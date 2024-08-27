@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('dashbroad');
 });
+Route::get('demo', function () {
+    dd("hello world");
+});
