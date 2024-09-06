@@ -2,7 +2,7 @@
 @section('title')
     dashbroad
 @endsection
-@section('content')
+@section('main')
     <div class="row">
         <div class="col">
             <div class="h-100">
@@ -986,7 +986,7 @@
 
 
 @endsection
-@section('style-libs')
+@section('script')
     <script src="{{asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
 
     <!-- Vector map-->
