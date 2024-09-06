@@ -2118,7 +2118,7 @@ File: Main Css File
 .avatar-group .avatar-group-item {
   margin-left: -12px;
   border: 2px solid var(--vz-secondary-bg);
-  border-radius: 50%;
+  border-radius: 100%;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
