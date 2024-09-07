@@ -58,57 +58,25 @@
                             <i class="ri-more-fill"></i> <span data-key="">More</span>
                         </a>
                     </li>
-                    <li class="menu-title"><span data-key="t-menu">Spaces</span></li>
+                    <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="evverything.html">
-                            <i class="ri-apps-fill"></i> <span data-key="">Everything</span>
+                            <i class="ri-apps-fill"></i> <span data-key="">Tên boards</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
-                            <i class="ri-group-fill"></i> <span data-key="t-authentication">Teams Space</span>
-                        </a>
-                        <div class="collapse menu-dropdown" id="sidebarAuth">
-                            <ul class="nav nav-sm flex-column">
-                                <li class="nav-item">
-                                    <a href="#sidebarSignIn" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSignIn" data-key="t-signin"> Project
-                                    </a>
-                                    <div class="collapse menu-dropdown" id="sidebarSignIn">
-                                        <ul class="nav nav-sm flex-column">
-                                            <li class="nav-item">
-                                                <a href="board.html" class="nav-link" data-key="t-basic"> Project
-                                                    1
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="board.html" class="nav-link" data-key="t-cover"> Project
-                                                    2
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </li>
-
-
+                
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="evverything.html">
-                            <i class="ri-function-line"></i><span data-key="">View All Space</span>
+                            <i class="ri-apps-fill"></i> <span data-key="">Tên boards</span>
                         </a>
                     </li>
-
+                
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="evverything.html">
-                            <i class="ri-add-line"></i><span data-key="">Create Space</span>
+                            <i class="ri-apps-fill"></i> <span data-key="">Tên boards</span>
                         </a>
                     </li>
-
-
-
-                    <!-- end Dashboard Menu -->
+            <!-- end Dashboard Menu -->
 
                 </ul>
             </div>

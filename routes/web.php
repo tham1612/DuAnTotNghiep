@@ -21,11 +21,15 @@ Route::get('tables', function () {
     return view('tables.index');
 });
 Route::get('catalog', function () {
-    return view('catalog.index');
+    return view('catalogs.index');
 });
 Route::get('ganttChart', function () {
-    return view('ganttChart.index');
+    return view('ganttCharts.index');
 });
 Route::get('boards', function () {
     return view('boards.index');
+});
+
+Route::get('lists', function () {
+    return view('lists.index');
 });
