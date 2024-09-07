@@ -1,7 +1,9 @@
 @extends('layouts.master')
 @section('main')
     <div class="tasks-board mb-3" id="kanbanboard">
-        <div class="tasks-list rounded-3 p-2 border">
+
+        <div class="tasks-list rounded-3 p-2 border" data-value="catalog1">
+
             <div class="d-flex mb-3 d-flex align-items-center">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
@@ -30,9 +32,11 @@
                 </div>
             </div>
             <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                <div id="unassigned-task" class="tasks">
+
+                <div id="unassigned-task" class="tasks" >
                     <!-- task item -->
-                    <div class="card tasks-box cursor-pointer">
+                    <div class="card tasks-box cursor-pointer" data-value="task1">
+
                         <div class="card-body">
                             <div class="d-flex mb-2">
                                 <h6 class="fs-15 mb-0 flex-grow-1 text-truncate task-title" data-bs-toggle="modal"
@@ -153,7 +157,9 @@
                     </div>
                     <!-- end task -->
                     <!--end card-->
-                    <div class="card tasks-box">
+
+                    <div class="card tasks-box" data-value="task2">
+
                         <div class="card-body">
                             <div class="d-flex mb-2">
                                 <div class="flex-grow-1">
@@ -273,7 +279,9 @@
             </div>
         </div>
         <!--end tasks-list-->
-        <div class="tasks-list rounded-3 p-2 border">
+
+        <div class="tasks-list rounded-3 p-2 border" data-value="catalog2">
+
             <div class="d-flex mb-3">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
