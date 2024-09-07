@@ -223,7 +223,9 @@
 
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{asset('teme/assets/images/products/img-2.png')}}"
+
+                                        <img src="{{asset('theme/assets/images/products/img-2.png')}}"
+
                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
@@ -250,7 +252,9 @@
 
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{asset('teme/assets/images/products/img-3.png')}}"
+
+                                        <img src="{{asset('theme/assets/images/products/img-3.png')}}"
+
                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
@@ -277,7 +281,9 @@
 
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{asset('teme/assets/images/products/img-6.png')}}"
+
+                                        <img src="{{asset('theme/assets/images/products/img-6.png')}}"
+
                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
@@ -304,7 +310,9 @@
 
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{asset('teme/assets/images/products/img-5.png')}}"
+
+                                        <img src="{{asset('theme/assets/images/products/img-5.png')}}"
+
                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
@@ -448,7 +456,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item position-relative">
                                         <div class="d-flex">
-                                            <img src="{{asset('teme/assets/images/users/avatar-2.jpg')}}"
+
+                                            <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}"
+
                                                 class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic" />
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
@@ -512,7 +522,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item position-relative">
                                         <div class="d-flex">
-                                            <img src="{{asset('teme/assets/images/users/avatar-8.jpg')}}"
+
+                                            <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}"
+
                                                 class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic" />
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
@@ -555,7 +567,9 @@
                                 <div data-simplebar style="max-height: 300px" class="pe-2">
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('teme/assets/images/users/avatar-3.jpg')}}"
+
+                                            <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}"
+
                                                 class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
@@ -586,7 +600,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('teme/assets/images/users/avatar-2.jpg')}}"
+
+                                            <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}"
+
                                                 class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
@@ -618,7 +634,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('teme/assets/images/users/avatar-6.jpg')}}"
+
+                                            <img src="{{asset('theme/assets/images/users/avatar-6.jpg')}}"
+
                                                 class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
@@ -650,7 +668,7 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('teme/assets/images/users/avatar-8.jpg')}}"
+                                                  <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}"
                                                 class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">

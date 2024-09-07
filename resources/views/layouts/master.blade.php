@@ -83,8 +83,10 @@
             <div class="container-fluid">
 
 
-                @include('layouts.masterBoard')
-                @include('boards.setting')
+
+                @include('layouts.navbar')
+                @include('components.setting')
+
 
 
                 {{-- các màn hình hiển thị --}}
@@ -93,8 +95,10 @@
                 {{-- giao diện task - dùng chung --}}
                 <!--end task-board-->
 
-                @include('boards.task')
-                @include('boards.member')
+
+                @include('components.task')
+                @include('components.member')
+
 
             </div>
             <!-- container-fluid -->
@@ -124,6 +128,11 @@
 
 
 <!-- JAVASCRIPT -->
+
+<script>
+    const PATH_ROOT = "theme";
+</script>
+
 <script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
