@@ -12,17 +12,20 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
-    return view('dashbroad');
+    return view('welcome');
 });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', function () {
+//     return view('dashbroad');
+// });
 
 Route::get('tables', function () {
     return view('tables.index');
 });
-Route::get('catalog', function () {
-    return view('catalogs.index');
-});
+
 Route::get('ganttChart', function () {
     return view('ganttCharts.index');
 });
@@ -33,3 +36,5 @@ Route::get('boards', function () {
 Route::get('lists', function () {
     return view('lists.index');
 });
+
+
