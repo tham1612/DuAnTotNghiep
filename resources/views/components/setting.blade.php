@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div
         class="offcanvas offcanvas-end"
         tabindex="-1"
@@ -6,24 +5,16 @@
         aria-labelledby="offcanvasRightLabel"
         style="width: 350px;"
 >
-=======
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
-    style="width: 350px;">
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title text-center" id="offcanvasRightLabel">
             Cài đặt
         </h5>
-<<<<<<< HEAD
         <button
                 type="button"
                 class="btn-close text-reset"
                 data-bs-dismiss="offcanvas"
                 aria-label="Close"
         ></button>
-=======
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)">
