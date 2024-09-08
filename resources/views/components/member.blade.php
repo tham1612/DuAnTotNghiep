@@ -1,5 +1,4 @@
 <!-- chia sẻ bảng & thêm thành viên -->
-<<<<<<< HEAD
 <div
     class="modal fade"
     id="addmemberModal"
@@ -7,16 +6,12 @@
     aria-labelledby="addmemberModalLabel"
     aria-hidden="true"
 >
-=======
-<div class="modal fade" id="addmemberModal" tabindex="-1" aria-labelledby="addmemberModalLabel" aria-hidden="true">
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
     <div class="modal-dialog">
         <div class="modal-content border-0" style="width: 125%;">
             <div class="modal-header p-3">
                 <h5 class="modal-title" id="addmemberModalLabel">
                     Chia sẻ bảng
                 </h5>
-<<<<<<< HEAD
                 <button
                     type="button"
                     class="btn-close"
@@ -24,27 +19,18 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"
                 ></button>
-=======
-                <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
             </div>
             <div class="modal-body">
                 <form>
                     <div class="row g-3">
                         <div class=" d-flex justify-content-between">
                             <div class="col-6">
-<<<<<<< HEAD
                                 <input
                                     type="number"
                                     class="form-control"
                                     id="submissionidInput"
                                     placeholder="Nhập email hoặc tên người dùng"
                                 />
-=======
-                                <input type="number" class="form-control" id="submissionidInput"
-                                    placeholder="Nhập email hoặc tên người dùng" />
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
                             </div>
                             <div class="col-4 ms-2">
                                 <select name="" id="" class="form-select">
@@ -78,7 +64,6 @@
                             </div>
                         </div>
                         <!--end col-->
-<<<<<<< HEAD
                         <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3"
                             role="tablist">
                             <li class="nav-item d-flex align-items-center justify-content-between">
@@ -88,15 +73,6 @@
                                 </a>
                                 <span class="badge bg-dark align-items-center justify-content-center d-flex"
                                       style="border-radius: 100%; width: 20px ;height: 20px;">2</span>
-=======
-                        <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3" role="tablist">
-                            <li class="nav-item d-flex align-items-center justify-content-between">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#home1" role="tab">
-                                    Thành viên trong bảng
-                                </a>
-                                <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                    style="border-radius: 100%; width: 20px ;height: 20px;">2</span>
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="tab" href="#profile1" role="tab">
@@ -112,7 +88,6 @@
                                 <ul style="margin-left: -32px;">
                                     <li class="d-flex">
                                         <div class="col-1">
-<<<<<<< HEAD
                                             <a
                                                 href="javascript: void(0);"
                                                 class="avatar-group-item"
@@ -126,13 +101,6 @@
                                                     alt=""
                                                     class="rounded-circle avatar-xs"
                                                 />
-=======
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                                title="Nancy">
-                                                <img src="assets/images/users/avatar-5.jpg" alt=""
-                                                    class="rounded-circle avatar-xs" />
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
                                             </a>
                                         </div>
                                         <div class="col-7 d-flex flex-column">
@@ -156,7 +124,6 @@
                                 <ul style="margin-left: -32px;">
                                     <li class="d-flex justify-content-between">
                                         <div class="col-1">
-<<<<<<< HEAD
                                             <a
                                                 href="javascript: void(0);"
                                                 class="avatar-group-item"
@@ -170,13 +137,6 @@
                                                     alt=""
                                                     class="rounded-circle avatar-xs"
                                                 />
-=======
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                                title="Nancy">
-                                                <img src="assets/images/users/avatar-5.jpg" alt=""
-                                                    class="rounded-circle avatar-xs" />
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
                                             </a>
                                         </div>
                                         <div class="col-7 d-flex flex-column">

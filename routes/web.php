@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
     return view('index');
 });
@@ -38,3 +37,9 @@ Route::get('ganttChart', function () {
 Route::get('boards', function () {
     return view('boards.index');
 });
+// Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', function () {
+//     return view('dashbroad');
+// });

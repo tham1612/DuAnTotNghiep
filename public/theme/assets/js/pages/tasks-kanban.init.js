@@ -14,6 +14,12 @@ var myModalEl,
     document.getElementById("completed-task"),
     document.getElementById("new-task"),
   ];
+<<<<<<< HEAD
+=======
+
+const testId = document.getElementsByClassName('tasks-box');
+
+>>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
 function noTaskImage() {
   Array.from(document.querySelectorAll("#kanbanboard .tasks-list")).forEach(
     function (e) {
@@ -87,9 +93,25 @@ tasks_list &&
     }),
   (drake = dragula(tasks_list)
     .on("drag", function (e) {
+<<<<<<< HEAD
       e.className = e.className.replace("ex-moved", "");
     })
     .on("drop", function (e) {
+=======
+
+        // lấy id của task
+        // console.log(testId.dataset.valueOf())
+      e.className = e.className.replace("ex-moved", "");
+    })
+    .on("drop", function (e) {
+        // Lấy data-value của danh sách (task list) mà task được thả vào
+        const targetList = e.parentElement.closest('.tasks-list'); // Lấy phần tử cha (tasks-list) chứa task vừa được thả
+        if (targetList) {
+            const listValue = targetList.dataset.value; // Giả sử bạn đã thêm data-value cho tasks-list
+            console.log("Task "+testId[0].dataset.value+" được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
+        }
+
+>>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
       e.className += " ex-moved";
     })
     .on("over", function (e, a) {
