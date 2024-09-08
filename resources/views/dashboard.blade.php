@@ -5,7 +5,6 @@
 @section('main')
     <div class="row">
         <div class="col">
-            <div class="">
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -55,7 +54,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <div>
-<p class="fw-medium text-muted mb-0">Số task quá hạn</p>
+                                        <p class="fw-medium text-muted mb-0">Số task quá hạn</p>
                                         <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
                                                 data-target="8"></span></h2>
                                     </div>
@@ -101,7 +100,7 @@
                                                     View</a>
                                                 <a class="dropdown-item" href="apps-projects-create.html"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-Edit</a>
+                                                    Edit</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                     data-bs-target="#removeProjectModal"><i
@@ -146,7 +145,7 @@ Edit</a>
                                                     <div class="avatar-title rounded-circle bg-danger">
                                                         T
                                                     </div>
-</div>
+                                                </div>
                                             </a>
                                             <a href="javascript: void(0);" class="avatar-group-item"
                                                 data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
@@ -193,7 +192,7 @@ Edit</a>
                         <!-- end card -->
                     </div>
                     <!-- end col -->
-<div class="col-3  project-card">
+                    <div class="col-3  project-card">
                         <div class="card">
                             <div class="card-body">
                                 <div class="p-3 mt-n3 mx-n3 bg-light rounded-top">
@@ -232,7 +231,7 @@ Edit</a>
                                 </div>
                                 <div class="py-3">
                                     <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html"
-class="text-body">Ecommerce app</a></h5>
+                                            class="text-body">Ecommerce app</a></h5>
                                     <div class="row gy-3">
                                         <div class="col-6">
                                             <div>
@@ -272,7 +271,7 @@ class="text-body">Ecommerce app</a></h5>
                                                     <div
                                                         class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                         +
-</div>
+                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
@@ -321,7 +320,7 @@ class="text-body">Ecommerce app</a></h5>
                                             </button>
 
                                             <div class="dropdown-menu dropdown-menu-end">
-<a class="dropdown-item" href="apps-projects-overview.html"><i
+                                                <a class="dropdown-item" href="apps-projects-overview.html"><i
                                                         class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                     View</a>
                                                 <a class="dropdown-item" href="apps-projects-create.html"><i
@@ -365,7 +364,7 @@ class="text-body">Ecommerce app</a></h5>
                                     <div class="d-flex align-items-center mt-3">
                                         <p class="text-muted mb-0 me-2">Team :</p>
                                         <div class="avatar-group">
-<a href="javascript: void(0);" class="avatar-group-item"
+                                            <a href="javascript: void(0);" class="avatar-group-item"
                                                 data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                                 title="Brent Gonzalez">
                                                 <div class="avatar-xxs">
@@ -404,7 +403,7 @@ class="text-body">Ecommerce app</a></h5>
                                     </div>
                                 </div>
                                 <div>
-<div class="d-flex mb-2">
+                                    <div class="d-flex mb-2">
                                         <div class="flex-grow-1">
                                             <div>Tasks</div>
                                         </div>
@@ -450,7 +449,7 @@ class="text-body">Ecommerce app</a></h5>
                                                 <a class="dropdown-item" href="apps-projects-overview.html"><i
                                                         class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                     View</a>
-<a class="dropdown-item" href="apps-projects-create.html"><i
+                                                <a class="dropdown-item" href="apps-projects-create.html"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                     Edit</a>
                                                 <div class="dropdown-divider"></div>
@@ -494,7 +493,7 @@ class="text-body">Ecommerce app</a></h5>
                                             <a href="javascript: void(0);" class="avatar-group-item"
                                                 data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                                 title="Donna Kline">
-<div class="avatar-xxs">
+                                                <div class="avatar-xxs">
                                                     <div class="avatar-title rounded-circle bg-danger">
                                                         D
                                                     </div>
@@ -535,7 +534,7 @@ class="text-body">Ecommerce app</a></h5>
                                             <div>Tasks</div>
                                         </div>
                                         <div class="flex-shrink-0">
-<div>
+                                            <div>
                                                 <i class="ri-list-check align-bottom me-1 text-muted"></i>
                                                 25/32
                                             </div>
@@ -555,6 +554,7 @@ class="text-body">Ecommerce app</a></h5>
                     </div>
                     <!-- end col -->
                 </div>
+                
                 <div class="row">
                     <div class="d-flex">
                         <h5 class="card-title fs-18 mb-2">Bảng của khách</h5>
@@ -584,7 +584,7 @@ class="text-body">Ecommerce app</a></h5>
                                                         class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                     View</a>
                                                 <a class="dropdown-item" href="apps-projects-create.html"><i
-class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                     Edit</a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="#" data-bs-toggle="modal"
@@ -628,7 +628,7 @@ class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 title="Terry Moberly">
                                                 <div class="avatar-xxs">
                                                     <div class="avatar-title rounded-circle bg-danger">
-T
+                                                        T
                                                     </div>
                                                 </div>
                                             </a>
@@ -674,7 +674,7 @@ T
                             </div>
                             <!-- end card body -->
                         </div>
-<!-- end card -->
+                        <!-- end card -->
                     </div>
                     <!-- end col -->
 
@@ -716,7 +716,7 @@ T
                                     </div>
                                 </div>
                                 <div class="py-3">
-<h5 class="mb-3 fs-14"><a href="apps-projects-overview.html"
+                                    <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html"
                                             class="text-body">Ecommerce app</a></h5>
                                     <div class="row gy-3">
                                         <div class="col-6">
@@ -755,7 +755,7 @@ T
                                                 title="Add Members">
                                                 <div class="avatar-xxs">
                                                     <div
-class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                         +
                                                     </div>
                                                 </div>
@@ -802,7 +802,7 @@ class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-prim
                                             <button
                                                 class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-<i data-feather="more-horizontal" class="icon-sm"></i>
+                                                <i data-feather="more-horizontal" class="icon-sm"></i>
                                             </button>
 
                                             <div class="dropdown-menu dropdown-menu-end">
@@ -846,7 +846,7 @@ class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-prim
                                             </div>
                                         </div>
                                     </div>
-<div class="d-flex align-items-center mt-3">
+                                    <div class="d-flex align-items-center mt-3">
                                         <p class="text-muted mb-0 me-2">Team :</p>
                                         <div class="avatar-group">
                                             <a href="javascript: void(0);" class="avatar-group-item"
@@ -883,7 +883,7 @@ class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-prim
                                                         +
                                                     </div>
                                                 </div>
-</a>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -932,7 +932,7 @@ class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-prim
 
                                             <div class="dropdown-menu dropdown-menu-end">
                                                 <a class="dropdown-item" href="apps-projects-overview.html"><i
-class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                     View</a>
                                                 <a class="dropdown-item" href="apps-projects-create.html"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i>
@@ -976,7 +976,7 @@ class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                         <p class="text-muted mb-0 me-2">Team :</p>
                                         <div class="avatar-group">
                                             <a href="javascript: void(0);" class="avatar-group-item"
-data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                                 title="Donna Kline">
                                                 <div class="avatar-xxs">
                                                     <div class="avatar-title rounded-circle bg-danger">
@@ -1016,7 +1016,7 @@ data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                 <div>
                                     <div class="d-flex mb-2">
                                         <div class="flex-grow-1">
-<div>Tasks</div>
+                                            <div>Tasks</div>
                                         </div>
                                         <div class="flex-shrink-0">
                                             <div>
@@ -1041,9 +1041,6 @@ data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                     <!-- end col -->
                 </div>
                 <!-- end row -->
-
-            </div> <!-- end .h-100-->
-
         </div> <!-- end col -->
 
     </div>

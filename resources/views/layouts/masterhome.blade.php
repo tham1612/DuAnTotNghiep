@@ -58,7 +58,7 @@
                             <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">
                                 Close
                             </button>
-<button type="button" class="btn w-sm btn-danger" id="delete-notification">
+                            <button type="button" class="btn w-sm btn-danger" id="delete-notification">
                                 Yes, Delete It!
                             </button>
                         </div>

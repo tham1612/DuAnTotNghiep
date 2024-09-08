@@ -77,7 +77,7 @@
                     <div class="flex-grow-1">
                         <h4>2762</h4>
                         <h6 class="text-muted fs-13 mb-0">Task quá hạn</h6>
-</div>
+                    </div>
                     <div class="flex-shrink-0 avatar-sm">
                         <div class="avatar-title bg-danger-subtle text-danger fs-22 rounded">
                             <i class=" ri-error-warning-line"></i>
@@ -142,7 +142,7 @@
                 </div>
                 <!--end col-->
                 <div class="col-xxl-1 col-lg-4">
-<button class="btn btn-primary w-100"><i class="ri-equalizer-line align-bottom me-1"></i>
+                    <button class="btn btn-primary w-100"><i class="ri-equalizer-line align-bottom me-1"></i>
                         Filters</button>
                 </div>
             </div>
@@ -193,51 +193,6 @@
                                 </li>
                                 <li class="list-group-item list-group-item-action">
                                     <div class="d-flex align-items-center">
-<img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                            class="avatar-xs object-fit-cover rounded-circle">
-                                        <div class="ms-3 flex-grow-1">
-                                            <a href="#!" class="stretched-link">
-                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
-                                            </a>
-                                            <p class="mb-0 text-muted">Tên task</p>
-                                        </div>
-                                        <div>
-                                            <h6>29/10/2024</h6>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item list-group-item-action">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                            class="avatar-xs object-fit-cover rounded-circle">
-                                        <div class="ms-3 flex-grow-1">
-                                            <a href="#!" class="stretched-link">
-                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
-                                            </a>
-                                            <p class="mb-0 text-muted">Tên task</p>
-                                        </div>
-                                        <div>
-                                            <h6>29/10/2024</h6>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item list-group-item-action">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                            class="avatar-xs object-fit-cover rounded-circle">
-                                        <div class="ms-3 flex-grow-1">
-                                            <a href="#!" class="stretched-link">
-                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
-                                            </a>
-                                            <p class="mb-0 text-muted">Tên task</p>
-                                        </div>
-                                        <div>
-                                            <h6>29/10/2024</h6>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item list-group-item-action">
-<div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
                                             class="avatar-xs object-fit-cover rounded-circle">
                                         <div class="ms-3 flex-grow-1">
@@ -281,7 +236,52 @@
                                         </div>
                                     </div>
                                 </li>
-<li class="list-group-item list-group-item-action">
+                                <li class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
+                                            class="avatar-xs object-fit-cover rounded-circle">
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!" class="stretched-link">
+                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
+                                            </a>
+                                            <p class="mb-0 text-muted">Tên task</p>
+                                        </div>
+                                        <div>
+                                            <h6>29/10/2024</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
+                                            class="avatar-xs object-fit-cover rounded-circle">
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!" class="stretched-link">
+                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
+                                            </a>
+                                            <p class="mb-0 text-muted">Tên task</p>
+                                        </div>
+                                        <div>
+                                            <h6>29/10/2024</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
+                                            class="avatar-xs object-fit-cover rounded-circle">
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!" class="stretched-link">
+                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
+                                            </a>
+                                            <p class="mb-0 text-muted">Tên task</p>
+                                        </div>
+                                        <div>
+                                            <h6>29/10/2024</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item list-group-item-action">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
                                             class="avatar-xs object-fit-cover rounded-circle">
@@ -331,51 +331,9 @@
                                 <li class="list-group-item list-group-item-action">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-class="avatar-xs object-fit-cover rounded-circle">
-                                        <div class="ms-3 flex-grow-1">
-                                            <a href="#!" class="stretched-link">
-                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h6>29/10/2024</h6>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item list-group-item-action">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
                                             class="avatar-xs object-fit-cover rounded-circle">
                                         <div class="ms-3 flex-grow-1">
                                             <a href="#!" class="stretched-link">
-                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h6>29/10/2024</h6>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item list-group-item-action">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                            class="avatar-xs object-fit-cover rounded-circle">
-                                        <div class="ms-3 flex-grow-1">
-                                            <a href="#!" class="stretched-link">
-                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <h6>29/10/2024</h6>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item list-group-item-action">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                            class="avatar-xs object-fit-cover rounded-circle">
-                                        <div class="ms-3 flex-grow-1">
-<a href="#!" class="stretched-link">
                                                 <h6 class="fs-14 mb-1">Tên bảng</h6>
                                             </a>
                                         </div>
@@ -420,7 +378,49 @@ class="avatar-xs object-fit-cover rounded-circle">
                                             <a href="#!" class="stretched-link">
                                                 <h6 class="fs-14 mb-1">Tên bảng</h6>
                                             </a>
-</div>
+                                        </div>
+                                        <div>
+                                            <h6>29/10/2024</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
+                                            class="avatar-xs object-fit-cover rounded-circle">
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!" class="stretched-link">
+                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h6>29/10/2024</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
+                                            class="avatar-xs object-fit-cover rounded-circle">
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!" class="stretched-link">
+                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <h6>29/10/2024</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item list-group-item-action">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
+                                            class="avatar-xs object-fit-cover rounded-circle">
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!" class="stretched-link">
+                                                <h6 class="fs-14 mb-1">Tên bảng</h6>
+                                            </a>
+                                        </div>
                                         <div>
                                             <h6>29/10/2024</h6>
                                         </div>
@@ -476,7 +476,7 @@ class="avatar-xs object-fit-cover rounded-circle">
                         <div class="d-flex mb-3">
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
-<img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
+                                    <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
                                         class="avatar-xxs" />
                                 </div>
                             </div>
@@ -533,7 +533,7 @@ class="avatar-xs object-fit-cover rounded-circle">
                             <div>
                                 <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem chi
                                     tiết
-<i class="ri-arrow-right-up-line align-bottom"></i></a>
+                                    <i class="ri-arrow-right-up-line align-bottom"></i></a>
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
@@ -590,7 +590,7 @@ class="avatar-xs object-fit-cover rounded-circle">
                             <div class="flex-grow-1">
                                 <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
                                 </h6>
-</div>
+                            </div>
                             <h6 class="flex-shrink-0 text-danger mb-0"><i class="ri-time-line align-bottom"></i> 05 ngày
                             </h6>
                         </div>
@@ -643,7 +643,7 @@ class="avatar-xs object-fit-cover rounded-circle">
                                 <p class="text-muted mb-2">Tên card</p>
                             </div>
                             <div>
-<a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem chi
+                                <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem chi
                                     tiết
                                     <i class="ri-arrow-right-up-line align-bottom"></i></a>
                             </div>
@@ -700,7 +700,7 @@ class="avatar-xs object-fit-cover rounded-circle">
                             <span class="mini-stat-icon avatar-title rounded-circle text-success bg-success-subtle fs-4">
                                 12
                             </span>
-</div>
+                        </div>
                         <div class="flex-grow-1 ms-3">
                             <h6 class="mb-1">Design new UI and check sales</h6>
                             <p class="text-muted mb-0">Meta4Systems</p>
@@ -762,7 +762,7 @@ class="avatar-xs object-fit-cover rounded-circle">
     <script src="{{ asset('theme/assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
 
     <!--Swiper slider js-->
-<script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
     <!-- Dashboard init -->
     <script src="{{ asset('theme/assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
