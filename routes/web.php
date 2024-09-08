@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', function () {
     return view('index');
 });
@@ -23,7 +24,15 @@ Route::get('/dashboard_detail', function () {
 });
 Route::get('/home', function () {
     return view('home');
-});
+
+
+Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', function () {
+//     return view('dashbroad');
+
+// });
 
 Route::get('tables', function () {
     return view('tables.index');
