@@ -8,11 +8,7 @@
                 style="
                       height: 150px;
                       object-fit: cover;
-<<<<<<< HEAD
-                      background-image: url('{{asset('theme/assets/images/small/img-7.jpg')}}');
-=======
                       background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}');
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
                     "
                 id="detailCardModalLabel">
                 <div></div>
