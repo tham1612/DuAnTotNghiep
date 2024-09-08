@@ -86,8 +86,8 @@
 
                                 <td>
                                     <div class="d-flex">
-                                        <div class="flex-grow-1" data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal">Thẻ công việc a
+                                        <div class="flex-grow-1" data-bs-toggle="modal" data-bs-target="#detailCardModal">
+                                            Thẻ công việc a
                                         </div>
                                         <div class="flex-shrink-0 ms-4">
                                             <ul class="list-inline tasks-list-menu mb-0">
@@ -108,25 +108,94 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal" data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name="" id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-utppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="todo">To do</option>
                                             <option value="inprogress">Inprogress</option>
@@ -134,10 +203,29 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class="">
+                                    <a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
+
                                 </td>
 
                             </tr>
@@ -174,26 +262,94 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name="" id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="todo">To do</option>
                                             <option value="inprogress">Inprogress</option>
@@ -202,20 +358,35 @@
                                     </div>
                                 </td>
 
-                                <td class="">
-                                    <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="modal"
-                                        data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
-                                </td>
 
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                     <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
                         aria-expanded="false" data-bs-offset="0,-50">
                         <i class="ri-add-line align-bottom me-1"></i>Add Task</button>
-
                     </button>
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
                         <form>
@@ -357,26 +528,94 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"><input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name="" id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="inprogress">Inprogress</option>
                                             <option value="todo">To do</option>
@@ -384,9 +623,26 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
                                 </td>
                             </tr>
@@ -423,26 +679,94 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name="" id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="inprogress">Inprogress</option>
                                             <option value="todo">To do</option>
@@ -450,9 +774,26 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
                                 </td>
 
@@ -460,24 +801,24 @@
                         </tbody>
                     </table>
                     <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
-                    aria-expanded="false" data-bs-offset="0,-50">
-                    <i class="ri-add-line align-bottom me-1"></i>Add Task</button>
+                        aria-expanded="false" data-bs-offset="0,-50">
+                        <i class="ri-add-line align-bottom me-1"></i>Add Task</button>
 
-                </button>
-                <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
-                    <form>
-                        <div class="mb-2">
-                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                placeholder="Nhập tên thẻ..." />
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <button type="submit" class="btn btn-primary">
-                                Add task
-                            </button>
-                            <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                        </div>
-                    </form>
-                </div>
+                    </button>
+                    <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
+                        <form>
+                            <div class="mb-2">
+                                <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                                    placeholder="Nhập tên thẻ..." />
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <button type="submit" class="btn btn-primary">
+                                    Add task
+                                </button>
+                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                            </div>
+                        </form>
+                    </div>
                     <div class="d-flex justify-content-end mt-2 me-3">
                         <div class="pagination-wrap hstack gap-2">
                             <a class="page-item pagination-prev disabled" href="#">
@@ -605,26 +946,94 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name="" id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="inprogress">Inprogress</option>
                                             <option value="todo">To do</option>
@@ -632,9 +1041,26 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
                                 </td>
 
@@ -672,26 +1098,94 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name="" id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="inprogress">Inprogress</option>
                                             <option value="todo">To do</option>
@@ -699,34 +1193,52 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
+
                                 </td>
 
                             </tr>
                         </tbody>
                     </table>
                     <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
-                    aria-expanded="false" data-bs-offset="0,-50">
-                    <i class="ri-add-line align-bottom me-1"></i>Add Task</button>
+                        aria-expanded="false" data-bs-offset="0,-50">
+                        <i class="ri-add-line align-bottom me-1"></i>Add Task</button>
 
-                </button>
-                <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
-                    <form>
-                        <div class="mb-2">
-                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                placeholder="Nhập tên thẻ..." />
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <button type="submit" class="btn btn-primary">
-                                Add task
-                            </button>
-                            <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                        </div>
-                    </form>
-                </div>
+                    </button>
+                    <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
+                        <form>
+                            <div class="mb-2">
+                                <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                                    placeholder="Nhập tên thẻ..." />
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <button type="submit" class="btn btn-primary">
+                                    Add task
+                                </button>
+                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                            </div>
+                        </form>
+                    </div>
                     <div class="d-flex justify-content-end mt-2 me-3">
                         <div class="pagination-wrap hstack gap-2">
                             <a class="page-item pagination-prev disabled" href="#">
@@ -808,7 +1320,8 @@
                             <tr>
                                 <th scope="col" style="width: 40px;">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                        <input class="form-check-input" type="checkbox" id="checkAll"
+                                            value="option">
                                     </div>
                                 </th>
                                 <th class="sort">Task</th>
@@ -853,26 +1366,97 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
-                                    </a>
-                                </td>
-
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
+                                        <input class="form-control" type="date" name=""
+                                            id=""></i>
                                     </a>
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="todo">To do</option>
                                             <option value="inprogress">Inprogress</option>
@@ -880,9 +1464,26 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
                                 </td>
 
@@ -920,26 +1521,98 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <div class="avatar-group" data-bs-toggle="modal"
-                                        data-bs-target="#inviteMembersModal">
-                                        <a href="javascript: void(0);" class="avatar-group-item">
-                                            <i class="ri-user-add-line"></i>
-                                        </a>
+                                    <div class="avatar-group">
+                                        <i class="ri-user-add-line fs-20 ms-2" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                            <h5 class="text-center">Thành viên</h5>
+                                            <form action="">
+                                                <input type="text" name="" id=""
+                                                    class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+
+                                                <!-- thành viên của thẻ -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        thẻ</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+
+                                                            <i class="ri-close-line fs-20"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- thành viên của bảng -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên của
+                                                        bảng</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!-- Thành viên Không gian làm việc -->
+                                                <div class="mt-3">
+                                                    <strong class="fs-14">Thành viên Không gian
+                                                        làm
+                                                        việc</strong>
+                                                    <ul class="" style="list-style: none; margin-left: -32px">
+                                                        <li class="d-flex justify-content-between align-items-center">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="Nancy">
+                                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
+                                                                </a>
+                                                                <p class="ms-3 mt-3">name</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class=""> <a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-calendar-2-line"> <input type="date" name=""
-                                                id=""></i>
+                                        <input class="form-control" type="date" name=""
+                                            id=""></i>
                                     </a>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item">
-                                        <i class="ri-flag-2-line"></i>
-                                    </a>
+                                <td class="">
+                                    <div class="flex-grow-1">
+                                        <select class="form-control text-utppercase fw-semibold mb-0">
+                                            <option value="hign">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                        </select>
+                                    </div>
+
                                 </td>
                                 <td class="">
                                     <div class="flex-grow-1">
-                                        <select class="form-selec text-uppercase fw-semibold mb-0">
+                                        <select class="form-control text-uppercase fw-semibold mb-0">
                                             <option value="unassigned">Unassigned</option>
                                             <option value="todo">To do</option>
                                             <option value="inprogress">Inprogress</option>
@@ -948,10 +1621,28 @@
                                     </div>
                                 </td>
 
-                                <td class=""><a href="javascript: void(0);" class="avatar-group-item"
-                                        data-bs-toggle="modal" data-bs-target="#commentModal">
-                                        <i class="ri-chat-1-line"></i>
+                                <td class=""><a href="javascript: void(0);">
+                                        <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                                            aria-expanded="false" data-bs-offset="0,-50">
+                                            <i class="ri-chat-1-line fs-20"></i></button>
+                                        </button>
+                                        <div class="dropdown-menu p-3" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            <form>
+                                                <div class="mb-2">
+                                                    <input type="text" class="form-control"
+                                                        id="exampleDropdownFormEmail" placeholder="Nhập bình luận..." />
+                                                </div>
+                                                <div class="mb-2 d-flex align-items-center">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Gửi
+                                                    </button>
+                                                    <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </a>
+
                                 </td>
 
                             </tr>
@@ -1140,6 +1831,13 @@
     <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>
 
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
+    <!--jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--select2 cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
 
 
     <script>
@@ -1170,6 +1868,165 @@
             } else {
                 console.log("Drop failed: Not a valid dropzone");
             }
+        });
+    </script>
+
+    <script>
+        // xử lý checklist card
+        const displayChecklistBtn = document.querySelector('.display-checklist');
+        const disableChecklistBtn = document.querySelector('.disable-checklist');
+        const checklistForm = document.querySelector('.addOrUpdate-checklist');
+        const checklistItem = document.querySelector('.checklistItem');
+
+
+        displayChecklistBtn.addEventListener('click', () => {
+
+            checklistForm.classList.toggle('d-none'); // Hiện hoặc ẩn form
+            displayChecklistBtn.classList.add('d-none'); // Hiện hoặc ẩn form
+        });
+
+        disableChecklistBtn.addEventListener('click', () => {
+            checklistItem.value = "";
+            checklistForm.classList.add('d-none'); // Hiện hoặc ẩn form
+            displayChecklistBtn.classList.toggle('d-none'); // Hiện hoặc ẩn form
+        });
+
+
+        //     xử lý lưu trữ cảu card
+        const archiver = document.querySelector('.archiver');
+        const restoreArchiver = document.querySelector('.restore-archiver');
+        const deleteArchiver = document.querySelector('.delete-archiver');
+        archiver.addEventListener('click', () => {
+
+            restoreArchiver.classList.toggle('d-none');
+            deleteArchiver.classList.toggle('d-none');
+            archiver.classList.add('d-none');
+        });
+
+        restoreArchiver.addEventListener('click', () => {
+
+            deleteArchiver.classList.add('d-none');
+            restoreArchiver.classList.add('d-none');
+            archiver.classList.toggle('d-none');
+        });
+
+        deleteArchiver.addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        //     xử lý theo dõi + ngày hết hạn của card
+        const notification = document.querySelector('#notification');
+        const notification_follow = document.querySelector('#notification_follow');
+        const notification_icon = document.querySelector('#notification_icon');
+        const notification_content = document.querySelector('#notification_content');
+        notification.addEventListener('click', () => {
+            notification_follow.classList.toggle('d-none');
+            notification_icon.classList.contains("ri-eye-line") ?
+                notification_icon.className = "ri-eye-off-line fs-22" :
+                notification_icon.className = "ri-eye-line fs-22";
+            notification_content.textContent === "Theo dõi" ?
+                notification_content.innerHTML = "Đang theo dõi" :
+                notification_content.innerHTML = "Theo dõi";
+        });
+
+        const due_date_checkbox = document.querySelector('#due_date_checkbox');
+        const due_date_success = document.querySelector('#due_date_success');
+        const due_date_due = document.querySelector('#due_date_due');
+        due_date_checkbox.addEventListener('click', () => {
+            due_date_due.classList.toggle('d-none');
+            due_date_success.classList.toggle('d-none');
+        });
+
+        // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
+        $(document).ready(function() {
+            $('.dropdown-menu').on('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+    <script>
+        const daysTag = document.querySelector(".days"),
+            currentDate = document.querySelector(".current-date"),
+            prevNextIcon = document.querySelectorAll(".icons span");
+
+        // getting new date, current year and month
+        let date = new Date(),
+            currYear = date.getFullYear(),
+            currMonth = date.getMonth();
+
+        // storing full name of all months in array
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+
+        const renderCalendar = () => {
+            let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
+                lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
+                lastDayofMonth = new Date(
+                    currYear,
+                    currMonth,
+                    lastDateofMonth
+                ).getDay(), // getting last day of month
+                lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
+            let liTag = "";
+
+            for (let i = firstDayofMonth; i > 0; i--) {
+                // creating li of previous month last days
+                liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
+            }
+
+            for (let i = 1; i <= lastDateofMonth; i++) {
+                // creating li of all days of current month
+                // adding active class to li if the current day, month, and year matched
+                let isToday =
+                    i === date.getDate() &&
+                    currMonth === new Date().getMonth() &&
+                    currYear === new Date().getFullYear() ?
+                    "active" :
+                    "";
+                liTag += `<li class="${isToday}">${i}</li>`;
+            }
+
+            for (let i = lastDayofMonth; i < 6; i++) {
+                // creating li of next month first days
+                liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
+            }
+            currentDate.innerText =
+                `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
+            daysTag.innerHTML = liTag;
+        };
+        renderCalendar();
+
+        prevNextIcon.forEach((icon) => {
+            // getting prev and next icons
+            icon.addEventListener("click", () => {
+                // adding click event on both icons
+                // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
+                currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+                if (currMonth < 0 || currMonth > 11) {
+                    // if current month is less than 0 or greater than 11
+                    // creating a new date of current year & month and pass it as date value
+                    date = new Date(currYear, currMonth, new Date().getDate());
+                    currYear = date.getFullYear(); // updating current year with new date year
+                    currMonth = date.getMonth(); // updating current month with new date month
+                } else {
+                    date = new Date(); // pass the current date as date value
+                }
+                renderCalendar(); // calling renderCalendar function
+            });
         });
     </script>
 @endsection
