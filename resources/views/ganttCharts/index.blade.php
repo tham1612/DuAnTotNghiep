@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<div>
-    <!-- When there is no desire, all things are at peace. - Laozi -->
-</div>
-=======
 @extends('layouts.master')
 
 @section('main')
@@ -37,4 +32,3 @@
 </body>
 @endsection
 
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c

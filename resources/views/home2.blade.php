@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 @extends('layouts.masterhome')
 @section('title')
     dashbroad
@@ -800,5 +800,5 @@
         </div>
     </div>
 </div>
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
+
 @endsection
