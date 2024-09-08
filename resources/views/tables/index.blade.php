@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+<div>
+    <!-- Nothing worth having comes easy. - Theodore Roosevelt -->
+</div>
+=======
 @extends('layouts.master')
 @section('main')
     <div class="row">
@@ -1541,3 +1546,4 @@ data-bs-target="#addds">Danh sách</button>
         });
     </script>
 @endsection
+>>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
