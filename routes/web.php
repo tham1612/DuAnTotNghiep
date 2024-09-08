@@ -13,26 +13,42 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return view('index');
+});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+Route::get('/dashboard_detail', function () {
+    return view('dashboard_detail');
+});
+Route::get('/home', function () {
+    return view('home');
+
+
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/', function () {
-    return view('dashbroad');
-});
+// Route::get('/', function () {
+//     return view('dashbroad');
+
+// });
 
 Route::get('tables', function () {
     return view('tables.index');
 });
-
+Route::get('catalog', function () {
+    return view('catalog.index');
+});
 Route::get('ganttChart', function () {
-    return view('ganttCharts.index');
+    return view('ganttChart.index');
 });
 Route::get('boards', function () {
     return view('boards.index');
 });
+// Auth::routes();
 
-Route::get('lists', function () {
-    return view('lists.index');
-});
-
-
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', function () {
+//     return view('dashbroad');
+// });
