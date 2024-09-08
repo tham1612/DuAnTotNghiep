@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="d-flex pt-2 pb-4">
+        <div class="d-flex">
             <h5 class="card-title fs-18 mb-1"></h5>
         </div>
         <div class="col-xl-12">
@@ -495,7 +495,7 @@
 @section('styles')
     <!--Swiper slider css-->
     <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
-@endsection@extends('layouts.masterhome')
+    @endsection@extends('layouts.masterhome')
 @section('title')
     dashbroad
 @endsection
@@ -558,7 +558,8 @@
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Chưa
-                                    hoàn thành<i class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
+                                    hoàn thành<i
+                                        class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
