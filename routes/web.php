@@ -14,5 +14,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('dashbroad');
+    return view('index');
+});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+Route::get('/dashboard_detail', function () {
+    return view('dashboard_detail');
+});
+Route::get('/home', function () {
+    return view('home');
+});
+
+Route::get('tables', function () {
+    return view('tables.index');
+});
+Route::get('catalog', function () {
+    return view('catalog.index');
+});
+Route::get('ganttChart', function () {
+    return view('ganttChart.index');
+});
+Route::get('boards', function () {
+    return view('boards.index');
 });
