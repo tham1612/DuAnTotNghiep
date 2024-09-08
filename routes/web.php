@@ -13,22 +13,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Định nghĩa các route
+Route::get('/index', function () {
+    return view('index');
 });
-Auth::routes();
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+Route::get('/dashboard_detail', function () {
+    return view('dashboard_detail');
+});
+Route::get('/home2', function () {
+    return view('home2');
+});
 
+
+// Định nghĩa route cho home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// Route::get('/', function () {
-//     return view('dashbroad');
-// });
+
+// Các route khác
 Route::get('tables', function () {
     return view('tables.index');
 });
-
+Route::get('catalog', function () {
+    return view('catalog.index');
+});
 Route::get('ganttChart', function () {
     return view('ganttChart.index');
 });
 Route::get('boards', function () {
     return view('boards.index');
 });
+
+// Đăng ký các route cho authentication
+// Auth::routes();

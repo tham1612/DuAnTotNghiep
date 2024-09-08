@@ -86,13 +86,6 @@
                 @include('layouts.masterBoard')
                 @include('boards.setting')
 
-<<<<<<< HEAD
-=======
-                @include('layouts.navbar')
-                @include('components.setting')
-
-
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
 
                 {{-- các màn hình hiển thị --}}
                 @yield('main')
@@ -100,15 +93,8 @@
                 {{-- giao diện task - dùng chung --}}
                 <!--end task-board-->
 
-<<<<<<< HEAD
                 @include('boards.task')
                 @include('boards.member')
-=======
-
-                @include('components.task')
-                @include('components.member')
-
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
 
             </div>
             <!-- container-fluid -->
@@ -138,14 +124,6 @@
 
 
 <!-- JAVASCRIPT -->
-<<<<<<< HEAD
-=======
-
-<script>
-    const PATH_ROOT = "theme";
-</script>
-
->>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
 <script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
