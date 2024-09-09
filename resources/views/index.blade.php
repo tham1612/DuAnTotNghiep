@@ -35,9 +35,10 @@
         <nav class="navbar navbar-expand-lg navbar-landing fixed-top job-navbar" id="navbar">
             <div class="container-fluid custom-container">
                 <a class="navbar-brand" href="index.html">
-                    <img src="{{ asset('theme/assets/images/logo-dark.png') }}" class="card-logo card-logo-dark" alt="logo dark" height="17">
-                    <img src="{{ asset('theme/assets/images/logo-light.png') }}" class="card-logo card-logo-light" alt="logo light"
-                        height="17">
+                    <img src="{{ asset('theme/assets/images/logo-dark.png') }}" class="card-logo card-logo-dark"
+                        alt="logo dark" height="17">
+                    <img src="{{ asset('theme/assets/images/logo-light.png') }}" class="card-logo card-logo-light"
+                        alt="logo light" height="17">
                 </a>
                 <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -149,8 +150,8 @@
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                         data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                         <div class="avatar-xs">
-                                            <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}" alt=""
-                                                class="rounded-circle img-fluid">
+                                            <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
+                                                alt="" class="rounded-circle img-fluid">
                                         </div>
                                     </a>
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
@@ -164,8 +165,8 @@
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                         data-bs-trigger="hover" data-bs-placement="top" title="Ellen Smith">
                                         <div class="avatar-xs">
-                                            <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                                class="rounded-circle img-fluid">
+                                            <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
+                                                alt="" class="rounded-circle img-fluid">
                                         </div>
                                     </a>
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
@@ -179,8 +180,8 @@
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                         data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                         <div class="avatar-xs">
-                                            <img src="{{ asset('theme/assets/images/users/avatar-9.jpg') }}" alt=""
-                                                class="rounded-circle img-fluid">
+                                            <img src="{{ asset('theme/assets/images/users/avatar-9.jpg') }}"
+                                                alt="" class="rounded-circle img-fluid">
                                         </div>
                                     </a>
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
@@ -194,7 +195,8 @@
                                     </a>
                                 </div>
                             </div>
-                            <img src="{{ asset('theme/assets/images/job-profile2.png') }}" alt="" class="user-img">
+                            <img src="{{ asset('theme/assets/images/job-profile2.png') }}" alt=""
+                                class="user-img">
 
                             <div class="circle-effect">
                                 <div class="circle"></div>
@@ -303,8 +305,8 @@
                             <div class="card feedback-box">
                                 <div class="card-body d-flex shadow-lg">
                                     <div class="flex-shrink-0 me-3">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}" alt=""
-                                            class="avatar-sm rounded-circle">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
+                                            alt="" class="avatar-sm rounded-circle">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h5 class="fs-14 lh-base mb-0">Thanh Thanh</h5>
@@ -320,7 +322,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <img src="{{ asset('theme/assets/images/about.jpg') }}" alt="" class="img-fluid mx-auto rounded-3" />
+                            <img src="{{ asset('theme/assets/images/about.jpg') }}" alt=""
+                                class="img-fluid mx-auto rounded-3" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -392,7 +395,8 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="text-center mb-5">
-                            <h1 class="mb-3 ff-secondary fw-semibold text-capitalize lh-base">Khả năng quản lý dự án của
+                            <h1 class="mb-3 ff-secondary fw-semibold text-capitalize lh-base">Khả năng quản lý dự án
+                                của
                                 phần mềm TaskFlow</h1>
                             <p class="text-muted">Đăng kí tài khoản để quản lí công việc, dự án của bạn một cách dễ
                                 dàng, hiệu quả, logic.</p>
@@ -621,7 +625,8 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="text-center mb-5">
-                            <h1 class="mb-3 ff-secondary fw-semibold text-capitalize lh-base">Phần mềm quản lý công việc
+                            <h1 class="mb-3 ff-secondary fw-semibold text-capitalize lh-base">Phần mềm quản lý công
+                                việc
                                 đa lĩnh vực.</h1>
                             <p class="text-muted">Đăng kí tài khoản để quản lí công việc, dự án của bạn một cách dễ
                                 dàng, hiệu quả, logic.</p>
@@ -638,7 +643,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-warning-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-3.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-3.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -653,7 +659,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> USA
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $23k - 35k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $23k -
+                                                35k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -679,7 +686,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-primary-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-2.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-2.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -694,7 +702,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> Spain
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $10k - 15k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $10k -
+                                                15k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -721,7 +730,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-danger-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-4.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-4.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -736,7 +746,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> Sweden
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $20k - 25k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $20k -
+                                                25k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -762,7 +773,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-success-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-9.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-9.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -803,7 +815,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-info-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-1.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-1.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -818,7 +831,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> Germany
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $18k - 26k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $18k -
+                                                26k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -843,7 +857,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-success-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-7.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-7.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -858,7 +873,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> USA
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $23k - 35k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $23k -
+                                                35k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -885,7 +901,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-info-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-8.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-8.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -900,7 +917,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> Namibia
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $12k - 15k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $12k -
+                                                15k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -927,7 +945,8 @@
                                 <div class="d-flex">
                                     <div class="avatar-sm">
                                         <div class="avatar-title bg-warning-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-5.png') }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-5.png') }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <div class="ms-3 flex-grow-1">
@@ -942,7 +961,8 @@
                                                 <i class="ri-map-pin-2-line align-bottom me-1"></i> USA
                                             </li>
                                             <li class="list-inline-item">
-                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $41k - 45k
+                                                <i class="ri-money-dollar-circle-line align-bottom me-1"></i> $41k -
+                                                45k
                                             </li>
                                         </ul>
                                         <div class="hstack gap-2">
@@ -976,7 +996,8 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="text-center mb-5">
-                            <h1 class="mb-3 ff-secondary fw-semibold text-capitalize lh-base">Các tiện ích phần mềm quản
+                            <h1 class="mb-3 ff-secondary fw-semibold text-capitalize lh-base">Các tiện ích phần mềm
+                                quản
                                 lý dự án hỗ trợ người dùng</h1>
                             <p class="text-muted">Đăng kí tài khoản để quản lí công việc, dự án của bạn một cách dễ
                                 dàng, hiệu quả, logic.</p>
@@ -1125,7 +1146,8 @@
                             <p class="ff-secondary mb-2">Các tính năng trực quan của TaskFlow mang đến cho mọi đội nhóm
                                 khả năng thiết lập và tùy chỉnh nhanh chóng quy trình làm việc, sẵn sàng đáp ứng mọi nhu
                                 cầu.</p>
-                            <p class="mb-4 ff-secondary">TaskFlow lý tưởng cho việc đơn giản hóa các quy trình. Là người
+                            <p class="mb-4 ff-secondary">TaskFlow lý tưởng cho việc đơn giản hóa các quy trình. Là
+                                người
                                 quản lí, tôi có thể chia quy trình thành từng phần nhỏ cho nhóm rồi phân công công việc
                                 nhưng vẫn có thể quan sát toàn bộ quy trình.</p>
 
@@ -1145,7 +1167,8 @@
                                             class="mdi mdi-cards-heart fs-16"></i></button>
                                     <div class="avatar-sm mb-4">
                                         <div class="avatar-title bg-secondary-subtle rounded">
-                                            <img src="{{ asset('theme/assets/images/companies/img-1.png') }}") }}" alt="" class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/companies/img-1.png') }}") }}"
+                                                alt="" class="avatar-xxs">
                                         </div>
                                     </div>
                                     <a href="#!">
@@ -1164,7 +1187,8 @@
                                         </div>
                                     </div>
 
-                                    <p class="text-muted">As a Product Designer, you will work within a Product Delivery
+                                    <p class="text-muted">As a Product Designer, you will work within a Product
+                                        Delivery
                                         Team fused with UX, engineering, product and data talent.</p>
 
                                     <div class="hstack gap-2">
@@ -1184,40 +1208,44 @@
                                     <h5 class="text-white fs-16 mb-4">10,000+ Featured Companies</h5>
 
                                     <div class="d-flex gap-1">
-                                        <a href="javascript: void(0);" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                            data-bs-placement="top" title="Brent Gonzalez">
+                                        <a href="javascript: void(0);" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                             <div class="avatar-xs">
                                                 <div class="avatar-title bg-light bg-opacity-25 rounded-circle">
-                                                    <img src="{{ asset('theme/assets/images/companies/img-5.png') }}" alt="" height="15">
+                                                    <img src="{{ asset('theme/assets/images/companies/img-5.png') }}"
+                                                        alt="" height="15">
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                            data-bs-placement="top" title="Brent Gonzalez">
+                                        <a href="javascript: void(0);" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                             <div class="avatar-xs">
                                                 <div class="avatar-title bg-light bg-opacity-25 rounded-circle">
-                                                    <img src="{{ asset('theme/assets/images/companies/img-2.png') }}" alt="" height="15">
+                                                    <img src="{{ asset('theme/assets/images/companies/img-2.png') }}"
+                                                        alt="" height="15">
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                            data-bs-placement="top" title="Brent Gonzalez">
+                                        <a href="javascript: void(0);" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                             <div class="avatar-xs">
                                                 <div class="avatar-title bg-light bg-opacity-25 rounded-circle">
-                                                    <img src="{{ asset('theme/assets/images/companies/img-8.png') }}" alt="" height="15">
+                                                    <img src="{{ asset('theme/assets/images/companies/img-8.png') }}"
+                                                        alt="" height="15">
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                            data-bs-placement="top" title="Brent Gonzalez">
+                                        <a href="javascript: void(0);" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                             <div class="avatar-xs">
                                                 <div class="avatar-title bg-light bg-opacity-25 rounded-circle">
-                                                    <img src="{{ asset('theme/assets/images/companies/img-7.png') }}" alt="" height="15">
+                                                    <img src="{{ asset('theme/assets/images/companies/img-7.png') }}"
+                                                        alt="" height="15">
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                            data-bs-placement="top" title="More Companies">
+                                        <a href="javascript: void(0);" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="More Companies">
                                             <div class="avatar-xs">
                                                 <div
                                                     class="avatar-title fs-11 rounded-circle bg-light bg-opacity-25 text-white">
@@ -1265,7 +1293,8 @@
                     <div class="col-lg-4 mt-4">
                         <div>
                             <div>
-                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="logo light" height="17" />
+                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="logo light"
+                                    height="17" />
                             </div>
                             <div class="mt-4 fs-13">
                                 <p>Mẫu bảng điều khiển và quản trị đa năng cao cấp</p>
@@ -1354,7 +1383,9 @@
                     <div class="col-sm-6">
                         <div>
                             <p class="copy-rights mb-0">
-                                <script> document.write(new Date().getFullYear()) </script> © TaskFlow - Themesbrand
+                                <script>
+                                    document.write(new Date().getFullYear())
+                                </script> © TaskFlow - Themesbrand
                             </p>
                         </div>
                     </div>

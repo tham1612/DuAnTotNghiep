@@ -18,22 +18,20 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('dashboard', function () {
+    return view('dashboard.index');
 });
-Route::get('/dashboard_detail', function () {
-    return view('dashboard_detail');
+Route::get('/dashboard/show', function () {
+    return view('dashboard.show');
 });
 
-Route::get('dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard/detail', function () {
+    return view('dashboard.detail');
 });
-Route::get('dashboard_detail', function () {
-    return view('dashboard_detail');
+Route::get('/dashboard/home', function () {
+    return view('dashboard.home');
 });
-Route::get('hom2', function () {
-    return view('hom2');
-});
+
 Auth::routes();
 
 // Định nghĩa route cho home
@@ -54,9 +52,3 @@ Route::get('boards', function () {
 Route::get('lists', function () {
     return view('lists.index');
 });
-
-
-
-
-
-
