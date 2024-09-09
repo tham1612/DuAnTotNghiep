@@ -25,7 +25,17 @@
 
     @yield('style')
 </head>
+<style>
+    .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+    }
 
+</style>
 
 <body>
 <!-- Begin page -->
@@ -93,8 +103,11 @@
                 {{-- giao diện task - dùng chung --}}
                 <!--end task-board-->
 
-                @include('boards.task')
-                @include('boards.member')
+
+                @include('components.task')
+                @include('components.member')
+                @include('components.createBoard')
+                @include('components.createTemplateBoard')
 
             </div>
             <!-- container-fluid -->
@@ -134,6 +147,14 @@
 <script src="{{asset('theme/assets/js/app.js')}}"></script>
 
 @yield('script')
+<script>
+    // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
+    $(document).ready(function () {
+        $('.dropdown-menu').on('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
 </body>
 
 </html>
