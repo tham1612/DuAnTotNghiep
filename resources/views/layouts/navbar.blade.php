@@ -62,15 +62,15 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-home-tab" href="teams-spaces-overview.html" role="tab"
+                    <a class="nav-link" id="pills-home-tab" href="#" role="tab"
                        aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-profile-tab" href="teams-spaces-board.html" role="tab"
+                    <a class="nav-link" id="pills-profile-tab" href="{{url('boards')}}" role="tab"
                        aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-list-tab" href="teams-spaces-list.html" role="tab"
+                    <a class="nav-link" id="pills-list-tab" href="{{url('lists')}}" role="tab"
                        aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -79,11 +79,11 @@
                         Calendar</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-gantt-tab" href="gantt.html" role="tab"
+                    <a class="nav-link" id="pills-gantt-tab" href="{{url('ganttChart')}}" role="tab"
                        aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt</a>
                 </li>
                 <li class="nav-item active" role="presentation">
-                    <a class="nav-link" id="pills-table-tab" href="teams-spaces-table.html" role="tab"
+                    <a class="nav-link" id="pills-table-tab" href="{{url('tables')}}" role="tab"
                        aria-controls="pills-table" aria-selected="false"><i class="ri-layout-3-line"></i> Table</a>
                 </li>
             </ul>

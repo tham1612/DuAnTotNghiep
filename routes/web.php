@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,22 +13,39 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Định nghĩa các route
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+Route::get('/dashboard_detail', function () {
+    return view('dashboard_detail');
+});
+
+Route::get('dashboard', function () {
+    return view('dashboard');
+});
+Route::get('dashboard_detail', function () {
+    return view('dashboard_detail');
+});
+Route::get('hom2', function () {
+    return view('hom2');
 });
 Auth::routes();
 
+// Định nghĩa route cho home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// Route::get('/', function () {
-//     return view('dashbroad');
-// });
 
+// Các route khác
 Route::get('tables', function () {
     return view('tables.index');
 });
 
 Route::get('ganttChart', function () {
-    return view('ganttCharts.index');
+    return view('ganttChart.index');
 });
 Route::get('boards', function () {
     return view('boards.index');
@@ -36,5 +54,3 @@ Route::get('boards', function () {
 Route::get('lists', function () {
     return view('lists.index');
 });
-
-
