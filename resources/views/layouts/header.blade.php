@@ -196,8 +196,10 @@
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
+
                                         <img src="{{asset('theme/assets/images/products/img-1.png')}}"
                                              class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -245,8 +247,10 @@
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
+
                                         <img src="{{asset('theme/assets/images/products/img-1.png')}}"
                                              class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -268,8 +272,10 @@
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
+
                                         <img src="{{asset('theme/assets/images/products/img-1.png')}}"
                                              class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -291,8 +297,10 @@
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
+
                                         <img src="{{asset('theme/assets/images/products/img-1.png')}}"
                                              class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -547,8 +555,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item position-relative">
                                         <div class="d-flex">
-                                            <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}"
+
                                                  class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic"/>
+
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">
@@ -611,8 +620,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item position-relative">
                                         <div class="d-flex">
-                                            <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}"
+
                                                  class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic"/>
+
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">
@@ -654,8 +664,9 @@
                                 <div data-simplebar style="max-height: 300px" class="pe-2">
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}"
+
                                                  class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">
@@ -685,8 +696,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}"
+
                                                  class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">
@@ -717,8 +729,9 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
-                                            <img src="{{asset('theme/assets/images/users/avatar-6.jpg')}}"
+
                                                  class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">
@@ -749,8 +762,10 @@
 
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
+
                                             <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}"
                                                  class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
                                                     <h6 class="mt-0 mb-1 fs-13 fw-semibold">
