@@ -1,4 +1,5 @@
 var myModalEl,
+
     kanbanboard,
     scroll,
     addNewBoard,
@@ -91,6 +92,7 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
                 document.getElementById("delete-btn-close").click(),
                 taskCounter();
         });
+
 }),
     (drake = dragula(tasks_list)
         .on("drag", function (e) {
@@ -121,6 +123,7 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
     maxSpeed: 100,
     scrollWhenOutside: !0,
     autoScroll: function () {
+
         return this.down && drake.dragging;
     },
 })),

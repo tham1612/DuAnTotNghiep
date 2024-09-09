@@ -1,4 +1,3 @@
-
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -10,7 +9,7 @@
                     </span>
                 </button>
                 <div class="mx-2 cursor-pointer" id="dropdownMenuOffset" data-bs-toggle="dropdown" aria-expanded="false"
-                     data-bs-offset="10,20">
+                    data-bs-offset="10,20">
                     <i class="ri-shield-user-fill fs-20 text-primary"></i>
                     <span class="fs-15">Không gian làm việc</span>
                     <!-- cài đặt quyền của bảng -->
@@ -62,35 +61,35 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-home-tab" href="#" role="tab"
-                       aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
+                    <a class="nav-link" id="pills-home-tab" href="teams-spaces-overview.html" role="tab"
+                        aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-profile-tab" href="{{url('boards')}}" role="tab"
-                       aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
+                    <a class="nav-link" id="pills-profile-tab" href="teams-spaces-board.html" role="tab"
+                        aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-list-tab" href="{{url('lists')}}" role="tab"
-                       aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
+                    <a class="nav-link" id="pills-list-tab" href="teams-spaces-list.html" role="tab"
+                        aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"
-                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>
+                        aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>
                         Calendar</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-gantt-tab" href="{{url('ganttChart')}}" role="tab"
-                       aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt</a>
+                    <a class="nav-link" id="pills-gantt-tab" href="gantt.html" role="tab"
+                        aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt</a>
                 </li>
                 <li class="nav-item active" role="presentation">
-                    <a class="nav-link" id="pills-table-tab" href="{{url('tables')}}" role="tab"
-                       aria-controls="pills-table" aria-selected="false"><i class="ri-layout-3-line"></i> Table</a>
+                    <a class="nav-link" id="pills-table-tab" href="teams-spaces-table.html" role="tab"
+                        aria-controls="pills-table" aria-selected="false"><i class="ri-layout-3-line"></i> Table</a>
                 </li>
             </ul>
             <div class="col-auto ms-auto d-flex justify-content-end align-items-center">
                 <!--  bộ lọc -->
                 <div class="d-flex justify-content-center align-items-center p-1 cursor-pointer"
-                     data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                    data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                     <i class="ri-filter-3-line fs-20"></i>
                     <span class="readonly">Bộ lọc</span>
                 </div>
@@ -102,7 +101,7 @@
                     <div class="mt-2">
                         <strong>Từ khóa</strong>
                         <input type="text" name="" id="" placeholder="Nhập từ khóa..."
-                               class="form-control" />
+                            class="form-control" />
                         <span class="fs-10">Tìm kiếm các thẻ, các thành viên, các nhãn và hơn thế
                             nữa.</span>
                     </div>
@@ -168,12 +167,12 @@
                         <br />
                         <div data-input-flag data-option-flag-name>
                             <input type="text" class="form-control rounded-end flag-input" readonly
-                                   placeholder="Chọn nhãn" data-bs-toggle="dropdown" aria-expanded="false" />
+                                placeholder="Chọn nhãn" data-bs-toggle="dropdown" aria-expanded="false" />
                             <div class="dropdown-menu w-100">
                                 <div class="p-2 px-3 pt-1 searchlist-input">
                                     <input type="text"
-                                           class="form-control form-control-sm border search-countryList"
-                                           placeholder="Tìm kiếm nhãn" />
+                                        class="form-control form-control-sm border search-countryList"
+                                        placeholder="Tìm kiếm nhãn" />
                                 </div>
                                 <ul class="list-unstyled dropdown-menu-list mb-0"></ul>
                             </div>
@@ -192,29 +191,29 @@
                         <div class="col-auto ms-sm-auto">
                             <div class="avatar-group" id="newMembar">
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                    data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                     <img src="{{asset('theme/assets/images/users/avatar-5.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                        class="rounded-circle avatar-xs" />
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Frank">
+                                    data-bs-trigger="hover" data-bs-placement="top" title="Frank">
                                     <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                        class="rounded-circle avatar-xs" />
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
+                                    data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
                                     <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                        class="rounded-circle avatar-xs" />
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
+                                    data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
                                     <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                        class="rounded-circle avatar-xs" />
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
+                                    data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
                                     <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                        class="rounded-circle avatar-xs" />
                                 </a>
                             </div>
                         </div>
@@ -228,11 +227,10 @@
                     <!-- menu bảng -->
                     <div class="d-flex justify-content-center align-items-center p-2 cursor-pointer">
                         <i class="ri-list-settings-line fs-15" data-bs-toggle="offcanvas"
-                           data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
                     </div>
                 </section>
             </div>
         </div>
     </div>
-
 </div>
