@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Định nghĩa các route
-Route::get('/index', function () {
+Route::get('/', function () {
     return view('index');
 });
 Route::get('/dashboard', function () {
@@ -24,9 +24,7 @@ Route::get('/dashboard', function () {
 Route::get('/dashboard_detail', function () {
     return view('dashboard_detail');
 });
-Route::get('index', function () {
-    return view('index');
-});
+
 Route::get('dashboard', function () {
     return view('dashboard');
 });
@@ -45,9 +43,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('tables', function () {
     return view('tables.index');
 });
-Route::get('catalog', function () {
-    return view('catalog.index');
-});
+
 Route::get('ganttChart', function () {
     return view('ganttChart.index');
 });
@@ -61,6 +57,6 @@ Route::get('lists', function () {
 
 
 
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
