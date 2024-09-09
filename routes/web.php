@@ -54,3 +54,9 @@ Route::get('boards', function () {
 Route::get('lists', function () {
     return view('lists.index');
 });
+
+
+
+
+
+

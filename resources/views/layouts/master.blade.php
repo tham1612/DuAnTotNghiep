@@ -25,7 +25,17 @@
 
     @yield('style')
 </head>
+<style>
+    .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+    }
 
+</style>
 
 <body>
 <!-- Begin page -->
@@ -83,10 +93,8 @@
             <div class="container-fluid">
 
 
-
-                @include('layouts.navbar')
-                @include('components.setting')
-
+                @include('layouts.masterBoard')
+                @include('boards.setting')
 
 
                 {{-- các màn hình hiển thị --}}
@@ -98,7 +106,8 @@
 
                 @include('components.task')
                 @include('components.member')
-
+                @include('components.createBoard')
+                @include('components.createTemplateBoard')
 
             </div>
             <!-- container-fluid -->
@@ -128,11 +137,6 @@
 
 
 <!-- JAVASCRIPT -->
-
-<script>
-    const PATH_ROOT = "theme";
-</script>
-
 <script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
@@ -143,6 +147,14 @@
 <script src="{{asset('theme/assets/js/app.js')}}"></script>
 
 @yield('script')
+<script>
+    // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
+    $(document).ready(function () {
+        $('.dropdown-menu').on('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>
 </body>
 
 </html>
