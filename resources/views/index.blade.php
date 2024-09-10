@@ -69,7 +69,7 @@
                     </ul>
 
                     <div class="">
-                        <a href="auth-signin-basic.html" class="btn btn-soft-primary"><i
+                        <a href="{{ route('login') }}" class="btn btn-soft-primary"><i
                                 class="ri-user-3-line align-bottom me-1"></i> Đăng nhập & Đăng kí</a>
                     </div>
                 </div>
