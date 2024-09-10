@@ -1,6 +1,6 @@
 @extends('layouts.masterhome')
 @section('title')
-    dashbroad
+    Home - TaskFlow
 @endsection
 @section('main')
     <!-- start page title -->

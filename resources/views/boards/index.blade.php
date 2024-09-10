@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('title')
+    Board - TaskFlow
+@endsection
 @section('main')
     <div class="tasks-board mb-3" id="kanbanboard">
 

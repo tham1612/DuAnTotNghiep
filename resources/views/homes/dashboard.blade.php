@@ -1,4 +1,5 @@
 @extends('layouts.masterhome')
+
 @section('title')
     dashbroad
 @endsection
