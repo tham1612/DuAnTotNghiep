@@ -34,7 +34,7 @@ Route::get('dashboard_detail', function () {
 Route::get('hom2', function () {
     return view('hom2');
 });
-Auth::routes();
+// Auth::routes();
 
 // Định nghĩa route cho home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -45,7 +45,7 @@ Route::get('tables', function () {
 });
 
 Route::get('ganttChart', function () {
-    return view('ganttChart.index');
+    return view('ganttCharts.index');
 });
 Route::get('boards', function () {
     return view('boards.index');
