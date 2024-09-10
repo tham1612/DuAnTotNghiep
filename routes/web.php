@@ -16,20 +16,17 @@ use Illuminate\Support\Facades\Route;
 
 // Định nghĩa các route
 Route::get('/', function () {
-    return view('index');
+    return view('welcome');
 });
-Route::get('dashboard', function () {
-    return view('dashboard.index');
-});
-Route::get('/dashboard/show', function () {
-    return view('dashboard.show');
+Route::get('/homes/dashboard_show', function () {
+    return view('homes.dashboard_show');
 });
 
-Route::get('/dashboard/detail', function () {
-    return view('dashboard.detail');
+Route::get('/homes/dashboard_home', function () {
+    return view('homes.dashboard_home');
 });
-Route::get('/dashboard/home', function () {
-    return view('dashboard.home');
+Route::get('/homes/dashboard_board', function () {
+    return view('homes.dashboard_board');
 });
 
 Auth::routes();

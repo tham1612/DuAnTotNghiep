@@ -110,8 +110,6 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div><!-- end row -->
-
-
     <div class="row">
         <div class="col-xl-4">
             <div class="card">
