@@ -30,9 +30,13 @@ Route::get('/homes/dashboard_board', function () {
 });
 
 Auth::routes();
+Route::get('/home', function () {
+    return view('homes.home');
+});
+Route::resource('/workspaces',\App\Http\Controllers\WorkspaceController::class);
 
 // Định nghĩa route cho home
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Các route khác
 Route::get('tables', function () {
