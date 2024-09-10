@@ -1,10 +1,12 @@
 @extends('layouts.master')
-
+@section('title')
+    List - TaskFlow
+@endsection
 @section('main')
     <div class="row mt-3 ms-3 me-3 ">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-left justify-content-between">
-                <!-- Icon menu -->    
+                <!-- Icon menu -->
                 <div class="menu-icon">
                     <i class="ri-menu-line fs-20" id="menuIcon"></i>
                 </div>
@@ -16,7 +18,7 @@
                     <a class="list-group-item list-group-item-action" href="#list-item-4">Completed</a>
                 </div>
             </div>
-            
+
         </div>
     </div>
 
@@ -1794,7 +1796,7 @@
         /* Menu sẽ xuất hiện */
         #verticalMenu {
             position: absolute;
-            top: 0px; 
+            top: 0px;
             left: 40px;
             background-color: white;
             border: 1px solid #ccc;
@@ -1964,11 +1966,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
-    
+
     <script>
         document.getElementById('menuIcon').addEventListener('click', function() {
             const verticalMenu = document.getElementById('verticalMenu');
-            
+
             // Toggle hiển thị/ẩn menu
             if (verticalMenu.classList.contains('d-none')) {
                 verticalMenu.classList.remove('d-none');

@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-<div>
-    <!-- Nothing worth having comes easy. - Theodore Roosevelt -->
-</div>
-=======
+
 @extends('layouts.master')
+@section('title')
+    Table - TaskFlow
+@endsection
 @section('main')
     <div class="row">
         <div class="col-12">
@@ -1465,7 +1464,7 @@ data-bs-target="#addds">Danh sách</button>
                 }
             });
         });
-        //nhãn          
+        //nhãn
         document.addEventListener('DOMContentLoaded', function() {
             var triggerButton = document.getElementById('triggerlabel');
             var modal = document.getElementById('nhan');
@@ -1497,7 +1496,7 @@ data-bs-target="#addds">Danh sách</button>
                 }
             });
         });
-        //thành viên         
+        //thành viên
         document.addEventListener('DOMContentLoaded', function() {
             var triggerButton = document.getElementById('triggermember');
             var modal = document.getElementById('member');

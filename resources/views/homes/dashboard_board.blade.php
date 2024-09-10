@@ -1,6 +1,6 @@
 @extends('layouts.masterhome')
 @section('title')
-    dashbroad
+    dashbroad_board
 @endsection
 
 @section('main')
