@@ -4,16 +4,19 @@
     <div class="row mt-3 ms-3 me-3 ">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-left justify-content-between">
-                <ul class="nav nav-pills d-flex justify-content-between align-items-center list-group" id="list-example"
-                    style="flex-direction: row !important;">
-                    <div id="list-example" class="list-group" style="flex-direction: row !important;">
-                        <a class="list-group-item list-group-item-action" href="#list-item-1">Unassigned</a>
-                        <a class="list-group-item list-group-item-action" href="#list-item-2">Inprogress</a>
-                        <a class="list-group-item list-group-item-action" href="#list-item-3">To do</a>
-                        <a class="list-group-item list-group-item-action" href="#list-item-4">Completed</a>
-                    </div>
-                </ul>
+                <!-- Icon menu -->    
+                <div class="menu-icon">
+                    <i class="ri-menu-line fs-20" id="menuIcon"></i>
+                </div>
+                <!-- Menu sẽ ẩn ban đầu -->
+                <div id="verticalMenu" class="list-group d-none">
+                    <a class="list-group-item list-group-item-action" href="#list-item-1">Unassigned</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-2">Inprogress</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-3">To do</a>
+                    <a class="list-group-item list-group-item-action" href="#list-item-4">Completed</a>
+                </div>
             </div>
+            
         </div>
     </div>
 
@@ -1782,6 +1785,38 @@
 
 @section('style')
     <style>
+        /* Đặt icon menu */
+        .menu-icon {
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Menu sẽ xuất hiện */
+        #verticalMenu {
+            position: absolute;
+            top: 0px; 
+            left: 40px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(225, 222, 222, 0.1);
+            z-index: 1000;
+            width: 200px;
+        }
+
+        /* Hiển thị menu khi cần */
+        .d-block {
+            display: block !important;
+        }
+
+        /* Ẩn menu */
+        .d-none {
+            display: none !important;
+        }
+
+        .list-group-item:hover {
+            background-color: #f0f0f0;
+        }
+
         .dropdown-item p {
             overflow-wrap: break-word;
             /* Cho phép xuống dòng */
@@ -1931,6 +1966,29 @@
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     
     <script>
+        document.getElementById('menuIcon').addEventListener('click', function() {
+            const verticalMenu = document.getElementById('verticalMenu');
+            
+            // Toggle hiển thị/ẩn menu
+            if (verticalMenu.classList.contains('d-none')) {
+                verticalMenu.classList.remove('d-none');
+                verticalMenu.classList.add('d-block');
+            } else {
+                verticalMenu.classList.remove('d-block');
+                verticalMenu.classList.add('d-none');
+            }
+        });
+
+        // Xử lý khi click vào một item trong menu
+        document.querySelectorAll('#verticalMenu .list-group-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                // Ẩn menu sau khi chọn item
+                const verticalMenu = document.getElementById('verticalMenu');
+                verticalMenu.classList.remove('d-block');
+                verticalMenu.classList.add('d-none');
+            });
+        });
+
         // kéo thả
         dragula([
           document.getElementById("unassigned"),
