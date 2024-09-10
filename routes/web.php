@@ -16,25 +16,20 @@ use Illuminate\Support\Facades\Route;
 
 // Định nghĩa các route
 Route::get('/', function () {
-    return view('index');
+    return view('welcome');
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-Route::get('/dashboard_detail', function () {
-    return view('dashboard_detail');
+Route::get('/homes/dashboard', function () {
+    return view('homes.dashboard');
 });
 
-Route::get('dashboard', function () {
-    return view('dashboard');
+Route::get('/homes/home', function () {
+    return view('homes.home');
 });
-Route::get('dashboard_detail', function () {
-    return view('dashboard_detail');
+Route::get('/homes/dashboard_board', function () {
+    return view('homes.dashboard_board');
 });
-Route::get('hom2', function () {
-    return view('hom2');
-});
-// Auth::routes();
+
+Auth::routes();
 
 // Định nghĩa route cho home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -54,9 +49,3 @@ Route::get('boards', function () {
 Route::get('lists', function () {
     return view('lists.index');
 });
-
-
-
-
-
-
