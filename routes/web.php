@@ -40,7 +40,7 @@ Route::get('tables', function () {
 });
 
 Route::get('ganttChart', function () {
-    return view('ganttChart.index');
+    return view('ganttCharts.index');
 });
 Route::get('boards', function () {
     return view('boards.index');
