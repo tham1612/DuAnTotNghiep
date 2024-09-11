@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,13 +14,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', function () {
-    return view('dashbroad');
+    return view('welcome');
+});
+Route::get('/homes/dashboard', function () {
+    return view('homes.dashboard');
 });
 
+Route::get('/homes/home', function () {
+    return view('homes.home');
+});
+Route::get('/homes/dashboard_board', function () {
+    return view('homes.dashboard_board');
+});
+
+Auth::routes();
+Route::get('/home', function () {
+    return view('homes.home');
+});
+Route::resource('/workspaces',\App\Http\Controllers\WorkspaceController::class);
+
+// Định nghĩa route cho home
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Các route khác
 Route::get('tables', function () {
     return view('tables.index');
 });
@@ -34,5 +53,3 @@ Route::get('boards', function () {
 Route::get('lists', function () {
     return view('lists.index');
 });
-
-

@@ -5,7 +5,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>TaskFlow</title>
+    <title>Job Landing | Velzon - Admin & Dashboard Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -68,13 +68,9 @@
                         </li>
                     </ul>
 
-                    <div class="d-flex justify-content-center">
-                        <a href="{{ route('login') }}" class="btn btn-soft-primary me-2">
-                            <i class="ri-user-3-line align-bottom me-1"></i> Đăng nhập
-                        </a>
-                        <a href="{{ route('register') }}" class="btn btn-soft-primary">
-                            <i class="ri-user-add-line align-bottom me-1"></i> Đăng ký
-                        </a>
+                    <div class="">
+                        <a href="{{ route('login') }}" class="btn btn-soft-primary"><i
+                                class="ri-user-3-line align-bottom me-1"></i> Đăng nhập & Đăng kí</a>
                     </div>
                 </div>
 

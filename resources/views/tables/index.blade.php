@@ -1,4 +1,8 @@
+
 @extends('layouts.master')
+@section('title')
+    Table - TaskFlow
+@endsection
 @section('main')
     <div class="row">
         <div class="col-lg-12">
@@ -1912,7 +1916,7 @@
                 }
             });
         });
-        //nhãn          
+        //nhãn
         document.addEventListener('DOMContentLoaded', function() {
             var triggerButton = document.getElementById('triggerlabel');
             var modal = document.getElementById('nhan');
@@ -1944,7 +1948,7 @@
                 }
             });
         });
-        //thành viên         
+        //thành viên
         document.addEventListener('DOMContentLoaded', function() {
             var triggerButton = document.getElementById('triggermember');
             var modal = document.getElementById('member');
@@ -2054,3 +2058,4 @@
         //add add danh sách
     </script>
 @endsection
+>>>>>>> 4d02292d6e1b76addb75d466d2c287371f0de58c
