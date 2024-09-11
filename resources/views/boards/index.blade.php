@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('title')
+    Board - TaskFlow
+@endsection
 @section('main')
     <div class="tasks-board mb-3" id="kanbanboard">
 
@@ -33,7 +36,8 @@
             </div>
             <div data-simplebar class="tasks-wrapper px-3 mx-n3">
 
-                <div id="unassigned-task" class="tasks" >
+                <div id="unassigned-task" class="tasks">
+
                     <!-- task item -->
                     <div class="card tasks-box cursor-pointer" data-value="task1">
 
@@ -1166,14 +1170,7 @@
 
 @section('style')
     <style>
-        .dropdown-item p {
-            overflow-wrap: break-word;
-            /* Cho phép xuống dòng */
-            white-space: normal;
-            /* Cho phép nội dung xuống dòng */
-            width: 200%;
-            /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
-        }
+
 
         /* Import Google font - Poppins */
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
@@ -1383,12 +1380,6 @@
             due_date_success.classList.toggle('d-none');
         });
 
-        // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
-        $(document).ready(function() {
-            $('.dropdown-menu').on('click', function(e) {
-                e.stopPropagation();
-            });
-        });
     </script>
 
     <script>
