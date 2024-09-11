@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 @section('title')
     Verify
 @endsection
@@ -28,7 +28,8 @@
                                 <h5 class="text-primary">Forgot Password?</h5>
                                 <p class="text-muted">Reset password with TaskFlow</p>
 
-                                <lord-icon src="https://cdn.lordicon.com/rhvddzym.json" trigger="loop" colors="primary:#0ab39c" class="avatar-xl"></lord-icon>
+                                <lord-icon src="https://cdn.lordicon.com/rhvddzym.json" trigger="loop"
+                                           colors="primary:#0ab39c" class="avatar-xl"></lord-icon>
 
                             </div>
 
@@ -54,7 +55,9 @@
                     <!-- end card -->
 
                     <div class="mt-4 text-center">
-                        <p class="mb-0">Wait, I remember my password... <a href="auth-signin-basic.html" class="fw-semibold text-primary text-decoration-underline"> Click here </a> </p>
+                        <p class="mb-0">Wait, I remember my password... <a href="auth-signin-basic.html"
+                                                                           class="fw-semibold text-primary text-decoration-underline">
+                                Click here </a></p>
                     </div>
 
                 </div>

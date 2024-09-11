@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.masterBoard')
 @section('title')
     Board - TaskFlow
 @endsection
@@ -17,7 +17,7 @@
                 <div class="flex-shrink-0">
                     <div class="dropdown card-header-dropdown">
                         <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             <span class="fw-medium text-muted fs-12">
                                 <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                             </span>
@@ -49,7 +49,7 @@
                                 </h6>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                                         <li>
                                             <a class="dropdown-item" href="#"><i
@@ -87,7 +87,7 @@
                             <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
                                 <!-- Ảnh bìa -->
                                 <div class="tasks-img rounded"
-                                    style="
+                                     style="
                               background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}');
                             ">
                                 </div>
@@ -95,15 +95,17 @@
                                 <div class="flex-shrink-0 d-flex align-items-center">
                                     <i class="ri-account-circle-line fs-20 me-2"></i>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
                                             <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}" alt=""
-                                                class="rounded-circle avatar-xxs" />
+                                                 class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                             <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}" alt=""
-                                                class="rounded-circle avatar-xxs" />
+                                                 class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -172,7 +174,7 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink12"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink12">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -204,20 +206,23 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Michael">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Michael">
                                             <img src="{{ asset('theme/assets/images/users/avatar-7.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
                                             <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Anna">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Anna">
                                             <img src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -258,14 +263,14 @@
             </div>
             <div class="my-3">
                 <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
-                    aria-expanded="false" data-bs-offset="0,-50">
+                        aria-expanded="false" data-bs-offset="0,-50">
                     Thêm thẻ
                 </button>
                 <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
                     <form>
                         <div class="mb-2">
                             <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                placeholder="Nhập tên thẻ..." />
+                                   placeholder="Nhập tên thẻ..."/>
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <button type="submit" class="btn btn-primary">
@@ -291,7 +296,7 @@
                 <div class="flex-shrink-0">
                     <div class="dropdown card-header-dropdown">
                         <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             <span class="fw-medium text-muted fs-12">Priority<i
                                     class="mdi mdi-chevron-down ms-1"></i></span>
                         </a>
@@ -314,7 +319,7 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink3"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink3">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -345,20 +350,23 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
                                             <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Frank">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Frank">
                                             <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
                                             <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -404,7 +412,7 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink4"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink4">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -435,15 +443,17 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Donald">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Donald">
                                             <img src="{{ asset('theme/assets/images/users/avatar-9.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
                                             <img src="{{ asset('theme/assets/images/users/avatar-8.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -483,14 +493,14 @@
             </div>
             <div class="my-3">
                 <button class="btn btn-soft-info w-100" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
-                    aria-expanded="false" data-bs-offset="0,-50">
+                        aria-expanded="false" data-bs-offset="0,-50">
                     Thêm thẻ
                 </button>
                 <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
                     <form>
                         <div class="mb-2">
                             <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                placeholder="Nhập tên thẻ..." />
+                                   placeholder="Nhập tên thẻ..."/>
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <button type="submit" class="btn btn-primary">
@@ -514,7 +524,7 @@
                 <div class="flex-shrink-0">
                     <div class="dropdown card-header-dropdown">
                         <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             <span class="fw-medium text-muted fs-12">Priority<i
                                     class="mdi mdi-chevron-down ms-1"></i></span>
                         </a>
@@ -533,7 +543,7 @@
                                 <a href="javascript:void(0)" class="text-muted fw-medium fs-14 flex-grow-1">#VL2457</a>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink5"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink5">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -568,20 +578,23 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                             <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Michael">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Michael">
                                             <img src="{{ asset('theme/assets/images/users/avatar-7.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
                                             <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -617,7 +630,7 @@
                         <!--end card-body-->
                         <div class="progress progress-sm">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 55%"
-                                aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                                 aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                     <!--end card-->
@@ -627,7 +640,7 @@
                                 <a href="javascript:void(0)" class="text-muted fw-medium fs-14 flex-grow-1">#VL2743</a>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink6"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink6">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -661,20 +674,23 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
                                             <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Donald">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Donald">
                                             <img src="{{ asset('theme/assets/images/users/avatar-9.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                             <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -710,7 +726,7 @@
                         <!--end card-body-->
                         <div class="progress progress-sm">
                             <div class="progress-bar bg-primary" role="progressbar" style="width: 0%" aria-valuenow="0"
-                                aria-valuemin="0" aria-valuemax="100"></div>
+                                 aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                     <!--end card-->
@@ -734,7 +750,7 @@
                 <div class="flex-shrink-0">
                     <div class="dropdown card-header-dropdown">
                         <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             <span class="fw-medium text-muted fs-12">Priority<i
                                     class="mdi mdi-chevron-down ms-1"></i></span>
                         </a>
@@ -753,7 +769,7 @@
                                 <a href="javascript:void(0)" class="text-muted fw-medium fs-14 flex-grow-1">#VL2453</a>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink7"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink7">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -777,7 +793,7 @@
                                 <a href="apps-tasks-details.html" class="d-block">Create Product Animations</a>
                             </h6>
                             <div class="tasks-img rounded"
-                                style="
+                                 style="
                             background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}');
                           ">
                             </div>
@@ -787,10 +803,11 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Anna">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Anna">
                                             <img src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -826,7 +843,7 @@
                         <!--end card-body-->
                         <div class="progress progress-sm">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                                 aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                     <!--end card-->
@@ -836,7 +853,7 @@
                                 <a href="javascript:void(0)" class="text-muted fw-medium fs-14 flex-grow-1">#VL2340</a>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink8"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink8">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -870,15 +887,17 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                             <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
                                             <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -915,7 +934,7 @@
                         <!--end card-body-->
                         <div class="progress progress-sm">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 67%"
-                                aria-valuenow="67" aria-valuemin="0" aria-valuemax="100"></div>
+                                 aria-valuenow="67" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                     <!--end card-->
@@ -925,7 +944,7 @@
                                 <a href="javascript:void(0)" class="text-muted fw-medium fs-14 flex-grow-1">#VL2462</a>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink9"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink9">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -960,25 +979,29 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
                                             <img src="{{ asset('theme/assets/images/users/avatar-4.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
                                             <img src="{{ asset('theme/assets/images/users/avatar-8.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
                                             <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Anna">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Anna">
                                             <img src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -1014,7 +1037,7 @@
                         <!--end card-body-->
                         <div class="progress progress-sm">
                             <div class="progress-bar bg-primary" role="progressbar" style="width: 0%" aria-valuenow="0"
-                                aria-valuemin="0" aria-valuemax="100"></div>
+                                 aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                     <!--end card-->
@@ -1038,7 +1061,7 @@
                 <div class="flex-shrink-0">
                     <div class="dropdown card-header-dropdown">
                         <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             <span class="fw-medium text-muted fs-12">Priority<i
                                     class="mdi mdi-chevron-down ms-1"></i></span>
                         </a>
@@ -1059,7 +1082,7 @@
                                 </h6>
                                 <div class="dropdown">
                                     <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink10"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink10">
                                         <li>
                                             <a class="dropdown-item" href="apps-tasks-details.html"><i
@@ -1096,7 +1119,7 @@
                                 </div>
                                 <div class="progress rounded-3 progress-sm">
                                     <div class="progress-bar bg-danger" role="progressbar" style="width: 35%"
-                                        aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                                         aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
@@ -1106,20 +1129,23 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                             <img src="{{ asset('theme/assets/images/users/avatar-8.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Frank">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Frank">
                                             <img src="{{ asset('theme/assets/images/users/avatar-7.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
                                             <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs" />
+                                                 alt="" class="rounded-circle avatar-xxs"/>
                                         </a>
                                     </div>
                                 </div>
@@ -1169,301 +1195,11 @@
 @endsection
 
 @section('style')
-    <style>
-
-
-        /* Import Google font - Poppins */
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
-
-        .wrapper {
-            width: 100%;
-            margin-left: -20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* box-shadow: 0 15px 100px rgba(0, 0, 0, 0.12); */
-        }
-
-        .wrapper header {
-            /*display: flex;*/
-            /*align-items: center;*/
-            padding: 25px 30px 10px;
-            /*justify-content: space-between;*/
-        }
-
-        header .icons {
-            display: flex;
-        }
-
-        header .icons span {
-            height: 38px;
-            width: 38px;
-            margin: 0 1px;
-            cursor: pointer;
-            color: #878787;
-            text-align: center;
-            line-height: 38px;
-            font-size: 1.9rem;
-            user-select: none;
-            border-radius: 50%;
-        }
-
-        .icons span:last-child {
-            margin-right: -10px;
-        }
-
-        header .icons span:hover {
-            background: #f2f2f2;
-        }
-
-        header .current-date {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-
-        .calendar {
-            padding: auto;
-        }
-
-        .calendar ul {
-            display: flex;
-            flex-wrap: wrap;
-            list-style: none;
-            text-align: center;
-        }
-
-        .calendar .days {
-            margin-bottom: 50px;
-        }
-
-        .calendar li {
-            color: #333;
-            width: calc(100% / 7);
-            font-size: 15px;
-        }
-
-        .calendar .weeks li {
-            font-weight: 500;
-            cursor: default;
-        }
-
-        .calendar .days li {
-            z-index: 1;
-            cursor: pointer;
-            position: relative;
-            margin-top: 30px;
-        }
-
-        .days li.inactive {
-            color: #aaa;
-        }
-
-        .days li.active {
-            color: #fff;
-        }
-
-        .days li::before {
-            position: absolute;
-            content: "";
-            left: 50%;
-            top: 50%;
-            height: 40px;
-            width: 40px;
-            z-index: -1;
-            border-radius: 5%;
-            transform: translate(-50%, -50%);
-        }
-
-        .days li.active::before {
-            background: #2d50af;
-        }
-
-        .days li:not(.active):hover::before {
-            background: #f2f2f2;
-        }
-    </style>
     <!-- Dragula css -->
-    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}"/>
 @endsection
 @section('script')
-    <!-- dragula init js -->
-    <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
-
-    <!-- dom autoscroll -->
-    <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
 
     <!--taks-kanban-->
     <script src="{{ asset('theme/assets/js/pages/tasks-kanban.init.js') }}"></script>
-
-    <!-- prismjs plugin -->
-    <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
-
-    <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>
-
-    <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
-
-    <!--jquery cdn-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <!--select2 cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
-
-    <script>
-        // xử lý checklist card
-        const displayChecklistBtn = document.querySelector('.display-checklist');
-        const disableChecklistBtn = document.querySelector('.disable-checklist');
-        const checklistForm = document.querySelector('.addOrUpdate-checklist');
-        const checklistItem = document.querySelector('.checklistItem');
-
-
-        displayChecklistBtn.addEventListener('click', () => {
-
-            checklistForm.classList.toggle('d-none'); // Hiện hoặc ẩn form
-            displayChecklistBtn.classList.add('d-none'); // Hiện hoặc ẩn form
-        });
-
-        disableChecklistBtn.addEventListener('click', () => {
-            checklistItem.value = "";
-            checklistForm.classList.add('d-none'); // Hiện hoặc ẩn form
-            displayChecklistBtn.classList.toggle('d-none'); // Hiện hoặc ẩn form
-        });
-
-
-        //     xử lý lưu trữ cảu card
-        const archiver = document.querySelector('.archiver');
-        const restoreArchiver = document.querySelector('.restore-archiver');
-        const deleteArchiver = document.querySelector('.delete-archiver');
-        archiver.addEventListener('click', () => {
-
-            restoreArchiver.classList.toggle('d-none');
-            deleteArchiver.classList.toggle('d-none');
-            archiver.classList.add('d-none');
-        });
-
-        restoreArchiver.addEventListener('click', () => {
-
-            deleteArchiver.classList.add('d-none');
-            restoreArchiver.classList.add('d-none');
-            archiver.classList.toggle('d-none');
-        });
-
-        deleteArchiver.addEventListener('click', () => {
-            window.location.reload();
-        });
-
-        //     xử lý theo dõi + ngày hết hạn của card
-        const notification = document.querySelector('#notification');
-        const notification_follow = document.querySelector('#notification_follow');
-        const notification_icon = document.querySelector('#notification_icon');
-        const notification_content = document.querySelector('#notification_content');
-        notification.addEventListener('click', () => {
-            notification_follow.classList.toggle('d-none');
-            notification_icon.classList.contains("ri-eye-line") ?
-                notification_icon.className = "ri-eye-off-line fs-22" :
-                notification_icon.className = "ri-eye-line fs-22";
-            notification_content.textContent === "Theo dõi" ?
-                notification_content.innerHTML = "Đang theo dõi" :
-                notification_content.innerHTML = "Theo dõi";
-        });
-
-        const due_date_checkbox = document.querySelector('#due_date_checkbox');
-        const due_date_success = document.querySelector('#due_date_success');
-        const due_date_due = document.querySelector('#due_date_due');
-        due_date_checkbox.addEventListener('click', () => {
-            due_date_due.classList.toggle('d-none');
-            due_date_success.classList.toggle('d-none');
-        });
-
-    </script>
-
-    <script>
-        const daysTag = document.querySelector(".days"),
-            currentDate = document.querySelector(".current-date"),
-            prevNextIcon = document.querySelectorAll(".icons span");
-
-        // getting new date, current year and month
-        let date = new Date(),
-            currYear = date.getFullYear(),
-            currMonth = date.getMonth();
-
-        // storing full name of all months in array
-        const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
-
-        const renderCalendar = () => {
-            let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
-                lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
-                lastDayofMonth = new Date(
-                    currYear,
-                    currMonth,
-                    lastDateofMonth
-                ).getDay(), // getting last day of month
-                lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-            let liTag = "";
-
-            for (let i = firstDayofMonth; i > 0; i--) {
-                // creating li of previous month last days
-                liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
-            }
-
-            for (let i = 1; i <= lastDateofMonth; i++) {
-                // creating li of all days of current month
-                // adding active class to li if the current day, month, and year matched
-                let isToday =
-                    i === date.getDate() &&
-                    currMonth === new Date().getMonth() &&
-                    currYear === new Date().getFullYear() ?
-                    "active" :
-                    "";
-                liTag += `<li class="${isToday}">${i}</li>`;
-            }
-
-            for (let i = lastDayofMonth; i < 6; i++) {
-                // creating li of next month first days
-                liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
-            }
-            currentDate.innerText =
-                `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-            daysTag.innerHTML = liTag;
-        };
-        renderCalendar();
-
-        prevNextIcon.forEach((icon) => {
-            // getting prev and next icons
-            icon.addEventListener("click", () => {
-                // adding click event on both icons
-                // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
-                currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-
-                if (currMonth < 0 || currMonth > 11) {
-                    // if current month is less than 0 or greater than 11
-                    // creating a new date of current year & month and pass it as date value
-                    date = new Date(currYear, currMonth, new Date().getDate());
-                    currYear = date.getFullYear(); // updating current year with new date year
-                    currMonth = date.getMonth(); // updating current month with new date month
-                } else {
-                    date = new Date(); // pass the current date as date value
-                }
-                renderCalendar(); // calling renderCalendar function
-            });
-        });
-    </script>
 @endsection

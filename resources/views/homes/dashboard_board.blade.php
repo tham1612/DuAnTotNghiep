@@ -1,4 +1,4 @@
-@extends('layouts.masterhome')
+@extends('layouts.masterHome')
 @section('title')
     dashbroad_board
 @endsection
@@ -29,7 +29,7 @@
                         <div class="col">
                             <div class="py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Thành viên<i
-                                        class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
+                                            class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -45,7 +45,7 @@
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Hoàn
                                     thành<i
-                                        class=" ri-checkbox-circle-line
+                                            class=" ri-checkbox-circle-line
                                             text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -61,7 +61,8 @@
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Chưa
-                                    hoàn thành<i class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
+                                    hoàn thành<i
+                                            class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -77,7 +78,7 @@
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Quá
                                     hạn<i
-                                        class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
+                                            class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -92,7 +93,7 @@
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Tổng<i
-                                        class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
+                                            class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -168,7 +169,7 @@
                             <div class="acitivity-item py-3 d-flex">
                                 <div class="flex-shrink-0">
                                     <img src="assets/images/users/avatar-2.jpg" alt=""
-                                        class="avatar-xs rounded-circle acitivity-avatar">
+                                         class="avatar-xs rounded-circle acitivity-avatar">
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1">Natasha Carey have liked the
@@ -190,7 +191,7 @@
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1">Today offers by <a href="apps-ecommerce-seller-details.html"
-                                            class="link-secondary">Digitech
+                                                                        class="link-secondary">Digitech
                                             Galaxy</a></h6>
                                     <p class="text-muted mb-2">Offer is valid on
                                         orders of
@@ -229,7 +230,7 @@
                                     <h6 class="mb-1">Flash sale starting <span class="text-primary">Tomorrow.</span>
                                     </h6>
                                     <p class="text-muted mb-0">Flash sale by <a href="javascript:void(0);"
-                                            class="link-secondary fw-medium">Zoetic
+                                                                                class="link-secondary fw-medium">Zoetic
                                             Fashion</a>
                                     </p>
                                     <small class="mb-0 text-muted">22 Oct,
@@ -250,7 +251,7 @@
                                             2 days left</span> notification to
                                         submit the
                                         monthly sales report. <a href="javascript:void(0);"
-                                            class="link-warning text-decoration-underline">Reports
+                                                                 class="link-warning text-decoration-underline">Reports
                                             Builder</a>
                                     </p>
                                     <small class="mb-0 text-muted">15 Oct</small>
@@ -259,7 +260,7 @@
                             <div class="acitivity-item d-flex">
                                 <div class="flex-shrink-0">
                                     <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}" alt=""
-                                        class="avatar-xs rounded-circle acitivity-avatar" />
+                                         class="avatar-xs rounded-circle acitivity-avatar"/>
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1">Frank Hook Commented</h6>
@@ -297,35 +298,36 @@
                 </div>
                 <div class="card-body">
                     <table id="scroll-vertical"
-                        class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                           class="table table-bordered dt-responsive nowrap align-middle mdl-data-table"
+                           style="width:100%">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên card</th>
-                                <th>Thành viên</th>
-                                <th>Ngày hết hạn</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên card</th>
+                            <th>Thành viên</th>
+                            <th>Ngày hết hạn</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>VLZ-452</td>
-                                <td>Symox v1.0.0</td>
-                                <td>
-                                    <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
-                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                            title="Username">
-                                            <img src="assets/images/users/avatar-3.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>03 Oct, 2021</td>
-                                <td><span class="badge bg-info-subtle text-info">Re-open</span>
-                                </td>
+                        <tr>
+                            <td>VLZ-452</td>
+                            <td>Symox v1.0.0</td>
+                            <td>
+                                <div class="avatar-group">
+                                    <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
+                                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                       title="Username">
+                                        <img src="assets/images/users/avatar-3.jpg" alt=""
+                                             class="rounded-circle avatar-xxs">
+                                    </a>
+                                </div>
+                            </td>
+                            <td>03 Oct, 2021</td>
+                            <td><span class="badge bg-info-subtle text-info">Re-open</span>
+                            </td>
 
-                            </tr>
+                        </tr>
 
                         </tbody>
                     </table>
@@ -447,8 +449,8 @@
 
 @section('styles')
     <!--Swiper slider css-->
-    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
-    @endsection@extends('layouts.masterhome')
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
+@endsection@extends('layouts.masterHome')
 @section('title')
     dashbroad
 @endsection
@@ -479,7 +481,7 @@
                         <div class="col">
                             <div class="py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Thành viên<i
-                                        class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
+                                            class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -495,7 +497,7 @@
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Hoàn
                                     thành<i
-                                        class=" ri-checkbox-circle-line
+                                            class=" ri-checkbox-circle-line
                                             text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -512,7 +514,7 @@
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Chưa
                                     hoàn thành<i
-                                        class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
+                                            class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -528,7 +530,7 @@
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Quá
                                     hạn<i
-                                        class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
+                                            class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -543,7 +545,7 @@
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Tổng<i
-                                        class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
+                                            class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -597,7 +599,7 @@
                 <div class="card-body" data-simplebar style="height: 400px;" class="px-3 mx-n3 mb-2">
                     <div class="upcoming-scheduled">
                         <input type="text" class="form-control" data-provider="flatpickr" data-date-format="d M, Y"
-                            data-deafult-date="today" data-inline-date="true">
+                               data-deafult-date="today" data-inline-date="true">
                     </div>
                     <!-- Event items go here -->
                     <div class="mini-stats-wid d-flex align-items-center mt-3">
@@ -795,35 +797,36 @@
                 </div>
                 <div class="card-body">
                     <table id="scroll-vertical"
-                        class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                           class="table table-bordered dt-responsive nowrap align-middle mdl-data-table"
+                           style="width:100%">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên card</th>
-                                <th>Thành viên</th>
-                                <th>Ngày hết hạn</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên card</th>
+                            <th>Thành viên</th>
+                            <th>Ngày hết hạn</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>VLZ-452</td>
-                                <td>Symox v1.0.0</td>
-                                <td>
-                                    <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
-                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                            title="Username">
-                                            <img src="assets/images/users/avatar-3.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>03 Oct, 2021</td>
-                                <td><span class="badge bg-info-subtle text-info">Re-open</span>
-                                </td>
+                        <tr>
+                            <td>VLZ-452</td>
+                            <td>Symox v1.0.0</td>
+                            <td>
+                                <div class="avatar-group">
+                                    <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
+                                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                       title="Username">
+                                        <img src="assets/images/users/avatar-3.jpg" alt=""
+                                             class="rounded-circle avatar-xxs">
+                                    </a>
+                                </div>
+                            </td>
+                            <td>03 Oct, 2021</td>
+                            <td><span class="badge bg-info-subtle text-info">Re-open</span>
+                            </td>
 
-                            </tr>
+                        </tr>
 
                         </tbody>
                     </table>
@@ -945,5 +948,5 @@
 
 @section('styles')
     <!--Swiper slider css-->
-    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
 @endsection
