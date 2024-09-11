@@ -1,22 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
       data-sidebar-image="none" data-preloader="disable">
 
 <head>
+
     <meta charset="utf-8"/>
     <title>@yield('title')</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{asset('theme/assets/images/favicon.ico')}}"/>
-    <!--datatable css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-    <!--datatable responsive css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link rel="shortcut icon" href="{{asset('theme/assets/images/favicon.ico')}}">
 
     <!-- Layout config Js -->
     <script src="{{asset('theme/assets/js/layout.js')}}"></script>
@@ -29,138 +23,65 @@
     <!-- custom Css-->
     <link href="{{asset('theme/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
 
-    @yield('style')
+
+
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-<style>
-    .dropdown-item p {
-        overflow-wrap: break-word;
-        /* Cho phép xuống dòng */
-        white-space: normal;
-        /* Cho phép nội dung xuống dòng */
-        width: 200%;
-        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
-    }
-
-</style>
-
 <body>
-<!-- Begin page -->
-<div id="layout-wrapper">
+<div id="app">
+    <div class="auth-page-wrapper pt-5">
+        <!-- auth page bg -->
+        <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
+            <div class="bg-overlay"></div>
 
-    {{-- header website --}}
-    @include('layouts.header')
+            <div class="shape">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     viewBox="0 0 1440 120">
+                    <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+                </svg>
+            </div>
+        </div>
 
-    <!-- removeNotificationModal -->
-    <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                            id="NotificationModalbtn-close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                                   colors="primary:#f7b84b,secondary:#f06548"
-                                   style="width: 100px; height: 100px"></lord-icon>
-                        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you sure ?</h4>
-                            <p class="text-muted mx-4 mb-0">
-                                Are you sure you want to remove this Notification ?
+        <!-- auth page content -->
+        @yield('content')
+
+        <!-- end auth page content -->
+    </div>
+</div>
+        <!-- footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p class="mb-0 text-muted">&copy;
+                                <script>document.write(new Date().getFullYear())</script>
+                               TaskFlow <i class="mdi mdi-heart text-danger"></i>
                             </p>
                         </div>
                     </div>
-                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">
-                            Close
-                        </button>
-                        <button type="button" class="btn w-sm btn-danger" id="delete-notification">
-                            Yes, Delete It!
-                        </button>
-                    </div>
                 </div>
             </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
-    @include('layouts.sidebar')
-
-    <!-- Vertical Overlay-->
-    <div class="vertical-overlay"></div>
-
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content">
-        <div class="page-content">
-            <div class="container-fluid">
+        </footer>
+        <!-- end Footer -->
 
 
-                @include('layouts.masterBoard')
-                @include('boards.setting')
 
 
-                {{-- các màn hình hiển thị --}}
-                @yield('main')
-
-                {{-- giao diện task - dùng chung --}}
-                <!--end task-board-->
-
-
-                @include('components.task')
-                @include('components.member')
-                @include('components.createBoard')
-                @include('components.createTemplateBoard')
-
-            </div>
-            <!-- container-fluid -->
-        </div>
-        <!-- End Page-content -->
-        @include('layouts.footer')
-
-    </div>
-    <!-- end main content-->
-</div>
-<!-- END layout-wrapper -->
-
-<!--start back-to-top-->
-<button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
-    <i class="ri-arrow-up-line"></i>
-</button>
-<!--end back-to-top-->
-
-<!--preloader-->
-<div id="preloader">
-    <div id="status">
-        <div class="spinner-border text-primary avatar-sm" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-</div>
-
-
-<!-- JAVASCRIPT -->
 <script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/feather-icons/feather.min.js')}}"></script>
 <script src="{{asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
 <script src="{{asset('theme/assets/js/plugins.js')}}"></script>
-<!-- App js -->
-<script src="{{asset('theme/assets/js/app.js')}}"></script>
 
-@yield('script')
-<script>
-    // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
-    $(document).ready(function () {
-        $('.dropdown-menu').on('click', function (e) {
-            e.stopPropagation();
-        });
-    });
-</script>
+<!-- particles js -->
+<script src="{{asset('theme/assets/libs/particles.js/particles.js')}}"></script>
+<!-- particles app js -->
+<script src="{{asset('theme/assets/js/pages/particles.app.js')}}"></script>
+<!-- password-addon init -->
+<script src="{{asset('theme/assets/js/pages/password-addon.init.js')}}"></script>
+
 </body>
-
 </html>
