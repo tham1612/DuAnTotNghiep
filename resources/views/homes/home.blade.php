@@ -1,4 +1,4 @@
-@extends('layouts.masterhome')
+@extends('layouts.masterHome')
 @section('title')
     Home - TaskFlow
 @endsection
@@ -118,11 +118,11 @@
                 <!--end col-->
                 <div class="col-xxl-3 col-lg-6">
                     <input type="text" class="form-control" data-provider="flatpickr" data-date-format="d M, Y"
-                        data-range-date="true" placeholder="Select date">
+                           data-range-date="true" placeholder="Select date">
                 </div>
                 <div class="col-xxl-2 col-lg-4">
                     <select class="form-control" data-choices data-choices-search-false name="choices-single-default2"
-                        id="choices-single-default2">
+                            id="choices-single-default2">
                         <option value="Active">Active</option>
                         <option value="Ended">Ended</option>
                         <option value="Upcoming">Upcoming</option>
@@ -131,7 +131,7 @@
                 <!--end col-->
                 <div class="col-xxl-2 col-lg-4">
                     <select class="form-control" data-choices data-choices-search-false name="choices-single-default"
-                        id="choices-single-default">
+                            id="choices-single-default">
                         <option value="">Select Rating</option>
                         <option value="1">1 star</option>
                         <option value="2">2 star</option>
@@ -143,7 +143,8 @@
                 <!--end col-->
                 <div class="col-xxl-1 col-lg-4">
                     <button class="btn btn-primary w-100"><i class="ri-equalizer-line align-bottom me-1"></i>
-                        Filters</button>
+                        Filters
+                    </button>
                 </div>
             </div>
             <!--end row-->
@@ -158,7 +159,7 @@
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
                             <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
+                               aria-expanded="false">
                                 <span class="text-muted fs-18"><i class="mdi mdi-dots-vertical"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
@@ -191,26 +192,26 @@
                                     <div class="avatar-group">
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Stine Nielsen">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Stine Nielsen">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Jansh Brown">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Jansh Brown">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Dan Gibson">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Dan Gibson">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
@@ -248,34 +249,34 @@
                                     <div class="avatar-group">
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Frida Bang">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Frida Bang">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-4.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Malou Silva">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Malou Silva">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Simon Schmidt">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Simon Schmidt">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Tosh Jessen">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Tosh Jessen">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-7.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
@@ -313,26 +314,26 @@
                                     <div class="avatar-group">
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Nina Schmidt">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Nina Schmidt">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-8.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Stine Nielsen">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Stine Nielsen">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
                                             <a href="javascript: void(0);" class="d-inline-block"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                                data-bs-original-title="Jansh Brown">
+                                               data-bs-toggle="tooltip" data-bs-placement="top" title=""
+                                               data-bs-original-title="Jansh Brown">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                    alt="" class="rounded-circle avatar-xxs">
+                                                     alt="" class="rounded-circle avatar-xxs">
                                             </a>
                                         </div>
                                         <div class="avatar-group-item">
@@ -354,11 +355,12 @@
                     <div class="align-items-center mt-2 row text-center text-sm-start">
                         <div class="col-sm">
                             <div class="text-muted">Showing<span class="fw-semibold">4</span>
-                                of <span class="fw-semibold">125</span> Results</div>
+                                of <span class="fw-semibold">125</span> Results
+                            </div>
                         </div>
                         <div class="col-sm-auto">
                             <ul
-                                class="pagination pagination-separated pagination-sm justify-content-center justify-content-sm-start mb-0">
+                                    class="pagination pagination-separated pagination-sm justify-content-center justify-content-sm-start mb-0">
                                 <li class="page-item disabled">
                                     <a href="#" class="page-link">←</a>
                                 </li>
@@ -389,9 +391,9 @@
                             <div class="flex-shrink-0">
                                 <div class="dropdown card-header-dropdown">
                                     <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
+                                       aria-haspopup="true" aria-expanded="false">
                                         <span class="text-muted"><i
-                                                class="ri-settings-4-line align-middle me-1 fs-15"></i>Settings</span>
+                                                    class="ri-settings-4-line align-middle me-1 fs-15"></i>Settings</span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <a class="dropdown-item" href="#">Sửa</a>
@@ -406,11 +408,13 @@
                             <div class="align-items-center p-3 justify-content-between d-flex">
                                 <div class="flex-shrink-0">
                                     <div class="text-muted"><span class="fw-semibold">4</span> of <span
-                                            class="fw-semibold">10</span> remaining</div>
+                                                class="fw-semibold">10</span> remaining
+                                    </div>
                                 </div>
                                 <button type="button" class="btn btn-sm btn-success"><i
-                                        class="ri-add-line align-middle me-1"></i> Add
-                                    Task</button>
+                                            class="ri-add-line align-middle me-1"></i> Add
+                                    Task
+                                </button>
                             </div><!-- end card header -->
 
                             <div data-simplebar style="max-height: 200px;">
@@ -503,7 +507,8 @@
                                                 <input type="checkbox" class="form-check-input ms-0" id="task_six">
                                             </div>
                                             <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_six">Styling wireframe
+                                                <label class="form-check-label mb-0 ps-2" for="task_six">Styling
+                                                    wireframe
                                                     design and
                                                     documentation for velzon
                                                     admin</label>
@@ -555,7 +560,7 @@
                                     <div class="acitivity-item py-3 d-flex">
                                         <div class="flex-shrink-0">
                                             <img src="assets/images/users/avatar-2.jpg" alt=""
-                                                class="avatar-xs rounded-circle acitivity-avatar">
+                                                 class="avatar-xs rounded-circle acitivity-avatar">
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h6 class="mb-1">Natasha Carey have liked the
@@ -577,8 +582,8 @@
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h6 class="mb-1">Today offers by <a
-                                                    href="apps-ecommerce-seller-details.html"
-                                                    class="link-secondary">Digitech
+                                                        href="apps-ecommerce-seller-details.html"
+                                                        class="link-secondary">Digitech
                                                     Galaxy</a></h6>
                                             <p class="text-muted mb-2">Offer is valid on
                                                 orders of
@@ -615,10 +620,10 @@
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h6 class="mb-1">Flash sale starting <span
-                                                    class="text-primary">Tomorrow.</span>
+                                                        class="text-primary">Tomorrow.</span>
                                             </h6>
                                             <p class="text-muted mb-0">Flash sale by <a href="javascript:void(0);"
-                                                    class="link-secondary fw-medium">Zoetic
+                                                                                        class="link-secondary fw-medium">Zoetic
                                                     Fashion</a>
                                             </p>
                                             <small class="mb-0 text-muted">22 Oct,
@@ -639,7 +644,7 @@
                                                     2 days left</span> notification to
                                                 submit the
                                                 monthly sales report. <a href="javascript:void(0);"
-                                                    class="link-warning text-decoration-underline">Reports
+                                                                         class="link-warning text-decoration-underline">Reports
                                                     Builder</a>
                                             </p>
                                             <small class="mb-0 text-muted">15 Oct</small>
@@ -648,7 +653,7 @@
                                     <div class="acitivity-item d-flex">
                                         <div class="flex-shrink-0">
                                             <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                                alt="" class="avatar-xs rounded-circle acitivity-avatar" />
+                                                 alt="" class="avatar-xs rounded-circle acitivity-avatar"/>
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h6 class="mb-1">Frank Hook Commented</h6>
@@ -684,7 +689,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -698,7 +703,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -730,7 +735,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -744,7 +749,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -776,7 +781,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -790,7 +795,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -809,7 +814,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -823,7 +828,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -842,7 +847,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -856,7 +861,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -889,7 +894,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -903,7 +908,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -922,7 +927,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -936,7 +941,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -955,7 +960,7 @@
                             <div class="flex-shrink-0 avatar-sm">
                                 <div class="avatar-title bg-light rounded">
                                     <img src="{{ asset('theme/assets/images/svg/crypto-icons/btc.svg') }}" alt=""
-                                        class="avatar-xxs" />
+                                         class="avatar-xxs"/>
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -969,7 +974,7 @@
                             </div>
                         </div>
                         <h6 class="text-muted mb-0">Người theo dõi <span class="badge bg-success-subtle text-secondary"><i
-                                    class=" ri-eye-line"></i></span></h6>
+                                        class=" ri-eye-line"></i></span></h6>
                     </div>
                     <div class="card-body border-top border-top-dashed">
                         <div class="d-flex">
@@ -1010,8 +1015,8 @@
 @section('styles')
     <!-- jsvectormap css -->
     <link href="{{ asset('theme/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
-        type="text/css" />
+          type="text/css"/>
 
     <!--Swiper slider css-->
-    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
 @endsection

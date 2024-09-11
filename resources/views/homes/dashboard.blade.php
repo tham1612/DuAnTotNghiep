@@ -1,4 +1,4 @@
-@extends('layouts.masterhome')
+@extends('layouts.masterHome')
 
 @section('title')
     dashbroad
@@ -20,8 +20,9 @@
                         <div class="card-body">
                             <h5 class="card-title mb-3">Phần trăn công việc hoàn thành</h5>
                             <div class="progress animated-progress custom-progress mb-1">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 38%" aria-valuenow="38"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 38%"
+                                     aria-valuenow="38"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <p class="text-muted mb-2">You used 215 of 2000 of your API
                             </p>
@@ -37,7 +38,7 @@
                                 <div>
                                     <p class="fw-medium text-muted mb-0">Số task hoàn thành</p>
                                     <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
-                                            data-target="50"></span></h2>
+                                                                                    data-target="50"></span></h2>
                                 </div>
                                 <div>
                                     <div class="avatar-sm flex-shrink-0">
@@ -57,7 +58,7 @@
                                 <div>
                                     <p class="fw-medium text-muted mb-0">Số task quá hạn</p>
                                     <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
-                                            data-target="8"></span></h2>
+                                                                                    data-target="8"></span></h2>
                                 </div>
                                 <div>
                                     <div class="avatar-sm flex-shrink-0">
@@ -89,7 +90,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -103,7 +105,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -111,7 +113,7 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
@@ -138,23 +140,26 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Terry Moberly">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Terry Moberly">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-danger">
                                                     T
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Ruby Miller">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Ruby Miller">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -178,7 +183,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="71"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -200,7 +205,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -214,7 +220,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -222,13 +228,13 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/mail_chimp.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
                             <div class="py-3">
                                 <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html"
-                                        class="text-body">Multipurpose landing
+                                                          class="text-body">Multipurpose landing
                                         template</a></h5>
                                 <div class="row gy-3">
                                     <div class="col-6">
@@ -250,30 +256,34 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Donna Kline">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Donna Kline">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-danger">
                                                     D
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Lee Winton">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Lee Winton">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Johnny Shorter">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Johnny Shorter">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -298,7 +308,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="75"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -327,7 +337,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -341,7 +352,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -349,7 +360,7 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
@@ -376,23 +387,26 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Terry Moberly">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Terry Moberly">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-danger">
                                                     T
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Ruby Miller">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Ruby Miller">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -416,7 +430,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="71"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -438,7 +452,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -452,7 +467,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -460,7 +475,7 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/slack.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
                             <div class="py-3">
@@ -486,18 +501,21 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Irma Metz">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Irma Metz">
                                             <img src="{{ asset('theme/assets/images/users/avatar-9.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs">
+                                                 alt="" class="rounded-circle avatar-xxs">
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="James Clem">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="James Clem">
                                             <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs">
+                                                 alt="" class="rounded-circle avatar-xxs">
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -522,7 +540,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="20"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -544,7 +562,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -558,7 +577,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -566,12 +585,13 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/dropbox.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
                             <div class="py-3">
-                                <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html" class="text-body">Redesign -
+                                <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html" class="text-body">Redesign
+                                        -
                                         Landing page</a>
                                 </h5>
                                 <div class="row gy-3">
@@ -594,30 +614,34 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Sylvia Wright">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Sylvia Wright">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-secondary">
                                                     S
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Ellen Smith">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Ellen Smith">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-4.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -642,7 +666,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="54"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 54%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 54%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -665,7 +689,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -679,7 +704,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -687,13 +712,13 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/mail_chimp.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
                             <div class="py-3">
                                 <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html"
-                                        class="text-body">Multipurpose landing
+                                                          class="text-body">Multipurpose landing
                                         template</a></h5>
                                 <div class="row gy-3">
                                     <div class="col-6">
@@ -715,30 +740,34 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Donna Kline">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Donna Kline">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-danger">
                                                     D
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Lee Winton">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Lee Winton">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Johnny Shorter">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Johnny Shorter">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -763,7 +792,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="75"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -794,7 +823,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -808,7 +838,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -816,7 +846,7 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
@@ -843,23 +873,26 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Terry Moberly">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Terry Moberly">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-danger">
                                                     T
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Ruby Miller">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Ruby Miller">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -883,7 +916,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="71"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 71%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -906,7 +939,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -920,7 +954,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -928,7 +962,7 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/slack.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
                             <div class="py-3">
@@ -954,18 +988,21 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Irma Metz">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Irma Metz">
                                             <img src="{{ asset('theme/assets/images/users/avatar-9.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs">
+                                                 alt="" class="rounded-circle avatar-xxs">
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="James Clem">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="James Clem">
                                             <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
-                                                alt="" class="rounded-circle avatar-xxs">
+                                                 alt="" class="rounded-circle avatar-xxs">
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -990,7 +1027,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="20"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -1012,7 +1049,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -1026,7 +1064,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -1034,12 +1072,13 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/dropbox.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
                             <div class="py-3">
-                                <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html" class="text-body">Redesign -
+                                <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html" class="text-body">Redesign
+                                        -
                                         Landing page</a>
                                 </h5>
                                 <div class="row gy-3">
@@ -1061,30 +1100,34 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Brent Gonzalez">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Sylvia Wright">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Sylvia Wright">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-secondary">
                                                     S
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Ellen Smith">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Ellen Smith">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-4.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -1109,7 +1152,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="54"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 54%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 54%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -1132,7 +1175,8 @@
                                         </span>
                                     </button>
                                     <div class="dropdown">
-                                        <button class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                        <button
+                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
@@ -1146,7 +1190,7 @@
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#removeProjectModal"><i
+                                               data-bs-target="#removeProjectModal"><i
                                                     class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
@@ -1154,13 +1198,13 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     <img src="{{ asset('theme/assets/images/brands/mail_chimp.png') }}" alt=""
-                                        height="32">
+                                         height="32">
                                 </div>
                             </div>
 
                             <div class="py-3">
                                 <h5 class="mb-3 fs-14"><a href="apps-projects-overview.html"
-                                        class="text-body">Multipurpose landing
+                                                          class="text-body">Multipurpose landing
                                         template</a></h5>
                                 <div class="row gy-3">
                                     <div class="col-6">
@@ -1182,30 +1226,34 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <p class="text-muted mb-0 me-2">Team :</p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Donna Kline">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Donna Kline">
                                             <div class="avatar-xxs">
                                                 <div class="avatar-title rounded-circle bg-danger">
                                                     D
                                                 </div>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Lee Winton">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Lee Winton">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Johnny Shorter">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Johnny Shorter">
                                             <div class="avatar-xxs">
                                                 <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                    alt="" class="rounded-circle img-fluid">
+                                                     alt="" class="rounded-circle img-fluid">
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
+                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
                                                     class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
@@ -1230,7 +1278,7 @@
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar" aria-valuenow="75"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
                                     <!-- /.progress-bar -->
                                 </div><!-- /.progress -->
                             </div>
@@ -1267,9 +1315,9 @@
 @section('styles')
     <!-- jsvectormap css -->
     <link href="{{ asset('theme/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"
-        type="text/css" />
+          type="text/css"/>
 
     <!--Swiper slider css-->
-    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
 @endsection
 .

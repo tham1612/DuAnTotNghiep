@@ -22,34 +22,40 @@ Route::get('/homes/dashboard', function () {
     return view('homes.dashboard');
 });
 
-Route::get('/homes/home', function () {
-    return view('homes.home');
-});
 Route::get('/homes/dashboard_board', function () {
     return view('homes.dashboard_board');
 });
 
 Auth::routes();
+
 Route::get('/home', function () {
     return view('homes.home');
-});
-Route::resource('/workspaces',\App\Http\Controllers\WorkspaceController::class);
+})->name('homes.home');
 
-// Định nghĩa route cho home
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('/workspaces', \App\Http\Controllers\WorkspaceController::class);
 
-// Các route khác
-Route::get('tables', function () {
-    return view('tables.index');
+
+// Các route hiển thị trong boards
+
+Route::prefix('b')
+    ->as('b.')
+    ->group(function () {
+
+    Route::get('/', function () {
+        return view('boards.index');
+    })->name('index');
+
+    Route::get('table', function () {
+        return view('tables.index');
+    })->name('table');
+
+    Route::get('ganttChart', function () {
+        return view('ganttCharts.index');
+    })->name('ganttChart');
+
+    Route::get('list', function () {
+        return view('lists.index');
+    })->name('list');
+
 });
 
-Route::get('ganttChart', function () {
-    return view('ganttCharts.index');
-});
-Route::get('boards', function () {
-    return view('boards.index');
-});
-
-Route::get('lists', function () {
-    return view('lists.index');
-});
