@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Định nghĩa các route
+
 Route::get('/', function () {
     return view('welcome');
 });
