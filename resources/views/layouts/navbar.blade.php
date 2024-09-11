@@ -67,24 +67,24 @@
                        aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-profile-tab" href="{{url('boards')}}" role="tab"
+                    <a class="nav-link" id="pills-profile-tab" href="{{route('b.index')}}" role="tab"
                        aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-list-tab" href="{{url('lists')}}" role="tab"
+                    <a class="nav-link" id="pills-list-tab" href="{{route('b.list')}}" role="tab"
                        aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
                 </li>
+{{--                <li class="nav-item" role="presentation">--}}
+{{--                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"--}}
+{{--                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>--}}
+{{--                        Calendar</a>--}}
+{{--                </li>--}}
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"
-                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>
-                        Calendar</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-gantt-tab" href="{{url('ganttChart')}}" role="tab"
-                       aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt</a>
+                    <a class="nav-link" id="pills-gantt-tab" href="{{route('b.ganttChart')}}" role="tab"
+                       aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt Chart</a>
                 </li>
                 <li class="nav-item active" role="presentation">
-                    <a class="nav-link" id="pills-table-tab" href="{{url('tables')}}" role="tab"
+                    <a class="nav-link" id="pills-table-tab" href="{{route('b.table')}}" role="tab"
                        aria-controls="pills-table" aria-selected="false"><i class="ri-layout-3-line"></i> Table</a>
                 </li>
             </ul>

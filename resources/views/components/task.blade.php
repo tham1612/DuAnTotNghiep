@@ -304,39 +304,9 @@
                                                     <div>
                                                         <i class="ri-time-line fs-20 ms-2"
                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                           aria-expanded="false" data-bs-offset="-10,-500"></i>
+                                                           aria-expanded="false"></i>
                                                         <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                            <h5 class="text-center">Ngày</h5>
-                                                            <form action="">
-
-                                                                <!-- ngày bắt đầu -->
-                                                                <div>
-                                                                    <strong class="fs-14">Ngày bắt đầu</strong>
-                                                                    <input type="datetime-local" name=""
-                                                                           id=""
-                                                                           class="form-control border-0 my-2"/>
-                                                                </div>
-                                                                <div>
-                                                                    <strong class="fs-14">Ngày kết thúc</strong>
-                                                                    <input type="datetime-local" name=""
-                                                                           id=""
-                                                                           class="form-control border-0 my-2"/>
-                                                                </div>
-                                                                <div class="mt-2">
-                                                                    <strong class="fs-16">Thiết lập nhắc
-                                                                        nhỏ</strong>
-                                                                    <select name="" id=""
-                                                                            class="form-select">
-                                                                        <option value="">1 ngày trước
-                                                                        </option>
-                                                                    </select>
-                                                                </div>
-
-                                                                <div class="mt-3 card">
-                                                                    <button class="btn bg-primary text-white">Lưu
-                                                                    </button>
-                                                                </div>
-                                                            </form>
+                                                            @include('dropdowns.date')
                                                         </div>
                                                     </div>
                                                     <div>
@@ -344,91 +314,7 @@
                                                            data-bs-toggle="dropdown" aria-haspopup="true"
                                                            aria-expanded="false"></i>
                                                         <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                            <h5 class="text-center">Thành viên</h5>
-                                                            <form action="">
-                                                                <input type="text" name=""
-                                                                       id="" class="form-control border-1"
-                                                                       placeholder="Tìm kiếm thành viên"/>
-
-                                                                <!-- thành viên của thẻ -->
-                                                                <div class="mt-3">
-                                                                    <strong class="fs-14">Thành viên của
-                                                                        thẻ</strong>
-                                                                    <ul class=""
-                                                                        style="list-style: none; margin-left: -32px">
-                                                                        <li
-                                                                            class="d-flex justify-content-between align-items-center">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <a href="javascript: void(0);"
-                                                                                   class="avatar-group-item"
-                                                                                   data-bs-toggle="tooltip"
-                                                                                   data-bs-trigger="hover"
-                                                                                   data-bs-placement="top"
-                                                                                   title="Nancy">
-                                                                                    <img
-                                                                                        src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                        alt=""
-                                                                                        class="rounded-circle avatar-xs"/>
-                                                                                </a>
-                                                                                <p class="ms-3 mt-3">vinhpq</p>
-                                                                            </div>
-
-                                                                            <i class="ri-close-line fs-20"></i>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <!-- thành viên của bảng -->
-                                                                <div class="mt-3">
-                                                                    <strong class="fs-14">Thành viên của
-                                                                        bảng</strong>
-                                                                    <ul class=""
-                                                                        style="list-style: none; margin-left: -32px">
-                                                                        <li
-                                                                            class="d-flex justify-content-between align-items-center">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <a href="javascript: void(0);"
-                                                                                   class="avatar-group-item"
-                                                                                   data-bs-toggle="tooltip"
-                                                                                   data-bs-trigger="hover"
-                                                                                   data-bs-placement="top"
-                                                                                   title="Nancy">
-                                                                                    <img
-                                                                                        src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                        alt=""
-                                                                                        class="rounded-circle avatar-xs"/>
-                                                                                </a>
-                                                                                <p class="ms-3 mt-3">vinhpq</p>
-                                                                            </div>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <!-- Thành viên Không gian làm việc -->
-                                                                <div class="mt-3">
-                                                                    <strong class="fs-14">Thành viên Không gian
-                                                                        làm
-                                                                        việc</strong>
-                                                                    <ul class=""
-                                                                        style="list-style: none; margin-left: -32px">
-                                                                        <li
-                                                                            class="d-flex justify-content-between align-items-center">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <a href="javascript: void(0);"
-                                                                                   class="avatar-group-item"
-                                                                                   data-bs-toggle="tooltip"
-                                                                                   data-bs-trigger="hover"
-                                                                                   data-bs-placement="top"
-                                                                                   title="Nancy">
-                                                                                    <img
-                                                                                        src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                        alt=""
-                                                                                        class="rounded-circle avatar-xs"/>
-                                                                                </a>
-                                                                                <p class="ms-3 mt-3">vinhpq</p>
-                                                                            </div>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </form>
+                                                            @include('dropdowns.member')
                                                         </div>
                                                     </div>
                                                     <div>
@@ -474,43 +360,7 @@
                                                                         </span>
                                                                     <div
                                                                         class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                        <h5 class="text-center">Ngày</h5>
-                                                                        <form action="">
-                                                                            <!-- ngày bắt đầu -->
-                                                                            <div>
-                                                                                <strong class="fs-14">Ngày bắt
-                                                                                    đầu</strong>
-                                                                                <input type="datetime-local"
-                                                                                       name="" id=""
-                                                                                       class="form-control border-0 my-2"/>
-                                                                            </div>
-                                                                            <div>
-                                                                                <strong class="fs-14">Ngày kết
-                                                                                    thúc</strong>
-                                                                                <input type="datetime-local"
-                                                                                       name="" id=""
-                                                                                       class="form-control border-0 my-2"/>
-                                                                            </div>
-                                                                            <div class="mt-2">
-                                                                                <strong class="fs-16">Thiết lập
-                                                                                    nhắc
-                                                                                    nhỏ</strong>
-                                                                                <select name=""
-                                                                                        id=""
-                                                                                        class="form-select">
-                                                                                    <option value="">1 ngày
-                                                                                        trước
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-
-                                                                            <div class="mt-3 card">
-                                                                                <button
-                                                                                    class="btn bg-primary text-white">
-                                                                                    Lưu
-                                                                                </button>
-                                                                            </div>
-                                                                        </form>
+                                                                        @include('dropdowns.date')
                                                                     </div>
                                                                 </div>
 
@@ -522,105 +372,9 @@
                                                                         </span>
                                                                     <div
                                                                         class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                        <h5 class="text-center">Thành viên</h5>
-                                                                        <form action="">
-                                                                            <input type="text" name=""
-                                                                                   id=""
-                                                                                   class="form-control border-0"
-                                                                                   placeholder="Tìm kiếm thành viên"/>
-
-                                                                            <!-- thành viên của thẻ -->
-                                                                            <div class="mt-3">
-                                                                                <strong class="fs-14">Thành viên
-                                                                                    của
-                                                                                    thẻ</strong>
-                                                                                <ul class=""
-                                                                                    style="list-style: none; margin-left: -32px">
-                                                                                    <li
-                                                                                        class="d-flex justify-content-between align-items-center">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center">
-                                                                                            <a href="javascript: void(0);"
-                                                                                               class="avatar-group-item"
-                                                                                               data-bs-toggle="tooltip"
-                                                                                               data-bs-trigger="hover"
-                                                                                               data-bs-placement="top"
-                                                                                               title="Nancy">
-                                                                                                <img
-                                                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-xs"/>
-                                                                                            </a>
-                                                                                            <p class="ms-3 mt-3">
-                                                                                                vinhpq</p>
-                                                                                        </div>
-
-                                                                                        <i
-                                                                                            class="ri-close-line fs-20"></i>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <!-- thành viên của bảng -->
-                                                                            <div class="mt-3">
-                                                                                <strong class="fs-14">Thành viên
-                                                                                    của
-                                                                                    bảng</strong>
-                                                                                <ul class=""
-                                                                                    style="list-style: none; margin-left: -32px">
-                                                                                    <li
-                                                                                        class="d-flex justify-content-between align-items-center">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center">
-                                                                                            <a href="javascript: void(0);"
-                                                                                               class="avatar-group-item"
-                                                                                               data-bs-toggle="tooltip"
-                                                                                               data-bs-trigger="hover"
-                                                                                               data-bs-placement="top"
-                                                                                               title="Nancy">
-                                                                                                <img
-                                                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-xs"/>
-                                                                                            </a>
-                                                                                            <p class="ms-3 mt-3">
-                                                                                                vinhpq</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <!-- Thành viên Không gian làm việc -->
-                                                                            <div class="mt-3">
-                                                                                <strong class="fs-14">Thành viên
-                                                                                    Không
-                                                                                    gian làm việc</strong>
-                                                                                <ul class=""
-                                                                                    style="list-style: none; margin-left: -32px">
-                                                                                    <li
-                                                                                        class="d-flex justify-content-between align-items-center">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center">
-                                                                                            <a href="javascript: void(0);"
-                                                                                               class="avatar-group-item"
-                                                                                               data-bs-toggle="tooltip"
-                                                                                               data-bs-trigger="hover"
-                                                                                               data-bs-placement="top"
-                                                                                               title="Nancy">
-                                                                                                <img
-                                                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-xs"/>
-                                                                                            </a>
-                                                                                            <p class="ms-3 mt-3">
-                                                                                                vinhpq</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </form>
+                                                                        @include('dropdowns.member')
                                                                     </div>
                                                                 </div>
-
-
                                                             </div>
                                                         </div>
                                                     </form>
@@ -658,69 +412,7 @@
                                     </p>
                                     <!--dropdown thành viên-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-
-                                        <h5 class="text-center">Thành viên</h5>
-                                        <form action="">
-                                            <input type="text" name="" id=""
-                                                   class="form-control border-1" placeholder="Tìm kiếm thành viên"/>
-
-                                            <!-- thành viên của thẻ -->
-                                            <div class="mt-3">
-                                                <strong class="fs-14">Thành viên của thẻ</strong>
-                                                <ul class="" style="list-style: none; margin-left: -32px">
-                                                    <li class="d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                               data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                               data-bs-placement="top" title="Nancy">
-                                                                <img
-                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                    alt="" class="rounded-circle avatar-xs"/>
-                                                            </a>
-                                                            <p class="ms-3 mt-3">vinhpq</p>
-                                                        </div>
-
-                                                        <i class="ri-close-line fs-20"></i>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <!-- thành viên của bảng -->
-                                            <div class="mt-3">
-                                                <strong class="fs-14">Thành viên của bảng</strong>
-                                                <ul class="" style="list-style: none; margin-left: -32px">
-                                                    <li class="d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                               data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                               data-bs-placement="top" title="Nancy">
-                                                                <img
-                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                    alt="" class="rounded-circle avatar-xs"/>
-                                                            </a>
-                                                            <p class="ms-3 mt-3">vinhpq</p>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <!-- Thành viên Không gian làm việc -->
-                                            <div class="mt-3">
-                                                <strong class="fs-14">Thành viên Không gian làm việc</strong>
-                                                <ul class="" style="list-style: none; margin-left: -32px">
-                                                    <li class="d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                               data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                               data-bs-placement="top" title="Nancy">
-                                                                <img
-                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                    alt="" class="rounded-circle avatar-xs"/>
-                                                            </a>
-                                                            <p class="ms-3 mt-3">vinhpq</p>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </form>
+                                        @include('dropdowns.member')
                                     </div>
                                 </div>
                             </div>
@@ -735,49 +427,7 @@
                                     </p>
                                     <!--dropdown nhãn-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <h5 class="text-center">Nhãn</h5>
-                                        <form action="">
-                                            <input type="text" name="" id=""
-                                                   class="form-control border-1" placeholder="Tìm nhãn..."/>
-                                            <div class="mt-3">
-                                                <strong class="fs-14">Nhãn</strong>
-                                                <ul class="" style="list-style: none; margin-left: -32px">
-                                                    <li class="mt-1 d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <input type="checkbox" name="" id="danger_tags"
-                                                                   class="form-check-input"/>
-                                                            <span class="bg bg-danger mx-2 rounded p-3 col-10"> </span>
-                                                        </div>
-                                                        <i class="ri-pencil-line fs-20"></i>
-                                                    </li>
-                                                    <li class="mt-1 d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <input type="checkbox" name="" id="danger_tags"
-                                                                   class="form-check-input"/>
-                                                            <span class="bg bg-info mx-2 rounded p-3 col-10"> </span>
-                                                        </div>
-                                                        <i class="ri-pencil-line fs-20"></i>
-                                                    </li>
-                                                    <li class="mt-1 d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <input type="checkbox" name="" id="danger_tags"
-                                                                   class="form-check-input"/>
-                                                            <span class="bg bg-success mx-2 rounded p-3 col-10">
-                                                            </span>
-                                                        </div>
-                                                        <i class="ri-pencil-line fs-20"></i>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="card">
-                                                <button class="btn text-white" style="background-color: #c7c7c7">Tạo
-                                                    nhãn
-                                                    mới
-                                                </button>
-                                            </div>
-                                        </form>
-
-
+                                        @include('dropdowns.tag')
                                     </div>
                                 </div>
                             </div>
@@ -792,19 +442,7 @@
                                     </p>
                                     <!-- dropdown việc cần làm-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <form>
-                                            <h5 class="mb-3" style="text-align: center">
-                                                Thêm danh sách công việc
-                                            </h5>
-                                            <div class="mt-2">
-                                                <label class="form-label" for="">Tiêu đề</label>
-                                                <input type="text" class="form-control"
-                                                       placeholder="Việc cần làm"/>
-                                            </div>
-                                            <div class="mt-2">
-                                                <button class="btn btn-primary">Thêm</button>
-                                            </div>
-                                        </form>
+                                        @include('dropdowns.checklist')
                                     </div>
                                 </div>
                             </div>
@@ -817,57 +455,9 @@
                                        aria-expanded="false" data-bs-offset="-40,10">
                                         Ngày
                                     </p>
-                                    <!--                                    dropdown ngày-->
-                                    <div class="dropdown-menu dropdown-menu-md p-3" style="width: 200%">
-                                        <h5 class="text-center">Ngày</h5>
-                                        <form action="">
-                                            <!-- lịch -->
-                                            <div class="wrapper">
-                                                <header
-                                                    class="d-flex align-items-center justify-content-between w-100">
-                                                    <p class="current-date"></p>
-                                                    <div class="icons">
-                                                        <span id="prev"
-                                                              class="material-symbols-rounded">chevron_left</span>
-                                                        <span id="next"
-                                                              class="material-symbols-rounded">chevron_right</span>
-                                                    </div>
-                                                </header>
-                                                <div class="calendar">
-                                                    <ul class="weeks">
-                                                        <li>CN</li>
-                                                        <li>T2</li>
-                                                        <li>T3</li>
-                                                        <li>T4</li>
-                                                        <li>T5</li>
-                                                        <li>T6</li>
-                                                        <li>T7</li>
-                                                    </ul>
-                                                    <ul class="days"></ul>
-                                                </div>
-                                            </div>
-                                            <!-- ngày bắt đầu -->
-                                            <div>
-                                                <strong class="fs-14">Ngày bắt đầu</strong>
-                                                <input type="datetime-local" name="" id=""
-                                                       class="form-control border-0 my-2"/>
-                                            </div>
-                                            <div>
-                                                <strong class="fs-14">Ngày kết thúc</strong>
-                                                <input type="datetime-local" name="" id=""
-                                                       class="form-control border-0 my-2"/>
-                                            </div>
-                                            <div class="mt-2">
-                                                <strong class="fs-16">Thiết lập nhắc nhỏ</strong>
-                                                <select name="" id="" class="form-select">
-                                                    <option value="">1 ngày trước</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="mt-3 card">
-                                                <button class="btn bg-primary text-white">Lưu</button>
-                                            </div>
-                                        </form>
+                                    <!-- dropdown ngày-->
+                                    <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
+                                        @include('dropdowns.date')
                                     </div>
                                 </div>
                             </div>
@@ -882,37 +472,7 @@
                                     </p>
                                     <!--                                    dropdown tệp đính kèm-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <h5 class="text-center">Đính kèm</h5>
-                                        <form action="" class=" mt-3">
-                                            <strong class="fs-14">Đính kèm tệp từ máy tính của bạn</strong>
-                                            <input type="file" name="" id=""
-                                                   class="form-control mt-2"/>
-
-                                            <div class="mt-3">
-                                                <strong class="fs-14">Đã xem gần đây</strong>
-                                                <ul class="" style="list-style: none; margin-left: -32px">
-                                                    <li class="mt-1 d-flex justify-content-between align-items-center">
-                                                        <i class="ri-artboard-line fs-20"></i>
-                                                        <div class="w-100">
-                                                            <strong class="ms-2 rounded">Tên thẻ</strong>
-                                                            <br/>
-                                                            <span class="ms-2">Tên bảng - Đã xem 2 giờ trước</span>
-                                                        </div>
-                                                    </li>
-                                                    <li class="mt-2 d-flex justify-content-between align-items-center">
-                                                        <i class="ri-artboard-line fs-20"></i>
-                                                        <div class="w-100">
-                                                            <strong class="ms-2 rounded">Tên thẻ</strong>
-                                                            <br/>
-                                                            <span class="ms-2">Tên bảng - Đã xem 2 giờ trước</span>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="card">
-                                                <button class="btn bg-dark-subtle">Lưu</button>
-                                            </div>
-                                        </form>
+                                        @include('dropdowns.attach')
                                     </div>
                                 </div>
                             </div>
@@ -947,17 +507,7 @@
                                     </p>
                                     <!--                                    dropdown ảnh bìa-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <form>
-                                            <h5 class="mb-3 text-center">Ảnh bìa</h5>
-                                            <div class="mb-2">
-                                                <label for="">Tải ảnh lên</label>
-                                                <input type="file" class="form-control"/>
-                                            </div>
-                                            <div class="mb-2">
-                                                <label for="">Tải ảnh lên</label>
-                                                <input type="file" class="form-control"/>
-                                            </div>
-                                        </form>
+                                        @include('dropdowns.imagePhoto')
                                     </div>
                                 </div>
                             </div>
@@ -973,33 +523,7 @@
                                     </p>
                                     <!--                                    dropdown di chuyển-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <h5 class="text-center">Di chuyển thẻ</h5>
-                                        <form>
-                                            <strong class="fs-14">Chọn đích đến</strong>
-                                            <div class="mt-2">
-                                                <strong class="fs-16">Bảng thông tin</strong>
-                                                <select name="" id="" class="form-select">
-                                                    <option value="">FPT</option>
-                                                </select>
-                                            </div>
-                                            <div class="row mt-2">
-                                                <section class="col-8">
-                                                    <strong class="fs-16">Danh sách</strong>
-                                                    <select name="" id="" class="form-select">
-                                                        <option value="">dự án tốt nghiệp</option>
-                                                    </select>
-                                                </section>
-                                                <section class="col-4">
-                                                    <strong class="fs-16">Vị trí</strong>
-                                                    <select name="" id="" class="form-select">
-                                                        <option value="">1</option>
-                                                    </select>
-                                                </section>
-                                            </div>
-                                            <button type="button" class="btn btn-primary waves-effect mt-2">
-                                                Di chuyển
-                                            </button>
-                                        </form>
+                                        @include('dropdowns.move')
                                     </div>
                                 </div>
                             </div>
@@ -1012,63 +536,9 @@
                                        aria-expanded="false" data-bs-offset="-40,10">
                                         Sao chép
                                     </p>
-                                    <!--                                    dropdown sao chép-->
+                                    <!--  dropdown sao chép-->
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <h5 class="text-center">Sao chép thẻ</h5>
-                                        <form action="">
-                                            <div>
-                                                <strong class="fs-14">Tên</strong>
-                                                <input type="text" name="" id=""
-                                                       class="form-control border-1 my-2" placeholder="Tên thẻ"/>
-                                            </div>
-                                            <div>
-                                                <strong class="fs-14 mt-3">Giữ</strong>
-                                                <ul style="list-style: none; margin-left: -32px" class="mt-2">
-                                                    <li>
-                                                        <input type="checkbox" name="" id=""
-                                                               class="form-check-input"/>
-                                                        <label for="">Danh sách công việc</label>
-                                                        <span>(1)</span>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" name="" id=""
-                                                               class="form-check-input"/>
-                                                        <label for="">Thành viên</label> <span>(1)</span>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" name="" id=""
-                                                               class="form-check-input"/>
-                                                        <label for="">Tệp đính kèm</label> <span>(1)</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div>
-                                                <strong class="fs-14">Sao chép tới...</strong>
-                                                <div class="mt-2">
-                                                    <strong class="fs-16">Bảng thông tin</strong>
-                                                    <select name="" id="" class="form-select">
-                                                        <option value="">FPT</option>
-                                                    </select>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <section class="col-8">
-                                                        <strong class="fs-16">Danh sách</strong>
-                                                        <select name="" id="" class="form-select">
-                                                            <option value="">dự án tốt nghiệp</option>
-                                                        </select>
-                                                    </section>
-                                                    <section class="col-4">
-                                                        <strong class="fs-16">Vị trí</strong>
-                                                        <select name="" id="" class="form-select">
-                                                            <option value="">1</option>
-                                                        </select>
-                                                    </section>
-                                                </div>
-                                            </div>
-                                            <div class="mt-3">
-                                                <button class="btn bg-primary text-white">Tạo thẻ</button>
-                                            </div>
-                                        </form>
+                                        @include('dropdowns.copy')
                                     </div>
                                 </div>
                             </div>
@@ -1120,16 +590,7 @@
                                     <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
                                        aria-expanded="false" data-bs-offset="-40,10">Chia sẻ</p>
                                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                        <h5 class="text-center">Chia sẻ</h5>
-                                        <div class="border-bottom mt-3">
-                                            <strong class="fs-14">Đường dẫn đến thẻ </strong>
-                                            <i class="ri-earth-line fs-20 text-success"></i>
-                                            <!--                                            <i class="ri-shield-user-fill fs-20 text-primary"></i>-->
-                                            <!--                                            <i class="ri-lock-2-line fs-20 text-danger"></i>-->
-                                            <input type="text" value="123" id=""
-                                                   class="form-control mt-2" readonly/>
-                                            <p class="mt-2">Hiện mã QR</p>
-                                        </div>
+                                        @include('dropdowns.share')
                                     </div>
                                 </div>
                             </div>

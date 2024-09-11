@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 @section('title')
     Regisster
 @endsection
@@ -33,7 +33,7 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label for="useremail" class="form-label">Email <span
-                                                class="text-danger">*</span></label>
+                                                    class="text-danger">*</span></label>
                                         <input id="useremail" type="email"
                                                class="form-control @error('email') is-invalid @enderror" id="useremail"
                                                placeholder="Enter email address" name="email" value="{{ old('email') }}"
@@ -65,9 +65,9 @@
                                                    id="password-input" aria-describedby="passwordInput" name="password"
                                                    required autocomplete="new-password">
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button" id="password-addon"><i
-                                                    class="ri-eye-fill align-middle"></i></button>
+                                                    class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                                    type="button" id="password-addon"><i
+                                                        class="ri-eye-fill align-middle"></i></button>
                                             @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -84,9 +84,9 @@
                                                    id="confirm-password-input" aria-describedby="confirmPasswordInput"
                                                    name="password_confirmation" required autocomplete="new-password">
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button" id="confirm-password-addon"><i
-                                                    class="ri-eye-fill align-middle"></i></button>
+                                                    class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                                    type="button" id="confirm-password-addon"><i
+                                                        class="ri-eye-fill align-middle"></i></button>
                                             @error('password_confirmation')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -106,16 +106,16 @@
                                         <div>
                                             <button type="button"
                                                     class="btn btn-primary btn-icon waves-effect waves-light"><i
-                                                    class="ri-facebook-fill fs-16"></i></button>
+                                                        class="ri-facebook-fill fs-16"></i></button>
                                             <button type="button"
                                                     class="btn btn-danger btn-icon waves-effect waves-light"><i
-                                                    class="ri-google-fill fs-16"></i></button>
+                                                        class="ri-google-fill fs-16"></i></button>
                                             <button type="button"
                                                     class="btn btn-dark btn-icon waves-effect waves-light"><i
-                                                    class="ri-github-fill fs-16"></i></button>
+                                                        class="ri-github-fill fs-16"></i></button>
                                             <button type="button"
                                                     class="btn btn-info btn-icon waves-effect waves-light"><i
-                                                    class="ri-twitter-fill fs-16"></i></button>
+                                                        class="ri-twitter-fill fs-16"></i></button>
                                         </div>
                                     </div>
                                 </form>

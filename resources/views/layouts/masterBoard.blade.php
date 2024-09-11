@@ -1,236 +1,255 @@
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="fs-20 mx-3 mt-2">Tên bảnggggggggg</h4>
-                <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn active">
-                    <span class="avatar-title bg-transparent fs-15">
-                        <i class="ri-star-fill fs-20 mx-2"></i>
-                    </span>
-                </button>
-                <div class="mx-2 cursor-pointer" id="dropdownMenuOffset" data-bs-toggle="dropdown" aria-expanded="false"
-                    data-bs-offset="10,20">
-                    <i class="ri-shield-user-fill fs-20 text-primary"></i>
-                    <span class="fs-15">Không gian làm việc</span>
-                    <!-- cài đặt quyền của bảng -->
-                    <ul class="dropdown-menu dropdown-menu-md p-3" style="width: 35%"
-                        aria-labelledby="dropdownMenuOffset">
-                        <li>
-                            <a class="dropdown-item w-100" href="#">
-                                <i class="ri-lock-2-line fs-20 text-danger"></i>
-                                <strong>Riêng tư</strong>
-                                <p class="fs-13 w-100">
-                                    Chỉ thành viên bảng thông tin mới có quyền xem
-                                    bảng thông tin này. Quản trị viên của Không gian
-                                    làm việc có thể đóng bảng thông tin hoặc xóa thành
-                                    viên.
-                                </p>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item w-100" href="#">
-                                <i class="ri-shield-user-fill fs-20 text-primary"></i>
-                                <strong>Không gian làm việc</strong>
-                                <p class="fs-13 w-100">
-                                    Tất cả thành viên của Không gian làm việc Trello
-                                    Không gian làm việc có thể xem và sửa bảng thông
-                                    tin này.
-                                </p>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item w-100" href="#">
-                                <i class="ri-earth-line fs-20 text-success"></i>
-                                <strong>Công khai</strong>
-                                <p class="fs-13 w-100">
-                                    Bất kỳ ai trên mạng internet đều có thể xem bảng
-                                    thông tin này. Chỉ thành viên bảng thông tin mới
-                                    có quyền sửa.
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-flex align-items-left justify-content-between">
-            <!-- các màn hình trong bảng -->
-            <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-home-tab" href="teams-spaces-overview.html" role="tab"
-                        aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-profile-tab" href="teams-spaces-board.html" role="tab"
-                        aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-list-tab" href="teams-spaces-list.html" role="tab"
-                        aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"
-                        aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>
-                        Calendar</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-gantt-tab" href="gantt.html" role="tab"
-                        aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt</a>
-                </li>
-                <li class="nav-item active" role="presentation">
-                    <a class="nav-link" id="pills-table-tab" href="teams-spaces-table.html" role="tab"
-                        aria-controls="pills-table" aria-selected="false"><i class="ri-layout-3-line"></i> Table</a>
-                </li>
-            </ul>
-            <div class="col-auto ms-auto d-flex justify-content-end align-items-center">
-                <!--  bộ lọc -->
-                <div class="d-flex justify-content-center align-items-center p-1 cursor-pointer"
-                    data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                    <i class="ri-filter-3-line fs-20"></i>
-                    <span class="readonly">Bộ lọc</span>
-                </div>
-                <div class="fs-20 fw-lighter text-secondary">|</div>
-                <!-- setting bộ lọc -->
-                <ul class="dropdown-menu dropdown-menu-md p-3" style="width: 35%">
-                    <p class="text-center fs-15"><strong>Lọc</strong></p>
-                    <!-- lọc tìm kiếm -->
-                    <div class="mt-2">
-                        <strong>Từ khóa</strong>
-                        <input type="text" name="" id="" placeholder="Nhập từ khóa..."
-                            class="form-control" />
-                        <span class="fs-10">Tìm kiếm các thẻ, các thành viên, các nhãn và hơn thế
-                            nữa.</span>
-                    </div>
-                    <!-- lọc thành viên -->
-                    <div class="mt-2">
-                        <p><strong>Thành viên</strong></p>
+<!DOCTYPE html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
+      data-sidebar-image="none" data-preloader="disable">
 
-                        <label for="no_member">
-                            <input type="checkbox" name="" id="no_member" />
-                            <span>Không có thành viên</span>
-                        </label>
-                        <br />
-                        <label for="it_mee">
-                            <input type="checkbox" name="" id="it_mee" />
-                            <span>Các thẻ chỉ định cho tôi</span>
-                        </label>
-                    </div>
-                    <!-- Ngày hết hạn -->
-                    <div class="mt-2">
-                        <p><strong>Ngày hết hạn</strong></p>
-                        <label for="no_date">
-                            <input type="checkbox" name="" id="no_date" />
-                            <span>Không có ngày hết hạn</span>
-                        </label>
-                        <br />
-                        <label for="no_overdue">
-                            <input type="checkbox" name="" id="no_overdue" />
-                            <span>Quá hạn</span>
-                        </label>
-                        <br />
-                        <label for="due_tomorrow">
-                            <input type="checkbox" name="" id="due_tomorrow" />
-                            <span>Hết hạn vào ngày mai</span>
-                        </label>
-                    </div>
-                    <!-- nhãn -->
-                    <div class="mt-2">
-                        <p><strong>Nhãn</strong></p>
-                        <label for="no_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="no_tags" />
-                            <i class="ri-price-tag-3-line mx-2 fs-20"></i>
-                            <span class="rounded col-11">Không có nhãn</span>
-                        </label>
-                        <br />
+<head>
+    <meta charset="utf-8"/>
+    <title>@yield('title')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
+    <meta content="Themesbrand" name="author"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{asset('theme/assets/images/favicon.ico')}}"/>
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
-                        <label for="primary_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="primary_tags" />
-                            <span class="bg bg-primary mx-2 rounded p-3 col-11">
-                            </span>
-                        </label>
-                        <br />
-                        <label for="danger_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="danger_tags" />
-                            <span class="bg bg-danger mx-2 rounded p-3 col-11">
-                            </span>
-                        </label>
-                        <br />
-                        <label for="success_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="success_tags" />
-                            <span class="bg bg-success mx-2 rounded p-3 col-11">
-                            </span>
-                        </label>
-                        <br />
-                        <div data-input-flag data-option-flag-name>
-                            <input type="text" class="form-control rounded-end flag-input" readonly
-                                placeholder="Chọn nhãn" data-bs-toggle="dropdown" aria-expanded="false" />
-                            <div class="dropdown-menu w-100">
-                                <div class="p-2 px-3 pt-1 searchlist-input">
-                                    <input type="text"
-                                        class="form-control form-control-sm border search-countryList"
-                                        placeholder="Tìm kiếm nhãn" />
-                                </div>
-                                <ul class="list-unstyled dropdown-menu-list mb-0"></ul>
-                            </div>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
+    <!-- Layout config Js -->
+    <script src="{{asset('theme/assets/js/layout.js')}}"></script>
+    <!-- Bootstrap Css -->
+    <link href="{{asset('theme/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <!-- Icons Css -->
+    <link href="{{asset('theme/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+    <!-- App Css-->
+    <link href="{{asset('theme/assets/css/app.min.css')}}" rel="stylesheet" type="text/css"/>
+    <!-- custom Css-->
+    <link href="{{asset('theme/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
+
+    @yield('style')
+</head>
+<style>
+    .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+    }
+
+</style>
+
+<body>
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+    {{-- header website --}}
+    @include('layouts.header')
+
+    <!-- removeNotificationModal -->
+    <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            id="NotificationModalbtn-close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mt-2 text-center">
+                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+                                   colors="primary:#f7b84b,secondary:#f06548"
+                                   style="width: 100px; height: 100px"></lord-icon>
+                        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                            <h4>Are you sure ?</h4>
+                            <p class="text-muted mx-4 mb-0">
+                                Are you sure you want to remove this Notification ?
+                            </p>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-ghost-secondary mt-2">
-                            Lọc
+                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                        <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn w-sm btn-danger" id="delete-notification">
+                            Yes, Delete It!
                         </button>
                     </div>
-                </ul>
-
-                <section class="d-flex">
-                    <!-- thêm thành viên & chia sẻ link bảng -->
-                    <div class="d-flex justify-content-center align-items-center cursor-pointer me-2">
-                        <div class="col-auto ms-sm-auto">
-                            <div class="avatar-group" id="newMembar">
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
-                                    <img src="{{asset('theme/assets/images/users/avatar-5.jpg')}}" alt=""
-                                        class="rounded-circle avatar-xs" />
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top" title="Frank">
-                                    <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}" alt=""
-                                        class="rounded-circle avatar-xs" />
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
-                                    <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}" alt=""
-                                        class="rounded-circle avatar-xs" />
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
-                                    <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}" alt=""
-                                        class="rounded-circle avatar-xs" />
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
-                                    <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}" alt=""
-                                        class="rounded-circle avatar-xs" />
-                                </a>
-                            </div>
-                        </div>
-                        <div class="bg-primary p-2 rounded">
-                            <i class="ri-user-add-line text-white"></i>
-                            <a href="#addmemberModal" data-bs-toggle="modal" class="avatar-group-item">
-                                <span class="text-white">Chia sẻ</span>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- menu bảng -->
-                    <div class="d-flex justify-content-center align-items-center p-2 cursor-pointer">
-                        <i class="ri-list-settings-line fs-15" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
-                    </div>
-                </section>
+                </div>
             </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    @include('layouts.sidebar')
+
+    <!-- Vertical Overlay-->
+    <div class="vertical-overlay"></div>
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                @include('layouts.navbar')
+
+
+                {{-- các màn hình hiển thị --}}
+                @yield('main')
+
+                {{-- giao diện task - dùng chung --}}
+                <!--end task-board-->
+                @include('components.setting')
+                @include('components.task')
+                @include('components.member')
+                @include('components.createBoard')
+                @include('components.createTemplateBoard')
+
+            </div>
+            <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+        @include('layouts.footer')
+
+    </div>
+    <!-- end main content-->
+</div>
+<!-- END layout-wrapper -->
+
+<!--start back-to-top-->
+<button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
+    <i class="ri-arrow-up-line"></i>
+</button>
+<!--end back-to-top-->
+
+<!--preloader-->
+<div id="preloader">
+    <div id="status">
+        <div class="spinner-border text-primary avatar-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 </div>
+
+
+<!-- JAVASCRIPT -->
+<script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
+<script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
+<script src="{{asset('theme/assets/libs/feather-icons/feather.min.js')}}"></script>
+<script src="{{asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
+<script src="{{asset('theme/assets/js/plugins.js')}}"></script>
+<!-- App js -->
+<script src="{{asset('theme/assets/js/app.js')}}"></script>
+
+<!-- dragula init js -->
+<script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
+
+<!-- dom autoscroll -->
+<script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
+
+
+
+<!-- prismjs plugin -->
+<script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
+
+<script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>
+
+<script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
+
+<!--jquery cdn-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<!--select2 cdn-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
+
+@yield('script')
+<script>
+    const PATH_ROOT = "theme/";
+    // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
+    $(document).ready(function () {
+        $('.dropdown-menu').on('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+
+    // xử lý checklist card
+    const displayChecklistBtn = document.querySelector('.display-checklist');
+    const disableChecklistBtn = document.querySelector('.disable-checklist');
+    const checklistForm = document.querySelector('.addOrUpdate-checklist');
+    const checklistItem = document.querySelector('.checklistItem');
+
+
+    displayChecklistBtn.addEventListener('click', () => {
+
+        checklistForm.classList.toggle('d-none'); // Hiện hoặc ẩn form
+        displayChecklistBtn.classList.add('d-none'); // Hiện hoặc ẩn form
+    });
+
+    disableChecklistBtn.addEventListener('click', () => {
+        checklistItem.value = "";
+        checklistForm.classList.add('d-none'); // Hiện hoặc ẩn form
+        displayChecklistBtn.classList.toggle('d-none'); // Hiện hoặc ẩn form
+    });
+
+
+    //     xử lý lưu trữ cảu card
+    const archiver = document.querySelector('.archiver');
+    const restoreArchiver = document.querySelector('.restore-archiver');
+    const deleteArchiver = document.querySelector('.delete-archiver');
+    archiver.addEventListener('click', () => {
+
+        restoreArchiver.classList.toggle('d-none');
+        deleteArchiver.classList.toggle('d-none');
+        archiver.classList.add('d-none');
+    });
+
+    restoreArchiver.addEventListener('click', () => {
+
+        deleteArchiver.classList.add('d-none');
+        restoreArchiver.classList.add('d-none');
+        archiver.classList.toggle('d-none');
+    });
+
+    deleteArchiver.addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    //     xử lý theo dõi + ngày hết hạn của card
+    const notification = document.querySelector('#notification');
+    const notification_follow = document.querySelector('#notification_follow');
+    const notification_icon = document.querySelector('#notification_icon');
+    const notification_content = document.querySelector('#notification_content');
+    notification.addEventListener('click', () => {
+        notification_follow.classList.toggle('d-none');
+        notification_icon.classList.contains("ri-eye-line") ?
+            notification_icon.className = "ri-eye-off-line fs-22" :
+            notification_icon.className = "ri-eye-line fs-22";
+        notification_content.textContent === "Theo dõi" ?
+            notification_content.innerHTML = "Đang theo dõi" :
+            notification_content.innerHTML = "Theo dõi";
+    });
+
+    const due_date_checkbox = document.querySelector('#due_date_checkbox');
+    const due_date_success = document.querySelector('#due_date_success');
+    const due_date_due = document.querySelector('#due_date_due');
+    due_date_checkbox.addEventListener('click', () => {
+        due_date_due.classList.toggle('d-none');
+        due_date_success.classList.toggle('d-none');
+    });
+
+</script>
+</body>
+
+</html>

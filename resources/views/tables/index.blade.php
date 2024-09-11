@@ -1,5 +1,4 @@
-
-@extends('layouts.master')
+@extends('layouts.masterBoard')
 @section('title')
     Table - TaskFlow
 @endsection
@@ -12,74 +11,77 @@
                 </div>
                 <div class="card-body">
                     <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                        style="width:100%">
+                           style="width:100%">
                         <thead>
-                            <tr>
-                                {{-- <th scope="col" style="width: 10px;">
-                                    <div class="form-check">
-                                        <input class="form-check-input fs-15" type="checkbox" id="checkAll" value="option">
-                                    </div>
-                                </th> --}}
-                                <th data-ordering="false">Thẻ</th>
-                                <th data-ordering="false">Danh sách</th>
-                                <th data-ordering="false">Nhãn</th>
-                                <th data-ordering="false">Thành viên</th>
-                                <th data-ordering="false">Ngày hết hạn</th>
-                            </tr>
+                        <tr>
+                            {{-- <th scope="col" style="width: 10px;">
+                                <div class="form-check">
+                                    <input class="form-check-input fs-15" type="checkbox" id="checkAll" value="option">
+                                </div>
+                            </th> --}}
+                            <th data-ordering="false">Thẻ</th>
+                            <th data-ordering="false">Danh sách</th>
+                            <th data-ordering="false">Nhãn</th>
+                            <th data-ordering="false">Thành viên</th>
+                            <th data-ordering="false">Ngày hết hạn</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                {{-- <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input fs-15" type="checkbox" name="checkAll"
-                                            value="option1">
-                                    </div>
-                                </th> --}}
-                                <td>
-                                    <div class="d-flex">
-                                        <div class="flex-grow-1 ">Thẻ công việc 1</div>
-                                        <div class="flex-shrink-0 ms-4">
-                                            <ul class="list-inline tasks-list-menu mb-0">
-                                                <li class="list-inline-item"><a href="" data-bs-toggle="modal"
-                                                        data-bs-target="#createCardDetailModal"><i
+                        <tr>
+                            {{-- <th scope="row">
+                                <div class="form-check">
+                                    <input class="form-check-input fs-15" type="checkbox" name="checkAll"
+                                        value="option1">
+                                </div>
+                            </th> --}}
+                            <td>
+                                <div class="d-flex">
+                                    <div class="flex-grow-1 ">Thẻ công việc 1</div>
+                                    <div class="flex-shrink-0 ms-4">
+                                        <ul class="list-inline tasks-list-menu mb-0">
+                                            <li class="list-inline-item"><a href="" data-bs-toggle="modal"
+                                                                            data-bs-target="#createCardDetailModal"><i
                                                             class="ri-pencil-fill align-bottom me-2 text-muted"></i></a>
-                                                </li>
-                                            </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn border-0 bg-transparent" id="triggerButton"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal">xin chào
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn border-0 bg-transparent" id="triggerlabel"
+                                        data-bs-toggle="modal" data-bs-target="#nhan">
+                                    <div style="display: flex; gap: 5px;">
+                                        <div
+                                                style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
+                                        </div>
+                                        <div
+                                                style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
                                         </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn border-0 bg-transparent" id="triggerButton"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal">xin chào</button>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn border-0 bg-transparent" id="triggerlabel"
-                                        data-bs-toggle="modal" data-bs-target="#nhan">
-                                        <div style="display: flex; gap: 5px;">
-                                            <div
-                                                style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
-                                            </div>
-                                            <div
-                                                style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
-                                            </div>
-                                        </div>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn border-0 bg-transparent" id="triggermember"
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn border-0 bg-transparent" id="triggermember"
                                         data-bs-toggle="modal" data-bs-target="#member"><a href=""
-                                            class="avatar-group-item" id="triggermember" data-bs-toggle="modal"
-                                            data-bs-target="#member">
-                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}" alt=""
-                                                class="rounded-circle avatar-xs" />
-                                    </button>
+                                                                                           class="avatar-group-item"
+                                                                                           id="triggermember"
+                                                                                           data-bs-toggle="modal"
+                                                                                           data-bs-target="#member">
+                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}" alt=""
+                                             class="rounded-circle avatar-xs"/>
+                                </button>
 
-                                </td>
-                                <td><a href="javascript: void(0);" class="avatar-group-item">
-                                        <input style="width:180px" class="form-control" type="date" name=""
-                                            id=""></i>
-                                    </a></td>
-                            </tr>
+                            </td>
+                            <td><a href="javascript: void(0);" class="avatar-group-item">
+                                    <input style="width:180px" class="form-control" type="date" name=""
+                                           id=""></i>
+                                </a></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -94,22 +96,23 @@
 
     <!-- Button "B" mở modal add danh sách -->
     <button id="bBtn" class="hidden btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#addds">Danh
-        sách</button>
+        sách
+    </button>
     <!-- //modal thẻ -->
     <div class="modal fade" id="createCardDetailModal" tabindex="-1" aria-labelledby="createCardDetailModalLabel"
-        aria-hidden="true">
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0">
                 <div class="modal-header p-3"
-                    style="
+                     style="
                       height: 150px;
                       object-fit: cover;
                       background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}');
                     "
-                    id="detailCardModalLabel">
+                     id="detailCardModalLabel">
                     <div></div>
                     <button type="button" class="btn-close bg-white" style="margin: -100px -5px 0px 0px"
-                        data-bs-dismiss="modal" aria-label="Close"></button>
+                            data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="modal-body container">
@@ -123,8 +126,8 @@
                                                 <section class="d-flex mb-2">
                                                     <i class="ri-artboard-line fs-22"></i>
                                                     <input type="text"
-                                                        class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent"
-                                                        id="borderInput" placeholder="Enter your name" />
+                                                           class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent"
+                                                           id="borderInput" placeholder="Enter your name"/>
                                                 </section>
                                                 <span class="ms-5">trong danh sách ...</span>
                                             </div>
@@ -135,43 +138,43 @@
                                                 <section class="d-flex">
                                                     <!-- thêm thành viên & chia sẻ link bảng -->
                                                     <div
-                                                        class="d-flex justify-content-center align-items-center cursor-pointer ">
+                                                            class="d-flex justify-content-center align-items-center cursor-pointer ">
                                                         <div class="col-auto ms-sm-auto">
                                                             <div class="avatar-group" id="newMembar">
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                    data-bs-placement="top">
+                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                   data-bs-placement="top">
                                                                     <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                         alt="" class="rounded-circle avatar-xs"/>
                                                                 </a>
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                    data-bs-placement="top" title="Frank">
+                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                   data-bs-placement="top" title="Frank">
                                                                     <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                         alt="" class="rounded-circle avatar-xs"/>
                                                                 </a>
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                    data-bs-placement="top" title="Tonya">
+                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                   data-bs-placement="top" title="Tonya">
                                                                     <img src="{{ asset('theme/assets/images/users/avatar-10.jpg') }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                         alt="" class="rounded-circle avatar-xs"/>
                                                                 </a>
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                    data-bs-placement="top" title="Thomas">
+                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                   data-bs-placement="top" title="Thomas">
                                                                     <img src="{{ asset('theme/assets/images/users/avatar-8.jpg') }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                         alt="" class="rounded-circle avatar-xs"/>
                                                                 </a>
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                    data-bs-placement="top" title="Herbert">
+                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                   data-bs-placement="top" title="Herbert">
                                                                     <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                         alt="" class="rounded-circle avatar-xs"/>
                                                                 </a>
 
                                                                 <button type="button" class="border-0 bg-transparent"
-                                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                    aria-expanded="false">
+                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                        aria-expanded="false">
 
                                                                 </button>
                                                             </div>
@@ -182,21 +185,21 @@
                                             <div class="p-3 ">
                                                 <strong>Thông báo</strong>
                                                 <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                    style="height: 35px; background-color: #c7c7c7" id="notification">
+                                                     style="height: 35px; background-color: #c7c7c7" id="notification">
                                                     <i class="ri-eye-line fs-22" id="notification_icon"></i>
                                                     <p class="ms-2 mt-3" id="notification_content">Theo dõi</p>
                                                     <div class="d-none" id="notification_follow">
                                                         <i class="ri-check-line fs-22 bg-light ms-2 rounded "
-                                                            style="color: black"></i>
+                                                           style="color: black"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="p-3 ">
                                                 <strong>Ngày hết hạn</strong>
                                                 <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                    style="height: 35px; background-color: #c7c7c7">
+                                                     style="height: 35px; background-color: #c7c7c7">
                                                     <input type="checkbox" id="due_date_checkbox"
-                                                        class="form-check-input" />
+                                                           class="form-check-input"/>
                                                     <p class="ms-2 mt-3">20:00 28 thg 8</p>
 
                                                     <span class="badge bg-success ms-2 d-none" id="due_date_success">Hoàn
@@ -214,7 +217,7 @@
                                         </section>
                                         <div class="ps-4">
                                             <textarea name="" cols="25" rows="5" class="form-control bg-light"
-                                                placeholder="Thêm mô tả chi tiết"></textarea>
+                                                      placeholder="Thêm mô tả chi tiết"></textarea>
                                         </div>
                                     </div>
                                     <!-- tệp -->
@@ -239,12 +242,13 @@
                                                                     <div class="flex-shrink-0">
                                                                         <div class="d-flex gap-1 align-items-center">
                                                                             <i class="ri-more-fill fs-20 cursor-pointer"
-                                                                                data-bs-toggle="dropdown"
-                                                                                aria-haspopup="true"
-                                                                                aria-expanded="false"></i>
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"></i>
                                                                             <div class="dropdown-menu dropdown-menu-md"
-                                                                                style="padding: 15px 15px 0 15px">
-                                                                                <h5 class="text-center">Thao tác mục</h5>
+                                                                                 style="padding: 15px 15px 0 15px">
+                                                                                <h5 class="text-center">Thao tác
+                                                                                    mục</h5>
                                                                                 <p class="mt-2">Chuyển sang thẻ</p>
                                                                                 <p>Xóa</p>
                                                                             </div>
@@ -263,15 +267,15 @@
                                                                         <div class="mt-3 d-flex justify-content-between">
                                                                             <div class="avatar-group">
                                                                                 <a href="javascript: void(0);"
-                                                                                    class="avatar-group-item border-0"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-trigger="hover"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Darline Williams">
+                                                                                   class="avatar-group-item border-0"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-trigger="hover"
+                                                                                   data-bs-placement="top"
+                                                                                   title="Darline Williams">
                                                                                     <div class="avatar-xxs">
                                                                                         <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                                            alt=""
-                                                                                            class="rounded-circle img-fluid" />
+                                                                                             alt=""
+                                                                                             class="rounded-circle img-fluid"/>
                                                                                     </div>
                                                                                 </a>
 
@@ -280,29 +284,29 @@
                                                                                 <!-- theo dõi -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-eye-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-eye-line align-bottom"></i>
                                                                                         04</a>
                                                                                 </li>
                                                                                 <!-- bình luận -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-question-answer-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-question-answer-line align-bottom"></i>
                                                                                         19</a>
                                                                                 </li>
                                                                                 <!-- tệp đính kèm -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-attachment-2 align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-attachment-2 align-bottom"></i>
                                                                                         02</a>
                                                                                 </li>
                                                                                 <!-- checklist -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-checkbox-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-checkbox-line align-bottom"></i>
                                                                                         2/4</a>
                                                                                 </li>
                                                                             </ul>
@@ -346,26 +350,26 @@
                                                                         <div class="mt-3 d-flex justify-content-between">
                                                                             <div class="avatar-group">
                                                                                 <a href="javascript: void(0);"
-                                                                                    class="avatar-group-item"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-trigger="hover"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Darline Williams">
+                                                                                   class="avatar-group-item"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-trigger="hover"
+                                                                                   data-bs-placement="top"
+                                                                                   title="Darline Williams">
                                                                                     <div class="avatar-xxs">
                                                                                         <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                                            alt=""
-                                                                                            class="rounded-circle img-fluid" />
+                                                                                             alt=""
+                                                                                             class="rounded-circle img-fluid"/>
                                                                                     </div>
                                                                                 </a>
                                                                                 <a href="javascript: void(0);"
-                                                                                    class="avatar-group-item"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-trigger="hover"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Add Members">
+                                                                                   class="avatar-group-item"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-trigger="hover"
+                                                                                   data-bs-placement="top"
+                                                                                   title="Add Members">
                                                                                     <div class="avatar-xxs">
                                                                                         <div
-                                                                                            class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                                                             +
                                                                                         </div>
                                                                                     </div>
@@ -375,29 +379,29 @@
                                                                                 <!-- theo dõi -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-eye-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-eye-line align-bottom"></i>
                                                                                         04</a>
                                                                                 </li>
                                                                                 <!-- bình luận -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-question-answer-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-question-answer-line align-bottom"></i>
                                                                                         19</a>
                                                                                 </li>
                                                                                 <!-- tệp đính kèm -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-attachment-2 align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-attachment-2 align-bottom"></i>
                                                                                         02</a>
                                                                                 </li>
                                                                                 <!-- checklist -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-checkbox-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-checkbox-line align-bottom"></i>
                                                                                         2/4</a>
                                                                                 </li>
                                                                             </ul>
@@ -441,26 +445,26 @@
                                                                         <div class="mt-3 d-flex justify-content-between">
                                                                             <div class="avatar-group">
                                                                                 <a href="javascript: void(0);"
-                                                                                    class="avatar-group-item"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-trigger="hover"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Darline Williams">
+                                                                                   class="avatar-group-item"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-trigger="hover"
+                                                                                   data-bs-placement="top"
+                                                                                   title="Darline Williams">
                                                                                     <div class="avatar-xxs">
                                                                                         <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                                            alt=""
-                                                                                            class="rounded-circle img-fluid" />
+                                                                                             alt=""
+                                                                                             class="rounded-circle img-fluid"/>
                                                                                     </div>
                                                                                 </a>
                                                                                 <a href="javascript: void(0);"
-                                                                                    class="avatar-group-item"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-trigger="hover"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Add Members">
+                                                                                   class="avatar-group-item"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-trigger="hover"
+                                                                                   data-bs-placement="top"
+                                                                                   title="Add Members">
                                                                                     <div class="avatar-xxs">
                                                                                         <div
-                                                                                            class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                                                             +
                                                                                         </div>
                                                                                     </div>
@@ -470,29 +474,29 @@
                                                                                 <!-- theo dõi -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-eye-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-eye-line align-bottom"></i>
                                                                                         04</a>
                                                                                 </li>
                                                                                 <!-- bình luận -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-question-answer-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-question-answer-line align-bottom"></i>
                                                                                         19</a>
                                                                                 </li>
                                                                                 <!-- tệp đính kèm -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-attachment-2 align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-attachment-2 align-bottom"></i>
                                                                                         02</a>
                                                                                 </li>
                                                                                 <!-- checklist -->
                                                                                 <li class="list-inline-item">
                                                                                     <a href="javascript:void(0)"
-                                                                                        class="text-muted"><i
-                                                                                            class="ri-checkbox-line align-bottom"></i>
+                                                                                       class="text-muted"><i
+                                                                                                class="ri-checkbox-line align-bottom"></i>
                                                                                         2/4</a>
                                                                                 </li>
                                                                             </ul>
@@ -523,7 +527,8 @@
                                                 <p class="fs-18 ms-2 mt-1">Việc cần làm</p>
                                             </section>
                                             <button class="btn btn-outline-dark" style="height: 35px"
-                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
                                                 Xóa
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-md p-3 w-50">
@@ -536,359 +541,361 @@
                                         </section>
 
                                         <div class="ps-4">
-                                            <div class="progress animated-progress bg-light-subtle" style="height: 20px">
+                                            <div class="progress animated-progress bg-light-subtle"
+                                                 style="height: 20px">
                                                 <div class="progress-bar bg-success" role="progressbar"
-                                                    style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                    aria-valuemax="100">
+                                                     style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                     aria-valuemax="100">
                                                     50%
                                                 </div>
                                             </div>
                                             <div class="table-responsive table-hover table-card">
                                                 <table class="table table-nowrap mt-4">
                                                     <tbody>
-                                                        <tr class="cursor-pointer">
-                                                            <td class="col-1">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        value="" id="cardtableCheck01" />
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <p>checklist1</p>
-                                                            </td>
-                                                            <td class=" d-flex justify-content-end">
-                                                                <div>
-                                                                    <i class="ri-time-line fs-20 ms-2"
-                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                        aria-expanded="false"
-                                                                        data-bs-offset="-10,-500"></i>
-                                                                    <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                        <h5 class="text-center">Ngày</h5>
-                                                                        <form action="">
+                                                    <tr class="cursor-pointer">
+                                                        <td class="col-1">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                       value="" id="cardtableCheck01"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <p>checklist1</p>
+                                                        </td>
+                                                        <td class=" d-flex justify-content-end">
+                                                            <div>
+                                                                <i class="ri-time-line fs-20 ms-2"
+                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                   aria-expanded="false"
+                                                                   data-bs-offset="-10,-500"></i>
+                                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                    <h5 class="text-center">Ngày</h5>
+                                                                    <form action="">
 
-                                                                            <!-- ngày bắt đầu -->
-                                                                            <div>
-                                                                                <strong class="fs-14">Ngày bắt
-                                                                                    đầu</strong>
-                                                                                <input type="datetime-local"
-                                                                                    name="" id=""
-                                                                                    class="form-control border-0 my-2" />
-                                                                            </div>
-                                                                            <div>
-                                                                                <strong class="fs-14">Ngày kết
-                                                                                    thúc</strong>
-                                                                                <input type="datetime-local"
-                                                                                    name="" id=""
-                                                                                    class="form-control border-0 my-2" />
-                                                                            </div>
-                                                                            <div class="mt-2">
-                                                                                <strong class="fs-16">Thiết lập nhắc
-                                                                                    nhỏ</strong>
-                                                                                <select name="" id=""
-                                                                                    class="form-select">
-                                                                                    <option value="">1 ngày trước
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-
-                                                                            <div class="mt-3 card">
-                                                                                <button
-                                                                                    class="btn bg-primary text-white">Lưu
-                                                                                </button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <i class="ri-user-add-line fs-20 ms-2"
-                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                        aria-expanded="false"></i>
-                                                                    <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                        <h5 class="text-center">Thành viên</h5>
-                                                                        <form action="">
-                                                                            <input type="text" name=""
-                                                                                id=""
-                                                                                class="form-control border-1"
-                                                                                placeholder="Tìm kiếm thành viên" />
-
-                                                                            <!-- thành viên của thẻ -->
-                                                                            <div class="mt-3">
-                                                                                <strong class="fs-14">Thành viên của
-                                                                                    thẻ</strong>
-                                                                                <ul class=""
-                                                                                    style="list-style: none; margin-left: -32px">
-                                                                                    <li
-                                                                                        class="d-flex justify-content-between align-items-center">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center">
-                                                                                            <a href="javascript: void(0);"
-                                                                                                class="avatar-group-item"
-                                                                                                data-bs-toggle="tooltip"
-                                                                                                data-bs-trigger="hover"
-                                                                                                data-bs-placement="top">
-                                                                                                <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-xs" />
-                                                                                            </a>
-                                                                                            <p class="ms-3 mt-3">vinhpq</p>
-                                                                                        </div>
-
-                                                                                        <i class="ri-close-line fs-20"></i>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <!-- thành viên của bảng -->
-                                                                            <div class="mt-3">
-                                                                                <strong class="fs-14">Thành viên của
-                                                                                    bảng</strong>
-                                                                                <ul class=""
-                                                                                    style="list-style: none; margin-left: -32px">
-                                                                                    <li
-                                                                                        class="d-flex justify-content-between align-items-center">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center">
-                                                                                            <a href="javascript: void(0);"
-                                                                                                class="avatar-group-item"
-                                                                                                data-bs-toggle="tooltip"
-                                                                                                data-bs-trigger="hover"
-                                                                                                data-bs-placement="top">
-                                                                                                <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-xs" />
-                                                                                            </a>
-                                                                                            <p class="ms-3 mt-3">vinhpq</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <!-- Thành viên Không gian làm việc -->
-                                                                            <div class="mt-3">
-                                                                                <strong class="fs-14">Thành viên Không
-                                                                                    gian
-                                                                                    làm
-                                                                                    việc</strong>
-                                                                                <ul class=""
-                                                                                    style="list-style: none; margin-left: -32px">
-                                                                                    <li
-                                                                                        class="d-flex justify-content-between align-items-center">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center">
-                                                                                            <a href="javascript: void(0);"
-                                                                                                class="avatar-group-item"
-                                                                                                data-bs-toggle="tooltip"
-                                                                                                data-bs-trigger="hover"
-                                                                                                data-bs-placement="top">
-                                                                                                <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-xs" />
-                                                                                            </a>
-                                                                                            <p class="ms-3 mt-3">vinhpq</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <i class="ri-more-fill fs-20 ms-2"
-                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                        aria-expanded="false"></i>
-                                                                    <div class="dropdown-menu dropdown-menu-md"
-                                                                        style="padding: 15px 15px 0 15px">
-                                                                        <h5 class="text-center">Thao tác mục</h5>
-                                                                        <p class="mt-2">Chuyển sang thẻ</p>
-                                                                        <p>Xóa</p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                            <td class="col-1">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        value="" />
-                                                                </div>
-                                                            </td>
-                                                            <td colspan="2">
-                                                                <form action="" class="w-100 " aria-labelledby="">
-                                                                    <input type="text" name=""
-                                                                        class="form-control checklistItem"
-                                                                        placeholder="Thêm mục" />
-                                                                    <div class="d-flex mt-3 justify-content-between">
+                                                                        <!-- ngày bắt đầu -->
                                                                         <div>
-                                                                            <button class="btn btn-primary">Thêm
-                                                                            </button>
+                                                                            <strong class="fs-14">Ngày bắt
+                                                                                đầu</strong>
+                                                                            <input type="datetime-local"
+                                                                                   name="" id=""
+                                                                                   class="form-control border-0 my-2"/>
+                                                                        </div>
+                                                                        <div>
+                                                                            <strong class="fs-14">Ngày kết
+                                                                                thúc</strong>
+                                                                            <input type="datetime-local"
+                                                                                   name="" id=""
+                                                                                   class="form-control border-0 my-2"/>
+                                                                        </div>
+                                                                        <div class="mt-2">
+                                                                            <strong class="fs-16">Thiết lập nhắc
+                                                                                nhỏ</strong>
+                                                                            <select name="" id=""
+                                                                                    class="form-select">
+                                                                                <option value="">1 ngày trước
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="mt-3 card">
                                                                             <button
-                                                                                class="btn btn-outline-dark disable-checklist">
-                                                                                Hủy
+                                                                                    class="btn bg-primary text-white">
+                                                                                Lưu
                                                                             </button>
                                                                         </div>
-                                                                        <div class="d-flex">
-                                                                            <div>
-                                                                                <i class="ri-time-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                    aria-haspopup="true"
-                                                                                    aria-expanded="false">Ngày hết hạn
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <i class="ri-user-add-line fs-20 ms-2"
+                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                   aria-expanded="false"></i>
+                                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                    <h5 class="text-center">Thành viên</h5>
+                                                                    <form action="">
+                                                                        <input type="text" name=""
+                                                                               id=""
+                                                                               class="form-control border-1"
+                                                                               placeholder="Tìm kiếm thành viên"/>
+
+                                                                        <!-- thành viên của thẻ -->
+                                                                        <div class="mt-3">
+                                                                            <strong class="fs-14">Thành viên của
+                                                                                thẻ</strong>
+                                                                            <ul class=""
+                                                                                style="list-style: none; margin-left: -32px">
+                                                                                <li
+                                                                                        class="d-flex justify-content-between align-items-center">
+                                                                                    <div
+                                                                                            class="d-flex align-items-center">
+                                                                                        <a href="javascript: void(0);"
+                                                                                           class="avatar-group-item"
+                                                                                           data-bs-toggle="tooltip"
+                                                                                           data-bs-trigger="hover"
+                                                                                           data-bs-placement="top">
+                                                                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                                                 alt=""
+                                                                                                 class="rounded-circle avatar-xs"/>
+                                                                                        </a>
+                                                                                        <p class="ms-3 mt-3">vinhpq</p>
+                                                                                    </div>
+
+                                                                                    <i class="ri-close-line fs-20"></i>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <!-- thành viên của bảng -->
+                                                                        <div class="mt-3">
+                                                                            <strong class="fs-14">Thành viên của
+                                                                                bảng</strong>
+                                                                            <ul class=""
+                                                                                style="list-style: none; margin-left: -32px">
+                                                                                <li
+                                                                                        class="d-flex justify-content-between align-items-center">
+                                                                                    <div
+                                                                                            class="d-flex align-items-center">
+                                                                                        <a href="javascript: void(0);"
+                                                                                           class="avatar-group-item"
+                                                                                           data-bs-toggle="tooltip"
+                                                                                           data-bs-trigger="hover"
+                                                                                           data-bs-placement="top">
+                                                                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                                                 alt=""
+                                                                                                 class="rounded-circle avatar-xs"/>
+                                                                                        </a>
+                                                                                        <p class="ms-3 mt-3">vinhpq</p>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <!-- Thành viên Không gian làm việc -->
+                                                                        <div class="mt-3">
+                                                                            <strong class="fs-14">Thành viên Không
+                                                                                gian
+                                                                                làm
+                                                                                việc</strong>
+                                                                            <ul class=""
+                                                                                style="list-style: none; margin-left: -32px">
+                                                                                <li
+                                                                                        class="d-flex justify-content-between align-items-center">
+                                                                                    <div
+                                                                                            class="d-flex align-items-center">
+                                                                                        <a href="javascript: void(0);"
+                                                                                           class="avatar-group-item"
+                                                                                           data-bs-toggle="tooltip"
+                                                                                           data-bs-trigger="hover"
+                                                                                           data-bs-placement="top">
+                                                                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                                                 alt=""
+                                                                                                 class="rounded-circle avatar-xs"/>
+                                                                                        </a>
+                                                                                        <p class="ms-3 mt-3">vinhpq</p>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <i class="ri-more-fill fs-20 ms-2"
+                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                   aria-expanded="false"></i>
+                                                                <div class="dropdown-menu dropdown-menu-md"
+                                                                     style="padding: 15px 15px 0 15px">
+                                                                    <h5 class="text-center">Thao tác mục</h5>
+                                                                    <p class="mt-2">Chuyển sang thẻ</p>
+                                                                    <p>Xóa</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="cursor-pointer addOrUpdate-checklist d-none">
+                                                        <td class="col-1">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                       value=""/>
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <form action="" class="w-100 " aria-labelledby="">
+                                                                <input type="text" name=""
+                                                                       class="form-control checklistItem"
+                                                                       placeholder="Thêm mục"/>
+                                                                <div class="d-flex mt-3 justify-content-between">
+                                                                    <div>
+                                                                        <button class="btn btn-primary">Thêm
+                                                                        </button>
+                                                                        <button
+                                                                                class="btn btn-outline-dark disable-checklist">
+                                                                            Hủy
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="d-flex">
+                                                                        <div>
+                                                                            <i class="ri-time-line fs-20 ms-2"></i>
+                                                                            <span data-bs-toggle="dropdown"
+                                                                                  aria-haspopup="true"
+                                                                                  aria-expanded="false">Ngày hết hạn
                                                                                 </span>
-                                                                                <div
+                                                                            <div
                                                                                     class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    <h5 class="text-center">Ngày</h5>
-                                                                                    <form action="">
-                                                                                        <!-- ngày bắt đầu -->
-                                                                                        <div>
-                                                                                            <strong class="fs-14">Ngày bắt
-                                                                                                đầu</strong>
-                                                                                            <input type="datetime-local"
-                                                                                                name=""
-                                                                                                id=""
-                                                                                                class="form-control border-0 my-2" />
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <strong class="fs-14">Ngày kết
-                                                                                                thúc</strong>
-                                                                                            <input type="datetime-local"
-                                                                                                name=""
-                                                                                                id=""
-                                                                                                class="form-control border-0 my-2" />
-                                                                                        </div>
-                                                                                        <div class="mt-2">
-                                                                                            <strong class="fs-16">Thiết
-                                                                                                lập
-                                                                                                nhắc
-                                                                                                nhỏ</strong>
-                                                                                            <select name=""
+                                                                                <h5 class="text-center">Ngày</h5>
+                                                                                <form action="">
+                                                                                    <!-- ngày bắt đầu -->
+                                                                                    <div>
+                                                                                        <strong class="fs-14">Ngày bắt
+                                                                                            đầu</strong>
+                                                                                        <input type="datetime-local"
+                                                                                               name=""
+                                                                                               id=""
+                                                                                               class="form-control border-0 my-2"/>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <strong class="fs-14">Ngày kết
+                                                                                            thúc</strong>
+                                                                                        <input type="datetime-local"
+                                                                                               name=""
+                                                                                               id=""
+                                                                                               class="form-control border-0 my-2"/>
+                                                                                    </div>
+                                                                                    <div class="mt-2">
+                                                                                        <strong class="fs-16">Thiết
+                                                                                            lập
+                                                                                            nhắc
+                                                                                            nhỏ</strong>
+                                                                                        <select name=""
                                                                                                 id=""
                                                                                                 class="form-select">
-                                                                                                <option value="">1
-                                                                                                    ngày
-                                                                                                    trước
-                                                                                                </option>
-                                                                                            </select>
-                                                                                        </div>
+                                                                                            <option value="">1
+                                                                                                ngày
+                                                                                                trước
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
 
-                                                                                        <div class="mt-3 card">
-                                                                                            <button
+                                                                                    <div class="mt-3 card">
+                                                                                        <button
                                                                                                 class="btn bg-primary text-white">
-                                                                                                Lưu
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                </div>
+                                                                                            Lưu
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </form>
                                                                             </div>
-
-                                                                            <div>
-                                                                                <i class="ri-user-add-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                    aria-haspopup="true"
-                                                                                    aria-expanded="false">Chỉ định
-                                                                                </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    <h5 class="text-center">Thành viên</h5>
-                                                                                    <form action="">
-                                                                                        <input type="text"
-                                                                                            name="" id=""
-                                                                                            class="form-control border-0"
-                                                                                            placeholder="Tìm kiếm thành viên" />
-
-                                                                                        <!-- thành viên của thẻ -->
-                                                                                        <div class="mt-3">
-                                                                                            <strong class="fs-14">Thành
-                                                                                                viên
-                                                                                                của
-                                                                                                thẻ</strong>
-                                                                                            <ul class=""
-                                                                                                style="list-style: none; margin-left: -32px">
-                                                                                                <li
-                                                                                                    class="d-flex justify-content-between align-items-center">
-                                                                                                    <div
-                                                                                                        class="d-flex align-items-center">
-                                                                                                        <a href="javascript: void(0);"
-                                                                                                            class="avatar-group-item"
-                                                                                                            data-bs-toggle="tooltip"
-                                                                                                            data-bs-trigger="hover"
-                                                                                                            data-bs-placement="top">
-                                                                                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                                alt=""
-                                                                                                                class="rounded-circle avatar-xs" />
-                                                                                                        </a>
-                                                                                                        <p
-                                                                                                            class="ms-3 mt-3">
-                                                                                                            vinhpq</p>
-                                                                                                    </div>
-
-                                                                                                    <i
-                                                                                                        class="ri-close-line fs-20"></i>
-                                                                                                </li>
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <!-- thành viên của bảng -->
-                                                                                        <div class="mt-3">
-                                                                                            <strong class="fs-14">Thành
-                                                                                                viên
-                                                                                                của
-                                                                                                bảng</strong>
-                                                                                            <ul class=""
-                                                                                                style="list-style: none; margin-left: -32px">
-                                                                                                <li
-                                                                                                    class="d-flex justify-content-between align-items-center">
-                                                                                                    <div
-                                                                                                        class="d-flex align-items-center">
-                                                                                                        <a href="javascript: void(0);"
-                                                                                                            class="avatar-group-item"
-                                                                                                            data-bs-toggle="tooltip"
-                                                                                                            data-bs-trigger="hover"
-                                                                                                            data-bs-placement="top">
-                                                                                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                                alt=""
-                                                                                                                class="rounded-circle avatar-xs" />
-                                                                                                        </a>
-                                                                                                        <p
-                                                                                                            class="ms-3 mt-3">
-                                                                                                            vinhpq</p>
-                                                                                                    </div>
-                                                                                                </li>
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <!-- Thành viên Không gian làm việc -->
-                                                                                        <div class="mt-3">
-                                                                                            <strong class="fs-14">Thành
-                                                                                                viên
-                                                                                                Không
-                                                                                                gian làm việc</strong>
-                                                                                            <ul class=""
-                                                                                                style="list-style: none; margin-left: -32px">
-                                                                                                <li
-                                                                                                    class="d-flex justify-content-between align-items-center">
-                                                                                                    <div
-                                                                                                        class="d-flex align-items-center">
-                                                                                                        <a href="javascript: void(0);"
-                                                                                                            class="avatar-group-item"
-                                                                                                            data-bs-toggle="tooltip"
-                                                                                                            data-bs-trigger="hover"
-                                                                                                            data-bs-placement="top">
-                                                                                                            <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                                                                alt=""
-                                                                                                                class="rounded-circle avatar-xs" />
-                                                                                                        </a>
-                                                                                                        <p
-                                                                                                            class="ms-3 mt-3">
-                                                                                                            vinhpq</p>
-                                                                                                    </div>
-                                                                                                </li>
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-
-
                                                                         </div>
+
+                                                                        <div>
+                                                                            <i class="ri-user-add-line fs-20 ms-2"></i>
+                                                                            <span data-bs-toggle="dropdown"
+                                                                                  aria-haspopup="true"
+                                                                                  aria-expanded="false">Chỉ định
+                                                                                </span>
+                                                                            <div
+                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                                <h5 class="text-center">Thành viên</h5>
+                                                                                <form action="">
+                                                                                    <input type="text"
+                                                                                           name="" id=""
+                                                                                           class="form-control border-0"
+                                                                                           placeholder="Tìm kiếm thành viên"/>
+
+                                                                                    <!-- thành viên của thẻ -->
+                                                                                    <div class="mt-3">
+                                                                                        <strong class="fs-14">Thành
+                                                                                            viên
+                                                                                            của
+                                                                                            thẻ</strong>
+                                                                                        <ul class=""
+                                                                                            style="list-style: none; margin-left: -32px">
+                                                                                            <li
+                                                                                                    class="d-flex justify-content-between align-items-center">
+                                                                                                <div
+                                                                                                        class="d-flex align-items-center">
+                                                                                                    <a href="javascript: void(0);"
+                                                                                                       class="avatar-group-item"
+                                                                                                       data-bs-toggle="tooltip"
+                                                                                                       data-bs-trigger="hover"
+                                                                                                       data-bs-placement="top">
+                                                                                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                                                             alt=""
+                                                                                                             class="rounded-circle avatar-xs"/>
+                                                                                                    </a>
+                                                                                                    <p
+                                                                                                            class="ms-3 mt-3">
+                                                                                                        vinhpq</p>
+                                                                                                </div>
+
+                                                                                                <i
+                                                                                                        class="ri-close-line fs-20"></i>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                    <!-- thành viên của bảng -->
+                                                                                    <div class="mt-3">
+                                                                                        <strong class="fs-14">Thành
+                                                                                            viên
+                                                                                            của
+                                                                                            bảng</strong>
+                                                                                        <ul class=""
+                                                                                            style="list-style: none; margin-left: -32px">
+                                                                                            <li
+                                                                                                    class="d-flex justify-content-between align-items-center">
+                                                                                                <div
+                                                                                                        class="d-flex align-items-center">
+                                                                                                    <a href="javascript: void(0);"
+                                                                                                       class="avatar-group-item"
+                                                                                                       data-bs-toggle="tooltip"
+                                                                                                       data-bs-trigger="hover"
+                                                                                                       data-bs-placement="top">
+                                                                                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                                                             alt=""
+                                                                                                             class="rounded-circle avatar-xs"/>
+                                                                                                    </a>
+                                                                                                    <p
+                                                                                                            class="ms-3 mt-3">
+                                                                                                        vinhpq</p>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                    <!-- Thành viên Không gian làm việc -->
+                                                                                    <div class="mt-3">
+                                                                                        <strong class="fs-14">Thành
+                                                                                            viên
+                                                                                            Không
+                                                                                            gian làm việc</strong>
+                                                                                        <ul class=""
+                                                                                            style="list-style: none; margin-left: -32px">
+                                                                                            <li
+                                                                                                    class="d-flex justify-content-between align-items-center">
+                                                                                                <div
+                                                                                                        class="d-flex align-items-center">
+                                                                                                    <a href="javascript: void(0);"
+                                                                                                       class="avatar-group-item"
+                                                                                                       data-bs-toggle="tooltip"
+                                                                                                       data-bs-trigger="hover"
+                                                                                                       data-bs-placement="top">
+                                                                                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                                                                             alt=""
+                                                                                                             class="rounded-circle avatar-xs"/>
+                                                                                                    </a>
+                                                                                                    <p
+                                                                                                            class="ms-3 mt-3">
+                                                                                                        vinhpq</p>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+
+
                                                                     </div>
-                                                                </form>
-                                                            </td>
-                                                        </tr>
+                                                                </div>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -904,7 +911,7 @@
                                         </section>
                                         <div class="ps-4">
                                             <textarea name="" cols="25" rows="5" class="form-control bg-light"
-                                                placeholder="Viết bình luận..."></textarea>
+                                                      placeholder="Viết bình luận..."></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -912,10 +919,10 @@
                                     <h5 class="mt-3 mb-3"><strong>Thêm vào thẻ</strong></h5>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-user"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Thành viên
                                             </p>
                                             <!--dropdown thành viên-->
@@ -924,7 +931,8 @@
                                                 <h5 class="text-center">Thành viên</h5>
                                                 <form action="">
                                                     <input type="text" name="" id=""
-                                                        class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+                                                           class="form-control border-1"
+                                                           placeholder="Tìm kiếm thành viên"/>
 
                                                     <!-- thành viên của thẻ -->
                                                     <div class="mt-3">
@@ -933,11 +941,12 @@
                                                             <li class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <a href="javascript: void(0);"
-                                                                        class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                        data-bs-trigger="hover" data-bs-placement="top">
+                                                                       class="avatar-group-item"
+                                                                       data-bs-toggle="tooltip"
+                                                                       data-bs-trigger="hover" data-bs-placement="top">
                                                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                            alt=""
-                                                                            class="rounded-circle avatar-xs" />
+                                                                             alt=""
+                                                                             class="rounded-circle avatar-xs"/>
                                                                     </a>
                                                                     <p class="ms-3 mt-3">vinhpq</p>
                                                                 </div>
@@ -953,11 +962,12 @@
                                                             <li class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <a href="javascript: void(0);"
-                                                                        class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                        data-bs-trigger="hover" data-bs-placement="top">
+                                                                       class="avatar-group-item"
+                                                                       data-bs-toggle="tooltip"
+                                                                       data-bs-trigger="hover" data-bs-placement="top">
                                                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                            alt=""
-                                                                            class="rounded-circle avatar-xs" />
+                                                                             alt=""
+                                                                             class="rounded-circle avatar-xs"/>
                                                                     </a>
                                                                     <p class="ms-3 mt-3">vinhpq</p>
                                                                 </div>
@@ -971,11 +981,12 @@
                                                             <li class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <a href="javascript: void(0);"
-                                                                        class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                        data-bs-trigger="hover" data-bs-placement="top">
+                                                                       class="avatar-group-item"
+                                                                       data-bs-toggle="tooltip"
+                                                                       data-bs-trigger="hover" data-bs-placement="top">
                                                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                            alt=""
-                                                                            class="rounded-circle avatar-xs" />
+                                                                             alt=""
+                                                                             class="rounded-circle avatar-xs"/>
                                                                     </a>
                                                                     <p class="ms-3 mt-3">vinhpq</p>
                                                                 </div>
@@ -988,10 +999,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-tag"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Nhãn
                                             </p>
                                             <!--dropdown nhãn-->
@@ -999,35 +1010,35 @@
                                                 <h5 class="text-center">Nhãn</h5>
                                                 <form action="">
                                                     <input type="text" name="" id=""
-                                                        class="form-control border-1" placeholder="Tìm nhãn..." />
+                                                           class="form-control border-1" placeholder="Tìm nhãn..."/>
                                                     <div class="mt-3">
                                                         <strong class="fs-14">Nhãn</strong>
                                                         <ul class="" style="list-style: none; margin-left: -32px">
                                                             <li
-                                                                class="mt-1 d-flex justify-content-between align-items-center">
+                                                                    class="mt-1 d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center w-100">
                                                                     <input type="checkbox" name=""
-                                                                        id="danger_tags" class="form-check-input" />
+                                                                           id="danger_tags" class="form-check-input"/>
                                                                     <span class="bg bg-danger mx-2 rounded p-3 col-10">
                                                                     </span>
                                                                 </div>
                                                                 <i class="ri-pencil-line fs-20"></i>
                                                             </li>
                                                             <li
-                                                                class="mt-1 d-flex justify-content-between align-items-center">
+                                                                    class="mt-1 d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center w-100">
                                                                     <input type="checkbox" name=""
-                                                                        id="danger_tags" class="form-check-input" />
+                                                                           id="danger_tags" class="form-check-input"/>
                                                                     <span class="bg bg-info mx-2 rounded p-3 col-10">
                                                                     </span>
                                                                 </div>
                                                                 <i class="ri-pencil-line fs-20"></i>
                                                             </li>
                                                             <li
-                                                                class="mt-1 d-flex justify-content-between align-items-center">
+                                                                    class="mt-1 d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center w-100">
                                                                     <input type="checkbox" name=""
-                                                                        id="danger_tags" class="form-check-input" />
+                                                                           id="danger_tags" class="form-check-input"/>
                                                                     <span class="bg bg-success mx-2 rounded p-3 col-10">
                                                                     </span>
                                                                 </div>
@@ -1037,7 +1048,7 @@
                                                     </div>
                                                     <div class="card">
                                                         <button class="btn text-white"
-                                                            style="background-color: #c7c7c7">Tạo
+                                                                style="background-color: #c7c7c7">Tạo
                                                             nhãn
                                                             mới
                                                         </button>
@@ -1050,10 +1061,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-check-square"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Việc cần làm
                                             </p>
                                             <!-- dropdown việc cần làm-->
@@ -1065,7 +1076,7 @@
                                                     <div class="mt-2">
                                                         <label class="form-label" for="">Tiêu đề</label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="Việc cần làm" />
+                                                               placeholder="Việc cần làm"/>
                                                     </div>
                                                     <div class="mt-2">
                                                         <button class="btn btn-primary">Thêm</button>
@@ -1076,10 +1087,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-clock"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Ngày
                                             </p>
                                             <!--                                    dropdown ngày-->
@@ -1089,13 +1100,13 @@
                                                     <!-- lịch -->
                                                     <div class="wrapper">
                                                         <header
-                                                            class="d-flex align-items-center justify-content-between w-100">
+                                                                class="d-flex align-items-center justify-content-between w-100">
                                                             <p class="current-date"></p>
                                                             <div class="icons">
                                                                 <span id="prev"
-                                                                    class="material-symbols-rounded">chevron_left</span>
+                                                                      class="material-symbols-rounded">chevron_left</span>
                                                                 <span id="next"
-                                                                    class="material-symbols-rounded">chevron_right</span>
+                                                                      class="material-symbols-rounded">chevron_right</span>
                                                             </div>
                                                         </header>
                                                         <div class="calendar">
@@ -1115,12 +1126,12 @@
                                                     <div>
                                                         <strong class="fs-14">Ngày bắt đầu</strong>
                                                         <input type="datetime-local" name="" id=""
-                                                            class="form-control border-0 my-2" />
+                                                               class="form-control border-0 my-2"/>
                                                     </div>
                                                     <div>
                                                         <strong class="fs-14">Ngày kết thúc</strong>
                                                         <input type="datetime-local" name="" id=""
-                                                            class="form-control border-0 my-2" />
+                                                               class="form-control border-0 my-2"/>
                                                     </div>
                                                     <div class="mt-2">
                                                         <strong class="fs-16">Thiết lập nhắc nhỏ</strong>
@@ -1138,10 +1149,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-paperclip"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Đính kèm
                                             </p>
                                             <!--                                    dropdown tệp đính kèm-->
@@ -1150,27 +1161,27 @@
                                                 <form action="" class=" mt-3">
                                                     <strong class="fs-14">Đính kèm tệp từ máy tính của bạn</strong>
                                                     <input type="file" name="" id=""
-                                                        class="form-control mt-2" />
+                                                           class="form-control mt-2"/>
 
                                                     <div class="mt-3">
                                                         <strong class="fs-14">Đã xem gần đây</strong>
                                                         <ul class="" style="list-style: none; margin-left: -32px">
                                                             <li
-                                                                class="mt-1 d-flex justify-content-between align-items-center">
+                                                                    class="mt-1 d-flex justify-content-between align-items-center">
                                                                 <i class="ri-artboard-line fs-20"></i>
                                                                 <div class="w-100">
                                                                     <strong class="ms-2 rounded">Tên thẻ</strong>
-                                                                    <br />
+                                                                    <br/>
                                                                     <span class="ms-2">Tên bảng - Đã xem 2 giờ
                                                                         trước</span>
                                                                 </div>
                                                             </li>
                                                             <li
-                                                                class="mt-2 d-flex justify-content-between align-items-center">
+                                                                    class="mt-2 d-flex justify-content-between align-items-center">
                                                                 <i class="ri-artboard-line fs-20"></i>
                                                                 <div class="w-100">
                                                                     <strong class="ms-2 rounded">Tên thẻ</strong>
-                                                                    <br />
+                                                                    <br/>
                                                                     <span class="ms-2">Tên bảng - Đã xem 2 giờ
                                                                         trước</span>
                                                                 </div>
@@ -1186,10 +1197,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-map-marker"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                               aria-expanded="false">
                                                 Vị trí
                                             </p>
                                             <!--                                    dropdown vị trí-->
@@ -1198,7 +1209,7 @@
                                                     <h5 class="mb-3" style="text-align: center">Thêm vị trí</h5>
                                                     <div class="mb-2">
                                                         <input type="search" class="form-control"
-                                                            placeholder="Tìm kiếm vị trí" />
+                                                               placeholder="Tìm kiếm vị trí"/>
                                                     </div>
                                                 </form>
                                             </div>
@@ -1206,10 +1217,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-credit-card"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Ảnh bìa
                                             </p>
                                             <!--                                    dropdown ảnh bìa-->
@@ -1218,11 +1229,11 @@
                                                     <h5 class="mb-3 text-center">Ảnh bìa</h5>
                                                     <div class="mb-2">
                                                         <label for="">Tải ảnh lên</label>
-                                                        <input type="file" class="form-control" />
+                                                        <input type="file" class="form-control"/>
                                                     </div>
                                                     <div class="mb-2">
                                                         <label for="">Tải ảnh lên</label>
-                                                        <input type="file" class="form-control" />
+                                                        <input type="file" class="form-control"/>
                                                     </div>
                                                 </form>
                                             </div>
@@ -1231,10 +1242,10 @@
                                     <h5 class="mt-3 mb-3"><strong>Thao tác</strong></h5>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style="height: 30px; background-color: #c7c7c7">
+                                             style="height: 30px; background-color: #c7c7c7">
                                             <i class="las la-arrow-circle-right"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Di chuyển
                                             </p>
                                             <!--                                    dropdown di chuyển-->
@@ -1271,10 +1282,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-copy"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10">
                                                 Sao chép
                                             </p>
                                             <!--                                    dropdown sao chép-->
@@ -1284,25 +1295,26 @@
                                                     <div>
                                                         <strong class="fs-14">Tên</strong>
                                                         <input type="text" name="" id=""
-                                                            class="form-control border-1 my-2" placeholder="Tên thẻ" />
+                                                               class="form-control border-1 my-2"
+                                                               placeholder="Tên thẻ"/>
                                                     </div>
                                                     <div>
                                                         <strong class="fs-14 mt-3">Giữ</strong>
                                                         <ul style="list-style: none; margin-left: -32px" class="mt-2">
                                                             <li>
                                                                 <input type="checkbox" name="" id=""
-                                                                    class="form-check-input" />
+                                                                       class="form-check-input"/>
                                                                 <label for="">Danh sách công việc</label>
                                                                 <span>(1)</span>
                                                             </li>
                                                             <li>
                                                                 <input type="checkbox" name="" id=""
-                                                                    class="form-check-input" />
+                                                                       class="form-check-input"/>
                                                                 <label for="">Thành viên</label> <span>(1)</span>
                                                             </li>
                                                             <li>
                                                                 <input type="checkbox" name="" id=""
-                                                                    class="form-check-input" />
+                                                                       class="form-check-input"/>
                                                                 <label for="">Tệp đính kèm</label>
                                                                 <span>(1)</span>
                                                             </li>
@@ -1320,14 +1332,14 @@
                                                             <section class="col-8">
                                                                 <strong class="fs-16">Danh sách</strong>
                                                                 <select name="" id=""
-                                                                    class="form-select">
+                                                                        class="form-select">
                                                                     <option value="">dự án tốt nghiệp</option>
                                                                 </select>
                                                             </section>
                                                             <section class="col-4">
                                                                 <strong class="fs-16">Vị trí</strong>
                                                                 <select name="" id=""
-                                                                    class="form-select">
+                                                                        class="form-select">
                                                                     <option value="">1</option>
                                                                 </select>
                                                             </section>
@@ -1344,10 +1356,10 @@
                                     <!-- lưu trữ-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-window-restore"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                               aria-expanded="false">
                                                 Lưu trữ
                                             </p>
                                             <div></div>
@@ -1356,10 +1368,10 @@
                                     <!--                            hoàn tác-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las la-window-restore"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                               aria-expanded="false">
                                                 Khôi phục
                                             </p>
                                             <div></div>
@@ -1368,10 +1380,10 @@
                                     <!--                            xóa vĩnh viễn-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3  w-100"
-                                            style=" height: 30px; background-color: red">
+                                             style=" height: 30px; background-color: red">
                                             <i class="las la-window-restore"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                               aria-expanded="false">
                                                 Xóa
                                             </p>
                                             <div></div>
@@ -1380,10 +1392,10 @@
 
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
+                                             style=" height: 30px; background-color: #c7c7c7">
                                             <i class="las ri-share-line"></i>
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Chia sẻ</p>
+                                               aria-expanded="false" data-bs-offset="-40,10">Chia sẻ</p>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
                                                 <h5 class="text-center">Chia sẻ</h5>
                                                 <div class="border-bottom mt-3">
@@ -1392,7 +1404,7 @@
                                                     <!--                                            <i class="ri-shield-user-fill fs-20 text-primary"></i>-->
                                                     <!--                                            <i class="ri-lock-2-line fs-20 text-danger"></i>-->
                                                     <input type="text" value="123" id=""
-                                                        class="form-control mt-2" readonly />
+                                                           class="form-control mt-2" readonly/>
                                                     <p class="mt-2">Hiện mã QR</p>
                                                 </div>
                                             </div>
@@ -1457,7 +1469,7 @@
                             </div>
                             <div class="ml-3">
                                 <button class="btn border-0 bg-transparent"><i
-                                        class=" fas fa-pencil-alt text-primary"></i></button>
+                                            class=" fas fa-pencil-alt text-primary"></i></button>
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-4">
@@ -1469,16 +1481,18 @@
                             </div>
                             <div class="ml-3">
                                 <button class="btn border-0 bg-transparent"><i
-                                        class=" fas fa-pencil-alt text-primary"></i></button>
+                                            class=" fas fa-pencil-alt text-primary"></i></button>
                             </div>
                         </div>
                         <div>
                             <button type="button" class="btn btn-secondary btn-block mb-2 w-100">Tạo nhãn
-                                mới</button>
+                                mới
+                            </button>
                         </div>
                         <div>
                             <button type="button" class="btn btn-secondary btn-block w-100 ">Bật chế độ thân
-                                thiện với người mù màu</button>
+                                thiện với người mù màu
+                            </button>
 
                         </div>
                     </div>
@@ -1507,9 +1521,9 @@
                         <div class="d-flex mb-3">
                             <div>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top">
+                                   data-bs-trigger="hover" data-bs-placement="top">
                                     <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}" alt=""
-                                        class="rounded-circle avatar-xs" />
+                                         class="rounded-circle avatar-xs"/>
                             </div>
                             <div>
                                 <p class="ms-1">nam </p>
@@ -1519,9 +1533,9 @@
                         <div class="d-flex">
                             <div>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                    data-bs-trigger="hover" data-bs-placement="top">
+                                   data-bs-trigger="hover" data-bs-placement="top">
                                     <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}" alt=""
-                                        class="rounded-circle avatar-xs" />
+                                         class="rounded-circle avatar-xs"/>
                             </div>
                             <div>
                                 <p class="ms-1">nam </p>
@@ -1542,7 +1556,8 @@
                     <div class="col-sm-6">
                         <script>
                             document.write(new Date().getFullYear())
-                        </script> © Velzon.
+                        </script>
+                        © Velzon.
                     </div>
                     <div class="col-sm-6">
                         <div class="text-sm-end d-none d-sm-block">
@@ -1562,9 +1577,12 @@
                 </div>
                 <div class="modal-body">
                     <button id="triggeraddthe" data-bs-toggle="modal" data-bs-target="#addthe"
-                        class="btn btn-primary mb-2">Thẻ</button><br>
+                            class="btn btn-primary mb-2">Thẻ
+                    </button>
+                    <br>
                     <button id="triggeraddds" data-bs-toggle="modal" data-bs-target="#addds"
-                        class="btn btn-success">Danh sách</button>
+                            class="btn btn-success">Danh sách
+                    </button>
                 </div>
                 <div class="modal-footer">
                     <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1590,7 +1608,7 @@
                             <div class="mb-3">
                                 <label for="inputName" class="form-label">Tên</label>
                                 <input type="text" class="form-control" id="inputName"
-                                    placeholder="Nhập tên cho thẻ này">
+                                       placeholder="Nhập tên cho thẻ này">
                             </div>
 
                             <!-- Label Danh sách và Select -->
@@ -1682,7 +1700,7 @@
 
     <div class="customizer-setting d-none d-md-block">
         <div class="btn-info rounded-pill shadow-lg btn btn-icon btn-lg p-2" data-bs-toggle="offcanvas"
-            data-bs-target="#theme-settings-offcanvas" aria-conthols="theme-settings-offcanvas">
+             data-bs-target="#theme-settings-offcanvas" aria-conthols="theme-settings-offcanvas">
             <i class='mdi mdi-spin mdi-cog-outline fs-22'></i>
         </div>
     </div>
@@ -1855,7 +1873,7 @@
     <script src="theme/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
     <script src="theme/assets/js/plugins.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <!--datatable js-->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -1877,7 +1895,7 @@
         const bBtn = document.getElementById('bBtn');
 
         // Sự kiện click cho button "Thêm"
-        themBtn.addEventListener('click', function() {
+        themBtn.addEventListener('click', function () {
             // Ẩn button "Thêm"
             themBtn.classList.add('hidden');
             // Hiển thị button "A" và "B"
@@ -1885,12 +1903,12 @@
             bBtn.classList.remove('hidden');
         });
         //danh sách
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var triggerButton = document.getElementById('triggerButton');
             var modal = document.getElementById('exampleModal');
             var modalDialog = modal.querySelector('.modal-dialog');
 
-            triggerButton.addEventListener('click', function() {
+            triggerButton.addEventListener('click', function () {
                 var rect = triggerButton.getBoundingClientRect();
                 var modalBackdrop = document.querySelector('.modal-backdrop');
 
@@ -1904,25 +1922,25 @@
 
             // Đóng modal khi nhấp vào nút đóng
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     modal.style.display = 'none'; // Ẩn modal khi nhấp vào nút đóng
                 });
             });
 
             // Đóng modal khi nhấp ra ngoài modal
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 if (!modal.contains(event.target) && event.target !== triggerButton) {
                     modal.style.display = 'none';
                 }
             });
         });
         //nhãn
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var triggerButton = document.getElementById('triggerlabel');
             var modal = document.getElementById('nhan');
             var modalDialog = modal.querySelector('.modal-dialog');
 
-            triggerButton.addEventListener('click', function() {
+            triggerButton.addEventListener('click', function () {
                 var rect = triggerButton.getBoundingClientRect();
                 var modalBackdrop = document.querySelector('.modal-backdrop');
 
@@ -1936,25 +1954,25 @@
 
             // Đóng modal khi nhấp vào nút đóng
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     modal.style.display = 'none'; // Ẩn modal khi nhấp vào nút đóng
                 });
             });
 
             // Đóng modal khi nhấp ra ngoài modal
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 if (!modal.contains(event.target) && event.target !== triggerButton) {
                     modal.style.display = 'none';
                 }
             });
         });
         //thành viên
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var triggerButton = document.getElementById('triggermember');
             var modal = document.getElementById('member');
             var modalDialog = modal.querySelector('.modal-dialog');
 
-            triggerButton.addEventListener('click', function() {
+            triggerButton.addEventListener('click', function () {
                 var rect = triggerButton.getBoundingClientRect();
                 var modalBackdrop = document.querySelector('.modal-backdrop');
 
@@ -1968,25 +1986,25 @@
 
             // Đóng modal khi nhấp vào nút đóng
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     modal.style.display = 'none'; // Ẩn modal khi nhấp vào nút đóng
                 });
             });
 
             // Đóng modal khi nhấp ra ngoài modal
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 if (!modal.contains(event.target) && event.target !== triggerButton) {
                     modal.style.display = 'none';
                 }
             });
         });
         //add add the
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var triggerButton = document.getElementById('aBtn'); // Nút kích hoạt modal
             var modal = document.getElementById('addthe'); // Modal
             var modalDialog = modal.querySelector('.modal-dialog'); // Modal dialog
 
-            triggerButton.addEventListener('click', function() {
+            triggerButton.addEventListener('click', function () {
                 var rect = triggerButton.getBoundingClientRect(); // Lấy vị trí của nút bấm
                 var modalBackdrop = document.querySelector('.modal-backdrop'); // Backdrop của modal
 
@@ -1996,7 +2014,7 @@
                 // Căn modal phía trên đầu nút bấm và dịch chuyển sang phải 50px
                 modalDialog.style.position = 'absolute';
                 modalDialog.style.top = (rect.top - modalDialog.offsetHeight - 10 + window.scrollY) +
-                'px'; // Đặt modal ngay trên đầu nút bấm với 10px khoảng cách
+                    'px'; // Đặt modal ngay trên đầu nút bấm với 10px khoảng cách
                 modalDialog.style.left = (rect.left + 50) + 'px'; // Dịch chuyển modal sang phải 50px
                 modalDialog.style.margin = '0'; // Loại bỏ margin mặc định
 
@@ -2006,24 +2024,24 @@
 
             // Đóng modal khi nhấp vào nút đóng
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     modal.style.display = 'none'; // Ẩn modal khi nhấp vào nút đóng
                 });
             });
 
             // Đóng modal khi nhấp ra ngoài modal
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 if (!modal.contains(event.target) && event.target !== triggerButton) {
                     modal.style.display = 'none';
                 }
             });
         });
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var triggerButton = document.getElementById('bBtn'); // Nút kích hoạt modal
             var modal = document.getElementById('addds'); // Modal
             var modalDialog = modal.querySelector('.modal-dialog'); // Modal dialog
 
-            triggerButton.addEventListener('click', function() {
+            triggerButton.addEventListener('click', function () {
                 var rect = triggerButton.getBoundingClientRect(); // Lấy vị trí của nút bấm
                 var modalBackdrop = document.querySelector('.modal-backdrop'); // Backdrop của modal
 
@@ -2033,7 +2051,7 @@
                 // Căn modal phía trên đầu nút bấm và dịch chuyển sang phải 50px
                 modalDialog.style.position = 'absolute';
                 modalDialog.style.top = (rect.top - modalDialog.offsetHeight - 10 + window.scrollY) +
-                'px'; // Đặt modal ngay trên đầu nút bấm với 10px khoảng cách
+                    'px'; // Đặt modal ngay trên đầu nút bấm với 10px khoảng cách
                 modalDialog.style.left = (rect.left + 50) + 'px'; // Dịch chuyển modal sang phải 50px
                 modalDialog.style.margin = '0'; // Loại bỏ margin mặc định
 
@@ -2043,13 +2061,13 @@
 
             // Đóng modal khi nhấp vào nút đóng
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     modal.style.display = 'none'; // Ẩn modal khi nhấp vào nút đóng
                 });
             });
 
             // Đóng modal khi nhấp ra ngoài modal
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 if (!modal.contains(event.target) && event.target !== triggerButton) {
                     modal.style.display = 'none';
                 }
