@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -49,4 +50,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function WorkspaceMember()
+    {
+        return $this->hasMany(WorkspaceMember::class);
+    }
+//    kieemr tra xem nguoiwf dung dax cso workspace chuaw
+    public function hasWorkspace()
+    {
+        $userId = Auth::id();
+        $isWorkspace = WorkspaceMember::where('user_id', $userId)
+            ->where('authorize', 1)
+            ->exists();
+        return $isWorkspace ? 1 : 0;
+    }
 }
