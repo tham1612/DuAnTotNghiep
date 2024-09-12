@@ -19,7 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','isWorkspace'])->group(function () {
 
     Route::get('/homes/dashboard', function () {
         return view('homes.dashboard');
