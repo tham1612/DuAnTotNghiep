@@ -1,4 +1,5 @@
 <h5 class="text-center">Đính kèm</h5>
+<h5 class="text-center">Đính kèm</h5>
 <form action="" class=" mt-3">
     <strong class="fs-14">Đính kèm tệp từ máy tính của bạn</strong>
     <input type="file" name="" id=""
