@@ -19,28 +19,27 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::resource('/workspaces', \App\Http\Controllers\WorkspaceController::class)->middleware('auth');
 Route::middleware(['auth','isWorkspace'])->group(function () {
-
     Route::get('/homes/dashboard', function () {
         return view('homes.dashboard');
     });
-
     Route::get('/homes/dashboard_board', function () {
         return view('homes.dashboard_board');
     });
-
     Route::get('/home', function () {
         return view('homes.home');
     })->name('homes.home');
+
 
  
     Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
 
-    Route::resource('/workspaces', \App\Http\Controllers\WorkspaceController::class);
+  
 
     
+
 
     Route::prefix('b')
         ->as('b.')
