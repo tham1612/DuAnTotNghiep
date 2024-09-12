@@ -35,7 +35,7 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
     Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
 
-    Route::resource('/workspaces', \App\Http\Controllers\WorkspaceController::class);
+  
 
     
 
