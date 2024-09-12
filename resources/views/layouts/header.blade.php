@@ -864,7 +864,6 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST"
                             style="display: none;">
                             @csrf
-                            @method('POST')
                         </form>
 
                         <a class="dropdown-item" href="javascript:void(0);"
