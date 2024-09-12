@@ -24,4 +24,7 @@ class BoardMember extends Model
         'follow' => 'boolean',
 
     ];
+
+
+
 }
