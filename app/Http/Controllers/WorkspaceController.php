@@ -48,7 +48,6 @@ class WorkspaceController extends Controller
         try {
             DB::beginTransaction();
             $workspace = Workspace::query()->create($data);
-
             DB::table('workspace_members')->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,
@@ -56,6 +55,7 @@ class WorkspaceController extends Controller
                 'invite' => now(),
             ]);
             DB::commit();
+
             return redirect()->route('homes.home');
         } catch (\Exception $exception) {
             DB::rollBack();
