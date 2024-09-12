@@ -18,7 +18,7 @@ class isWorkspace
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::user()->hasWorkspace()) {
+        if (Auth::check()&&!Auth::user()->hasWorkspace()) {
             if (!$request->is('workspaces/create')) {
                 return redirect('/workspaces/create');
             }
