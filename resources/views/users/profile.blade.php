@@ -47,19 +47,6 @@
                         <div class="flex-grow-1">
                             <h5 class="card-title mb-0">Liên kết mạng xã hội </h5>
                         </div>
-                        <div class="flex-shrink-0">
-                            <a href="javascript:void(0);" class="badge bg-light text-primary fs-12"><i
-                                    class="ri-add-fill align-bottom me-1"></i> Add</a>
-                        </div>
-                    </div>
-                    <div class="mb-3 d-flex">
-                        <div class="avatar-xs d-block flex-shrink-0 me-3">
-                            <span class="avatar-title rounded-circle fs-16 bg-body text-body">
-                                <i class="ri-github-fill"></i>
-                            </span>
-                        </div>
-                        <input type="text" class="form-control" id="social_id" name="social_id" placeholder=""
-                            value="">
                     </div>
                     <div class="mb-3 d-flex">
                         <div class="avatar-xs d-block flex-shrink-0 me-3">
@@ -67,8 +54,8 @@
                                 <i class="ri-global-fill"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" id="websiteInput" placeholder="www.example.com"
-                            value="www.velzon.com">
+                        <input type="text" class="form-control" id="websiteInput" placeholder="www.facebook.com"
+                            >
                     </div>
                     <div class="mb-3 d-flex">
                         <div class="avatar-xs d-block flex-shrink-0 me-3">
@@ -77,7 +64,7 @@
                             </span>
                         </div>
                         <input type="text" class="form-control" id="dribbleName" placeholder="Username"
-                            value="@dave_adame">
+                            >
                     </div>
                     <div class="d-flex">
                         <div class="avatar-xs d-block flex-shrink-0 me-3">
@@ -85,8 +72,7 @@
                                 <i class="ri-pinterest-fill"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" id="pinterestName" placeholder="Username"
-                            value="Advance Dave">
+                        <input type="text" class="form-control" id="pinterestName" placeholder="Username">
                     </div>
                 </div>
             </div>
