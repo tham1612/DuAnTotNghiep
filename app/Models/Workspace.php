@@ -20,4 +20,8 @@ class Workspace extends Model
     protected $casts = [
         'access' => AccessEnum::class,
     ];
+    public function WorkspaceMember()
+    {
+        return $this->hasMany(WorkspaceMember::class);
+    }
 }

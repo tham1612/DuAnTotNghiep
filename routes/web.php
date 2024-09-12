@@ -18,44 +18,46 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/homes/dashboard', function () {
-    return view('homes.dashboard');
+
+Route::middleware(['auth','isWorkspace'])->group(function () {
+
+    Route::get('/homes/dashboard', function () {
+        return view('homes.dashboard');
+    });
+
+    Route::get('/homes/dashboard_board', function () {
+        return view('homes.dashboard_board');
+    });
+
+    Route::get('/home', function () {
+        return view('homes.home');
+    })->name('homes.home');
+
+    Route::resource('/workspaces', \App\Http\Controllers\WorkspaceController::class);
+
+
+    Route::prefix('b')
+        ->as('b.')
+        ->group(function () {
+
+            Route::get('/', function () {
+                return view('boards.index');
+            })->name('index');
+
+            Route::get('table', function () {
+                return view('tables.index');
+            })->name('table');
+
+            Route::get('ganttChart', function () {
+                return view('ganttCharts.index');
+            })->name('ganttChart');
+
+            Route::get('list', function () {
+                return view('lists.index');
+            })->name('list');
+        });
 });
 
-Route::get('/homes/dashboard_board', function () {
-    return view('homes.dashboard_board');
-});
 
 Auth::routes();
-
-Route::get('/home', function () {
-    return view('homes.home');
-})->name('homes.home');
-
-Route::resource('/workspaces', \App\Http\Controllers\WorkspaceController::class);
-
-
-// Các route hiển thị trong boards
-
-Route::prefix('b')
-    ->as('b.')
-    ->group(function () {
-
-    Route::get('/', function () {
-        return view('boards.index');
-    })->name('index');
-
-    Route::get('table', function () {
-        return view('tables.index');
-    })->name('table');
-
-    Route::get('ganttChart', function () {
-        return view('ganttCharts.index');
-    })->name('ganttChart');
-
-    Route::get('list', function () {
-        return view('lists.index');
-    })->name('list');
-
-});
 
