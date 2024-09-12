@@ -13,11 +13,6 @@
                     <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                         <thead>
                             <tr>
-                                {{-- <th scope="col" style="width: 10px;">
-                                <div class="form-check">
-                                    <input class="form-check-input fs-15" type="checkbox" id="checkAll" value="option">
-                                </div>
-                            </th> --}}
                                 <th data-ordering="false">Thẻ</th>
                                 <th data-ordering="false">Danh sách</th>
                                 <th data-ordering="false">Nhãn</th>
@@ -27,7 +22,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>                              
+                            <tr>
                                 <td>
                                     <div class="d-flex  cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
@@ -138,7 +133,7 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr>                              
+                            <tr>
                                 <td>
                                     <div class="d-flex  cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
@@ -249,7 +244,7 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr>                              
+                            <tr>
                                 <td>
                                     <div class="d-flex  cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
@@ -360,7 +355,7 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr>                              
+                            <tr>
                                 <td>
                                     <div class="d-flex  cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
@@ -471,7 +466,7 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr>                              
+                            <tr>
                                 <td>
                                     <div class="d-flex  cursor-pointer">
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
@@ -1357,7 +1352,8 @@
                                                                                     <h5 class="text-center">Thành viên</h5>
                                                                                     <form action="">
                                                                                         <input type="text"
-                                                                                            name="" id=""
+                                                                                            name=""
+                                                                                            id=""
                                                                                             class="form-control border-0"
                                                                                             placeholder="Tìm kiếm thành viên" />
 
@@ -1493,7 +1489,8 @@
                                                 <h5 class="text-center">Thành viên</h5>
                                                 <form action="">
                                                     <input type="text" name="" id=""
-                                                        class="form-control border-1" placeholder="Tìm kiếm thành viên" />
+                                                        class="form-control border-1"
+                                                        placeholder="Tìm kiếm thành viên" />
 
                                                     <!-- thành viên của thẻ -->
                                                     <div class="mt-3">
@@ -1502,8 +1499,9 @@
                                                             <li class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <a href="javascript: void(0);"
-                                                                        class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                        data-bs-trigger="hover" data-bs-placement="top">
+                                                                        class="avatar-group-item"
+                                                                        data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                        data-bs-placement="top">
                                                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
                                                                             alt=""
                                                                             class="rounded-circle avatar-xs" />
@@ -1522,8 +1520,9 @@
                                                             <li class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <a href="javascript: void(0);"
-                                                                        class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                        data-bs-trigger="hover" data-bs-placement="top">
+                                                                        class="avatar-group-item"
+                                                                        data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                        data-bs-placement="top">
                                                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
                                                                             alt=""
                                                                             class="rounded-circle avatar-xs" />
@@ -1540,8 +1539,9 @@
                                                             <li class="d-flex justify-content-between align-items-center">
                                                                 <div class="d-flex align-items-center">
                                                                     <a href="javascript: void(0);"
-                                                                        class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                        data-bs-trigger="hover" data-bs-placement="top">
+                                                                        class="avatar-group-item"
+                                                                        data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                        data-bs-placement="top">
                                                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
                                                                             alt=""
                                                                             class="rounded-circle avatar-xs" />
@@ -2159,6 +2159,8 @@
     </style>
 @endsection
 @section('script')
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src={{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}></script>
     <script src={{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src={{ asset('theme/assets/libs/node-waves/waves.min.js') }}></script>
