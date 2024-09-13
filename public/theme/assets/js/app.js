@@ -113,7 +113,31 @@
 
     function O() {
         var e = document.documentElement.clientWidth;
-        767 < e && document.querySelector(".hamburger-icon").classList.toggle("open"), "horizontal" === document.documentElement.getAttribute("data-layout") && (document.body.classList.contains("menu") ? document.body.classList.remove("menu") : document.body.classList.add("menu")), "vertical" === document.documentElement.getAttribute("data-layout") && (e <= 1025 && 767 < e ? (document.body.classList.remove("vertical-sidebar-enable"), "sm" == document.documentElement.getAttribute("data-sidebar-size") ? document.documentElement.setAttribute("data-sidebar-size", "") : document.documentElement.setAttribute("data-sidebar-size", "sm")) : 1025 < e ? (document.body.classList.remove("vertical-sidebar-enable"), "lg" == document.documentElement.getAttribute("data-sidebar-size") ? document.documentElement.setAttribute("data-sidebar-size", "sm") : document.documentElement.setAttribute("data-sidebar-size", "lg")) : e <= 767 && (document.body.classList.add("vertical-sidebar-enable"), document.documentElement.setAttribute("data-sidebar-size", "lg"))), "semibox" === document.documentElement.getAttribute("data-layout") && (767 < e ? "show" == document.documentElement.getAttribute("data-sidebar-visibility") ? "lg" == document.documentElement.getAttribute("data-sidebar-size") ? document.documentElement.setAttribute("data-sidebar-size", "sm") : document.documentElement.setAttribute("data-sidebar-size", "lg") : (document.getElementById("sidebar-visibility-show").click(), document.documentElement.setAttribute("data-sidebar-size", document.documentElement.getAttribute("data-sidebar-size"))) : e <= 767 && (document.body.classList.add("vertical-sidebar-enable"), document.documentElement.setAttribute("data-sidebar-size", "lg"))), "twocolumn" == document.documentElement.getAttribute("data-layout") && (document.body.classList.contains("twocolumn-panel") ? document.body.classList.remove("twocolumn-panel") : document.body.classList.add("twocolumn-panel"))
+        767 < e
+        && document.querySelector(".hamburger-icon").classList.toggle("open"), "horizontal" === document.documentElement.getAttribute("data-layout")
+        && (document.body.classList.contains("menu")
+            ? (document.body.classList.remove("menu"))
+            : document.body.classList.add("menu")),
+        "vertical" === document.documentElement.getAttribute("data-layout")
+        && (e <= 1025 && 767 < e
+            ? (document.body.classList.remove("vertical-sidebar-enable"), "sm" == document.documentElement.getAttribute("data-sidebar-size")
+                    ? document.documentElement.setAttribute("data-sidebar-size", "")
+                    : document.documentElement.setAttribute("data-sidebar-size", "sm")
+            ) : 1025 < e
+                ? (document.body.classList.remove("vertical-sidebar-enable"), "lg" == document.documentElement.getAttribute("data-sidebar-size")
+                        ? (document.documentElement.setAttribute("data-sidebar-size", "sm"), document.getElementById('swicthWs').classList.add('d-none'))
+                        : (document.documentElement.setAttribute("data-sidebar-size", "lg"), document.getElementById('swicthWs').classList.remove('d-none'))
+                ) : e <= 767 && (document.body.classList.add("vertical-sidebar-enable"), document.documentElement.setAttribute("data-sidebar-size", "lg")))
+            , "semibox" === document.documentElement.getAttribute("data-layout")
+        && (767 < e
+                ? "show" == document.documentElement.getAttribute("data-sidebar-visibility")
+                    ? "lg" == document.documentElement.getAttribute("data-sidebar-size")
+                        ? document.documentElement.setAttribute("data-sidebar-size", "sm")
+                        : document.documentElement.setAttribute("data-sidebar-size", "lg")
+                    : (document.getElementById("sidebar-visibility-show").click(), document.documentElement.setAttribute("data-sidebar-size", document.documentElement.getAttribute("data-sidebar-size"))
+                    ) : e <= 767 && (document.body.classList.add("vertical-sidebar-enable"), document.documentElement.setAttribute("data-sidebar-size", "lg"))
+        ), "twocolumn" == document.documentElement.getAttribute("data-layout")
+        && (document.body.classList.contains("twocolumn-panel") ? document.body.classList.remove("twocolumn-panel") : document.body.classList.add("twocolumn-panel"))
     }
 
     function G() {
@@ -192,7 +216,9 @@
 
     function E() {
         document.getElementById("vertical-hover").addEventListener("click", function () {
-            "sm-hover" === document.documentElement.getAttribute("data-sidebar-size") ? document.documentElement.setAttribute("data-sidebar-size", "sm-hover-active") : (document.documentElement.getAttribute("data-sidebar-size"), document.documentElement.setAttribute("data-sidebar-size", "sm-hover"))
+            "sm-hover" === document.documentElement.getAttribute("data-sidebar-size")
+                ? document.documentElement.setAttribute("data-sidebar-size", "sm-hover-active")
+                : (document.documentElement.getAttribute("data-sidebar-size"), document.documentElement.setAttribute("data-sidebar-size", "sm-hover"))
         })
     }
 
