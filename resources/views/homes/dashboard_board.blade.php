@@ -29,7 +29,7 @@
                         <div class="col">
                             <div class="py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Thành viên<i
-                                            class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
+                                        class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -45,7 +45,7 @@
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Hoàn
                                     thành<i
-                                            class=" ri-checkbox-circle-line
+                                        class=" ri-checkbox-circle-line
                                             text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -61,8 +61,7 @@
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Chưa
-                                    hoàn thành<i
-                                            class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
+                                    hoàn thành<i class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -78,7 +77,7 @@
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Quá
                                     hạn<i
-                                            class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
+                                        class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -93,7 +92,7 @@
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Tổng<i
-                                            class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
+                                        class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -169,7 +168,7 @@
                             <div class="acitivity-item py-3 d-flex">
                                 <div class="flex-shrink-0">
                                     <img src="assets/images/users/avatar-2.jpg" alt=""
-                                         class="avatar-xs rounded-circle acitivity-avatar">
+                                        class="avatar-xs rounded-circle acitivity-avatar">
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1">Natasha Carey have liked the
@@ -191,7 +190,7 @@
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1">Today offers by <a href="apps-ecommerce-seller-details.html"
-                                                                        class="link-secondary">Digitech
+                                            class="link-secondary">Digitech
                                             Galaxy</a></h6>
                                     <p class="text-muted mb-2">Offer is valid on
                                         orders of
@@ -230,7 +229,7 @@
                                     <h6 class="mb-1">Flash sale starting <span class="text-primary">Tomorrow.</span>
                                     </h6>
                                     <p class="text-muted mb-0">Flash sale by <a href="javascript:void(0);"
-                                                                                class="link-secondary fw-medium">Zoetic
+                                            class="link-secondary fw-medium">Zoetic
                                             Fashion</a>
                                     </p>
                                     <small class="mb-0 text-muted">22 Oct,
@@ -251,7 +250,7 @@
                                             2 days left</span> notification to
                                         submit the
                                         monthly sales report. <a href="javascript:void(0);"
-                                                                 class="link-warning text-decoration-underline">Reports
+                                            class="link-warning text-decoration-underline">Reports
                                             Builder</a>
                                     </p>
                                     <small class="mb-0 text-muted">15 Oct</small>
@@ -260,7 +259,7 @@
                             <div class="acitivity-item d-flex">
                                 <div class="flex-shrink-0">
                                     <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}" alt=""
-                                         class="avatar-xs rounded-circle acitivity-avatar"/>
+                                        class="avatar-xs rounded-circle acitivity-avatar" />
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1">Frank Hook Commented</h6>
@@ -279,16 +278,205 @@
         </div>
     </div><!-- end row -->
     <div class="row">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title mb-0">Nhiệm vụ của thành viên</h4>
-            </div><!-- end card header -->
-            <div class="card-body">
-                <div>
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div><!-- end card-body -->
-        </div><!-- end card -->
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Nhiệm vụ của thành viên</h4>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    <div>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
+        </div>
+        <div class="col-6">
+            <div class="card card-height-100">
+                <div class="card-header align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1 py-1">My Tasks</h4>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <span class="text-muted">Thành viên<i class="mdi mdi-chevron-down ms-1"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">Thanh Thanh</a>
+                                <a class="dropdown-item" href="#">Thị Thắm </a>
+                                <a class="dropdown-item" href="#">Minh Nguyệt</a>
+                                <a class="dropdown-item" href="#">Quang Vinh</a>
+                                <a class="dropdown-item" href="#">Giang Tuấn</a>
+                                <a class="dropdown-item" href="#">Thành Đạt</a>
+                                <a class="dropdown-item" href="#">Trọng Nam</a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card header -->
+                <div class="card-body"  data-simplebar style="max-height: 300px;">
+                    <div class="table-responsive table-card">
+                        <table class="table table-borderless table-nowrap table-centered align-middle mb-0">
+                            <thead class="table-light text-muted">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Dedline</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Assignee</th>
+                                </tr>
+                            </thead><!-- end thead -->
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask1">
+                                            <label class="form-check-label ms-1" for="checkTask1">
+                                                Create new Admin Template
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">03 Nov 2021</td>
+                                    <td><span class="badge bg-success-subtle text-success">Completed</span>
+                                    </td>
+                                    <td>
+                                        <div class="avatar-group flex-nowrap">
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="d-inline-block">
+                                                    <img src="assets/images/users/avatar-1.jpg" alt=""
+                                                        class="rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="d-inline-block">
+                                                    <img src="assets/images/users/avatar-2.jpg" alt=""
+                                                        class="rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="d-inline-block">
+                                                    <img src="assets/images/users/avatar-3.jpg" alt=""
+                                                        class="rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask2">
+                                            <label class="form-check-label ms-1" for="checkTask2">
+                                                Marketing Coordinator
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">17 Nov 2021</td>
+                                    <td><span class="badge bg-warning-subtle text-warning">Progress</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="" data-bs-original-title="Den Davis">
+                                            <img src="assets/images/users/avatar-7.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask3">
+                                            <label class="form-check-label ms-1" for="checkTask3">
+                                                Administrative Analyst
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">26 Nov 2021</td>
+                                    <td><span class="badge bg-success-subtle text-success">Completed</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="" data-bs-original-title="Alex Brown">
+                                            <img src="assets/images/users/avatar-6.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask4">
+                                            <label class="form-check-label ms-1" for="checkTask4">
+                                                E-commerce Landing Page
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">10 Dec 2021</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">Pending</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="" data-bs-original-title="Prezy Morin">
+                                            <img src="assets/images/users/avatar-5.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask5">
+                                            <label class="form-check-label ms-1" for="checkTask5">
+                                                UI/UX Design
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">22 Dec 2021</td>
+                                    <td><span class="badge bg-warning-subtle text-warning">Progress</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title=""
+                                            data-bs-original-title="Stine Nielsen">
+                                            <img src="assets/images/users/avatar-1.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask6">
+                                            <label class="form-check-label ms-1" for="checkTask6">
+                                                Projects Design
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">31 Dec 2021</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">Pending</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title=""
+                                            data-bs-original-title="Jansh William">
+                                            <img src="assets/images/users/avatar-4.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                            </tbody><!-- end tbody -->
+                        </table><!-- end table -->
+                    </div>
+                    <div class="mt-3 text-center">
+                        <a href="javascript:void(0);" class="text-muted text-decoration-underline">Load
+                            More</a>
+                    </div>
+                </div><!-- end cardbody -->
+            </div><!-- end card -->
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
@@ -296,38 +484,37 @@
                 <div class="card-header">
                     <h5 class="card-title mb-0">Nhiệm vụ quá hạn</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body"  data-simplebar style="max-height: 300px;">
                     <table id="scroll-vertical"
-                           class="table table-bordered dt-responsive nowrap align-middle mdl-data-table"
-                           style="width:100%">
+                        class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
                         <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tên card</th>
-                            <th>Thành viên</th>
-                            <th>Ngày hết hạn</th>
-                            <th></th>
-                        </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên card</th>
+                                <th>Thành viên</th>
+                                <th>Ngày hết hạn</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>VLZ-452</td>
-                            <td>Symox v1.0.0</td>
-                            <td>
-                                <div class="avatar-group">
-                                    <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
-                                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                       title="Username">
-                                        <img src="assets/images/users/avatar-3.jpg" alt=""
-                                             class="rounded-circle avatar-xxs">
-                                    </a>
-                                </div>
-                            </td>
-                            <td>03 Oct, 2021</td>
-                            <td><span class="badge bg-info-subtle text-info">Re-open</span>
-                            </td>
+                            <tr>
+                                <td>VLZ-452</td>
+                                <td>Symox v1.0.0</td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
+                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                            title="Username">
+                                            <img src="assets/images/users/avatar-3.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>03 Oct, 2021</td>
+                                <td><span class="badge bg-info-subtle text-info">Re-open</span>
+                                </td>
 
-                        </tr>
+                            </tr>
 
                         </tbody>
                     </table>
@@ -449,8 +636,8 @@
 
 @section('styles')
     <!--Swiper slider css-->
-    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
-@endsection@extends('layouts.masterHome')
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
+    @endsection@extends('layouts.masterHome')
 @section('title')
     dashbroad
 @endsection
@@ -481,7 +668,7 @@
                         <div class="col">
                             <div class="py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Thành viên<i
-                                            class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
+                                        class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -497,7 +684,7 @@
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Hoàn
                                     thành<i
-                                            class=" ri-checkbox-circle-line
+                                        class=" ri-checkbox-circle-line
                                             text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -514,7 +701,7 @@
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Chưa
                                     hoàn thành<i
-                                            class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
+                                        class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -530,7 +717,7 @@
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Quá
                                     hạn<i
-                                            class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
+                                        class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -545,7 +732,7 @@
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Tổng<i
-                                            class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
+                                        class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
@@ -599,7 +786,7 @@
                 <div class="card-body" data-simplebar style="height: 400px;" class="px-3 mx-n3 mb-2">
                     <div class="upcoming-scheduled">
                         <input type="text" class="form-control" data-provider="flatpickr" data-date-format="d M, Y"
-                               data-deafult-date="today" data-inline-date="true">
+                            data-deafult-date="today" data-inline-date="true">
                     </div>
                     <!-- Event items go here -->
                     <div class="mini-stats-wid d-flex align-items-center mt-3">
@@ -778,16 +965,205 @@
         </div>
     </div><!-- end row -->
     <div class="row">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title mb-0">Nhiệm vụ của thành viên</h4>
-            </div><!-- end card header -->
-            <div class="card-body">
-                <div>
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div><!-- end card-body -->
-        </div><!-- end card -->
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Nhiệm vụ của thành viên</h4>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    <div>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
+        </div>
+        <div class="col-6">
+            <div class="card card-height-100">
+                <div class="card-header align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1 py-1">My Tasks</h4>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <span class="text-muted">Thành viên<i class="mdi mdi-chevron-down ms-1"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">Thanh Thanh</a>
+                                <a class="dropdown-item" href="#">Thị Thắm </a>
+                                <a class="dropdown-item" href="#">Minh Nguyệt</a>
+                                <a class="dropdown-item" href="#">Quang Vinh</a>
+                                <a class="dropdown-item" href="#">Giang Tuấn</a>
+                                <a class="dropdown-item" href="#">Thành Đạt</a>
+                                <a class="dropdown-item" href="#">Trọng Nam</a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    <div class="table-responsive table-card">
+                        <table class="table table-borderless table-nowrap table-centered align-middle mb-0">
+                            <thead class="table-light text-muted">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Dedline</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Assignee</th>
+                                </tr>
+                            </thead><!-- end thead -->
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask1">
+                                            <label class="form-check-label ms-1" for="checkTask1">
+                                                Create new Admin Template
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">03 Nov 2021</td>
+                                    <td><span class="badge bg-success-subtle text-success">Completed</span>
+                                    </td>
+                                    <td>
+                                        <div class="avatar-group flex-nowrap">
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="d-inline-block">
+                                                    <img src="assets/images/users/avatar-1.jpg" alt=""
+                                                        class="rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="d-inline-block">
+                                                    <img src="assets/images/users/avatar-2.jpg" alt=""
+                                                        class="rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                            <div class="avatar-group-item">
+                                                <a href="javascript: void(0);" class="d-inline-block">
+                                                    <img src="assets/images/users/avatar-3.jpg" alt=""
+                                                        class="rounded-circle avatar-xxs">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask2">
+                                            <label class="form-check-label ms-1" for="checkTask2">
+                                                Marketing Coordinator
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">17 Nov 2021</td>
+                                    <td><span class="badge bg-warning-subtle text-warning">Progress</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="" data-bs-original-title="Den Davis">
+                                            <img src="assets/images/users/avatar-7.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask3">
+                                            <label class="form-check-label ms-1" for="checkTask3">
+                                                Administrative Analyst
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">26 Nov 2021</td>
+                                    <td><span class="badge bg-success-subtle text-success">Completed</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="" data-bs-original-title="Alex Brown">
+                                            <img src="assets/images/users/avatar-6.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask4">
+                                            <label class="form-check-label ms-1" for="checkTask4">
+                                                E-commerce Landing Page
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">10 Dec 2021</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">Pending</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="" data-bs-original-title="Prezy Morin">
+                                            <img src="assets/images/users/avatar-5.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask5">
+                                            <label class="form-check-label ms-1" for="checkTask5">
+                                                UI/UX Design
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">22 Dec 2021</td>
+                                    <td><span class="badge bg-warning-subtle text-warning">Progress</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title=""
+                                            data-bs-original-title="Stine Nielsen">
+                                            <img src="assets/images/users/avatar-1.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-15" type="checkbox" value=""
+                                                id="checkTask6">
+                                            <label class="form-check-label ms-1" for="checkTask6">
+                                                Projects Design
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted">31 Dec 2021</td>
+                                    <td><span class="badge bg-danger-subtle text-danger">Pending</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title=""
+                                            data-bs-original-title="Jansh William">
+                                            <img src="assets/images/users/avatar-4.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </td>
+                                </tr><!-- end -->
+                            </tbody><!-- end tbody -->
+                        </table><!-- end table -->
+                    </div>
+                    <div class="mt-3 text-center">
+                        <a href="javascript:void(0);" class="text-muted text-decoration-underline">Load
+                            More</a>
+                    </div>
+                </div><!-- end cardbody -->
+            </div><!-- end card -->
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
@@ -797,36 +1173,35 @@
                 </div>
                 <div class="card-body">
                     <table id="scroll-vertical"
-                           class="table table-bordered dt-responsive nowrap align-middle mdl-data-table"
-                           style="width:100%">
+                        class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
                         <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tên card</th>
-                            <th>Thành viên</th>
-                            <th>Ngày hết hạn</th>
-                            <th></th>
-                        </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên card</th>
+                                <th>Thành viên</th>
+                                <th>Ngày hết hạn</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>VLZ-452</td>
-                            <td>Symox v1.0.0</td>
-                            <td>
-                                <div class="avatar-group">
-                                    <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
-                                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                       title="Username">
-                                        <img src="assets/images/users/avatar-3.jpg" alt=""
-                                             class="rounded-circle avatar-xxs">
-                                    </a>
-                                </div>
-                            </td>
-                            <td>03 Oct, 2021</td>
-                            <td><span class="badge bg-info-subtle text-info">Re-open</span>
-                            </td>
+                            <tr>
+                                <td>VLZ-452</td>
+                                <td>Symox v1.0.0</td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
+                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                            title="Username">
+                                            <img src="assets/images/users/avatar-3.jpg" alt=""
+                                                class="rounded-circle avatar-xxs">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>03 Oct, 2021</td>
+                                <td><span class="badge bg-info-subtle text-info">Re-open</span>
+                                </td>
 
-                        </tr>
+                            </tr>
 
                         </tbody>
                     </table>
@@ -948,5 +1323,5 @@
 
 @section('styles')
     <!--Swiper slider css-->
-    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection

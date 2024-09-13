@@ -73,11 +73,11 @@
                     <a class="nav-link" id="pills-list-tab" href="{{route('b.list')}}" role="tab"
                        aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
                 </li>
-{{--                <li class="nav-item" role="presentation">--}}
-{{--                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"--}}
-{{--                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>--}}
-{{--                        Calendar</a>--}}
-{{--                </li>--}}
+                {{--                <li class="nav-item" role="presentation">--}}
+                {{--                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"--}}
+                {{--                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>--}}
+                {{--                        Calendar</a>--}}
+                {{--                </li>--}}
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="pills-gantt-tab" href="{{route('b.ganttChart')}}" role="tab"
                        aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt Chart</a>
