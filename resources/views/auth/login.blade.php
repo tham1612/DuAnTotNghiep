@@ -10,12 +10,12 @@
                 <div class="col-lg-12">
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
-                            <a href="{{url('/')}}" class="d-inline-block auth-logo">
-                                <img src="{{asset('theme/assets/theme/clients/reader/images/logo.png')}}" alt=""
-                                     height="50">
+                            <a href="{{ url('/') }}" class="d-inline-block auth-logo">
+                                <img src="{{ asset('theme/assets/theme/clients/reader/images/logo.png') }}" alt=""
+                                    height="50">
                             </a>
                         </div>
-                        <p class="mt-3 fs-15 fw-medium">chào mừng </p>
+                        <p class="mt-3 fs-15 fw-medium">Welcome</p>
                     </div>
                 </div>
             </div>
@@ -37,54 +37,51 @@
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Email </label>
                                         <input id="email" type="email"
-                                               class="form-control @error('email') is-invalid @enderror" name="email"
-                                               value="{{ old('email') }}" required autocomplete="email" autofocus
-                                               placeholder="Enter email">
+                                            class="form-control @error('email') is-invalid @enderror" name="email"
+                                            value="{{ old('email') }}" required autocomplete="email" autofocus
+                                            placeholder="Enter email">
                                         @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
                                         @enderror
                                     </div>
 
                                     <div class="mb-3">
                                         <div class="float-end">
                                             @if (Route::has('password.request'))
-                                                <a class="btn btn-link text-muted"
-                                                   href="{{ route('password.request') }}">
-                                                    {{ __('Forgot Your Password?') }}
+                                                <a class="btn btn-link text-muted" href="{{ route('password.request') }}">
+                                                    {{ __('Quên mật khẩu?') }}
                                                 </a>
                                             @endif
                                         </div>
                                         <label class="form-label" for="password-input">Password</label>
                                         <div class="position-relative auth-pass-inputgroup mb-3">
-                                            <input id="password" type="password-addon"
-                                                   class="form-control @error('password') is-invalid @enderror"
-                                                   name="password" required autocomplete="current-password"
-                                                   placeholder="Enter password">
-
-                                            @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                            @enderror
+                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror password-input" name="password"
+                                                required autocomplete="current-password" placeholder="Enter password">
 
                                             <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                    type="button" id="password-addon"><i
-                                                        class="ri-eye-fill align-middle"></i></button>
+                                                type="button"><i class="ri-eye-fill align-middle"></i></button>
+
+                                            @error('password')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
+
+
                                     </div>
 
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="remember"
-                                               id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                                            {{ old('remember') ? 'checked' : '' }}>
 
                                         <label class="form-check-label" for="auth-remember-check">Remember me</label>
                                     </div>
 
                                     <div class="mt-4">
-                                        <button class="btn btn-success w-100"
-                                                type="submit">     {{ __('Login') }}</button>
+                                        <button class="btn btn-success w-100" type="submit"> {{ __('Login') }}</button>
 
                                     </div>
 
@@ -94,17 +91,15 @@
                                         </div>
                                         <div>
                                             <button type="button"
-                                                    class="btn btn-primary btn-icon waves-effect waves-light"><i
-                                                        class="ri-facebook-fill fs-16"></i></button>
+                                                class="btn btn-primary btn-icon waves-effect waves-light"><i
+                                                    class="ri-facebook-fill fs-16"></i></button>
                                             <button type="button"
-                                                    class="btn btn-danger btn-icon waves-effect waves-light"><i
-                                                        class="ri-google-fill fs-16"></i></button>
-                                            <button type="button"
-                                                    class="btn btn-dark btn-icon waves-effect waves-light"><i
-                                                        class="ri-github-fill fs-16"></i></button>
-                                            <button type="button"
-                                                    class="btn btn-info btn-icon waves-effect waves-light"><i
-                                                        class="ri-twitter-fill fs-16"></i></button>
+                                                class="btn btn-danger btn-icon waves-effect waves-light"><i
+                                                    class="ri-google-fill fs-16"></i></button>
+                                            <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i
+                                                    class="ri-github-fill fs-16"></i></button>
+                                            <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i
+                                                    class="ri-twitter-fill fs-16"></i></button>
                                         </div>
                                     </div>
                                 </form>
@@ -116,7 +111,7 @@
 
                     <div class="mt-4 text-center">
                         <p class="mb-0">Don't have an account ? <a href="{{ route('register') }}"
-                                                                   class="fw-semibold text-primary text-decoration-underline">
+                                class="fw-semibold text-primary text-decoration-underline">
                                 Signup </a></p>
                     </div>
 
@@ -127,5 +122,4 @@
         <!-- end container -->
     </div>
     <!-- end auth page content -->
-
 @endsection
