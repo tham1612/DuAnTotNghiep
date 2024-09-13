@@ -18,11 +18,15 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('position');
             $table->string('image')->nullable();
-             $table->enum('priority',\App\Enums\IndexEnum::getValues());
-             $table->enum('risk',\App\Enums\IndexEnum::getValues());
-             $table->integer('complete')->default(0);
-             $table->softDeletes();
-
+            $table->enum('priority', \App\Enums\IndexEnum::getValues());
+            $table->enum('risk', \App\Enums\IndexEnum::getValues());
+            $table->integer('complete')->default(0);
+            $table->integer('duration');
+            $table->float('progress');
+            $table->dateTime('start_date');
+            $table->integer('parent');
+            $table->integer('sortorder')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
