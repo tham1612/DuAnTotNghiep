@@ -72,7 +72,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="inbox.html">
+                    <a class="nav-link menu-link" href="http://127.0.0.1:8000/b/inboxs">
                         <i class="ri-inbox-archive-line"></i> <span data-key="">Inbox</span>
                     </a>
                 </li>
