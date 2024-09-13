@@ -85,7 +85,6 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
-
     @include('layouts.sidebar')
 
     <!-- Vertical Overlay-->
@@ -94,7 +93,7 @@
     <!-- ============================================================== -->
     <!-- Start right Content here -->
     <!-- ============================================================== -->
-    <div class="main-content">
+    <div class="main-content" style="margin-top: -10px">
         <div class="page-content">
             <div class="container-fluid">
 
