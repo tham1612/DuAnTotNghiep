@@ -2,27 +2,7 @@
     <div class="layout-width">
         <div class="navbar-header">
             <div class="d-flex">
-                <!-- LOGO -->
-                <div class="navbar-brand-box horizontal-logo">
-                    <a href="index.html" class="logo logo-dark">
-                        <span class="logo-sm">
-                            <img src="{{ asset('theme/assets/images/logo-sm.png') }}" alt="" height="22" />
-                        </span>
-                        <span class="logo-lg">
-                            <img src="{{ asset('theme/assets/images/logo-dark.png') }}" alt="" height="17" />
-                        </span>
-                    </a>
 
-                    <a href="index.html" class="logo logo-light">
-                        <span class="logo-sm">
-                            <img src="{{ asset('theme/assets/images/logo-sm.png') }}" alt="" height="22" />
-                        </span>
-                        <span class="logo-lg">
-                            <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt=""
-                                height="17" />
-                        </span>
-                    </a>
-                </div>
 
                 <!--        ẩn hiện side-bar-->
                 <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
@@ -821,15 +801,17 @@
                     </div>
                 </div>
 
-                <div class="dropdown ms-sm-3 header-item topbar-user">
+                <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <img class="rounded-circle header-profile-user"
-                                src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" <span
-                                class="text-start ms-xl-2">
-                            <span
-                                class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
+                                 src="{{asset('theme/assets/images/users/avatar-1.jpg')}}"
+                                 alt="Header Avatar"/>
+                            <span class="text-start ms-xl-2">
+                                <span
+                                    class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
+
 
                         </span>
                         </span>
@@ -861,17 +843,13 @@
                         <a class="dropdown-item" href="auth-lockscreen-basic.html"><i
                                 class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Lock screen</span></a>
-                        <!-- Blade Template -->
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                            style="display: none;">
+
+                        <form action="{{ route('logout') }}" method="post" class="dropdown-item">
                             @csrf
+                            <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
+                            <button type="submit" class="bg-transparent border-0">Logout</button>
                         </form>
 
-                        <a class="dropdown-item" href="javascript:void(0);"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle" data-key="t-logout">{{ __('Logout') }}</span>
-                        </a>
 
                     </div>
                 </div>
