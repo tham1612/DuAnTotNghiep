@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,17 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
     Route::get('/home', function () {
         return view('homes.home');
     })->name('homes.home');
+
+
+ 
+    Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
+    Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
+
+  
+
+    
+
+
     Route::prefix('b')
         ->as('b.')
         ->group(function () {
@@ -49,8 +61,9 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
                 return view('lists.index');
             })->name('list');
         });
+
+
 });
 
 
 Auth::routes();
-
