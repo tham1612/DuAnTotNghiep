@@ -83,7 +83,6 @@
                 <div class="container-fluid">
                     {{-- các màn hình hiển thị --}}
                     @yield('main')
-
                     {{-- giao diện task - dùng chung --}}
                     <!--end task-board-->
                 </div>
