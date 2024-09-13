@@ -14,17 +14,27 @@ class Task extends Model
 
     protected $fillable = [
         'catalog_id',
-        'title',
+        'text',
         'description',
         'position',
         'image',
         'priority',
         'risk',
         'complete',
+        'duration',
+        'progress',
+        'start_date',
+        'parent',
+        'sortorder'
     ];
     protected $casts = [
-         'priority' => IndexEnum::class,
+        'priority' => IndexEnum::class,
         'risk' => IndexEnum::class,
     ];
+    protected $appends = ["open"];
+
+    public function getOpenAttribute(){
+        return true;
+    }
 
 }
