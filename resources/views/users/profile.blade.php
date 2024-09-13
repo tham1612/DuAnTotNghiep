@@ -25,15 +25,7 @@
                     <div class="text-center">
                         <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
                             <img src="{{ asset('storage/' . $user->image) }}"
-                                class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image">
-                            {{-- <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                <input id="profile-img-file-input" type="file" class="profile-img-file-input">
-                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
-                                    <span class="avatar-title rounded-circle bg-light text-body">
-                                        <i class="ri-camera-fill"></i>
-                                    </span>
-                                </label>
-                            </div> --}}
+                                class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="Avata">
                         </div>
                         <h5 class="fs-16 mb-1">{{ $user->name }}</h5>
                     </div>
@@ -54,8 +46,7 @@
                                 <i class="ri-global-fill"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" id="websiteInput" placeholder="www.facebook.com"
-                            >
+                        <input type="text" class="form-control" id="websiteInput" placeholder="www.facebook.com">
                     </div>
                     <div class="mb-3 d-flex">
                         <div class="avatar-xs d-block flex-shrink-0 me-3">
@@ -63,8 +54,7 @@
                                 <i class="ri-dribbble-fill"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" id="dribbleName" placeholder="Username"
-                            >
+                        <input type="text" class="form-control" id="dribbleName" placeholder="Username">
                     </div>
                     <div class="d-flex">
                         <div class="avatar-xs d-block flex-shrink-0 me-3">
@@ -152,14 +142,13 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <!--end col-->
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="address" class="form-label">
                                                 Address</label>
                                             <input type="text"
                                                 class="form-control  @error('address') is-invalid @enderror "
-                                                name="address"
+                                                placeholder="Enter your address" name="address"
                                                 id="address"value="{{ old('address', $user->address) }}">
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -168,46 +157,33 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="image" class="form-label">image</label>
-                                            <input type="file"name="image"
-                                                class="form-control  @error('image') is-invalid @enderror " id="image"
-                                                placeholder="Designation" value="{{ old('image', $user->image) }}">
-                                            @error('image')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <!--end col-->
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label for="password" class="form-label">password</label>
-                                            <input type="text"name="password"
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="text" name="password"
                                                 class="form-control  @error('password') is-invalid @enderror "
-                                                id="password" placeholder=""
+                                                id="password" placeholder="Enter your password"
                                                 value="{{ old('password', $user->password) }}" />
                                             @error('password')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="social_id" class="form-label">social_id</label>
-                                            <input type="text"
-                                                class="form-control  @error('social_id') is-invalid @enderror "
-                                                id="social_id" name="social_id" placeholder=""
-                                                value="{{ old('social_id', $user->social_id) }}">
-                                            @error('social_id')
+                                            <label for="image" class="form-label">Image</label>
+                                            <input type="file"name="image"
+                                                class="form-control  @error('image') is-invalid @enderror " id="image"
+                                                placeholder="Avatar" value="{{ old('image', $user->image) }}">
+                                            @error('image')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="social_name"
-                                                class="form-label  @error('social_name') is-invalid @enderror  ">social_name</label>
+                                                class="form-label  @error('social_name') is-invalid @enderror  ">Social_name</label>
                                             <input type="text" class="form-control" name="social_name"
-                                                id="social_name" placeholder="City"
+                                                id="social_name" placeholder="PH33245 Đinh Thị Minh Nguyệt"
                                                 value="{{ old('social_name', $user->social_name) }}" />
                                             @error('social_name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -216,9 +192,9 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="mb-3 pb-2">
-                                            <label for="introduce" class="form-label">introduce</label>
+                                            <label for="introduce" class="form-label">Introduce</label>
                                             <textarea name="introduce" class="form-control  @error('introduce') is-invalid @enderror" id="introduce"
-                                                placeholder="Enter your description" rows="3">{{ old('introduce', $user->introduce) }}</textarea>
+                                                placeholder="Enter your introduction" rows="3">{{ old('introduce', $user->introduce) }}</textarea>
                                             @error('introduce')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

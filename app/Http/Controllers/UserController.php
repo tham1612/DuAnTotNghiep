@@ -22,30 +22,30 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        $updateData = [
-            'name' => $validatedData['name'],
-            'fullName' => $validatedData['fullName'],
-            'phone' => $validatedData['phone'],
-            'introduce' => $validatedData['introduce'],
-            'address' => $validatedData['address'],
-            'email' => $validatedData['email'],
-            'social_id' => $validatedData['social_id'],
-            'social_name' => $validatedData['social_name'],
-        ];
+        // Cập nhật dữ liệu
+        $user->name = $validatedData['name'];
+        $user->fullName = $validatedData['fullName'];
+        $user->phone = $validatedData['phone'];
+        $user->introduce = $validatedData['introduce'];
+        $user->address = $validatedData['address'];
+        $user->email = $validatedData['email'];
 
         if ($request->filled('password')) {
-            $updateData['password'] = Hash::make($validatedData['password']);
+            $user->password = Hash::make($validatedData['password']);
         }
 
-        $updateData = $request->except('image');
+        $user->social_name = $validatedData['social_name'];
+
+        // Xử lý ảnh
         if ($request->hasFile('image')) {
             if ($user->image) {
-                Storage::delete($user->image);
+                Storage::delete( $user->image);
             }
-
-            $updateData['image'] = Storage::put('users', $request->file('image'));
+            $user->image = Storage::put('users', $request->file('image'));
         }
-        $user->update($updateData);
+
+        $user->save();
+        
 
         return redirect()->route('user', $id)
             ->with('success', 'Thông tin người dùng đã được cập nhật');
