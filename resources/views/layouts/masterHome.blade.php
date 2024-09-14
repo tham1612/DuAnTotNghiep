@@ -25,7 +25,17 @@
 
     @yield('style')
 </head>
+<style>
+    .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+    }
 
+</style>
 
 <body>
     <!-- Begin page -->
@@ -78,7 +88,7 @@
         <!-- ============================================================== -->
         <!-- Start right Content here -->
         <!-- ============================================================== -->
-        <div class="main-content">
+        <div class="main-content" style="margin-top: -10px">
             <div class="page-content">
                 <div class="container-fluid">
                     {{-- các màn hình hiển thị --}}
