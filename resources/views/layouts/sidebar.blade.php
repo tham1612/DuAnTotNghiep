@@ -124,4 +124,3 @@
     <!-- Vertical Overlay-->
     <div class="sidebar-background"></div>
 </div>
-
