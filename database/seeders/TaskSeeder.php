@@ -25,11 +25,16 @@ class TaskSeeder extends Seeder
             $randomAccess = $access[array_rand($access)];
             Task::query()->create([
                 'catalog_id' => $CatalogID,
-                'title' => fake()->sentence(),
+                'text' => fake()->sentence(),
                 'description' => fake()->paragraph(),
                 'position' => fake()->numberBetween(1, 5),
                 'image' => fake()->optional()->imageUrl(),
                 'priority' => $randomAccess,
+                'duration' => 120,
+                'progress' => rand(0, 100),  // Giá trị ngẫu nhiên từ 0 đến 100
+                'start_date' => '2024-09-14',  // Ngày cố định
+                'parent' => 0,  // Không có task cha
+                'sortorder' => rand(1, 100),  // Giá trị ngẫu nhiên cho thứ tự sắp xếp
                 'risk' => $randomAccess,
                 'complete' => fake()->numberBetween(0, 100),
             ]);
@@ -37,8 +42,8 @@ class TaskSeeder extends Seeder
         for ($TaskID = 0; $TaskID < 100; $TaskID++) {
             for ($UserID = 0; $UserID < 10; $UserID++) {
                 TaskMember::query()->create([
-                    'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
+                    'task_id' => $TaskID,
+                    'user_id' => $UserID,
                     'follow' => fake()->boolean(20),
                 ]);
             }
@@ -46,20 +51,20 @@ class TaskSeeder extends Seeder
         for ($TaskID = 0; $TaskID < 100; $TaskID++) {
             for ($UserID = 0; $UserID < 10; $UserID++) {
                 TaskComment::query()->create([
-                    'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
+                    'task_id' => $TaskID,
+                    'user_id' => $UserID,
                     'content' => fake()->paragraph(),
                     'image' => fake()->optional()->imageUrl(),
                     'parent_id' => null,
                 ]);
             }
         }
-       $data=TaskComment::query()->get();
+        $data = TaskComment::query()->get();
         for ($TaskID = 0; $TaskID < 100; $TaskID++) {
             for ($UserID = 0; $UserID < 10; $UserID++) {
                 TaskComment::query()->create([
-                    'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
+                    'task_id' => $TaskID,
+                    'user_id' => $UserID,
                     'content' => fake()->paragraph(),
                     'image' => fake()->optional()->imageUrl(),
                     'parent_id' =>  $data->random()->id,
@@ -69,28 +74,26 @@ class TaskSeeder extends Seeder
         for ($TaskID = 0; $TaskID < 100; $TaskID++) {
             for ($UserID = 0; $UserID < 10; $UserID++) {
                 TaskAttachment::query()->create([
-                    'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
+                    'task_id' => $TaskID,
+                    'user_id' => $UserID,
                     'file_name' => fake()->word() . '.pdf',
                 ]);
             }
         }
-        for ($TaskID = 0; $TaskID < 100; $TaskID++){
-            if (fake()->boolean()){
+        for ($TaskID = 0; $TaskID < 100; $TaskID++) {
+            if (fake()->boolean()) {
                 TaskLink::query()->create([
                     'task_id' => $TaskID,
-                    'linkable_id' => rand(1,10),
+                    'linkable_id' => rand(1, 10),
                     'linkable_type' => Board::class,
                 ]);
-            }else{
+            } else {
                 TaskLink::query()->create([
                     'task_id' => $TaskID,
-                    'linkable_id' => rand(1,10),
+                    'linkable_id' => rand(1, 10),
                     'linkable_type' => Task::class,
                 ]);
             }
         }
-
-
     }
 }
