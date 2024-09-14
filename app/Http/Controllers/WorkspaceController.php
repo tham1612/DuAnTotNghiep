@@ -21,12 +21,9 @@ class WorkspaceController extends Controller
 
     public function index()
     {
-        //
+       
+        return view('workspaces.create');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('workspaces.create');
@@ -69,9 +66,10 @@ class WorkspaceController extends Controller
      * Display the specified resource.
      */
     public
-    function show(string $id)
-    {
-//        $model = Workspace::query()->findOrFail($id);
+        function show(
+        string $id
+    ) {
+        //        $model = Workspace::query()->findOrFail($id);
 //         return view('workspaces.edit',compact('model'));
 //        $data = $request->except('image');
 //        if ($request->hasFile('image')) {
@@ -84,18 +82,21 @@ class WorkspaceController extends Controller
      * Show the form for editing the specified resource.
      */
     public
-    function edit(string $id)
-    {
+        function edit(
+        string $id
+    ) {
         $model = Workspace::query()->findOrFail($id);
-        return view('workspaces.edit',compact('model'));
+        return view('workspaces.edit', compact('model'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public
-    function update(Request $request, string $id)
-    {
+        function update(
+        Request $request,
+        string $id
+    ) {
         $model = Workspace::query()->findOrFail($id);
     }
 
@@ -103,8 +104,9 @@ class WorkspaceController extends Controller
      * Remove the specified resource from storage.
      */
     public
-    function destroy(string $id)
-    {
+        function destroy(
+        string $id
+    ) {
         //
     }
 
