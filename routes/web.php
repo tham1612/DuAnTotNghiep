@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -35,8 +36,7 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
     Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
 
-
-
+    
 
 
     Route::prefix('b')

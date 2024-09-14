@@ -170,12 +170,18 @@
                                 <td>
                                     <div class="d-flex  cursor-pointer">
                                         <div>
-                                            <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
+                                            <div style="display: flex; gap: 5px; flex-wrap: wrap; max-width: 260px;"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                data-bs-offset="-40,10">
                                                 <span class="badge bg-info">Blue</span>
                                                 <span class="badge bg-success">Green</span>
                                                 <span class="badge bg-danger">Danger</span>
+                                                <span class="badge bg-warning">Warning</span>
+                                                <span class="badge bg-warning">Warning</span>
+                                                <span class="badge bg-warning">Warning</span>
+                                                <span class="badge bg-warning">Warning</span>
                                             </div>
+
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
                                                 <!-- Include nội dung của dropdown -->
                                                 @include('dropdowns.tag')
@@ -495,7 +501,7 @@
                                     <div class="d-flex  cursor-pointer">
                                         <div>
                                             <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">                                               
+                                                aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
                                                 <span class="badge bg-info">Blue</span>
                                                 <span class="badge bg-success">Green</span>
                                                 <span class="badge bg-danger">Danger</span>
@@ -1327,14 +1333,16 @@
                                                                             </div>
 
                                                                             <div>
-                                                                                <i class="ri-user-add-line fs-20 ms-2"></i>
+                                                                                <i
+                                                                                    class="ri-user-add-line fs-20 ms-2"></i>
                                                                                 <span data-bs-toggle="dropdown"
                                                                                     aria-haspopup="true"
                                                                                     aria-expanded="false">Chỉ định
                                                                                 </span>
                                                                                 <div
                                                                                     class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    <h5 class="text-center">Thành viên</h5>
+                                                                                    <h5 class="text-center">Thành viên
+                                                                                    </h5>
                                                                                     <form action="">
                                                                                         <input type="text"
                                                                                             name=""
