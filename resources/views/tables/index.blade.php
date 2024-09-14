@@ -7,7 +7,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Basic Datatables</h5>
+                    <h5 class="card-title mb-0">Bảng</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
@@ -18,7 +18,7 @@
                                 <th data-ordering="false">Nhãn</th>
                                 <th data-ordering="false">Thành viên</th>
                                 <th data-ordering="false">Ngày hết hạn</th>
-                                <th class="sort"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i></th>
+                                <th><i class="ri-pencil-fill align-bottom me-2 text-muted"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,12 +64,9 @@
                                         <div>
                                             <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
-                                                </div>
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
-                                                </div>
+                                                <span class="badge bg-info">Blue</span>
+                                                <span class="badge bg-success">Green</span>
+                                                <span class="badge bg-danger">Danger</span>
                                             </div>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
                                                 <!-- Include nội dung của dropdown -->
@@ -139,7 +136,7 @@
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 2</p>
                                             <li class="list-inline-item"><a href="" data-bs-toggle="modal"
                                                     data-bs-target="#createCardDetailModal"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i></a>
@@ -152,7 +149,7 @@
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 2</p>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:350px">
                                                 <div class="custom-table">
                                                     <h3 class="text-center">Thay đổi danh sách</h3>
@@ -175,12 +172,9 @@
                                         <div>
                                             <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
-                                                </div>
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
-                                                </div>
+                                                <span class="badge bg-info">Blue</span>
+                                                <span class="badge bg-success">Green</span>
+                                                <span class="badge bg-danger">Danger</span>
                                             </div>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
                                                 <!-- Include nội dung của dropdown -->
@@ -250,7 +244,7 @@
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 3</p>
                                             <li class="list-inline-item"><a href="" data-bs-toggle="modal"
                                                     data-bs-target="#createCardDetailModal"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i></a>
@@ -263,7 +257,7 @@
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 3</p>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:350px">
                                                 <div class="custom-table">
                                                     <h3 class="text-center">Thay đổi danh sách</h3>
@@ -286,12 +280,9 @@
                                         <div>
                                             <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
-                                                </div>
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
-                                                </div>
+                                                <span class="badge bg-info">Blue</span>
+                                                <span class="badge bg-success">Green</span>
+                                                <span class="badge bg-danger">Danger</span>
                                             </div>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
                                                 <!-- Include nội dung của dropdown -->
@@ -361,7 +352,7 @@
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 4</p>
                                             <li class="list-inline-item"><a href="" data-bs-toggle="modal"
                                                     data-bs-target="#createCardDetailModal"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i></a>
@@ -374,7 +365,7 @@
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 4</p>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:350px">
                                                 <div class="custom-table">
                                                     <h3 class="text-center">Thay đổi danh sách</h3>
@@ -397,12 +388,9 @@
                                         <div>
                                             <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
-                                                </div>
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
-                                                </div>
+                                                <span class="badge bg-info">Blue</span>
+                                                <span class="badge bg-success">Green</span>
+                                                <span class="badge bg-danger">Danger</span>
                                             </div>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
                                                 <!-- Include nội dung của dropdown -->
@@ -472,7 +460,7 @@
                                         <div class="d-flex align-items-center justify-content-between justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Thẻ công việc 5</p>
                                             <li class="list-inline-item"><a href="" data-bs-toggle="modal"
                                                     data-bs-target="#createCardDetailModal"><i
                                                         class="ri-pencil-fill align-bottom me-2 text-muted"></i></a>
@@ -485,7 +473,7 @@
                                         <div class="d-flex align-items-center justify-content-flex-start rounded p-3 w-100"
                                             style="height: 30px;">
                                             <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 1</p>
+                                                aria-expanded="false" data-bs-offset="-40,10">Công việc 5</p>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:350px">
                                                 <div class="custom-table">
                                                     <h3 class="text-center">Thay đổi danh sách</h3>
@@ -507,13 +495,10 @@
                                     <div class="d-flex  cursor-pointer">
                                         <div>
                                             <div style="display: flex; gap: 5px;" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: red; border-radius: 5px;">
-                                                </div>
-                                                <div
-                                                    style="width: 70px;height: 10px; background-color: blue; border-radius: 5px;">
-                                                </div>
+                                                aria-haspopup="true" aria-expanded="false" data-bs-offset="-40,10">                                               
+                                                <span class="badge bg-info">Blue</span>
+                                                <span class="badge bg-success">Green</span>
+                                                <span class="badge bg-danger">Danger</span>
                                             </div>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
                                                 <!-- Include nội dung của dropdown -->
