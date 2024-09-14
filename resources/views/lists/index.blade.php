@@ -3,7 +3,7 @@
     List - TaskFlow
 @endsection
 @section('main')
-    <div class="row mt-3 ms-3 me-3 fixed">
+    <div class="row mt-3 ms-3 me-3">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-left justify-content-between">
                 <!-- Icon menu -->
@@ -17,8 +17,25 @@
                     <a class="list-group-item list-group-item-action" href="#list-item-3">To do</a>
                     <a class="list-group-item list-group-item-action" href="#list-item-4">Completed</a>
                 </div>
+                <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                    aria-expanded="false" data-bs-offset="0,-50">
+                    <i class="ri-add-line align-bottom me-1"></i>Add Catalog
+                </button>
+                <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
+                    <form>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                                placeholder="Nhập danh sách công việc..." />
+                        </div>
+                        <div class="mb-2 d-flex align-items-center">
+                            <button type="submit" class="btn btn-primary">
+                                Add Catalog
+                            </button>
+                            <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                        </div>
+                    </form>
+                </div>
             </div>
-
         </div>
     </div>
 
@@ -71,10 +88,9 @@
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
                                 aria-expanded="false" data-bs-offset="0,-50">
                                 <i class="ri-add-line align-bottom me-1"></i>Add Task
-                            </button>
                             </button>
                             <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
                                 <form>
@@ -102,7 +118,8 @@
                                 <tr>
                                     <th scope="col" style="width: 40px;">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                            <input class="form-check-input" type="checkbox" id="checkAll"
+                                                value="option">
                                         </div>
                                     </th>
                                     <th class="sort">Task</th>
@@ -508,10 +525,9 @@
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
                                 aria-expanded="false" data-bs-offset="0,-50">
                                 <i class="ri-add-line align-bottom me-1"></i>Add Task
-                            </button>
                             </button>
                             <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
                                 <form>
@@ -948,10 +964,9 @@
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
                                 aria-expanded="false" data-bs-offset="0,-50">
                                 <i class="ri-add-line align-bottom me-1"></i>Add Task
-                            </button>
                             </button>
                             <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
                                 <form>
@@ -1217,7 +1232,8 @@
                                                                     data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                                     data-bs-placement="top" title="Nancy">
                                                                     <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                        alt=""
+                                                                        class="rounded-circle avatar-xs" />
                                                                 </a>
                                                                 <p class="ms-3 mt-3">Nancy</p>
                                                             </div>
@@ -1387,11 +1403,9 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary mt-3 ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+                        <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
                             aria-expanded="false" data-bs-offset="0,-50">
                             <i class="ri-add-line align-bottom me-1"></i>Add Task
-                        </button>
-
                         </button>
                         <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
                             <form>
@@ -1807,12 +1821,10 @@
             z-index: 1000;
             width: 200px;
         }
+
         .list-group-item:hover {
             background-color: #f0f0f0;
         }
-
-
-       
     </style>
     <!-- Dragula css -->
     <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
@@ -1820,26 +1832,6 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 @endsection
 @section('script')
-    <!-- dragula init js -->
-    <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
-
-    <!-- dom autoscroll -->
-    <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
-
-
-    <!-- prismjs plugin -->
-    <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
-
-    <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>
-
-    <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
-    <!--jquery cdn-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <!--select2 cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
 
     <script>
         document.getElementById('menuIcon').addEventListener('click', function() {
@@ -1885,9 +1877,7 @@
             .on("out", function(el, container) {
                 container.className.replace("ex-over", "");
             });
-    </script>
 
-    <script>
         // Xử lý sự kiện cho mỗi icon được lặp
         document.querySelectorAll('.userAddIcon').forEach(function(icon) {
             icon.addEventListener('click', function() {
@@ -1919,5 +1909,4 @@
             });
         });
     </script>
-
 @endsection
