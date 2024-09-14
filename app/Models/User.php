@@ -54,13 +54,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(WorkspaceMember::class);
     }
+    public function workspaces()
+    {
+        return $this->belongsToMany(Workspace::class, 'workspace_members', 'user_id', 'workspace_id');
+    }
 //    kieemr tra xem nguoiwf dung dax cso workspace chuaw
     public function hasWorkspace()
     {
         $userId = Auth::id();
+
         $isWorkspace = WorkspaceMember::where('user_id', $userId)
             ->where('authorize', 1)
             ->exists();
         return $isWorkspace ? 1 : 0;
     }
+
+//    public function getWorkspace()
+//    {
+//        // Lấy các workspace mà người dùng hiện tại là thành viên hoặc owner
+//        return Workspace::whereHas('users', function ($query) {
+//            $query->where('user_id', $this->id)
+//                ->whereIn('authorize', [0, 1]); // authorize = 0 hoặc 1
+//        })->get();
+//    }
+
+
 }
