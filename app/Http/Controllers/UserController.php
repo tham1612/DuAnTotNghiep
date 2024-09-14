@@ -29,21 +29,19 @@ class UserController extends Controller
         $user->introduce = $validatedData['introduce'];
         $user->address = $validatedData['address'];
         $user->email = $validatedData['email'];
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($validatedData['password']);
-        }
-
         $user->social_name = $validatedData['social_name'];
 
         // Xử lý ảnh
         if ($request->hasFile('image')) {
-            if ($user->image) {
-                Storage::delete( $user->image);
+            $newImagePath = Storage::put('users', $request->file('image'));
+            
+            $currentImage = $user->image;
+            if ($currentImage && Storage::exists($currentImage)) {
+                Storage::delete($currentImage);
             }
-            $user->image = Storage::put('users', $request->file('image'));
+            $user->image = $newImagePath;
         }
-
+        
         $user->save();
 
         return redirect()->route('user', $id)
