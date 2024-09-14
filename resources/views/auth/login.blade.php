@@ -57,10 +57,13 @@
                                         </div>
                                         <label class="form-label" for="password-input">Password</label>
                                         <div class="position-relative auth-pass-inputgroup mb-3">
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror password-input" name="password"
-                                                required autocomplete="current-password" placeholder="Enter password">
+                                            <input id="password" type="password"
+                                                class="form-control @error('password') is-invalid @enderror password-input"
+                                                name="password" required autocomplete="current-password"
+                                                placeholder="Enter password">
 
-                                            <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                            <button
+                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                 type="button"><i class="ri-eye-fill align-middle"></i></button>
 
                                             @error('password')
