@@ -38,7 +38,6 @@ class UpdateUserRequest extends FormRequest
                 'email',
                 Rule::unique('users')->ignore($this->route('id')),
             ],
-            'password' => 'nullable|string',
             'social_id' => 'nullable|string|max:255',
             'social_name' => 'nullable|string|max:255',
             'image' => 'nullable|image',
