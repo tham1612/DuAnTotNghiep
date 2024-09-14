@@ -21,8 +21,8 @@ class WorkspaceController extends Controller
 
     public function index()
     {
-        //
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -51,7 +51,7 @@ class WorkspaceController extends Controller
             DB::table('workspace_members')->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,
-                'authorize' => true,
+                'authorize' => 1,
                 'invite' => now(),
             ]);
             DB::commit();
@@ -87,7 +87,7 @@ class WorkspaceController extends Controller
     function edit(string $id)
     {
         $model = Workspace::query()->findOrFail($id);
-        return view('workspaces.edit',compact('model'));
+        return view('workspaces.edit', compact('model'));
     }
 
     /**
@@ -107,6 +107,16 @@ class WorkspaceController extends Controller
     {
         //
     }
-
+//    wsuser
+    public function getWorkspace()
+    {
+        // Tìm các workspace mà người dùng hiện tại là thành viên hoặc owner
+        $userId = Auth::id();
+      $workspaces1= Workspace::whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                ->whereIn('authorize', [0, 1]);
+        })->get();
+        return  $workspaces1;
+    }
 
 }

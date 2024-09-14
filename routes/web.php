@@ -34,11 +34,6 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
 
     Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
-
-
-
-
-
     Route::prefix('b')
         ->as('b.')
         ->group(function () {
@@ -58,7 +53,7 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
             Route::get('list', function () {
                 return view('lists.index');
             })->name('list');
-            
+
             Route::get('inboxs', function () {
                 return view('Inboxs.index');
             })->name('inbox');
