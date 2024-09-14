@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AccessEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,6 @@ class Board extends Model
 
     protected $fillable = [
         'workspace_id',
-
         'access',
         'name',
         'description',
@@ -26,6 +26,7 @@ class Board extends Model
         'comment_rights' => 'boolean',
          'add_delete_rights' => 'boolean',
         'edit_workspace' => 'boolean',
+        'access' => AccessEnum::class,
     ];
     public function taskLinks()
     {
