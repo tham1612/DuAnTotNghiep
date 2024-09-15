@@ -41,7 +41,7 @@ class UserController extends Controller
             }
             $user->image = $newImagePath;
         }
-        
+
         $user->save();
 
         return redirect()->route('user', $id)
