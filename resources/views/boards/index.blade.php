@@ -10,7 +10,7 @@
             <div class="d-flex mb-3 d-flex align-items-center">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Tên catalog
+                        Catalog 1
                         <small class="badge bg-success align-bottom ms-1 totaltask-badge">2</small>
                     </h6>
                 </div>
@@ -517,7 +517,7 @@
             <div class="d-flex mb-3">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Inprogress
+                        Catalog 2
                         <small class="badge bg-warning align-bottom ms-1 totaltask-badge">2</small>
                     </h6>
                 </div>

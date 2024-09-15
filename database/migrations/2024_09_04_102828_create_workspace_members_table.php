@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->foreignIdFor(\App\Models\Workspace::class)->constrained();
-            $table->boolean('authorize')->default(false)->comment('0:member, 1:Owner');
+            $table->enum('authorize',  \App\Enums\AuthorizeEnum::getValues());
             $table->date('invite');
             $table->softDeletes();
 

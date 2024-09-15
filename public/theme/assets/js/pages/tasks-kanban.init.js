@@ -1,5 +1,4 @@
 var myModalEl,
-
     kanbanboard,
     scroll,
     addNewBoard,
@@ -16,7 +15,7 @@ var myModalEl,
         document.getElementById("new-task"),
     ];
 
-const testId = document.getElementsByClassName('tasks-box');
+var targetTaskId = document.getElementsByClassName('tasks-box');
 
 function noTaskImage() {
     Array.from(document.querySelectorAll("#kanbanboard .tasks-list")).forEach(
@@ -96,8 +95,9 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
 }),
     (drake = dragula(tasks_list)
         .on("drag", function (e) {
-            // lấy id của task
-            // console.log(testId.dataset.valueOf())
+            // const draggedTask = event.target;
+            targetTaskId = event.target.closest('.tasks-box').dataset.value;
+            console.log(targetTaskId)
             e.className = e.className.replace("ex-moved", "");
         })
         .on("drop", function (e) {
@@ -105,8 +105,11 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             const targetList = e.parentElement.closest('.tasks-list'); // Lấy phần tử cha (tasks-list) chứa task vừa được thả
             if (targetList) {
                 const listValue = targetList.dataset.value; // Giả sử bạn đã thêm data-value cho tasks-list
-                console.log("Task " + testId[0].dataset.value + " được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
+                console.log("Task " + targetTaskId + " được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
             }
+            // lấy số phần tử trong danh sách
+            console.log(targetList)
+            console.log(document.querySelectorAll('.tasks-list .tasks-box').length)
             e.className += " ex-moved";
         })
         .on("over", function (e, a) {

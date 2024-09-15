@@ -36,10 +36,12 @@ class WorkspaceSeeder extends Seeder
         }
         for ($userID  = 0; $userID  < 10; $userID ++){
             for ($WorkspaceID  = 0; $WorkspaceID  < 10; $WorkspaceID ++){
+                $authorize = \App\Enums\AuthorizeEnum::getValues();
+                $randomAuthorize = $authorize[array_rand($authorize)];
                 WorkspaceMember::query()->create([
                     'user_id'=>$userID,
                     'workspace_id'=>$WorkspaceID,
-                    'authorize'=>fake()->boolean(20),
+                    'authorize'=> $randomAuthorize,
                     'invite'=>fake()->date(),
                 ]);
 
