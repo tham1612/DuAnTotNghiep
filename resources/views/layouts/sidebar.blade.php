@@ -1,14 +1,16 @@
 @php
     $userId = \Illuminate\Support\Facades\Auth::id();
     $workspaces = \App\Models\Workspace::query()
-
     ->whereHas('users', function ($query) use ($userId) {
           $query
           ->where('user_id', $userId)
               ->whereIn('authorize', [0, 1]);
-      })->get();
-     $workspaceChecked = \App\Models\Workspace::query()->findOrFail('23');
-//    dd($workspaceChecked->toArray())
+      })
+      ->whereNot('id',4)
+      ->get();
+
+     $workspaceChecked = \App\Models\Workspace::query()->findOrFail(4);
+
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
@@ -20,7 +22,7 @@
             {{strtoupper(substr($workspaceChecked->name,0,1)) }}
         </div>
         <span class="fs-15 ms-2 text-white" id="swicthWs">
-            {{$workspaceChecked->name}}
+            {{\Illuminate\Support\Str::limit($workspaceChecked->name,20)}}
             <i class=" ri-arrow-drop-down-line fs-20"></i>
         </span>
 
@@ -28,29 +30,28 @@
         <ul class="dropdown-menu dropdown-menu-md p-3"
             style="width:300px"
             aria-labelledby="dropdownMenuOffset">
+
+
+            <li class="d-flex">
+                @if($workspaceChecked->image)
+
+                @else
+                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                         style="width: 40px;height: 40px">
+                        {{strtoupper(substr($workspaceChecked->name,0,1)) }}
+                    </div>
+                @endif
+                <section class=" ms-2">
+                    <p class="fs-15 fw-bolder"> {{\Illuminate\Support\Str::limit($workspaceChecked->name,20)}} </p>
+                    <p class="fs-10" style="margin-top: -10px">
+                        Công khai
+                    </p>
+                </section>
+            </li>
+
+            <li class="border mb-3"></li>
+
             @foreach($workspaces as $workspace)
-                @if($workspace->id == $workspaceChecked->id)
-                    <li class="d-flex">
-                        @if($workspaceChecked->image)
-
-                        @else
-                            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                 style="width: 40px;height: 40px">
-                                {{strtoupper(substr($workspaceChecked->name,0,1)) }}
-                            </div>
-                        @endif
-                        <section class=" ms-2">
-                            <p class="fs-15 fw-bolder"> {{$workspaceChecked->name}} </p>
-                            <p class="fs-10" style="margin-top: -10px">
-                                Công khai
-                            </p>
-                        </section>
-                    </li>
-                @endif
-
-                @if($loop->first)
-                    <li class="border mb-3"></li>
-                @endif
                 <li class="d-flex"
 
                 >
@@ -62,7 +63,7 @@
                         </div>
                     @endif
                     <section class=" ms-2">
-                        <p class="fs-15 fw-bolder"> {{$workspace->name}} </p>
+                        <p class="fs-15 fw-bolder"> {{\Illuminate\Support\Str::limit($workspace->name,20)}} </p>
                         <p class="fs-10" style="margin-top: -10px">
                             <span>Công khai</span>
                             <i class=""></i>
@@ -70,7 +71,6 @@
                         </p>
                     </section>
                 </li>
-
             @endforeach
         </ul>
     </div>
