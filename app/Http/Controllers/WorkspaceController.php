@@ -21,9 +21,9 @@ class WorkspaceController extends Controller
 
     public function index()
     {
-       
-        return view('workspaces.create');
+
     }
+
     public function create()
     {
         return view('workspaces.create');
@@ -48,7 +48,7 @@ class WorkspaceController extends Controller
             DB::table('workspace_members')->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,
-                'authorize' => true,
+                'authorize' => 1,
                 'invite' => now(),
             ]);
             DB::commit();

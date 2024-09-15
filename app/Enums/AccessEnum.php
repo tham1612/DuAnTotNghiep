@@ -5,15 +5,32 @@ namespace App\Enums;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static OptionOne()
- * @method static static OptionTwo()
- * @method static static OptionThree()
+ * @method static static PublicAccess()
+ * @method static static PrivateAccess()
+ * @method static static Workspace()
  */
 final class AccessEnum extends Enum
 {
-    const public = 'public';
-    const private = 'private';
-    const workspace = 'workspace';
+    const PUBLIC_ACCESS = 'public';
+    const PRIVATE_ACCESS = 'private';
+    const WORKSPACE = 'workspace';
 
+    public function label(): string
+    {
+        return match ($this->value) {
+            self::PUBLIC_ACCESS => 'Công khai',
+            self::PRIVATE_ACCESS => 'Riêng tư',
+            self::WORKSPACE => 'Không gian làm việc',
+            default => 'Không xác định',
+        };
+    }
+    public static function getLimitedChoices(): array
+    {
+        return [
+            self::PRIVATE_ACCESS,
+            self::WORKSPACE,
+            self::PUBLIC_ACCESS,
+        ];
+    }
 
 }
