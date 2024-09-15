@@ -6,12 +6,19 @@
                 "starred": true,
                 "readed" : true,
                 "name": "Peter, me",
-                "title": "Hello",
+                "title": "zdfbzdfb",
                 "description" : "Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)",
                 "date" : "Mar 7",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/avatar-2.jpg",
-                "labeltype": "Support"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-2.jpg",
+                "labeltype": "Support",
+                "status_task":"TO DOING",
+                "assign":"http://127.0.0.1:8000/theme/assets/images/users/avatar-2.jpg",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"hiihihi",
+                "time_estimate":"hshshshsh",
+                "track_time":"hết giờ",
+                "tag":"TO DOING"
             },
             {
                 "id": 2,
@@ -22,12 +29,19 @@
                 "description" : "Alright thanks. I'll have to re-book that somehow, i'll get back to you.",
                 "date" : "Mar 7",
                 "tabtype" : "Sent",
-                "userImg": "assets/images/users/avatar-3.jpg",
-                "labeltype": "Freelance"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-3.jpg",
+                "labeltype": "Freelance",
+                "status_task":"TO DO",
+                "assign":"http://127.0.0.1:8000/theme/assets/images/users/avatar-3.jpg",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"dfhhfdhdfh",
+                "time_estimate":"dgsdfhfsdfh",
+                "track_time":"hết giờ",
+                "tag":"Ghét"
             },
             {
                 "id": 3,
-                "starred": false,
+                "starred": true,
                 "readed" : false,
                 "name": "Web Support Dennis",
                 "counted": 7,
@@ -35,8 +49,15 @@
                 "description" : "Will you answer him asap?",
                 "date" : "Mar 5",
                 "tabtype" : "Trash",
-                "userImg": "assets/images/users/avatar-4.jpg",
-                "labeltype": "Social"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-4.jpg",
+                "labeltype": "Social",
+                "status_task":"TO DO",
+                "assign":"http://127.0.0.1:8000/theme/assets/images/users/avatar-4.jpg",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"krrkrkrk",
+                "time_estimate":"kukukukuk",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 4,
                 "starred": false,
@@ -46,8 +67,15 @@
                 "description" : "Eff that place, you might as well stay here with us instead! Sent from my iPhone 4  4 mar 2014 at 5:55 pm",
                 "date" : "Mar 4",
                 "tabtype" : "Sent",
-                "userImg": "assets/images/users/avatar-5.jpg",
-                "labeltype": "Support"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-5.jpg",
+                "labeltype": "Support",
+                "status_task":"TO DO",
+                "assign":"http://127.0.0.1:8000/theme/assets/images/users/avatar-5.jpg",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 5,
                 "starred": false,
@@ -57,8 +85,15 @@
                 "description" : "Our top pick for you on Medium this week The Man Who Destroyed America’s Ego",
                 "date" : "Feb 28",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/avatar-6.jpg",
-                "labeltype": "Support"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-6.jpg",
+                "labeltype": "Support",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 6,
                 "starred": true,
@@ -68,8 +103,15 @@
                 "description" : "To create this month's pack, we hosted a party with local musician Jared Mahone here in Columbus, Ohio.",
                 "date" : "Feb 28",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/user-dummy-img.jpg",
-                "labeltype": "Friends"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/user-dummy-img.jpg",
+                "labeltype": "Friends",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 7,
                 "starred": false,
@@ -80,8 +122,15 @@
                 "description" : "Yeah i'd like that! Do you remember the video you showed me of your train ride between Colombo and Kandy? The one with the mountain view? I would love to see that one again!",
                 "date" : "Feb 27",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/avatar-8.jpg",
-                "labeltype": "Freelance"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-8.jpg",
+                "labeltype": "Freelance",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 7,
                 "starred": false,
@@ -92,8 +141,15 @@
                 "description" : "You've been confirmed! Welcome to the ruling class of the inbox. For your records, here is a copy of the information you submitted to us...",
                 "date" : "Feb 27",
                 "tabtype" : "Draft",
-                "userImg": "assets/images/users/avatar-9.jpg",
-                "labeltype": "Social"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-9.jpg",
+                "labeltype": "Social",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 9,
                 "starred": true,
@@ -103,8 +159,15 @@
                 "description" : "Hej Nicklas Sandell! Vi vill bjuda in dig till \"First tour 2014\", ett rekryteringsevent som erbjuder jobb på 16 semesterorter iSverige.",
                 "date" : "Feb 27",
                 "tabtype" : "Starred",
-                "userImg": "assets/images/users/avatar-10.jpg",
-                "labeltype": "Support"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-10.jpg",
+                "labeltype": "Support",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 10,
                 "starred": true,
@@ -114,8 +177,15 @@
                 "description" : "Today's Friday and we thought maybe you want some music inspiration for the weekend. Here are some trending tracks and playlists we think you should give a listen!",
                 "date" : "Feb 26",
                 "tabtype" : "Starred",
-                "userImg": "assets/images/users/user-dummy-img.jpg",
-                "labeltype": "Support"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/user-dummy-img.jpg",
+                "labeltype": "Support",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 11,
                 "starred": false,
@@ -125,8 +195,15 @@
                 "description" : "That's great, see you on Thursday!",
                 "date" : "Feb 25",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/avatar-4.jpg",
-                "labeltype": "Social"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-4.jpg",
+                "labeltype": "Social",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 12,
                 "starred": false,
@@ -136,8 +213,15 @@
                 "description" : "You have been assigned a task by Alex@Work on the board Web.",
                 "date" : "Feb 24",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/avatar-5.jpg",
-                "labeltype": "Friends"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-5.jpg",
+                "labeltype": "Friends",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 13,
                 "starred": false,
@@ -147,8 +231,15 @@
                 "description" : "Hey, You wanna join me and Fred at the lake tomorrow? It'll be awesome.",
                 "date" : "Feb 23",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/user-dummy-img.jpg",
-                "labeltype": "Family"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/user-dummy-img.jpg",
+                "labeltype": "Family",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 14,
                 "starred": false,
@@ -158,9 +249,16 @@
                 "description" : "Nah man sorry i don't. Should i get it?",
                 "date" : "Feb 23",
                 "tabtype" : "Important",
-                "userImg": "assets/images/users/avatar-8.jpg",
-                "labeltype": "Support"
-                
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-8.jpg",
+                "labeltype": "Support",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
+
             },{
                 "id": 15,
                 "starred": true,
@@ -170,8 +268,15 @@
                 "description" : "That's just perfect! See you tomorrow.",
                 "date" : "Feb 21",
                 "tabtype" : "Starred",
-                "userImg": "assets/images/users/avatar-10.jpg",
-                "labeltype": "Freelance"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-10.jpg",
+                "labeltype": "Freelance",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 16,
                 "starred": true,
@@ -181,8 +286,15 @@
                 "description" : "The following items were added to your Stack Exchange global inbox since you last checked it.",
                 "date" : "Feb 21",
                 "tabtype" : "Starred",
-                "userImg": "assets/images/users/user-dummy-img.jpg",
-                "labeltype": "Freelance"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/user-dummy-img.jpg",
+                "labeltype": "Freelance",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 17,
                 "starred": false,
@@ -192,8 +304,15 @@
                 "description" : "Hey Nicklas Sandell! Thank you for purchasing extra storage space in Google Drive.",
                 "date" : "Feb 20",
                 "tabtype" : "Spam",
-                "userImg": "assets/images/users/avatar-6.jpg",
-                "labeltype": "Social"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-6.jpg",
+                "labeltype": "Social",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             },{
                 "id": 18,
                 "starred": false,
@@ -203,8 +322,15 @@
                 "description" : "Yes ok, great! I'm not stuck in Stockholm anymore, we're making progress.",
                 "date" : "Feb 19",
                 "tabtype" : "Draft",
-                "userImg": "assets/images/users/user-dummy-img.jpg",
-                "labeltype": "Friends"
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/user-dummy-img.jpg",
+                "labeltype": "Friends",
+                "status_task":"TO DO",
+                "assign":"TO DO",
+                "date_task":"Aug 5 - Aug 8",
+                "priority":"ngon luôn ",
+                "time_estimate":"ngon luôn ",
+                "track_time":"hết giờ",
+                "tag":"TO DO"
             }
         ],
         "social": [
@@ -217,7 +343,7 @@
                 "description" : "Trip home from Colombo has been arranged, then Jenna will come get me from Stockholm. :)",
                 "date" : "Mar 7",
                 "tabtype" : "Inbox",
-                "userImg": "assets/images/users/avatar-8.jpg",
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-8.jpg",
                 "labeltype": "Social"
             },
             {
@@ -229,7 +355,7 @@
                 "description" : "Alright thanks. I'll have to re-book that somehow, i'll get back to you.",
                 "date" : "Mar 7",
                 "tabtype" : "Sent",
-                "userImg": "assets/images/users/avatar-10.jpg",
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-10.jpg",
                 "labeltype": "Social"
             },
             {
@@ -242,7 +368,7 @@
                 "description" : "Will you answer him asap?",
                 "date" : "Mar 5",
                 "tabtype" : "Trash",
-                "userImg": "assets/images/users/avatar-3.jpg",
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-3.jpg",
                 "labeltype": "Social"
             }
         ],
@@ -256,7 +382,7 @@
                 "description" : "Hey Nicklas Sandell! Thank you for purchasing extra storage space in Google Drive.",
                 "date" : "Feb 20",
                 "tabtype" : "Spam",
-                "userImg": "assets/images/users/user-dummy-img.jpg",
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/user-dummy-img.jpg",
                 "labeltype": "Social"
             },
             {
@@ -268,7 +394,7 @@
                 "description" : "Yes ok, great! I'm not stuck in Stockholm anymore, we're making progress.",
                 "date" : "Feb 19",
                 "tabtype" : "Draft",
-                "userImg": "assets/images/users/avatar-3.jpg",
+                "userImg": "http://127.0.0.1:8000/theme/assets/images/users/avatar-3.jpg",
                 "labeltype": "Social"
             }
         ]

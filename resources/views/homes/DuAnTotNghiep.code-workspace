@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "../../.."
+	},
+	{
+		"path": "D:/theme-admin"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "theme-admin"
+  }
+}

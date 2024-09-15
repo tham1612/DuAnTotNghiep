@@ -32,13 +32,11 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
     })->name('homes.home');
 
 
- 
     Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
 
-  
 
-    
+
 
 
     Route::prefix('b')
@@ -60,6 +58,11 @@ Route::middleware(['auth','isWorkspace'])->group(function () {
             Route::get('list', function () {
                 return view('lists.index');
             })->name('list');
+            
+            Route::get('inboxs', function () {
+                return view('Inboxs.index');
+            })->name('inbox');
+
         });
 
 
