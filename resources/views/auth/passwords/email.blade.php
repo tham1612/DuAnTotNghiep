@@ -30,25 +30,29 @@
                                     colors="primary:#0ab39c" class="avatar-xl"></lord-icon>
 
                             </div>
-
-                            <div class="alert border-0 alert-warning text-center mb-2 mx-2" role="alert">
-                                Enter your email and instructions will be sent to you!
-                            </div>
+                            @if (session('status'))
+                                <div class="alert border-0 alert-success text-center mb-2 mx-2" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            @else
+                                <div class="alert border-0 alert-warning text-center mb-2 mx-2" role="alert">
+                                    Enter your email and instructions will be sent to you!
+                                </div>
+                            @endif
                             <div class="p-2">
-
-                                <form method="POST" action="{{ route('password.confirm') }}">
+                                <form method="POST" action="{{ route('password.email') }}">
                                     @csrf
                                     <div class="mb-4">
                                         <label class="form-label">Email</label>
                                         <input id="email" type="email"
-                                            class="form-control @error('email') is-invalid @enderror" name="email"
+                                            class="form-control" name="email"
                                             value="{{ old('email') }}" required autocomplete="email" autofocus>
 
-                                        @error('email')
+                                        {{-- @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
-                                        @enderror
+                                        @enderror --}}
                                     </div>
 
                                     <div class="text-center mt-4">
