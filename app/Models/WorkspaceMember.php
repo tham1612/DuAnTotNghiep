@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AccessEnum;
+use App\Enums\AuthorizeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,7 +20,7 @@ class WorkspaceMember extends Model
         'invite',
     ];
     protected $casts = [
-        'authorize' => 'boolean',
+        'authorize' => AuthorizeEnum::class,
     ];
     public function user()
     {

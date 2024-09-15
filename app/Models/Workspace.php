@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AccessEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Workspace extends Model
 {
@@ -24,4 +25,12 @@ class Workspace extends Model
     {
         return $this->hasMany(WorkspaceMember::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'workspace_members', 'workspace_id', 'user_id')
+            ->withPivot('authorize');
+    }
+
+
 }
