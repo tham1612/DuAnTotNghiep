@@ -33,7 +33,7 @@ class UserController extends Controller
 
         // Xử lý ảnh
         if ($request->hasFile('image')) {
-            $newImagePath = Storage::put('users', $request->file('image'));
+            $newImagePath = Storage::put('users.', $request->file('image'));
             
             $currentImage = $user->image;
             if ($currentImage && Storage::exists($currentImage)) {
