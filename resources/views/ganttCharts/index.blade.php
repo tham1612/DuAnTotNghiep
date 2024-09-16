@@ -1,7 +1,7 @@
-@extends('layouts.masterBoard')
+@extends('layouts.masterMain')
 
 @section('main')
-        <!DOCTYPE html>
+    <!DOCTYPE html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
