@@ -633,19 +633,20 @@
         <div class="d-flex cursor-pointer">
             <div class="d-flex align-items-center justify-content-flex-start rounded p-3 w-100" style="height: 30px;">
                 <button id="bBtn" class="hidden btn btn-primary mb-1" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false" data-bs-offset="0,-300">Danh sách
-                </button>
-                <div class="dropdown-menu dropdown-menu-md p-3" style="width:350px">
+
+                    aria-haspopup="true" aria-expanded="false" data-bs-offset="0,-300">Danh sách</button>
+                <div class="dropdown-menu dropdown-menu-md p-3" style="width:300px">
+
                     <!-- Nội dung dropdown của Danh Sách -->
                     <h2 class="text-center">Thêm Danh Sách</h2>
                     <div class="mb-3">
                         <label for="selectPosition" class="form-label">Vị trí</label>
                         <select class="form-select" id="selectPosition">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                            <option value="1">Danh sách 1</option>
+                            <option value="2">Danh sách  2</option>
+                            <option value="3">Danh sách  3</option>
+                            <option value="4">Danh sách  4</option>
+                            <option value="5">Danh sách  5</option>
                         </select>
                         <button type="button" class="btn btn-primary mt-3 w-100">Thêm Danh Sách</button>
                     </div>
