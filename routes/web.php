@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
+use \App\Http\Controllers\CatalogControler;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,30 +24,23 @@ Route::get('/', function () {
 
     return view('welcome');
 });
-Route::get('workspaces/create', [WorkspaceController::class, 'create'])
-    ->middleware('auth');
-Route::post('workspaces/store', [WorkspaceController::class, 'store'])
-    ->middleware('auth')
-    ->name('workspaces.store');
+
 Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
         Route::prefix('workspaces')
             ->as('workspaces.')
             ->group(function () {
-                Route::get('/', [WorkspaceController::class, 'index'])
-                    ->name('index');
-                Route::get('show/{id}', [WorkspaceController::class, 'show'])
-                    ->name('show');
-                Route::get('{id}/edit', [WorkspaceController::class, 'edit'])
-                    ->name('edit');
-                Route::put('{id}/update', [WorkspaceController::class, 'update'])
-                    ->name('update');
-                Route::delete('{id}/destroy', [WorkspaceController::class, 'destroy'])
-                    ->name('destroy');
+                Route::resource('/', WorkspaceController::class)
+                    ->middleware(['auth', 'isWorkspace']);
+                Route::get('create', [WorkspaceController::class, 'create'])
+                    ->withoutMiddleware('isWorkspace')
+                    ->name('create');
+                Route::post('store', [WorkspaceController::class, 'store'])
+                    ->withoutMiddleware('isWorkspace')
+                    ->name('store');
             });
 
-        Route::resource('workspaces', WorkspaceController::class)
-        ->middleware(['auth', 'isWorkspace']);
+
 
         Route::get('/homes/dashboard', function () {
             return view('homes.dashboard');
@@ -57,8 +51,10 @@ Route::middleware(['auth', 'isWorkspace'])
         })->name('homes.home');
 
 
-        Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
-        Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::get('/user/{id}', [UserController::class, 'edit'])
+        ->name('user');
+        Route::put('/user/{id}', [UserController::class, 'update'])
+        ->name('users.update');
         Route::prefix('b')
             ->as('b.')
             ->group(function () {
@@ -93,7 +89,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 })->name('inbox');
 
             });
-        Route::resource('catalogs', \App\Http\Controllers\CatalogControler::class);
+        Route::resource('catalogs', CatalogControler::class);
 
 
     });
