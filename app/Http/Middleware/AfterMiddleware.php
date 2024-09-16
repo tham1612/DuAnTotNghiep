@@ -16,8 +16,8 @@ class AfterMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $response= $next($request);
+        $response = $next($request);
         Log::debug('AfterMiddleware',[$response]);
-        return $next($request);
+        return $response;
     }
 }
