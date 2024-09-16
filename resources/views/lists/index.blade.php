@@ -147,62 +147,26 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="">
+                                <td class="col-2">
                                     <!-- Icon hiển thị ban đầu -->
-                                    <div class="d-flex cursor-pointer">
-                                        <i class="ri-user-add-line fs-20 ms-2 userAddIcon" data-bs-toggle="dropdown"
-                                           aria-haspopup="true" aria-expanded="false"></i>
+                                    <div class="d-flex cursor-pointer" data-bs-toggle="dropdown"
+                                         aria-haspopup="true" aria-expanded="false">
+                                        <div class="avatar-group">
+                                            <a href="javascript:void(0);"
+                                               class="avatar-group-item avatarClick"
+                                               data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                               data-bs-placement="top" title="Nancy">
+                                                <img
+                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                    alt="" class="rounded-circle avatar-xs"/>
+                                            </a>
+                                        </div>
                                     </div>
 
-                                    <!-- Avatar group sẽ ẩn ban đầu -->
-                                    <div class="avatar-group d-none avatarGroup" data-bs-toggle="dropdown"
-                                         aria-haspopup="true" aria-expanded="false">
-                                        <section class="d-flex">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="col-auto ms-sm-auto">
-                                                    <div class="avatar-group">
-                                                        <a href="javascript:void(0);"
-                                                           class="avatar-group-item avatarClick"
-                                                           data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                           data-bs-placement="top" title="Nancy">
-                                                            <img
-                                                                src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                alt="" class="rounded-circle avatar-xs"/>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                    </div>
 
                                     <!-- Dropdown menu hiển thị thành viên -->
                                     <div class="dropdown-menu dropdown-menu-lg p-3 userDropdown">
-                                        <h5 class="text-center">Thành viên</h5>
-                                        <form action="">
-                                            <input type="text" name="" id=""
-                                                   class="form-control border-1" placeholder="Tìm kiếm thành viên"/>
-
-                                            <!-- thành viên của thẻ -->
-                                            <div class="mt-3">
-                                                <strong class="fs-14">Thành viên của thẻ</strong>
-                                                <ul class="" style="list-style: none; margin-left: -32px">
-                                                    <li class="d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="javascript:void(0);"
-                                                               class="avatar-group-item selectUser"
-                                                               data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                               data-bs-placement="top" title="Nancy">
-                                                                <img
-                                                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                                    alt="" class="rounded-circle avatar-xs"/>
-                                                            </a>
-                                                            <p class="ms-3 mt-3">Nancy</p>
-                                                        </div>
-                                                        <i class="ri-close-line fs-20 closeIcon"></i>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </form>
+                                        @include('dropdowns.member')
                                     </div>
                                 </td>
 
@@ -1791,7 +1755,7 @@
                                                 Lưu trữ</a>
                                         </li>
                                     </ul>
-                    </div>
+{{--                    </div>--}}
                     </tr>
                     </tbody>
                     </table>
