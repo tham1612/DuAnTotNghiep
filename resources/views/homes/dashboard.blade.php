@@ -1279,4 +1279,3 @@
     <!--Swiper slider css-->
     <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
-.
