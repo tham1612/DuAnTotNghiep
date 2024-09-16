@@ -110,7 +110,7 @@
                 @yield('main')
                     @include('components.createBoard')
                     @include('components.createTemplateBoard')
-                    @include('workspaces.create')
+                    @include('components.workspace')
             </div>
             <!-- container-fluid -->
         </div>
