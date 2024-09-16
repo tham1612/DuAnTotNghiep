@@ -164,6 +164,7 @@
                 </form>
             </div>
         </div>
+
         <div class="mt-2 cursor-pointer">
             <p  data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
@@ -176,6 +177,7 @@
                     <div class="mb-2">
                         <select name="" id="" class="form-select">
                             <option value="">Cần làm</option>
+
                         </select>
                     </div>
                     <div class="mb-2 d-grid">
