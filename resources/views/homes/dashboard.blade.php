@@ -1,4 +1,4 @@
-@extends('layouts.masterHome')
+@extends('layouts.masterMain')
 
 @section('title')
     dashbroad
@@ -91,22 +91,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -162,7 +162,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -206,22 +206,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -286,7 +286,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -338,22 +338,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -409,7 +409,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -453,22 +453,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -518,7 +518,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -563,22 +563,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -644,7 +644,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -690,22 +690,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -770,7 +770,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -824,22 +824,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -895,7 +895,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -940,22 +940,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -1005,7 +1005,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -1050,22 +1050,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -1130,7 +1130,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
@@ -1176,22 +1176,22 @@
                                     </button>
                                     <div class="dropdown">
                                         <button
-                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <i data-feather="more-horizontal" class="icon-sm"></i>
                                         </button>
 
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a class="dropdown-item" href="apps-projects-overview.html"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                 View</a>
                                             <a class="dropdown-item" href="apps-projects-create.html"><i
-                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                 Edit</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#removeProjectModal"><i
-                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
                                                 Remove</a>
                                         </div>
                                     </div>
@@ -1256,7 +1256,7 @@
                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
                                             <div class="avatar-xxs">
                                                 <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
                                                     +
                                                 </div>
                                             </div>
