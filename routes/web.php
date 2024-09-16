@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
+
+
     return view('welcome');
 });
 Route::get('workspaces/create', [WorkspaceController::class, 'create'])
@@ -41,14 +43,15 @@ Route::middleware(['auth', 'isWorkspace'])
                     ->name('update');
                 Route::delete('{id}/destroy', [WorkspaceController::class, 'destroy'])
                     ->name('destroy');
-
             });
+
+        Route::resource('workspaces', WorkspaceController::class)
+        ->middleware(['auth', 'isWorkspace']);
+
         Route::get('/homes/dashboard', function () {
             return view('homes.dashboard');
         });
-        Route::get('/homes/dashboard_board', function () {
-            return view('homes.dashboard_board');
-        });
+
         Route::get('/home', function () {
             return view('homes.home');
         })->name('homes.home');
@@ -60,13 +63,18 @@ Route::middleware(['auth', 'isWorkspace'])
             ->as('b.')
             ->group(function () {
 
-                Route::get('/', function () {
-                    return view('boards.index');
-                })->name('index');
                 Route::get('create', [BoardController::class, 'create'])
                     ->name('create');
                 Route::post('store', [BoardController::class, 'store'])
                     ->name('store');
+
+                Route::get('dashboard', function () {
+                    return view('homes.dashboard_board');
+                })->name('dashboard');
+
+                Route::get('board', function () {
+                    return view('boards.index');
+                })->name('board');
 
                 Route::get('table', function () {
                     return view('tables.index');
@@ -85,7 +93,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 })->name('inbox');
 
             });
-        Route::resource('catalogs',\App\Http\Controllers\CatalogControler::class);
+        Route::resource('catalogs', \App\Http\Controllers\CatalogControler::class);
 
 
     });
