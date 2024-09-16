@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class LinkController extends Controller
 {
     public function store(Request $request){
-        $link = new Link();
+        $link = new Link  ();
 
         $link->type = $request->type;
         $link->source = $request->source;
