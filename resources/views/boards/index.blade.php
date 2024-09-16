@@ -1,4 +1,4 @@
-@extends('layouts.masterBoard')
+@extends('layouts.masterMain')
 @section('title')
     Board - TaskFlow
 @endsection
@@ -10,7 +10,7 @@
             <div class="d-flex mb-3 d-flex align-items-center">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Tên catalog
+                        Catalog 1
                         <small class="badge bg-success align-bottom ms-1 totaltask-badge">2</small>
                     </h6>
                 </div>
@@ -517,7 +517,7 @@
             <div class="d-flex mb-3">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Inprogress
+                        Catalog 2
                         <small class="badge bg-warning align-bottom ms-1 totaltask-badge">2</small>
                     </h6>
                 </div>
@@ -1188,7 +1188,30 @@
                 </button>
             </div>
         </div>
-        <!--end tasks-list-->
+
+        <div class="tasks-list rounded-3 p-2 bg-info-subtle" style="height: 40px">
+            <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
+                 aria-expanded="false" data-bs-offset="-7,-30">
+                <i class="ri-add-line fs-15"></i>
+                <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                    Thêm danh sách
+                </h6>
+            </div>
+            <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
+                <form>
+                    <div class="mb-2">
+                        <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                               placeholder="Nhập tên thẻ..."/>
+                    </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <button type="submit" class="btn btn-primary">
+                            Thêm thẻ
+                        </button>
+                        <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </div>
     <!--end task-board-->
