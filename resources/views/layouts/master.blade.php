@@ -45,40 +45,20 @@
                 </div>
             </div>
 
-            <!-- auth page content -->
-            @yield('content')
-            <!-- footer -->
-            <footer class="footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="text-center">
-                                <p class="mb-0 text-muted">&copy;
-                                    <script>
-                                        document.write(new Date().getFullYear())
-                                    </script>
-                                    TaskFlow <i class="mdi mdi-heart text-danger"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-            <!-- end Footer -->
-            <!-- end auth page content -->
-        </div>
+        <!-- auth page content -->
+        @yield('content')
+
+        <!-- end auth page content -->
     </div>
+</div>
 
 
-
-
-
-    <script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/libs/node-waves/waves.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/libs/feather-icons/feather.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/plugins.js') }}"></script>
+<script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
+<script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
+<script src="{{asset('theme/assets/libs/feather-icons/feather.min.js')}}"></script>
+<script src="{{asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
+<script src="{{asset('theme/assets/js/plugins.js')}}"></script>
 
     <!-- particles js -->
     <script src="{{ asset('theme/assets/libs/particles.js/particles.js') }}"></script>
