@@ -62,11 +62,11 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-home-tab" href="#" role="tab"
+                    <a class="nav-link" id="pills-home-tab" href="{{route('b.dashboard')}}" role="tab"
                        aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-profile-tab" href="{{route('b.index')}}" role="tab"
+                    <a class="nav-link" id="pills-profile-tab" href="{{route('b.board')}}" role="tab"
                        aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
                 </li>
                 <li class="nav-item" role="presentation">
