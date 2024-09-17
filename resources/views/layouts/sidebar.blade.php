@@ -7,7 +7,7 @@
     ->whereNot('workspaces.id',4)
     ->get();
 
-     $workspaceChecked = \App\Models\Workspace::query()->findOrFail(4);
+     $workspaceChecked = \App\Models\Workspace::query()->findOrFail(1);
 //dd($workspaces->toArray());
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
@@ -102,20 +102,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="docs.html">
-                        <i class="ri-file-text-line"></i> <span data-key="">Docs</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link menu-link" href="Dashboards.html">
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="more.html">
                         <i class="ri-more-fill"></i> <span data-key="">More</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="evverything.html">
