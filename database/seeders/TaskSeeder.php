@@ -20,22 +20,23 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        for ($CatalogID = 0; $CatalogID < 100; $CatalogID++) {
+        for ($CatalogID = 01; $CatalogID < 100; $CatalogID++) {
             $access = \App\Enums\IndexEnum::getValues();
             $randomAccess = $access[array_rand($access)];
             Task::query()->create([
                 'catalog_id' => $CatalogID,
-                'title' => fake()->sentence(),
+                'text' => fake()->sentence(),
                 'description' => fake()->paragraph(),
                 'position' => fake()->numberBetween(1, 5),
+                'duration' => fake()->numberBetween(1, 5),
                 'image' => fake()->optional()->imageUrl(),
                 'priority' => $randomAccess,
                 'risk' => $randomAccess,
-                'complete' => fake()->numberBetween(0, 100),
+                'start_date'=>now(),
             ]);
         }
-        for ($TaskID = 0; $TaskID < 100; $TaskID++) {
-            for ($UserID = 0; $UserID < 10; $UserID++) {
+        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+            for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskMember::query()->create([
                     'task_id' =>$TaskID,
                     'user_id' =>$UserID,
@@ -43,8 +44,8 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-        for ($TaskID = 0; $TaskID < 100; $TaskID++) {
-            for ($UserID = 0; $UserID < 10; $UserID++) {
+        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+            for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskComment::query()->create([
                     'task_id' =>$TaskID,
                     'user_id' =>$UserID,
@@ -55,8 +56,8 @@ class TaskSeeder extends Seeder
             }
         }
        $data=TaskComment::query()->get();
-        for ($TaskID = 0; $TaskID < 100; $TaskID++) {
-            for ($UserID = 0; $UserID < 10; $UserID++) {
+        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+            for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskComment::query()->create([
                     'task_id' =>$TaskID,
                     'user_id' =>$UserID,
@@ -66,8 +67,8 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-        for ($TaskID = 0; $TaskID < 100; $TaskID++) {
-            for ($UserID = 0; $UserID < 10; $UserID++) {
+        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+            for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskAttachment::query()->create([
                     'task_id' =>$TaskID,
                     'user_id' =>$UserID,
@@ -75,7 +76,7 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-        for ($TaskID = 0; $TaskID < 100; $TaskID++){
+        for ($TaskID = 01; $TaskID < 100; $TaskID++){
             if (fake()->boolean()){
                 TaskLink::query()->create([
                     'task_id' => $TaskID,

@@ -45,11 +45,11 @@ class BoardController extends Controller
             DB::table('board_members')->insert([
                 'user_id' => auth()->id(),
                 'board_id' => $board->id,
-                'authorize' => 1,
+                'authorize' => 'Owner',
                 'invite' => now(),
             ]);
             DB::commit();
-            return redirect()->route('homes.home');
+            return redirect()->route('home');
         } catch (\Exception $exception) {
             DB::rollBack();
             dd($exception->getMessage());

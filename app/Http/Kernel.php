@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AfterMiddleware;
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\BeforeMiddleware;
 use App\Http\Middleware\isWorkspace;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
