@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    Regisster
+    REGISTER
 @endsection
 @section('content')
     <div class="auth-page-content">
@@ -10,7 +10,7 @@
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
                             <a href="#" class="d-inline-block auth-logo">
-                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="" height="20">
+                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="" height="50">
                             </a>
                         </div>
                         <p class="mt-3 fs-15 fw-medium">TaskFlow - quản lí công viêc</p>
@@ -133,7 +133,7 @@
                     <div class="mt-4 text-center">
                         <p class="mb-0">Already have an account ? <a href="{{ route('login') }}"
                                 class="fw-semibold text-primary text-decoration-underline">
-                                Signin </a></p>
+                                Sign In </a></p>
                     </div>
 
                 </div>

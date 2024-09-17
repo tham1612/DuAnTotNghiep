@@ -1,23 +1,23 @@
 @php
     $userId = \Illuminate\Support\Facades\Auth::id();
 
-    $workspaces = \App\Models\Workspace::query()
-    ->join('workspace_members','workspaces.id','workspace_members.workspace_id')
-    ->where('workspace_members.user_id',$userId)
-    ->whereNot('workspace_members.is_active',1)
-    ->get();
+$workspaces = \App\Models\Workspace::query()
+->join('workspace_members','workspaces.id','workspace_members.workspace_id')
+->where('workspace_members.user_id',$userId)
+->whereNot('workspace_members.is_active',1)
+->get();
 
-     $workspaceChecked = \App\Models\Workspace::query()
-     ->join('workspace_members','workspaces.id','workspace_members.workspace_id')
-     ->where('workspace_members.user_id',$userId)
-     ->where('workspace_members.is_active',1)
-     ->first();
+ $workspaceChecked = \App\Models\Workspace::query()
+ ->join('workspace_members','workspaces.id','workspace_members.workspace_id')
+ ->where('workspace_members.user_id',$userId)
+ ->where('workspace_members.is_active',1)
+ ->first();
 if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()){
-     $workspaceBoards = \App\Models\Workspace::query()
-     ->with(['boards'])
-     ->where('id',$workspaceChecked->id)
-     ->first();
-     }
+ $workspaceBoards = \App\Models\Workspace::query()
+ ->with(['boards'])
+ ->where('id',$workspaceChecked->id)
+ ->first();
+ }
 //dd($workspaceBoards->boards);
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
@@ -115,15 +115,15 @@ if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()){
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('homes.dashboard')}}">
+                    <a class="nav-link menu-link" href="Dashboards.html">
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="more.html">
                         <i class="ri-more-fill"></i> <span data-key="">More</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                 @if(isset($workspaceBoards))
                     @foreach($workspaceBoards->boards as $board)

@@ -92,7 +92,6 @@ Route::middleware(['auth', 'isWorkspace'])
             });
         Route::resource('catalogs', CatalogControler::class);
 
-
     });
 
 
