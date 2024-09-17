@@ -65,10 +65,12 @@
                                                 onpaste="return false" placeholder="Enter password" id="password-input"
                                                 aria-describedby="passwordInput" name="password" required
                                                 autocomplete="new-password">
+
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button" id="password-addon-1"><i
-                                                    class="ri-eye-fill align-middle"></i></button>
+                                                class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted password-addon"
+                                                type="button" id="togglePassword">
+                                                <i class="ri-eye-fill align-middle" id="eyeIcon"></i>
+                                            </button>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -84,10 +86,12 @@
                                                 class="form-control pe-5 password-input @error('password_confirmation') is-invalid @enderror"
                                                 id="confirm-password-input" aria-describedby="confirmPasswordInput"
                                                 name="password_confirmation" required autocomplete="new-password">
+
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button" id="password-addon-2"><i
-                                                    class="ri-eye-fill align-middle"></i></button>
+                                                class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted password-addon"
+                                                type="button" id="togglePassword">
+                                                <i class="ri-eye-fill align-middle" id="eyeIcon"></i>
+                                            </button>
                                             @error('password_confirmation')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

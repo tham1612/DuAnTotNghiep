@@ -7,7 +7,7 @@
     ->whereNot('workspaces.id',4)
     ->get();
 
-     $workspaceChecked = \App\Models\Workspace::query()->findOrFail(4);
+     $workspaceChecked = \App\Models\Workspace::query()->findOrFail(1);
 //dd($workspaces->toArray());
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
