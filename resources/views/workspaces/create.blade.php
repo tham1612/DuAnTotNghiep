@@ -1,8 +1,8 @@
-{{--@extends('layouts.masterMain')--}}
-{{--@section('title')--}}
-{{--    Workspace - TaskFlow--}}
-{{--@endsection--}}
-{{--@section('main')--}}
+@extends('layouts.masterMain')
+@section('title')
+    Workspace - TaskFlow
+@endsection
+@section('main')
     <div class="modal fade" id="workspaceModal" tabindex="-1" aria-labelledby="workspaceModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 70%; height: 60vh;">
             <div class="modal-content border-0 rounded-3" style="height: 100%;">
@@ -72,13 +72,13 @@
         workspaceNameInput.addEventListener('input', validateForm);
 
 
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     var myModal = new bootstrap.Modal(document.getElementById('workspaceModal'), {
-        //         // backdrop: 'static',
-        //         keyboard: false
-        //     });
-        //     myModal.show();
-        // });
+        document.addEventListener('DOMContentLoaded', function () {
+            var myModal = new bootstrap.Modal(document.getElementById('workspaceModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            myModal.show();
+        });
     </script>
 
-{{--@endsection--}}
+@endsection
