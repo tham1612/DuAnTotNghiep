@@ -3,7 +3,6 @@
     Home - TaskFlow
 @endsection
 @section('main')
-    <!-- start page title -->
     <div >
         <div class="row" style="padding-top: -2px">
             <div class="col-12">
@@ -19,7 +18,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row row-cols-xxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1">
             <div class="col">
                 <div class="card">
@@ -103,7 +101,6 @@
             <!--end col-->
         </div>
         <!--end row-->
-
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
