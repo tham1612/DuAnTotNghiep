@@ -56,7 +56,7 @@ class WorkspaceController extends Controller
             WorkspaceMember::query()->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,
-                'authorize' => 1,
+                'authorize' => 'Owner',
                 'invite' => now(),
             ]);
 

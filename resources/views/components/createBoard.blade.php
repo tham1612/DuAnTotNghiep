@@ -29,7 +29,7 @@
                     ->whereHas('users', function ($query) use ($userId) {
                           $query
                           ->where('user_id', $userId)
-                              ->whereIn('authorize', [0, 1]);
+                              ->whereIn('authorize', ['Owner', 'Member']);
                       })->get();
                 @endphp
                 <form class="p-3" action="{{route('b.store')}}" method="POST">
