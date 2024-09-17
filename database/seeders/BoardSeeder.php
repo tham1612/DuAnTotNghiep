@@ -39,8 +39,8 @@ class BoardSeeder extends Seeder
                 'complete' => fake()->numberBetween(0, 100),
             ]);
         }
-        for ($userID  = 01; $userID  < 10; $userID ++){
-            for ($BoardID  = 01; $BoardID  < 100; $BoardID ++){
+        for ($userID  = 1; $userID  < 10; $userID ++){
+            for ($BoardID  = 1; $BoardID  < 100; $BoardID ++){
                 $authorize = \App\Enums\AuthorizeEnum::getValues();
                 $randomAuthorize = $authorize[array_rand($authorize)];
                BoardMember::query()->create([
@@ -52,7 +52,7 @@ class BoardSeeder extends Seeder
                    'invite' => fake()->date(),
                ]);
             }
-            for ($BoardID  = 01; $BoardID  < 100; $BoardID ++){
+            for ($BoardID  = 1; $BoardID  < 100; $BoardID ++){
                 Catalog::query()->create([
                     'board_id' => $BoardID,
                     'name' =>  fake()->text(100),
