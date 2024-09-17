@@ -115,11 +115,6 @@ if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()){
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="docs.html">
-                        <i class="ri-file-text-line"></i> <span data-key="">Docs</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link menu-link" href="Dashboards.html">
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
