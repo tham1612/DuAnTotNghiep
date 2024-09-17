@@ -14,14 +14,13 @@
 
                     <div class="row">
                         <form method="POST" action="{{route('workspaces.store')}}"
-                              class="col-6 d-flex flex-column justify-content-between">
+                              class="col-6 d-flex flex-column justify-content-between" onsubmit="disableButtonOnSubmit()">
+                            @csrf
                             <h3 class="modal-title fw-bold" id="workspaceModalLabel">Hãy xây dựng một Không gian làm
                                 việc</h3>
                             <p class="fs-15">Tăng năng suất của bạn bằng cách giúp mọi người dễ dàng truy cập bảng ở một
                                 vị
                                 trí.</p>
-
-                            @csrf
                             <div class="mb-3 mt-3">
                                 <label for="workspaceName" class="form-label">Tên Không gian làm việc</label>
                                 <input type="text" id="workspaceName" class="form-control"
@@ -79,6 +78,10 @@
             });
             myModal.show();
         });
+        function disableButtonOnSubmit() {
+            continueButton.disabled = true;
+            return true; // Vẫn cho phép submit form
+        }
     </script>
 
 @endsection
