@@ -20,7 +20,7 @@ class TemplateBoardSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 01; $i < 10; $i++) {
             TemplateBoard::query()->create([
                 'name' => fake()->word(),
                 'description' => fake()->paragraph(),
