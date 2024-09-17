@@ -9,7 +9,10 @@
 
                 <div class="row">
                     <form method="POST" action="{{route('workspaces.store')}}"
+
                           class="col-6 d-flex flex-column justify-content-between" onsubmit="disableButtonOnSubmit()">
+
+
                         <h3 class="modal-title fw-bold" id="workspaceModalLabel">Hãy xây dựng một Không gian làm
                             việc</h3>
                         <p class="fs-15">Tăng năng suất của bạn bằng cách giúp mọi người dễ dàng truy cập bảng ở một
@@ -66,7 +69,10 @@
 
     workspaceNameInput.addEventListener('input', validateForm);
 
-
+    function disableButtonOnSubmit() {
+        continueButton.disabled = true;
+        return true; // Vẫn cho phép submit form
+    }
     // document.addEventListener('DOMContentLoaded', function () {
     //     var myModal = new bootstrap.Modal(document.getElementById('workspaceModal'), {
     //         // backdrop: 'static',
