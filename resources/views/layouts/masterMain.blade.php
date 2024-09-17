@@ -240,10 +240,14 @@
 
     </script>
 @endif
-
-@yield('script')
 <script>
     const PATH_ROOT = "theme/";
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var dropdownElement = document.getElementById('swicthWs');
+        var dropdown = new bootstrap.Dropdown(dropdownElement);
+    });
+
     // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
     $(document).ready(function () {
         $('.dropdown-menu').on('click', function (e) {
@@ -251,6 +255,8 @@
         });
     });
 </script>
+@yield('script')
+
 
 </body>
 

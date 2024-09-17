@@ -31,6 +31,8 @@ Route::middleware(['auth', 'isWorkspace'])
             ->as('workspaces.')
             ->group(function () {
                 Route::resource('/', WorkspaceController::class);
+                Route::get('/{id}', [WorkspaceController::class, 'index'])
+                    ->name('index');
                 Route::get('create', [WorkspaceController::class, 'create'])
                     ->withoutMiddleware('isWorkspace')
                     ->name('create');
@@ -43,11 +45,11 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::get('/homes/dashboard', function () {
             return view('homes.dashboard');
-        });
+        })->name('homes.dashboard');
 
         Route::get('/home', function () {
             return view('homes.home');
-        })->name('homes.home');
+        })->name('home');
 
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
