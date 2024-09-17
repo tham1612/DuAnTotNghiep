@@ -11,8 +11,7 @@
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
                             <a href="{{ url('/') }}" class="d-inline-block auth-logo">
-                                <img src="{{ asset('theme/assets/theme/clients/reader/images/logo.png') }}" alt=""
-                                    height="50">
+                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="" height="50">
                             </a>
                         </div>
                         <p class="mt-3 fs-15 fw-medium">Welcome</p>
@@ -115,7 +114,7 @@
                     <div class="mt-4 text-center">
                         <p class="mb-0">Don't have an account ? <a href="{{ route('register') }}"
                                 class="fw-semibold text-primary text-decoration-underline">
-                                Signup </a></p>
+                                Sign Up </a></p>
                     </div>
 
                 </div>

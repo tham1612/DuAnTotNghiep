@@ -1,7 +1,7 @@
 @extends('layouts.masterMain')
 
 @section('title')
-    dashbroad
+    Dashbroad
 @endsection
 @section('main')
     <div class="row">
