@@ -25,7 +25,7 @@ class TaskSeeder extends Seeder
             $randomAccess = $access[array_rand($access)];
             Task::query()->create([
                 'catalog_id' => $CatalogID,
-                'title' => fake()->sentence(),
+                'text' => fake()->sentence(),
                 'description' => fake()->paragraph(),
                 'position' => fake()->numberBetween(1, 5),
                 'image' => fake()->optional()->imageUrl(),
