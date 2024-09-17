@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Catalog::class)->constrained();
-            $table->string('title');
+            $table->string('text');
             $table->text('description')->nullable();
             $table->integer('position');
             $table->string('image')->nullable();
