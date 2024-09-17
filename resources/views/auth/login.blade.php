@@ -60,11 +60,11 @@
                                                 class="form-control @error('password') is-invalid @enderror password-input"
                                                 name="password" required autocomplete="current-password"
                                                 placeholder="Enter password">
-
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button"><i class="ri-eye-fill align-middle"></i></button>
-
+                                                class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted password-addon"
+                                                type="button" id="togglePassword">
+                                                <i class="ri-eye-fill align-middle" id="eyeIcon"></i>
+                                            </button>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
