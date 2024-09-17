@@ -53,7 +53,7 @@ class WorkspaceController extends Controller
             $workspace = Workspace::query()->create($data);
 
             Log::info('Form submitted by user: ' . auth()->id());
-            DB::table('workspace_members')->insert([
+            WorkspaceMember::query()->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,
                 'authorize' => 1,
