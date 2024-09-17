@@ -4,107 +4,105 @@
 @endsection
 @section('main')
     <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Trang chủ</h4>
+    <div >
+        <div class="row" style="padding-top: -2px">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Trang chủ</h4>
 
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Trang
-                                chủ</a>
-                        </li>
-                    </ol>
-                </div>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Trang chủ</a></li>
+                        </ol>
+                    </div>
 
+                </div>
             </div>
         </div>
-    </div>
-    <!-- end page title -->
 
-    <div class="row row-cols-xxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1">
-        <div class="col">
-            <div class="card">
-                <div class="card-body d-flex">
-                    <div class="flex-grow-1">
-                        <h4>4751</h4>
-                        <h6 class="text-muted fs-13 mb-0">Thành viên</h6>
-                    </div>
-                    <div class="flex-shrink-0 avatar-sm">
-                        <div class="avatar-title bg-warning-subtle text-warning fs-22 rounded">
-                            <i class="ri-upload-2-line"></i>
+        <div class="row row-cols-xxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div class="flex-grow-1">
+                            <h4>4751</h4>
+                            <h6 class="text-muted fs-13 mb-0">Thành viên</h6>
+                        </div>
+                        <div class="flex-shrink-0 avatar-sm">
+                            <div class="avatar-title bg-warning-subtle text-warning fs-22 rounded">
+                                <i class="ri-upload-2-line"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--end col-->
-        <div class="col">
-            <div class="card">
-                <div class="card-body d-flex">
-                    <div class="flex-grow-1">
-                        <h4>3423</h4>
-                        <h6 class="text-muted fs-13 mb-0">Tổng Task</h6>
-                    </div>
-                    <div class="flex-shrink-0 avatar-sm">
-                        <div class="avatar-title bg-success-subtle text-success fs-22 rounded">
-                            <i class="ri-remote-control-line"></i>
+            <!--end col-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div class="flex-grow-1">
+                            <h4>3423</h4>
+                            <h6 class="text-muted fs-13 mb-0">Tổng Task</h6>
+                        </div>
+                        <div class="flex-shrink-0 avatar-sm">
+                            <div class="avatar-title bg-success-subtle text-success fs-22 rounded">
+                                <i class="ri-remote-control-line"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--end col-->
-        <div class="col">
-            <div class="card">
-                <div class="card-body d-flex">
-                    <div class="flex-grow-1">
-                        <h4>354</h4>
-                        <h6 class="text-muted fs-13 mb-0">Task hoàn thành</h6>
-                    </div>
-                    <div class="flex-shrink-0 avatar-sm">
-                        <div class="avatar-title bg-info-subtle text-info fs-22 rounded">
-                            <i class="ri-flashlight-fill"></i>
+            <!--end col-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div class="flex-grow-1">
+                            <h4>354</h4>
+                            <h6 class="text-muted fs-13 mb-0">Task hoàn thành</h6>
+                        </div>
+                        <div class="flex-shrink-0 avatar-sm">
+                            <div class="avatar-title bg-info-subtle text-info fs-22 rounded">
+                                <i class="ri-flashlight-fill"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--end col-->
-        <div class="col">
-            <div class="card">
-                <div class="card-body d-flex">
-                    <div class="flex-grow-1">
-                        <h4>2762</h4>
-                        <h6 class="text-muted fs-13 mb-0">Task quá hạn</h6>
-                    </div>
-                    <div class="flex-shrink-0 avatar-sm">
-                        <div class="avatar-title bg-danger-subtle text-danger fs-22 rounded">
-                            <i class="ri-hand-coin-line"></i>
+            <!--end col-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div class="flex-grow-1">
+                            <h4>2762</h4>
+                            <h6 class="text-muted fs-13 mb-0">Task quá hạn</h6>
+                        </div>
+                        <div class="flex-shrink-0 avatar-sm">
+                            <div class="avatar-title bg-danger-subtle text-danger fs-22 rounded">
+                                <i class="ri-hand-coin-line"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--end col-->
-        <div class="col">
-            <div class="card">
-                <div class="card-body d-flex">
-                    <div class="flex-grow-1">
-                        <h4>1585</h4>
-                        <h6 class="text-muted fs-13 mb-0">Chưa hoàn thành</h6>
-                    </div>
-                    <div class="flex-shrink-0 avatar-sm">
-                        <div class="avatar-title bg-primary-subtle text-primary fs-22 rounded">
-                            <i class="ri-donut-chart-line"></i>
+            <!--end col-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div class="flex-grow-1">
+                            <h4>1585</h4>
+                            <h6 class="text-muted fs-13 mb-0">Chưa hoàn thành</h6>
+                        </div>
+                        <div class="flex-shrink-0 avatar-sm">
+                            <div class="avatar-title bg-primary-subtle text-primary fs-22 rounded">
+                                <i class="ri-donut-chart-line"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--end col-->
         </div>
-        <!--end col-->
-    </div>
-    <!--end row-->
+        <!--end row-->
 
     <div class="card">
         <div class="card-body">
@@ -403,7 +401,7 @@
                             </div>
                         </div><!-- end card header -->
 
-                        <div class="card-body p-0">
+                            <div class="card-body p-0">
 
                             <div class="align-items-center p-3 justify-content-between d-flex">
                                 <div class="flex-shrink-0">
@@ -417,145 +415,149 @@
                                 </button>
                             </div><!-- end card header -->
 
-                            <div data-simplebar style="max-height: 200px;">
-                                <ul class="list-group list-group-flush border-dashed px-3">
-                                    <li class="list-group-item ps-0">
-                                        <div class="d-flex align-items-start">
-                                            <div class="form-check ps-0 flex-sharink-0">
-                                                <input type="checkbox" class="form-check-input ms-0" id="task_one">
+                                <div data-simplebar style="max-height: 200px;">
+                                    <ul class="list-group list-group-flush border-dashed px-3">
+                                        <li class="list-group-item ps-0">
+                                            <div class="d-flex align-items-start">
+                                                <div class="form-check ps-0 flex-sharink-0">
+                                                    <input type="checkbox" class="form-check-input ms-0" id="task_one">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-check-label mb-0 ps-2" for="task_one">Review and
+                                                        make
+                                                        sure
+                                                        nothing slips
+                                                        through cracks</label>
+                                                </div>
+                                                <div class="flex-shrink-0 ms-2">
+                                                    <p class="text-muted fs-12 mb-0">15 Sep,
+                                                        2021</p>
+                                                </div>
                                             </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_one">Review and make
-                                                    sure
-                                                    nothing slips
-                                                    through cracks</label>
+                                        </li>
+                                        <li class="list-group-item ps-0">
+                                            <div class="d-flex align-items-start">
+                                                <div class="form-check ps-0 flex-sharink-0">
+                                                    <input type="checkbox" class="form-check-input ms-0" id="task_two">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-check-label mb-0 ps-2" for="task_two">Send meeting
+                                                        invites
+                                                        for sales
+                                                        upcampaign</label>
+                                                </div>
+                                                <div class="flex-shrink-0 ms-2">
+                                                    <p class="text-muted fs-12 mb-0">20 Sep,
+                                                        2021</p>
+                                                </div>
                                             </div>
-                                            <div class="flex-shrink-0 ms-2">
-                                                <p class="text-muted fs-12 mb-0">15 Sep,
-                                                    2021</p>
+                                        </li>
+                                        <li class="list-group-item ps-0">
+                                            <div class="d-flex align-items-start">
+                                                <div class="form-check flex-sharink-0 ps-0">
+                                                    <input type="checkbox" class="form-check-input ms-0" id="task_three">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-check-label mb-0 ps-2" for="task_three">Weekly
+                                                        closed
+                                                        sales won checking
+                                                        with sales team</label>
+                                                </div>
+                                                <div class="flex-shrink-0 ms-2">
+                                                    <p class="text-muted fs-12 mb-0">24 Sep,
+                                                        2021</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item ps-0">
+                                            <div class="d-flex align-items-start">
+                                                <div class="form-check ps-0 flex-sharink-0">
+                                                    <input type="checkbox" class="form-check-input ms-0" id="task_four">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-check-label mb-0 ps-2" for="task_four">Add notes
+                                                        that
+                                                        can
+                                                        be viewed from
+                                                        the individual view</label>
+                                                </div>
+                                                <div class="flex-shrink-0 ms-2">
+                                                    <p class="text-muted fs-12 mb-0">27 Sep,
+                                                        2021</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item ps-0">
+                                            <div class="d-flex align-items-start">
+                                                <div class="form-check ps-0 flex-sharink-0">
+                                                    <input type="checkbox" class="form-check-input ms-0" id="task_five">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-check-label mb-0 ps-2" for="task_five">Move stuff
+                                                        to
+                                                        another page</label>
+                                                </div>
+                                                <div class="flex-shrink-0 ms-2">
+                                                    <p class="text-muted fs-12 mb-0">27 Sep,
+                                                        2021</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item ps-0">
+                                            <div class="d-flex align-items-start">
+                                                <div class="form-check ps-0 flex-sharink-0">
+                                                    <input type="checkbox" class="form-check-input ms-0" id="task_six">
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-check-label mb-0 ps-2" for="task_six">Styling
+                                                        wireframe
+                                                        design and
+                                                        documentation for velzon
+                                                        admin</label>
+                                                </div>
+                                                <div class="flex-shrink-0 ms-2">
+                                                    <p class="text-muted fs-12 mb-0">27 Sep,
+                                                        2021</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul><!-- end ul -->
+                                </div>
+                                <div class="p-3">
+                                    <a href="javascript:void(0);" class="text-muted text-decoration-underline">Show
+                                        more...</a>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div><!-- end col -->
+                    <div class="col-xl-6">
+                        <div class="card card-height-100">
+                            <div class="card-header border-bottom-dashed align-items-center d-flex">
+                                <h4 class="card-title mb-0 flex-grow-1">Hoạt động gần đây</h4>
+                                <div class="flex-shrink-0">
+                                    <button type="button" class="btn btn-soft-primary btn-sm">
+                                        Xem tất cả các hoạt động
+                                    </button>
+                                </div>
+                            </div><!-- end cardheader -->
+                            <div class="card-body p-0">
+                                <div data-simplebar style="max-height: 260px;" class="p-3">
+                                    <div class="acitivity-timeline acitivity-main">
+                                        <div class="acitivity-item d-flex">
+                                            <div class="flex-shrink-0 avatar-xs acitivity-avatar">
+                                                <div class="avatar-title bg-success-subtle text-success rounded-circle">
+                                                    <i class="ri-shopping-cart-2-line"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-1">Purchase by James Price</h6>
+                                                <p class="text-muted mb-1">Product noise
+                                                    evolve smartwatch
+                                                </p>
+                                                <small class="mb-0 text-muted">02:14 PM
+                                                    Today</small>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li class="list-group-item ps-0">
-                                        <div class="d-flex align-items-start">
-                                            <div class="form-check ps-0 flex-sharink-0">
-                                                <input type="checkbox" class="form-check-input ms-0" id="task_two">
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_two">Send meeting
-                                                    invites
-                                                    for sales
-                                                    upcampaign</label>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-2">
-                                                <p class="text-muted fs-12 mb-0">20 Sep,
-                                                    2021</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item ps-0">
-                                        <div class="d-flex align-items-start">
-                                            <div class="form-check flex-sharink-0 ps-0">
-                                                <input type="checkbox" class="form-check-input ms-0" id="task_three">
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_three">Weekly closed
-                                                    sales won checking
-                                                    with sales team</label>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-2">
-                                                <p class="text-muted fs-12 mb-0">24 Sep,
-                                                    2021</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item ps-0">
-                                        <div class="d-flex align-items-start">
-                                            <div class="form-check ps-0 flex-sharink-0">
-                                                <input type="checkbox" class="form-check-input ms-0" id="task_four">
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_four">Add notes that
-                                                    can
-                                                    be viewed from
-                                                    the individual view</label>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-2">
-                                                <p class="text-muted fs-12 mb-0">27 Sep,
-                                                    2021</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item ps-0">
-                                        <div class="d-flex align-items-start">
-                                            <div class="form-check ps-0 flex-sharink-0">
-                                                <input type="checkbox" class="form-check-input ms-0" id="task_five">
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_five">Move stuff to
-                                                    another page</label>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-2">
-                                                <p class="text-muted fs-12 mb-0">27 Sep,
-                                                    2021</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item ps-0">
-                                        <div class="d-flex align-items-start">
-                                            <div class="form-check ps-0 flex-sharink-0">
-                                                <input type="checkbox" class="form-check-input ms-0" id="task_six">
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <label class="form-check-label mb-0 ps-2" for="task_six">Styling
-                                                    wireframe
-                                                    design and
-                                                    documentation for velzon
-                                                    admin</label>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-2">
-                                                <p class="text-muted fs-12 mb-0">27 Sep,
-                                                    2021</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul><!-- end ul -->
-                            </div>
-                            <div class="p-3">
-                                <a href="javascript:void(0);" class="text-muted text-decoration-underline">Show
-                                    more...</a>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
-                <div class="col-xl-6">
-                    <div class="card card-height-100">
-                        <div class="card-header border-bottom-dashed align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Hoạt động gần đây</h4>
-                            <div class="flex-shrink-0">
-                                <button type="button" class="btn btn-soft-primary btn-sm">
-                                    Xem tất cả các hoạt động
-                                </button>
-                            </div>
-                        </div><!-- end cardheader -->
-                        <div class="card-body p-0">
-                            <div data-simplebar style="max-height: 260px;" class="p-3">
-                                <div class="acitivity-timeline acitivity-main">
-                                    <div class="acitivity-item d-flex">
-                                        <div class="flex-shrink-0 avatar-xs acitivity-avatar">
-                                            <div class="avatar-title bg-success-subtle text-success rounded-circle">
-                                                <i class="ri-shopping-cart-2-line"></i>
-                                            </div>
-                                        </div>
-                                        <div class="flex-grow-1 ms-3">
-                                            <h6 class="mb-1">Purchase by James Price</h6>
-                                            <p class="text-muted mb-1">Product noise
-                                                evolve smartwatch
-                                            </p>
-                                            <small class="mb-0 text-muted">02:14 PM
-                                                Today</small>
-                                        </div>
-                                    </div>
 
                                     <div class="acitivity-item py-3 d-flex">
                                         <div class="flex-shrink-0">
@@ -752,8 +754,8 @@
             </div>
             <!--end card-->
 
-        </div>
-        <!--end col-->
+            </div>
+            <!--end col-->
 
         <div class="col-xxl-3 col-md-6">
             <div class="card overflow-hidden">
@@ -798,8 +800,8 @@
             </div>
             <!--end card-->
 
-        </div>
-        <!--end col-->
+            </div>
+            <!--end col-->
 
         <div class="col-xxl-3 col-md-6">
             <div class="card overflow-hidden">
@@ -1010,8 +1012,8 @@
             <!--end card-->
 
 
-        </div>
-        <!--end col-->
+            </div>
+            <!--end col-->
 
         <div class="col-xxl-3 col-md-6">
             <div class="card overflow-hidden">

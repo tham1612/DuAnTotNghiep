@@ -2,8 +2,6 @@
     <div class="layout-width">
         <div class="navbar-header">
             <div class="d-flex">
-
-
                 <!--        ẩn hiện side-bar-->
                 <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
                     id="topnav-hamburger-icon">
@@ -115,9 +113,9 @@
                 </form>
                 {{--  Bảng hoạt động gần đây              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3"
-                        style="width: 150px" id="recently-home" data-bs-toggle="dropdown"
-                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
+                        id="recently-home" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
+                        aria-expanded="false">
                         <p class="dropdown-item">Gần đây <i class=" ri-arrow-drop-down-line fs-20"></i></p>
                         {{--                        <span --}}
                         {{--                            class="position-absolute topbar-badge cartitem-badge fs-10 translate-middle badge rounded-pill bg-info">5</span> --}}
@@ -806,14 +804,13 @@
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <img class="rounded-circle header-profile-user"
-                                 src="{{asset('theme/assets/images/users/avatar-1.jpg')}}"
-                                 alt="Header Avatar"/>
+                                src="{{ asset('theme/assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" />
                             <span class="text-start ms-xl-2">
                                 <span
                                     class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
 
 
-                        </span>
+                            </span>
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
