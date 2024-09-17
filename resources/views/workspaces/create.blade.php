@@ -1,4 +1,4 @@
-@extends('layouts.masterMain')
+@extends('layouts.master')
 @section('title')
     Workspace - TaskFlow
 @endsection
