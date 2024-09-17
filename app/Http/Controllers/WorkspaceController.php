@@ -35,7 +35,10 @@ class WorkspaceController extends Controller
      */
     public function store(Request $request)
     {
+
+
         Log::debug('check');
+
         $data = $request->except('image');
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -46,7 +49,10 @@ class WorkspaceController extends Controller
         $data['link_invite'] = url("taskflow/invite/{$uuid}/{$token}");
         try {
             DB::beginTransaction();
+
             $workspace = Workspace::query()->create($data);
+
+            Log::info('Form submitted by user: ' . auth()->id());
             WorkspaceMember::query()->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,

@@ -30,8 +30,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::prefix('workspaces')
             ->as('workspaces.')
             ->group(function () {
-                Route::resource('/', WorkspaceController::class)
-                    ->middleware(['auth', 'isWorkspace']);
+                Route::resource('/', WorkspaceController::class);
                 Route::get('create', [WorkspaceController::class, 'create'])
                     ->withoutMiddleware('isWorkspace')
                     ->name('create');
