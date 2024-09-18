@@ -69,10 +69,7 @@
 
     workspaceNameInput.addEventListener('input', validateForm);
 
-    function disableButtonOnSubmit() {
-        continueButton.disabled = true;
-        return true; // Vẫn cho phép submit form
-    }
+
     // document.addEventListener('DOMContentLoaded', function () {
     //     var myModal = new bootstrap.Modal(document.getElementById('workspaceModal'), {
     //         // backdrop: 'static',
