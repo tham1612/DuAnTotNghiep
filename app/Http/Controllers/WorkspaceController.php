@@ -7,6 +7,7 @@ use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use function Laravel\Prompts\table;
@@ -34,6 +35,7 @@ class WorkspaceController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug('check');
         $data = $request->except('image');
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -45,18 +47,19 @@ class WorkspaceController extends Controller
         try {
             DB::beginTransaction();
             $workspace = Workspace::query()->create($data);
-            DB::table('workspace_members')->insert([
+            WorkspaceMember::query()->insert([
                 'user_id' => auth()->id(),
                 'workspace_id' => $workspace->id,
                 'authorize' => 1,
                 'invite' => now(),
             ]);
+
             DB::commit();
 
             return redirect()->route('homes.home');
         } catch (\Exception $exception) {
             DB::rollBack();
-            dd($exception->getMessage());
+//            dd($exception->getMessage());
             return back()->with('error', 'Error: ' . $exception->getMessage());
         }
     }
