@@ -804,7 +804,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <img class="rounded-circle header-profile-user"
-                                 src="{{ asset('storage/' . auth()->user()->image) }}"
+                                 src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->image)}}"
                                  alt="Avatar"/>
                             <span class="text-start ms-xl-2">
                                 <span
