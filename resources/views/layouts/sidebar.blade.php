@@ -12,13 +12,14 @@ $workspaces = \App\Models\Workspace::query()
  ->where('workspace_members.user_id',$userId)
  ->where('workspace_members.is_active',1)
  ->first();
+
 if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()){
  $workspaceBoards = \App\Models\Workspace::query()
  ->with(['boards'])
- ->where('id',$workspaceChecked->id)
+ ->where('id',$workspaceChecked->workspace_id)
  ->first();
  }
-//dd($workspaceBoards->boards);
+//dd($workspaceChecked);
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
@@ -112,11 +113,6 @@ if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()){
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('b.inbox')}}">
                         <i class="ri-inbox-archive-line"></i> <span data-key="">Inbox</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="docs.html">
-                        <i class="ri-file-text-line"></i> <span data-key="">Docs</span>
                     </a>
                 </li>
                 <li class="nav-item">
