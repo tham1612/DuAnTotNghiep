@@ -128,9 +128,8 @@
                 @if (isset($workspaceBoards))
                     @foreach ($workspaceBoards->boards as $board)
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('b.board') }}">
-                                <i class="ri-apps-fill"></i> <span
-                                    data-key="">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
+                            <a class="nav-link menu-link" href="{{ route('b.edit', ['id' => $board->id]) }}">
+                                <i class="ri-apps-fill"></i> <span>{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
                             </a>
                         </li>
                     @endforeach

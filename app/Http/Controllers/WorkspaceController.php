@@ -60,11 +60,8 @@ class WorkspaceController extends Controller
         $is_active = 1;
         try {
             DB::beginTransaction();
-
             $workspace = Workspace::query()->create($data);
-
             Log::info('Form submitted by user: ' . auth()->id());
-
             $workspaceMember = WorkspaceMember::query()
                 ->create([
                     'user_id' => auth()->id(),
@@ -81,6 +78,7 @@ class WorkspaceController extends Controller
             DB::commit();
 
             return redirect()->route('home');
+
         } catch (\Exception $exception) {
             DB::rollBack();
 //            dd($exception->getMessage());
