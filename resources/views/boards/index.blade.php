@@ -4,7 +4,6 @@
 @endsection
 @section('main')
     <div class="tasks-board mb-3" id="kanbanboard">
-
         <div class="tasks-list rounded-3 p-2 border" data-value="catalog1">
 
             <div class="d-flex mb-3 d-flex align-items-center">
@@ -1189,9 +1188,10 @@
             </div>
         </div>
 
-        <div class="tasks-list rounded-3 p-2 bg-info-subtle" style="height: 40px">
-            <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
-                 aria-expanded="false" data-bs-offset="-7,-30">
+        <div class="rounded-3 p-2 bg-info-subtle" style="height: 40px;">
+            <div class="d-flex align-items-center cursor-pointer" id="addCatalog"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px">
                 <i class="ri-add-line fs-15"></i>
                 <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                     Thêm danh sách
@@ -1214,7 +1214,6 @@
         </div>
 
     </div>
-    <!--end task-board-->
 @endsection
 
 @section('style')
