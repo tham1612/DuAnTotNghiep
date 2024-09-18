@@ -94,21 +94,24 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
 }),
     (drake = dragula(tasks_list)
         .on("drag", function (e) {
-            // const draggedTask = event.target;
+            // lấy id task bị keo
             targetTaskId = event.target.closest('.tasks-box').dataset.value;
             console.log(targetTaskId)
             e.className = e.className.replace("ex-moved", "");
         })
-        .on("drop", function (e) {
+        .on("drop", function (e, target) {
             // Lấy data-value của danh sách (task list) mà task được thả vào
             const targetList = e.parentElement.closest('.tasks-list'); // Lấy phần tử cha (tasks-list) chứa task vừa được thả
             if (targetList) {
-                const listValue = targetList.dataset.value; // Giả sử bạn đã thêm data-value cho tasks-list
+                // lấy id catalog được thả vào
+                const listValue = targetList.dataset.value;
                 console.log("Task " + targetTaskId + " được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
             }
-            // lấy số phần tử trong danh sách
-            console.log(targetList)
-            console.log(document.querySelectorAll('.tasks-list .tasks-box').length)
+            // lấy vị trí cuối cùng trong danh sách
+            const tasks = Array.from(target.children);
+            const newIndex = tasks.indexOf(e);
+            console.log(newIndex)
+
             e.className += " ex-moved";
         })
         .on("over", function (e, a) {
