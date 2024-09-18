@@ -37,7 +37,7 @@ if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()){
 
 
             <ul class="dropdown-menu dropdown-menu-md p-3"
-                style="width:300px">
+                data-simplebar style="max-height: 600px; width:300px">
                 <li class="d-flex">
                     @if($workspaceChecked->image)
                         Ảnh
