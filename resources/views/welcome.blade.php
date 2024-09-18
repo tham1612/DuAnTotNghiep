@@ -36,9 +36,9 @@
             <div class="container-fluid custom-container">
                 <a class="navbar-brand" href="index.html">
                     <img src="{{ asset('theme/assets/images/logo-dark.png') }}" class="card-logo card-logo-dark"
-                        alt="logo dark" height="17">
+                        alt="logo dark" height="25">
                     <img src="{{ asset('theme/assets/images/logo-light.png') }}" class="card-logo card-logo-light"
-                        alt="logo light" height="17">
+                        alt="logo light" height="25">
                 </a>
                 <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

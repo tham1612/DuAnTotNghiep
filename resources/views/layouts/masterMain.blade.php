@@ -108,9 +108,9 @@
 
                 {{-- các màn hình hiển thị --}}
                 @yield('main')
-                    @include('components.createBoard')
-                    @include('components.createTemplateBoard')
-                    @include('components.workspace')
+                @include('components.createBoard')
+                @include('components.createTemplateBoard')
+                @include('components.workspace')
             </div>
             <!-- container-fluid -->
         </div>
@@ -138,6 +138,21 @@
 </div>
 
 
+<script>
+    const PATH_ROOT = "/theme/";
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // var dropdownElement = document.getElementById('swicthWs');
+        // var dropdown = new bootstrap.Dropdown(dropdownElement);
+        // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', event => {
+                event.stopPropagation();
+            });
+        });
+    });
+</script>
 <!-- JAVASCRIPT -->
 <script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
@@ -160,7 +175,7 @@
     <!-- prismjs plugin -->
     <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
 
-    <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>
+{{--        <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>--}}
 
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
 
@@ -242,15 +257,7 @@
 @endif
 
 @yield('script')
-<script>
-    const PATH_ROOT = "theme/";
-    // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
-    $(document).ready(function () {
-        $('.dropdown-menu').on('click', function (e) {
-            e.stopPropagation();
-        });
-    });
-</script>
+
 
 </body>
 
