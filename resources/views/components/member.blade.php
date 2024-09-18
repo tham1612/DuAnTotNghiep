@@ -97,7 +97,7 @@
                                                 title="Nancy"
                                             >
                                                 <img
-                                                    src="assets/images/users/avatar-5.jpg"
+                                                    src="{{Storage::url(\Illuminate\Support\Facades\Auth::user()->image)?Storage::url(\Illuminate\Support\Facades\Auth::user()->image):''}}"
                                                     alt=""
                                                     class="rounded-circle avatar-xs"
                                                 />
@@ -133,7 +133,7 @@
                                                 title="Nancy"
                                             >
                                                 <img
-                                                    src="assets/images/users/avatar-5.jpg"
+                                                    src="{{Storage::url(\Illuminate\Support\Facades\Auth::user()->image)?Storage::url(\Illuminate\Support\Facades\Auth::user()->image):''}}"
                                                     alt=""
                                                     class="rounded-circle avatar-xs"
                                                 />
