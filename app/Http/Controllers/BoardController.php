@@ -49,7 +49,7 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             DB::commit();
-            return redirect()->route('homes.home');
+            return redirect()->route('home');
         } catch (\Exception $exception) {
             DB::rollBack();
             dd($exception->getMessage());

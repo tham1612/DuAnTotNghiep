@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AuthorizeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,10 +64,11 @@ class User extends Authenticatable
     {
         $userId = Auth::id();
 
-        $isWorkspace = WorkspaceMember::where('user_id', $userId)
-            ->where('authorize', 'Owner')
+
+        $isWorkspace = WorkspaceMember::query()
+            ->where('user_id', $userId)
             ->exists();
-        return $isWorkspace ? 1 : 0;
+        return $isWorkspace ;
     }
 
 //    public function getWorkspace()

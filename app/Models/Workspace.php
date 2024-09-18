@@ -32,5 +32,8 @@ class Workspace extends Model
             ->withPivot('authorize');
     }
 
-
+    public function boards()
+    {
+        return $this->hasMany(Board::class);
+    }
 }
