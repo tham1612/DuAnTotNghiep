@@ -49,9 +49,7 @@ class WorkspaceController extends Controller
         $data['link_invite'] = url("taskflow/invite/{$uuid}/{$token}");
         try {
             DB::beginTransaction();
-
             $workspace = Workspace::query()->create($data);
-
             Log::info('Form submitted by user: ' . auth()->id());
             WorkspaceMember::query()->insert([
                 'user_id' => auth()->id(),
@@ -59,9 +57,7 @@ class WorkspaceController extends Controller
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
-
             DB::commit();
-
             return redirect()->route('homes.home');
         } catch (\Exception $exception) {
             DB::rollBack();
