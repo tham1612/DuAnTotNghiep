@@ -6,7 +6,6 @@ var myModalEl,
     profileField,
     reader,
     tasks_list = [
-        // document.getElementById("kanbanboard"), xóa phần này thì k thể kéo thả list
         document.getElementById("unassigned-task"),
         document.getElementById("todo-task"),
         document.getElementById("inprogress-task"),
