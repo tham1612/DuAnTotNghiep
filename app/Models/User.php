@@ -64,6 +64,7 @@ class User extends Authenticatable
     {
         $userId = Auth::id();
 
+
         $isWorkspace = WorkspaceMember::query()
             ->where('user_id', $userId)
             ->exists();

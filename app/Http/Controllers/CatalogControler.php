@@ -29,10 +29,13 @@ class CatalogControler extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except(['image','link_invite']);
+        $data = $request->except(['image','position']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
         }
+        $maxPosition = \App\Models\Catalog::where('board_id', $request->board_id)
+            ->max('position');
+
     }
 
     /**
