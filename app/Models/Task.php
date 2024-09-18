@@ -20,12 +20,12 @@ class Task extends Model
         'image',
         'priority',
         'risk',
-        'complete',
         'duration',
         'progress',
         'start_date',
         'parent',
-        'sortorder'
+        'sortorder',
+
     ];
     protected $casts = [
         'priority' => IndexEnum::class,
