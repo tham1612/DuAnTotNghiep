@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Board;
+use App\Models\BoardMember;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -42,7 +44,7 @@ class BoardController extends Controller
         try {
             DB::beginTransaction();
             $board = Board::query()->create($data);
-            DB::table('board_members')->insert([
+            BoardMember::query()->create([
                 'user_id' => auth()->id(),
                 'board_id' => $board->id,
                 'authorize' => 'Owner',
@@ -64,15 +66,22 @@ class BoardController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $Board = Board::query()->findOrFail($id);
+        $viewType = \request('viewType', 'board');
+        return match ($viewType) {
+            'list' => view('lists.index', compact('Board')),
+            'gantt' => view('ganttCharts.index', compact('Board')),
+            'table' => view('tables.index', compact('Board')),
+            default => view('boards.index', compact('Board')),
+        };
     }
 
     /**

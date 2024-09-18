@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
-                <h4 class="fs-20 mx-3 mt-2">Tên bảnggggggggg</h4>
+                <h4 class="fs-20 mx-3 mt-2">{{$Board->name}}</h4>
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn active">
                     <span class="avatar-title bg-transparent fs-15">
                         <i class="ri-star-fill fs-20 mx-2"></i>
@@ -62,30 +62,48 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-home-tab" href="{{route('b.dashboard')}}" role="tab"
-                       aria-controls="pills-home" aria-selected="true"><i class="ri-dashboard-line"></i> Overview</a>
+                    <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('b.dashboard') }}" role="tab"
+                       aria-controls="pills-home" aria-selected="{{ request()->is('dashboard') ? 'true' : 'false' }}">
+                        <i class="ri-dashboard-line"></i> Overview
+                    </a>
                 </li>
+
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-profile-tab" href="{{route('b.board')}}" role="tab"
-                       aria-controls="pills-profile" aria-selected="false"><i class="ri-table-line"></i> Board</a>
+                    <a class="nav-link {{ request()->get('type') == 'board' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $Board->id]) }}"
+                       role="tab" aria-controls="pills-profile"
+                       aria-selected="{{ request()->get('type') == 'board' ? 'true' : 'false' }}">
+                        <i class="ri-table-line"></i> Board
+                    </a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-list-tab" href="{{route('b.list')}}" role="tab"
-                       aria-controls="pills-list" aria-selected="false"><i class="ri-list-unordered"></i> List</a>
-                </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {{ request()->get('type') == 'list' ? 'active' : '' }}"
+                           href="{{ route('b.edit', ['viewType' => 'list', 'id' => $Board->id]) }}" role="tab"
+                           aria-controls="pills-list" aria-selected="{{ request()->get('type') == 'list' ? 'true' : 'false' }}">
+                            <i class="ri-list-unordered"></i> List
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {{ request()->get('type') == 'ganttChart' ? 'active' : '' }}"
+                           href="{{ route('b.edit', ['viewType' => 'gantt', 'id' => $Board->id]) }}" role="tab"
+                           aria-controls="pills-gantt" aria-selected="{{ request()->get('type') == 'ganttChart' ? 'true' : 'false' }}">
+                            <i class="ri-menu-2-line"></i> Gantt Chart
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link {{ request()->get('type') == 'table' ? 'active' : '' }}"
+                           href="{{ route('b.edit', ['viewType' => 'table', 'id' => $Board->id]) }}" role="tab"
+                           aria-controls="pills-table" aria-selected="{{ request()->get('type') == 'table' ? 'true' : 'false' }}">
+                            <i class="ri-layout-3-line"></i> Table
+                        </a>
+                    </li>
+
+
                 {{--                <li class="nav-item" role="presentation">--}}
                 {{--                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab"--}}
                 {{--                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i>--}}
                 {{--                        Calendar</a>--}}
                 {{--                </li>--}}
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-gantt-tab" href="{{route('b.ganttChart')}}" role="tab"
-                       aria-controls="pills-gantt" aria-selected="false"><i class="ri-menu-2-line"></i> Gantt Chart</a>
-                </li>
-                <li class="nav-item active" role="presentation">
-                    <a class="nav-link" id="pills-table-tab" href="{{route('b.table')}}" role="tab"
-                       aria-controls="pills-table" aria-selected="false"><i class="ri-layout-3-line"></i> Table</a>
-                </li>
             </ul>
             <div class="col-auto ms-auto d-flex justify-content-end align-items-center">
                 <!--  bộ lọc -->

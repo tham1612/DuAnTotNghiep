@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Board::class)->constrained();
             $table->string('name');
             $table->string('image')->nullable();
-            $table->integer('position');
+            $table->integer(column: 'position');
             $table->softDeletes();
             $table->timestamps();
         });
