@@ -28,7 +28,11 @@ class TaskSeeder extends Seeder
                 'text' => fake()->sentence(),
                 'description' => fake()->paragraph(),
                 'position' => fake()->numberBetween(1, 5),
-                'duration' => fake()->numberBetween(1, 5),
+                'duration' => 12,
+                'progress' => rand(0, 100),  // Giá trị ngẫu nhiên từ 0 đến 100
+                'start_date' => '2024-09-14',  // Ngày cố định
+                'parent' => 0,  // Không có task cha
+                'sortorder' => rand(1, 100),  // Giá trị ngẫu nhiên cho thứ tự sắp xếp
                 'image' => fake()->optional()->imageUrl(),
                 'priority' => $randomAccess,
                 'risk' => $randomAccess,
