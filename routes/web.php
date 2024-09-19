@@ -66,22 +66,6 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('create', [BoardController::class, 'create'])->name('create');
                 Route::post('store', [BoardController::class, 'store'])->name('store');
 
-//                Route::get('/board', function () {
-//                    return view('boards.index');
-//                })->name('board');
-//
-//                Route::get('table', function () {
-//                    return view('tables.index');
-//                })->name('table');
-//
-//                Route::get('ganttChart', function () {
-//                    return view('ganttCharts.index');
-//                })->name('ganttChart');
-//
-//                Route::get('list', function () {
-//                    return view('lists.index');
-//                })->name('list');
-
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
 
