@@ -36,5 +36,8 @@ class Task extends Model
     public function getOpenAttribute(){
         return true;
     }
-
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }
