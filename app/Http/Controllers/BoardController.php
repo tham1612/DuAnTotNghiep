@@ -34,7 +34,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except(['image','link_invite']);
+        $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
         }
@@ -57,30 +57,29 @@ class BoardController extends Controller
             dd($exception->getMessage());
             return back()->with('error', 'Error: ' . $exception->getMessage());
         }
-
-
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
-        $Board = Board::query()->findOrFail($id);
+      
+        $board = Board::query()->findOrFail($id);
+        session(['board' => $board]);
+
+        // dd(session('board'));
         $viewType = \request('viewType', 'board');
         return match ($viewType) {
-            'list' => view('lists.index', compact('Board')),
-            'gantt' => view('ganttCharts.index', compact('Board')),
-            'table' => view('tables.index', compact('Board')),
-            default => view('boards.index', compact('Board')),
+            'list' => view('lists.index', compact('board')),
+            'gantt' => view('ganttCharts.index', compact('board')),
+            'table' => view('tables.index', compact('board')),
+            default => view('boards.index', compact('board')),
         };
     }
 
