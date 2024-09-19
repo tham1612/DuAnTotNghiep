@@ -20,7 +20,7 @@
 </head>
 
 <body>
-<div id="gantt_here" style='width:100%; height:420px;'></div>
+<div id="gantt_here" style='width:100%; height:60vh;'></div>
 <script type="text/javascript">
     gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
     gantt.init("gantt_here");
@@ -57,7 +57,7 @@ function openCustomModal(taskId) {
         console.error("Modal không tồn tại!");
     }
 }
-Hàm để lưu thay đổi từ modal
+// Hàm để lưu thay đổi từ modal
 function saveTask() {
     var taskId = gantt.getSelectedId();  // Lấy ID của tác vụ hiện tại
     var task = gantt.getTask(taskId);  // Lấy thông tin tác vụ

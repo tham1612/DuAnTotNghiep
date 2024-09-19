@@ -212,17 +212,17 @@
                         aria-labelledby="page-header-cart-dropdown">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
-                                <div class="text-center empty-cart" id="empty-cart">
-                                    <div class="avatar-md mx-auto my-3">
-                                        <div class="avatar-title bg-info-subtle fs-36 rounded-circle"
-                                            style=" color: yellow">
-                                            <i class="ri-star-fill"></i>
-                                        </div>
-                                    </div>
-                                    <h5 class="mb-3">Bạn chưa có bảng nào đánh dấu sao</h5>
-                                    {{--                                    <a href="apps-ecommerce-products.html" class="btn btn-success w-md mb-3">Shop --}}
-                                    {{--                                        Now</a> --}}
-                                </div>
+{{--                                <div class="text-center empty-cart" id="empty-cart">--}}
+{{--                                    <div class="avatar-md mx-auto my-3">--}}
+{{--                                        <div class="avatar-title bg-info-subtle fs-36 rounded-circle"--}}
+{{--                                            style=" color: yellow">--}}
+{{--                                            <i class="ri-star-fill"></i>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <h5 class="mb-3">Bạn chưa có bảng nào đánh dấu sao</h5>--}}
+{{--                                    --}}{{--                                    <a href="apps-ecommerce-products.html" class="btn btn-success w-md mb-3">Shop --}}
+{{--                                    --}}{{--                                        Now</a> --}}
+{{--                                </div>--}}
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">

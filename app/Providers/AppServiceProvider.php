@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
-
-
+//        dd(request()->getP());
+//        View::share('boardGlobal', \App\Models\Board::query()->findOrFail(request()->input('id')));
 
     }
 
