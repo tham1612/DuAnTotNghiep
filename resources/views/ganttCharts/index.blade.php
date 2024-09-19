@@ -28,7 +28,6 @@
     var dp = new gantt.dataProcessor("/api");
     dp.init(gantt);
     dp.setTransactionMode("REST");
-    
 </script>
 </body>
 @endsection

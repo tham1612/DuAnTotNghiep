@@ -1,8 +1,11 @@
+@php
+    $boardGlobal = \App\Models\Board::query()->findOrFail(3);
+@endphp
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
-                <h4 class="fs-20 mx-3 mt-2">{{$Board->name}}</h4>
+                <h4 class="fs-20 mx-3 mt-2">{{$boardGlobal->name}}</h4>
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn active">
                     <span class="avatar-title bg-transparent fs-15">
                         <i class="ri-star-fill fs-20 mx-2"></i>
@@ -62,7 +65,8 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('b.dashboard') }}" role="tab"
+                    <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}"
+                       href="{{ route('b.dashboard') }}" role="tab"
                        aria-controls="pills-home" aria-selected="{{ request()->is('dashboard') ? 'true' : 'false' }}">
                         <i class="ri-dashboard-line"></i> Overview
                     </a>
@@ -70,33 +74,36 @@
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ request()->get('type') == 'board' ? 'active' : '' }}"
-                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $Board->id]) }}"
+                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardGlobal->id]) }}"
                        role="tab" aria-controls="pills-profile"
                        aria-selected="{{ request()->get('type') == 'board' ? 'true' : 'false' }}">
                         <i class="ri-table-line"></i> Board
                     </a>
                 </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->get('type') == 'list' ? 'active' : '' }}"
-                           href="{{ route('b.edit', ['viewType' => 'list', 'id' => $Board->id]) }}" role="tab"
-                           aria-controls="pills-list" aria-selected="{{ request()->get('type') == 'list' ? 'true' : 'false' }}">
-                            <i class="ri-list-unordered"></i> List
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->get('type') == 'ganttChart' ? 'active' : '' }}"
-                           href="{{ route('b.edit', ['viewType' => 'gantt', 'id' => $Board->id]) }}" role="tab"
-                           aria-controls="pills-gantt" aria-selected="{{ request()->get('type') == 'ganttChart' ? 'true' : 'false' }}">
-                            <i class="ri-menu-2-line"></i> Gantt Chart
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link {{ request()->get('type') == 'table' ? 'active' : '' }}"
-                           href="{{ route('b.edit', ['viewType' => 'table', 'id' => $Board->id]) }}" role="tab"
-                           aria-controls="pills-table" aria-selected="{{ request()->get('type') == 'table' ? 'true' : 'false' }}">
-                            <i class="ri-layout-3-line"></i> Table
-                        </a>
-                    </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ request()->get('type') == 'list' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardGlobal->id]) }}" role="tab"
+                       aria-controls="pills-list"
+                       aria-selected="{{ request()->get('type') == 'list' ? 'true' : 'false' }}">
+                        <i class="ri-list-unordered"></i> List
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ request()->get('type') == 'ganttChart' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'gantt', 'id' => $boardGlobal->id]) }}" role="tab"
+                       aria-controls="pills-gantt"
+                       aria-selected="{{ request()->get('type') == 'ganttChart' ? 'true' : 'false' }}">
+                        <i class="ri-menu-2-line"></i> Gantt Chart
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ request()->get('type') == 'table' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'table', 'id' => $boardGlobal->id]) }}" role="tab"
+                       aria-controls="pills-table"
+                       aria-selected="{{ request()->get('type') == 'table' ? 'true' : 'false' }}">
+                        <i class="ri-layout-3-line"></i> Table
+                    </a>
+                </li>
 
 
                 {{--                <li class="nav-item" role="presentation">--}}
@@ -120,7 +127,7 @@
                     <div class="mt-2">
                         <strong>Từ khóa</strong>
                         <input type="text" name="" id="" placeholder="Nhập từ khóa..."
-                               class="form-control" />
+                               class="form-control"/>
                         <span class="fs-10">Tìm kiếm các thẻ, các thành viên, các nhãn và hơn thế
                             nữa.</span>
                     </div>
@@ -129,12 +136,12 @@
                         <p><strong>Thành viên</strong></p>
 
                         <label for="no_member">
-                            <input type="checkbox" name="" id="no_member" />
+                            <input type="checkbox" name="" id="no_member"/>
                             <span>Không có thành viên</span>
                         </label>
-                        <br />
+                        <br/>
                         <label for="it_mee">
-                            <input type="checkbox" name="" id="it_mee" />
+                            <input type="checkbox" name="" id="it_mee"/>
                             <span>Các thẻ chỉ định cho tôi</span>
                         </label>
                     </div>
@@ -142,17 +149,17 @@
                     <div class="mt-2">
                         <p><strong>Ngày hết hạn</strong></p>
                         <label for="no_date">
-                            <input type="checkbox" name="" id="no_date" />
+                            <input type="checkbox" name="" id="no_date"/>
                             <span>Không có ngày hết hạn</span>
                         </label>
-                        <br />
+                        <br/>
                         <label for="no_overdue">
-                            <input type="checkbox" name="" id="no_overdue" />
+                            <input type="checkbox" name="" id="no_overdue"/>
                             <span>Quá hạn</span>
                         </label>
-                        <br />
+                        <br/>
                         <label for="due_tomorrow">
-                            <input type="checkbox" name="" id="due_tomorrow" />
+                            <input type="checkbox" name="" id="due_tomorrow"/>
                             <span>Hết hạn vào ngày mai</span>
                         </label>
                     </div>
@@ -160,38 +167,38 @@
                     <div class="mt-2">
                         <p><strong>Nhãn</strong></p>
                         <label for="no_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="no_tags" />
+                            <input type="checkbox" name="" id="no_tags"/>
                             <i class="ri-price-tag-3-line mx-2 fs-20"></i>
                             <span class="rounded col-11">Không có nhãn</span>
                         </label>
-                        <br />
+                        <br/>
 
                         <label for="primary_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="primary_tags" />
+                            <input type="checkbox" name="" id="primary_tags"/>
                             <span class="bg bg-primary mx-2 rounded p-3 col-11">
                             </span>
                         </label>
-                        <br />
+                        <br/>
                         <label for="danger_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="danger_tags" />
+                            <input type="checkbox" name="" id="danger_tags"/>
                             <span class="bg bg-danger mx-2 rounded p-3 col-11">
                             </span>
                         </label>
-                        <br />
+                        <br/>
                         <label for="success_tags" class="d-flex align-items-center">
-                            <input type="checkbox" name="" id="success_tags" />
+                            <input type="checkbox" name="" id="success_tags"/>
                             <span class="bg bg-success mx-2 rounded p-3 col-11">
                             </span>
                         </label>
-                        <br />
+                        <br/>
                         <div data-input-flag data-option-flag-name>
                             <input type="text" class="form-control rounded-end flag-input" readonly
-                                   placeholder="Chọn nhãn" data-bs-toggle="dropdown" aria-expanded="false" />
+                                   placeholder="Chọn nhãn" data-bs-toggle="dropdown" aria-expanded="false"/>
                             <div class="dropdown-menu w-100">
                                 <div class="p-2 px-3 pt-1 searchlist-input">
                                     <input type="text"
                                            class="form-control form-control-sm border search-countryList"
-                                           placeholder="Tìm kiếm nhãn" />
+                                           placeholder="Tìm kiếm nhãn"/>
                                 </div>
                                 <ul class="list-unstyled dropdown-menu-list mb-0"></ul>
                             </div>
@@ -212,22 +219,22 @@
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                    data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
                                     <img src="{{asset('theme/assets/images/users/avatar-5.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                         class="rounded-circle avatar-xs"/>
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                    data-bs-trigger="hover" data-bs-placement="top" title="Frank">
                                     <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                         class="rounded-circle avatar-xs"/>
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                    data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
                                     <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                         class="rounded-circle avatar-xs"/>
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                    data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
                                     <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
+                                         class="rounded-circle avatar-xs"/>
                                 </a>
                                 <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                    data-bs-trigger="hover" data-bs-placement="top" title="Herbert">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalog;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,27 +13,26 @@ class TaskController extends Controller
     {
         Log::info('Request received', $request->all()); // Ghi lại request nhận được
 
-        $task = new Task();
-        $task->text = $request->text;
-        $task->start_date = $request->start_date;
-        $task->duration = $request->duration;
-        $task->progress = $request->has("progress") ? $request->progress : 0;
-        $task->parent = $request->parent;
-        $task->sortorder = Task::max("sortorder") + 1;
-
         try {
-            $task->save();
+            $task = Task::query()->create($request->all());
             Log::info('Task saved successfully', ['task_id' => $task->id]); // Ghi lại sau khi lưu task thành công
         } catch (\Exception $e) {
             Log::error('Error saving task', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            return response()->json(
+                [
+                    'error' => 'Internal Server Error',
+                    'msg' => $e->getMessage(),
+                    'request' => $request->all(),
+                ]
+                , 500);
         }
 
         return response()->json([
             "action" => "inserted",
-            "tid" => $task->id
+            'val' => $task,
         ]);
     }
+
     public function update($id, Request $request)
     {
         $task = Task::find($id);
@@ -52,6 +52,7 @@ class TaskController extends Controller
             "action" => "updated"
         ]);
     }
+
     private function updateOrder($taskId, $target)
     {
         $nextTask = false;
