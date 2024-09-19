@@ -20,4 +20,8 @@ class Catalog extends Model
     {
         return $this->morphMany(TaskLink::class, 'linkable');
     }
+    public function catalog()
+    {
+        return $this->belongsTo(Catalog::class);
+    }
 }
