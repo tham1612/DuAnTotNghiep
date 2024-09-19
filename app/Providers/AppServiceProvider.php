@@ -26,16 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
-        View::composer('partials.sidebar', function ($view) {
-            if (Auth::check()) {
-                $user = Auth::user();
-                $workspaces = $user->getWorkspace();  // Lấy danh sách workspaces của người dùng
-
-                // Chia sẻ workspaces với view sidebar
-                $view->with('workspaces', $workspaces);
-            }
-        });
-
 
 
     }
