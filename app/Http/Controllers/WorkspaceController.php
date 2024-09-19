@@ -20,15 +20,15 @@ class WorkspaceController extends Controller
      */
     const PATH_UPLOAD = 'workspaces.';
 
-    public function index(string $id)
+    public function index()
     {
         $userId = \Illuminate\Support\Facades\Auth::id();
         WorkspaceMember::query()
             ->where('user_id', auth()->id())
-            ->whereNot('id', $id)
+            ->whereNot('id', $userId)
             ->update(['is_active' => 0]);
         WorkspaceMember::query()
-            ->where('id', $id)
+            ->where('id', $userId)
             ->update(['is_active' => 1]);
         return view('homes.home');
     }
