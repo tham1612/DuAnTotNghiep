@@ -74,9 +74,9 @@ Route::middleware(['auth', 'isWorkspace'])
 //                    return view('tables.index');
 //                })->name('table');
 //
-//                Route::get('ganttChart', function () {
-//                    return view('ganttCharts.index');
-//                })->name('ganttChart');
+            //    Route::get('ganttChart', function () {
+            //        return view('ganttCharts.index');
+            //    })->name('ganttChart');
 //
 //                Route::get('list', function () {
 //                    return view('lists.index');
