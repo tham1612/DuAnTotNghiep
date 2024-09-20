@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -35,6 +36,11 @@ class CatalogControler extends Controller
         }
         $maxPosition = \App\Models\Catalog::where('board_id', $request->board_id)
             ->max('position');
+        $data['position']=$maxPosition +1;
+        Catalog::query()->create($data);
+        return back()
+            ->with('success', 'Thêm mới danh sách thành công vào bảng');
+
 
     }
 
