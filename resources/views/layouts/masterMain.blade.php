@@ -103,19 +103,20 @@
                         @php
                             $board = session('board');
                         @endphp
-            
+
                         @include('layouts.navbar')
                         @include('components.setting')
                         @include('components.task')
                         @include('components.member')
-                    @endif
+
 
                     {{-- các màn hình hiển thị --}}
-                    @yield('main')
+                        @yield('main')
 
-                    @include('components.createBoard')
-                    @include('components.createTemplateBoard')
-                    @include('components.workspace')
+                        @include('components.createBoard')
+                        @include('components.createTemplateBoard')
+                        @include('components.workspace')
+                    @endif
                 </div>
                 <!-- container-fluid -->
             </div>
@@ -257,6 +258,17 @@
                 due_date_due.classList.toggle('d-none');
                 due_date_success.classList.toggle('d-none');
             });
+            function disableButtonOnSubmit() {
+                continueButton.disabled = true;
+                return true; // Vẫn cho phép submit form
+            }
+            // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+            setTimeout(function() {
+                var alertElement = document.getElementById('success-alert');
+                if (alertElement) {
+                    alertElement.style.display = 'none';
+                }
+            }, 3000);
         </script>
     @endif
 
