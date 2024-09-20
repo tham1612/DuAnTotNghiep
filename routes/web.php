@@ -59,13 +59,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::prefix('b')
             ->as('b.')
             ->group(function () {
-                Route::get('dashboard', function () {
-                    return view('homes.dashboard_board');
-                })->name('dashboard');
-
                 Route::get('create', [BoardController::class, 'create'])->name('create');
                 Route::post('store', [BoardController::class, 'store'])->name('store');
-
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
 
@@ -76,8 +71,10 @@ Route::middleware(['auth', 'isWorkspace'])
 
             });
         Route::resource('catalogs', CatalogControler::class);
+        Route::resource('tasks',\App\Http\Controllers\TaskController::class);
 
     });
 
 
 Auth::routes();
+
