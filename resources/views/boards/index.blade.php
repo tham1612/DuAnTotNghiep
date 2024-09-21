@@ -266,10 +266,12 @@
                     Thêm thẻ
                 </button>
                 <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                    <form>
+                    <form action="{{route('tasks.store')}}" method="post">
+                        @csrf
                         <div class="mb-2">
-                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                            <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
                                    placeholder="Nhập tên thẻ..."/>
+                            <input type="hidden" name="catalogId" value="1">
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <button type="submit" class="btn btn-primary">
@@ -1198,14 +1200,16 @@
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                <form>
+                <form action="{{route('catalogs.store')}}" method="post">
+                    @csrf
                     <div class="mb-2">
-                        <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                               placeholder="Nhập tên thẻ..."/>
+                        <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
+                               placeholder="Nhập tên danh sách..."/>
+                        <input type="hidden" name="boardId" value="1">
                     </div>
                     <div class="mb-2 d-flex align-items-center">
                         <button type="submit" class="btn btn-primary">
-                            Thêm thẻ
+                            Thêm danh sách
                         </button>
                         <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                     </div>

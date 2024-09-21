@@ -1,11 +1,8 @@
-@php
-    $boardGlobal = \App\Models\Board::query()->findOrFail(3);
-@endphp
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
-                <h4 class="fs-20 mx-3 mt-2">{{$boardGlobal->name}}</h4>
+                <h4 class="fs-20 mx-3 mt-2">{{$board->name}}</h4>
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn active">
                     <span class="avatar-title bg-transparent fs-15">
                         <i class="ri-star-fill fs-20 mx-2"></i>
@@ -65,16 +62,16 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}"
-                       href="{{ route('b.dashboard') }}" role="tab"
-                       aria-controls="pills-home" aria-selected="{{ request()->is('dashboard') ? 'true' : 'false' }}">
+                    <a class="nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}" role="tab"
+                       aria-controls="pills-home" aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}">
                         <i class="ri-dashboard-line"></i> Overview
                     </a>
                 </li>
 
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ request()->get('type') == 'board' ? 'active' : '' }}"
-                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardGlobal->id]) }}"
+                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}"
                        role="tab" aria-controls="pills-profile"
                        aria-selected="{{ request()->get('type') == 'board' ? 'true' : 'false' }}">
                         <i class="ri-table-line"></i> Board
@@ -82,7 +79,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ request()->get('type') == 'list' ? 'active' : '' }}"
-                       href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardGlobal->id]) }}" role="tab"
+                       href="{{ route('b.edit', ['viewType' => 'list', 'id' => $board->id]) }}" role="tab"
                        aria-controls="pills-list"
                        aria-selected="{{ request()->get('type') == 'list' ? 'true' : 'false' }}">
                         <i class="ri-list-unordered"></i> List
@@ -90,7 +87,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ request()->get('type') == 'ganttChart' ? 'active' : '' }}"
-                       href="{{ route('b.edit', ['viewType' => 'gantt', 'id' => $boardGlobal->id]) }}" role="tab"
+                       href="{{ route('b.edit', ['viewType' => 'gantt', 'id' => $board->id]) }}" role="tab"
                        aria-controls="pills-gantt"
                        aria-selected="{{ request()->get('type') == 'ganttChart' ? 'true' : 'false' }}">
                         <i class="ri-menu-2-line"></i> Gantt Chart
@@ -98,7 +95,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ request()->get('type') == 'table' ? 'active' : '' }}"
-                       href="{{ route('b.edit', ['viewType' => 'table', 'id' => $boardGlobal->id]) }}" role="tab"
+                       href="{{ route('b.edit', ['viewType' => 'table', 'id' => $board->id]) }}" role="tab"
                        aria-controls="pills-table"
                        aria-selected="{{ request()->get('type') == 'table' ? 'true' : 'false' }}">
                         <i class="ri-layout-3-line"></i> Table

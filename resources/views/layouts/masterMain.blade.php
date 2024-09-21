@@ -10,28 +10,22 @@
     <meta content="Themesbrand" name="author"/>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{asset('theme/assets/images/favicon.ico')}}"/>
+    <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
 
     <!-- Layout config Js -->
-    <script src="{{asset('theme/assets/js/layout.js')}}"></script>
+    <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
-    <link href="{{asset('theme/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- Icons Css -->
-    <link href="{{asset('theme/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- App Css-->
-    <link href="{{asset('theme/assets/css/app.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
-    <link href="{{asset('theme/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
 
     @yield('style')
 </head>
-@if(request()->is('b/*'))
-    <!--datatable css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
-    <!--datatable responsive css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"/>
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+@if (request()->is('b/*'))
     <style>
         .dropdown-item p {
             overflow-wrap: break-word;
@@ -84,6 +78,7 @@
             </div>
             <!-- /.modal-content -->
         </div>
+
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
@@ -99,7 +94,13 @@
         <div class="page-content">
             <div class="container-fluid">
 
-                @if(request()->is('b/*'))
+
+                @if (request()->is('b/*'))
+                    @php
+                        $board = session('board');
+
+                    @endphp
+
                     @include('layouts.navbar')
                     @include('components.setting')
                     @include('components.task')
@@ -108,7 +109,7 @@
 
                 {{-- các màn hình hiển thị --}}
                 @yield('main')
-                    
+
                 @include('components.createBoard')
                 @include('components.createTemplateBoard')
                 @include('components.workspace')
@@ -155,17 +156,14 @@
     });
 </script>
 <!-- JAVASCRIPT -->
-<script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{asset('theme/assets/libs/simplebar/simplebar.min.js')}}"></script>
-<script src="{{asset('theme/assets/libs/node-waves/waves.min.js')}}"></script>
-<script src="{{asset('theme/assets/libs/feather-icons/feather.min.js')}}"></script>
-<script src="{{asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
-<script src="{{asset('theme/assets/js/plugins.js')}}"></script>
+<script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}"></script>
+<script src="{{ asset('theme/assets/libs/node-waves/waves.min.js') }}"></script>
+<script src="{{ asset('theme/assets/libs/feather-icons/feather.min.js') }}"></script>
+<script src="{{ asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
+<script src="{{ asset('theme/assets/js/plugins.js') }}"></script>
 
-@if(request()->is('b/*'))
-    <!-- App js -->
-    <script src="{{asset('theme/assets/js/app.js')}}"></script>
-
+@if (request()->is('b/*'))
     <!-- dragula init js -->
     <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
 
@@ -176,7 +174,7 @@
     <!-- prismjs plugin -->
     <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
 
-{{--        <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script>--}}
+    {{--        <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script> --}}
 
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
 
@@ -231,35 +229,31 @@
             window.location.reload();
         });
 
-        //     xử lý theo dõi + ngày hết hạn của card
-        const notification = document.querySelector('#notification');
-        const notification_follow = document.querySelector('#notification_follow');
-        const notification_icon = document.querySelector('#notification_icon');
-        const notification_content = document.querySelector('#notification_content');
-        notification.addEventListener('click', () => {
-            notification_follow.classList.toggle('d-none');
-            notification_icon.classList.contains("ri-eye-line") ?
-                notification_icon.className = "ri-eye-off-line fs-22" :
-                notification_icon.className = "ri-eye-line fs-22";
-            notification_content.textContent === "Theo dõi" ?
-                notification_content.innerHTML = "Đang theo dõi" :
-                notification_content.innerHTML = "Theo dõi";
-        });
-
-        const due_date_checkbox = document.querySelector('#due_date_checkbox');
-        const due_date_success = document.querySelector('#due_date_success');
-        const due_date_due = document.querySelector('#due_date_due');
-        due_date_checkbox.addEventListener('click', () => {
-            due_date_due.classList.toggle('d-none');
-            due_date_success.classList.toggle('d-none');
-        });
-
-    </script>
-@endif
+    const due_date_checkbox = document.querySelector('#due_date_checkbox');
+            const due_date_success = document.querySelector('#due_date_success');
+            const due_date_due = document.querySelector('#due_date_due');
+            due_date_checkbox.addEventListener('click', () => {
+                due_date_due.classList.toggle('d-none');
+                due_date_success.classList.toggle('d-none');
+            });
+            function disableButtonOnSubmit() {
+                continueButton.disabled = true;
+                return true; // Vẫn cho phép submit form
+            }
+            // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+            setTimeout(function() {
+                var alertElement = document.getElementById('success-alert');
+                if (alertElement) {
+                    alertElement.style.display = 'none';
+                }
+            }, 3000);
+        </script>
+    @endif
 
 @yield('script')
 
-
+<!-- App js -->
+<script src="{{ asset('theme/assets/js/app.js') }}"></script>
 </body>
 
 </html>

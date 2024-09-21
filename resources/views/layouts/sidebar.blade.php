@@ -19,7 +19,6 @@
             ->where('id', $workspaceChecked->workspace_id)
             ->first();
     }
-    //dd($workspaceChecked);
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
@@ -115,21 +114,24 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="Dashboards.html">
+                    <a class="nav-link menu-link" href="{{route('homes.dashboard')}}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link menu-link" href="more.html">
-                        <i class="ri-more-fill"></i> <span data-key="">More</span>
-                    </a>
-                </li> --}}
+
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                 @if (isset($workspaceBoards))
                     @foreach ($workspaceBoards->boards as $board)
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('b.edit', ['id' => $board->id]) }}">
-                                <i class="ri-apps-fill"></i> <span>{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
+                                @if ($board->image)
+                                @else
+                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                         style="width: 30px;height: 30px">
+                                        {{ strtoupper(substr($board->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                                <span>{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
                             </a>
                         </li>
                     @endforeach
