@@ -78,6 +78,7 @@
             </div>
             <!-- /.modal-content -->
         </div>
+
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
@@ -92,6 +93,7 @@
     <div class="main-content" style="margin-top: -10px">
         <div class="page-content">
             <div class="container-fluid">
+
 
                 @if (request()->is('b/*'))
                     @php
@@ -227,30 +229,26 @@
             window.location.reload();
         });
 
-        //     xử lý theo dõi + ngày hết hạn của card
-        const notification = document.querySelector('#notification');
-        const notification_follow = document.querySelector('#notification_follow');
-        const notification_icon = document.querySelector('#notification_icon');
-        const notification_content = document.querySelector('#notification_content');
-        notification.addEventListener('click', () => {
-            notification_follow.classList.toggle('d-none');
-            notification_icon.classList.contains("ri-eye-line") ?
-                notification_icon.className = "ri-eye-off-line fs-22" :
-                notification_icon.className = "ri-eye-line fs-22";
-            notification_content.textContent === "Theo dõi" ?
-                notification_content.innerHTML = "Đang theo dõi" :
-                notification_content.innerHTML = "Theo dõi";
-        });
-
-        const due_date_checkbox = document.querySelector('#due_date_checkbox');
-        const due_date_success = document.querySelector('#due_date_success');
-        const due_date_due = document.querySelector('#due_date_due');
-        due_date_checkbox.addEventListener('click', () => {
-            due_date_due.classList.toggle('d-none');
-            due_date_success.classList.toggle('d-none');
-        });
-    </script>
-@endif
+    const due_date_checkbox = document.querySelector('#due_date_checkbox');
+            const due_date_success = document.querySelector('#due_date_success');
+            const due_date_due = document.querySelector('#due_date_due');
+            due_date_checkbox.addEventListener('click', () => {
+                due_date_due.classList.toggle('d-none');
+                due_date_success.classList.toggle('d-none');
+            });
+            function disableButtonOnSubmit() {
+                continueButton.disabled = true;
+                return true; // Vẫn cho phép submit form
+            }
+            // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+            setTimeout(function() {
+                var alertElement = document.getElementById('success-alert');
+                if (alertElement) {
+                    alertElement.style.display = 'none';
+                }
+            }, 3000);
+        </script>
+    @endif
 
 @yield('script')
 

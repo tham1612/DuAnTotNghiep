@@ -62,9 +62,9 @@
             <!-- các màn hình trong bảng -->
             <ul class="nav nav-pills d-flex justify-content-between align-items-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}"
-                       href="{{ route('b.dashboard') }}" role="tab"
-                       aria-controls="pills-home" aria-selected="{{ request()->is('dashboard') ? 'true' : 'false' }}">
+                    <a class="nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}" role="tab"
+                       aria-controls="pills-home" aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}">
                         <i class="ri-dashboard-line"></i> Overview
                     </a>
                 </li>

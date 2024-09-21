@@ -22,14 +22,32 @@ class Board extends Model
         'link_invite',
         'complete'
     ];
+
     protected $casts = [
         'comment_rights' => 'boolean',
-         'add_delete_rights' => 'boolean',
+        'add_delete_rights' => 'boolean',
         'edit_workspace' => 'boolean',
         'access' => AccessEnum::class,
     ];
+
+    public function users()
+    {
+        $this->belongsToMany(User::class);
+    }
+
+    public function boardMembers()
+    {
+        $this->hasMany(BoardMember::class);
+    }
+
+    public function catalogs()
+    {
+        return $this->hasMany(Catalog::class);
+    }
+
     public function taskLinks()
     {
         return $this->morphMany(TaskLink::class, 'linkable');
     }
+
 }
