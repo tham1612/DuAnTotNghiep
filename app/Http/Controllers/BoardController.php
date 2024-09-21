@@ -6,6 +6,7 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -16,6 +17,7 @@ class BoardController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'board.';
+
     public function index()
     {
         //
@@ -34,7 +36,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except(['image','link_invite']);
+        $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
         }
@@ -57,8 +59,6 @@ class BoardController extends Controller
             dd($exception->getMessage());
             return back()->with('error', 'Error: ' . $exception->getMessage());
         }
-
-
     }
 
     /**
@@ -66,7 +66,6 @@ class BoardController extends Controller
      */
     public function show(string $id)
     {
-
     }
 
     /**
@@ -74,13 +73,35 @@ class BoardController extends Controller
      */
     public function edit($id)
     {
-        $Board = Board::query()->findOrFail($id);
+        $board = Board::query()->findOrFail($id);
+
+        session(['board' => $board]);
+
         $viewType = \request('viewType', 'board');
+
+        // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
+        // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
+        $board->load([
+            'catalogs',
+            'catalogs.tasks',
+            'catalogs.tasks.members'
+        ]);
+        // Lấy danh sách catalogs
+        $catalogs = $board->catalogs;
+        /*
+         * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
+         * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
+         * */
+
+        $tasks = $catalogs->pluck('tasks')->flatten();
+        $taskMembers=$tasks->pluck('members')->flatten();
+//dd($tasks );
         return match ($viewType) {
-            'list' => view('lists.index', compact('Board')),
-            'gantt' => view('ganttCharts.index', compact('Board')),
-            'table' => view('tables.index', compact('Board')),
-            default => view('boards.index', compact('Board')),
+            'dashboard' => view('homes.dashboard_board', compact('board')),
+            'list' => view('lists.index', compact('board')),
+            'gantt' => view('ganttCharts.index', compact('board','catalogs', 'tasks','taskMembers')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','taskMembers')),
+            default => view('boards.index', compact('board')),
         };
     }
 
