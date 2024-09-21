@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Link;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,7 @@ class LinkController extends Controller
     }
 
     public function destroy($id){
+
         $link = Link::find($id);
         $link->delete();
 
