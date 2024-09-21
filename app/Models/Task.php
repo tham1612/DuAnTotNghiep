@@ -36,8 +36,15 @@ class Task extends Model
     public function getOpenAttribute(){
         return true;
     }
-    public function tasks()
+
+    public function catalog()
     {
-        return $this->hasMany(Task::class);
+        return $this->belongsTo(Catalog::class);
     }
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'task_members')->withPivot('follow');
+    }
+
 }
