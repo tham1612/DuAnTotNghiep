@@ -21,6 +21,12 @@
         </style>
     </head>
     <body>
+        @if (session('success'))
+                    <div class="alert alert-success m-4" id="success-alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
         <div id="gantt_here" style='width:100%; height:350px;'></div>
         <br>
 
@@ -34,11 +40,13 @@
             <div class="my-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form>
+                    <form action="{{route('catalogs.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
+                        @csrf
                         <h5 class="text-center">Thêm danh sách</h5>
                         <div class="mb-2">
                             <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                   placeholder="Nhập tên danh sách..."/>
+                                   placeholder="Nhập tên danh sách..."name="name"/>
+                            <input type="hidden" name="board_id" value="{{ $board->id }}">
                         </div>
                         <div class="mb-2 d-grid ">
                             <button type="submit" class="btn btn-primary">
@@ -70,9 +78,9 @@
                         <div class="mb-2">
                             <select name="catalog_id" id="catalog_id" class="form-select">
                                 <option value="">Chọn catalog</option>
-                                {{-- @foreach ($catalogs as $catalog)
+                                @foreach ($catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                         <div class="mb-2 d-grid">
