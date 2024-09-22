@@ -28,9 +28,9 @@
                 data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false" data-bs-offset="70,10">
             <i class="ri-add-line me-1"></i>
-            Thêm
-        </button>
-        <div class="dropdown-menu dropdown-menu-end p-3">
+                Thêm
+            </button>
+            <div class="dropdown-menu dropdown-menu-end p-3">
             <div class="my-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
@@ -127,7 +127,7 @@
                 }
             }
 
-              
+
         </script>
     </body>
 @endsection
