@@ -64,6 +64,10 @@ Route::middleware(['auth', 'isWorkspace'])
             return view('homes.home');
         })->name('home');
 
+        Route::get('/chat',function(){
+            return view('chat.index');
+        })->name('chat');
+
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
