@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
 use \App\Http\Controllers\CatalogControler;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -39,8 +40,21 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [WorkspaceController::class, 'store'])
                     ->withoutMiddleware('isWorkspace')
                     ->name('store');
+                Route::get('delete/{id}', [WorkspaceController::class, 'delete'])
+                    ->withoutMiddleware('isWorkspace')
+                    ->name('delete');
             });
 
+        //Xử lý chỉnh sửa workspace
+        Route::get('edit_workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
+            ->name('showFormEditWorkspace');
+        Route::post('update_workspaces', [WorkspaceController::class, 'editWorkspace'])
+            ->name('editWorkspace');
+        Route::post('update_ws_access', [WorkspaceController::class, 'update_ws_access'])
+            ->name('update_ws_access');
+        Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite']);
+        Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
+            ->middleware('auth')->name('invite_workspace');
 
 
         Route::get('/homes/dashboard', function () {
@@ -53,9 +67,9 @@ Route::middleware(['auth', 'isWorkspace'])
 
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
-        ->name('user');
+            ->name('user');
         Route::put('/user/{id}', [UserController::class, 'update'])
-        ->name('users.update');
+            ->name('users.update');
         Route::prefix('b')
             ->as('b.')
             ->group(function () {
@@ -63,7 +77,8 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
-
+                Route::get('/tasks', [TaskController::class, 'create']);          // Lấy danh sách task
+                Route::post('/task', [TaskController::class, 'store']);          // Tạo mới một task
 
                 Route::get('inboxs', function () {
                     return view('Inboxs.index');
@@ -71,7 +86,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
             });
         Route::resource('catalogs', CatalogControler::class);
-        Route::resource('tasks',\App\Http\Controllers\TaskController::class);
+        Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 
     });
 
