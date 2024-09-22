@@ -111,7 +111,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('b.inbox') }}">
+                    <a class="nav-link menu-link" href="{{ route('inbox') }}">
                         <i class="ri-inbox-archive-line"></i> <span data-key="">Inbox</span>
                     </a>
                 </li>
