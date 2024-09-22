@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \App\Events\UserInvitedToWorkspace::class => [
+            \App\Listeners\SendInviteEmail::class,
+        ],
     ];
 
     /**
