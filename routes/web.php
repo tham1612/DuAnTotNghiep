@@ -82,6 +82,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 
     });
+    
 Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
