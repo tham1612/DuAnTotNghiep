@@ -10,10 +10,10 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        
-    }
+    // public function index()
+    // {
+
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -35,8 +35,9 @@ class TaskController extends Controller
           $taskData = $request->all();
           $taskData['sortorder'] = Task::max('sortorder') + 1;
           $taskData['progress'] = $request->input('progress',0);
-          $task = Task::create($taskData);
-          return response()->json(['action' => 'inserted', 'tid' => $task->id]);
+           Task::create($taskData);
+          return back()
+          ->with('success', 'Thêm mới danh sách thành công vào bảng');
     }
 
     public function update($id, Request $request)
