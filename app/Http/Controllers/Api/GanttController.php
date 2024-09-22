@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\TaskLink;
-use Illuminate\Http\Request;
 
 class GanttController extends Controller
 {
@@ -14,7 +14,7 @@ class GanttController extends Controller
     $tasks = Task::orderBy('sortorder')->get();
     // Lấy tất cả các liên kết nếu cần
     $links = TaskLink::all();
-    
+
     return response()->json(['data' => $tasks, 'links' => $links]); // Trả dữ liệu dưới dạng JSON
 }
 

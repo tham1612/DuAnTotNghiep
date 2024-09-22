@@ -15,8 +15,16 @@
                     <div class="card-body p-4">
                         <div class="text-center">
                             <div class="profile-user position-relative d-inline-block mx-auto mb-4">
-                                <img src="{{ asset('storage/' . $user->image) }}"
-                                     class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="Avatar">
+                                @if (auth()->user()->image)
+                                    <img class="rounded-circle avatar-xl img-thumbnail user-profile-imager"
+                                         src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->image)}}"
+                                         alt="Avatar"/>
+                                @else
+                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center fs-20"
+                                         style="width: 80px;height: 80px">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </div>
+                                @endif
                                 <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
                                     <input type="file" name="image"
                                            class="profile-img-file-input @error('image') is-invalid @enderror"
