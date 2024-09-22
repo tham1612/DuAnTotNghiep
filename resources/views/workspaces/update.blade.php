@@ -93,7 +93,9 @@
                         <!--end col-->
                         <div class="col-lg-5 ms-auto">
                             <div class="mt-5">
-                                <button class="btn btn-primary ms-3 mt-4" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+
+                                {{-- <button class="btn btn-primary ms-3 mt-4" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+
                                     aria-expanded="false" data-bs-offset="0,-50">
                                     <i class="ri-add-line align-bottom me-1"></i>Mời thành viên vào Không gian làm việc
                                 </button>
@@ -111,93 +113,104 @@
                                             <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                         </div>
                                     </form>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end row-->
-                    </div>
-                    <div class="card-body py-4" style="margin-left: -15px">
-                        <div class="mt-3">
-                            <h2>Các cài đặt không gian làm việc</h2>
-                            <div class="form-switch mt-3" style="margin-left: -30px">
-                                <label class="form-check-label">Khả năng hiển thị trong không gian
-                                    làm việc</label>
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <p><i class="{{ $icon }}"></i> {{ $access }} - {{ $ws_desrip }}</p>
-                            {{-- <button class="btn btn-primary">Thay đổi</button> --}}
 
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#customModal">
-                                Open Settings
-                            </button>
+                                </div> --}}
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="customModal" tabindex="-1" aria-labelledby="customModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <form action="{{ route('update_ws_access') }}" method="post">
-                                            @csrf
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="customModalLabel">Chọn khả năng hiển thị trong
-                                                    Không gian làm việc</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <!-- Privacy Options -->
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="access"
-                                                        id="privateOption" value="private"
-                                                        {{ $workspaceChecked->access == 'private' ? 'checked' : '' }}>
-                                                    <label class="form-check-label option-label" for="privateOption">
-                                                        <span class="option-icon">🔒</span> Riêng tư
-                                                    </label>
-                                                    <p class="option-description">
-                                                        Đây là Không gian làm việc riêng tư. Chỉ những người trong Không
-                                                        gian
-                                                        làm việc có thể truy cập hoặc nhìn thấy Không gian làm việc.
-                                                    </p>
-                                                </div>
-                                                <hr>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="access"
-                                                        id="publicOption" value="public"
-                                                        {{ $workspaceChecked->access == 'public' ? 'checked' : '' }}>
-                                                    <label class="form-check-label option-label" for="publicOption">
-                                                        <span class="option-icon">🟢</span> Công khai
-                                                    </label>
-                                                    <p class="option-description">
-                                                        Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới
-                                                        Không
-                                                        gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm
-                                                        việc.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                <div class="bg-primary p-2 rounded text-center">
+                                    <i class="ri-user-add-line text-white"></i>
+                                    <a href="#addmemberModal" data-bs-toggle="modal" class="avatar-group-item">
+                                        <span class="text-white">Mời thành viên vào Không gian làm việc</span>
+                                    </a>
                                 </div>
+                                @include('components.invitemember')
+
                             </div>
-                            {{--  --}}
                         </div>
                     </div>
-                    <a href="{{ route('workspaces.delete', $workspaceChecked->wm_id) }}"
-                        onclick="return confirm('Bạn có chắc chắn muốn xóa bỏ không gian làm việc?')"
-                        class="text-danger">Xóa Không gian
-                        làm việc này?</a>
+                    <!--end row-->
                 </div>
+                <div class="card-body py-4" style="margin-left: -15px">
+                    <div class="mt-3">
+                        <h2>Các cài đặt không gian làm việc</h2>
+                        <div class="form-switch mt-3" style="margin-left: -30px">
+                            <label class="form-check-label">Khả năng hiển thị trong không gian
+                                làm việc</label>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <p><i class="{{ $icon }}"></i> {{ $access }} - {{ $ws_desrip }}</p>
+                        {{-- <button class="btn btn-primary">Thay đổi</button> --}}
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customModal">
+                            Open Settings
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="customModal" tabindex="-1" aria-labelledby="customModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <form action="{{ route('update_ws_access') }}" method="post">
+                                        @csrf
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="customModalLabel">Chọn khả năng hiển thị trong
+                                                Không gian làm việc</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Privacy Options -->
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="access"
+                                                    id="privateOption" value="private"
+                                                    {{ $workspaceChecked->access == 'private' ? 'checked' : '' }}>
+                                                <label class="form-check-label option-label" for="privateOption">
+                                                    <span class="option-icon">🔒</span> Riêng tư
+                                                </label>
+                                                <p class="option-description">
+                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không
+                                                    gian
+                                                    làm việc có thể truy cập hoặc nhìn thấy Không gian làm việc.
+                                                </p>
+                                            </div>
+                                            <hr>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="access"
+                                                    id="publicOption" value="public"
+                                                    {{ $workspaceChecked->access == 'public' ? 'checked' : '' }}>
+                                                <label class="form-check-label option-label" for="publicOption">
+                                                    <span class="option-icon">🟢</span> Công khai
+                                                </label>
+                                                <p class="option-description">
+                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới
+                                                    Không
+                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm
+                                                    việc.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {{--  --}}
+                    </div>
+                </div>
+                <a href="{{ route('workspaces.delete', $workspaceChecked->wm_id) }}"
+                    onclick="return confirm('Bạn có chắc chắn muốn xóa bỏ không gian làm việc?')" class="text-danger">Xóa
+                    Không gian
+                    làm việc này?</a>
             </div>
-            <!--end col-->
         </div>
+        <!--end col-->
+    </div>
+
     </div>
 @endsection
 
