@@ -57,7 +57,9 @@
                     <a href="#">Thêm thành viên</a>
                 </li>
                 <li class="d-flex">
-                    <a href="#">Cài đặt không gian làm việc</a>
+                    <a href="{{ route('showFormEditWorkspace') }}"
+                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                        việc</a>
                 </li>
                 <li class="border mb-3"></li>
 
@@ -114,7 +116,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('homes.dashboard')}}">
+                    <a class="nav-link menu-link" href="{{ route('homes.dashboard') }}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>
@@ -127,7 +129,7 @@
                                 @if ($board->image)
                                 @else
                                     <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                         style="width: 30px;height: 30px">
+                                        style="width: 30px;height: 30px">
                                         {{ strtoupper(substr($board->name, 0, 1)) }}
                                     </div>
                                 @endif
