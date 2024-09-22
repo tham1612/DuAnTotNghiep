@@ -53,6 +53,10 @@ Route::middleware(['auth', 'isWorkspace'])
             return view('homes.home');
         })->name('homes.home');
 
+        Route::get('/chat',function(){
+            return view('chat.index');
+        })->name('chat');
+
 
         Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
         Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
