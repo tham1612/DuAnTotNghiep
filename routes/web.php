@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
 use \App\Http\Controllers\CatalogControler;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -80,6 +81,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
+
 
             });
         Route::resource('catalogs', CatalogControler::class);

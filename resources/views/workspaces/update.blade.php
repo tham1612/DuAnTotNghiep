@@ -93,7 +93,9 @@
                         <!--end col-->
                         <div class="col-lg-5 ms-auto">
                             <div class="mt-5">
+
                                 {{-- <button class="btn btn-primary ms-3 mt-4" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+
                                     aria-expanded="false" data-bs-offset="0,-50">
                                     <i class="ri-add-line align-bottom me-1"></i>Mời thành viên vào Không gian làm việc
                                 </button>
@@ -111,6 +113,7 @@
                                             <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                         </div>
                                     </form>
+
                                 </div> --}}
 
                                 <div class="bg-primary p-2 rounded text-center">
@@ -207,6 +210,7 @@
         </div>
         <!--end col-->
     </div>
+
     </div>
 @endsection
 
