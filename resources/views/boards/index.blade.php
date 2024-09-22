@@ -1,16 +1,15 @@
-@extends('layouts.masterBoard')
+@extends('layouts.masterMain')
 @section('title')
     Board - TaskFlow
 @endsection
 @section('main')
     <div class="tasks-board mb-3" id="kanbanboard">
-
         <div class="tasks-list rounded-3 p-2 border" data-value="catalog1">
 
             <div class="d-flex mb-3 d-flex align-items-center">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Tên catalog
+                        Catalog 1
                         <small class="badge bg-success align-bottom ms-1 totaltask-badge">2</small>
                     </h6>
                 </div>
@@ -267,10 +266,12 @@
                     Thêm thẻ
                 </button>
                 <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                    <form>
+                    <form action="{{route('tasks.store')}}" method="post">
+                        @csrf
                         <div class="mb-2">
-                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                            <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
                                    placeholder="Nhập tên thẻ..."/>
+                            <input type="hidden" name="catalogId" value="1">
                         </div>
                         <div class="mb-2 d-flex align-items-center">
                             <button type="submit" class="btn btn-primary">
@@ -517,7 +518,7 @@
             <div class="d-flex mb-3">
                 <div class="flex-grow-1">
                     <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Inprogress
+                        Catalog 2
                         <small class="badge bg-warning align-bottom ms-1 totaltask-badge">2</small>
                     </h6>
                 </div>
@@ -1188,10 +1189,35 @@
                 </button>
             </div>
         </div>
-        <!--end tasks-list-->
+
+        <div class="rounded-3 p-2 bg-info-subtle" style="height: 40px;">
+            <div class="d-flex align-items-center cursor-pointer" id="addCatalog"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px">
+                <i class="ri-add-line fs-15"></i>
+                <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                    Thêm danh sách
+                </h6>
+            </div>
+            <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
+                <form action="{{route('catalogs.store')}}" method="post">
+                    @csrf
+                    <div class="mb-2">
+                        <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
+                               placeholder="Nhập tên danh sách..."/>
+                        <input type="hidden" name="boardId" value="1">
+                    </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <button type="submit" class="btn btn-primary">
+                            Thêm danh sách
+                        </button>
+                        <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </div>
-    <!--end task-board-->
 @endsection
 
 @section('style')

@@ -7,6 +7,7 @@ use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use function Laravel\Prompts\table;
@@ -19,13 +20,24 @@ class WorkspaceController extends Controller
      */
     const PATH_UPLOAD = 'workspaces.';
 
-    public function index()
+    public function index(string $id)
     {
-
+        $userId = \Illuminate\Support\Facades\Auth::id();
+//        dd($userId);
+        WorkspaceMember::query()
+            ->where('user_id', auth()->id())
+            ->whereNot('id', $id)
+            ->update(['is_active' => 0]);
+        WorkspaceMember::query()
+            ->where('id', $id)
+            ->update(['is_active' => 1]);
+        return view('homes.home');
     }
 
     public function create()
     {
+        Log::debug(Auth::check());
+        Log::debug(Auth::user()->hasWorkspace());
         return view('workspaces.create');
     }
 
@@ -34,6 +46,10 @@ class WorkspaceController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        Log::debug('check');
+
         $data = $request->except('image');
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -42,21 +58,31 @@ class WorkspaceController extends Controller
         $uuid = Str::uuid();
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/{$uuid}/{$token}");
+        $is_active = 1;
         try {
             DB::beginTransaction();
             $workspace = Workspace::query()->create($data);
-            DB::table('workspace_members')->insert([
-                'user_id' => auth()->id(),
-                'workspace_id' => $workspace->id,
-                'authorize' => 1,
-                'invite' => now(),
-            ]);
+            Log::info('Form submitted by user: ' . auth()->id());
+            $workspaceMember = WorkspaceMember::query()
+                ->create([
+                    'user_id' => auth()->id(),
+                    'workspace_id' => $workspace->id,
+                    'authorize' => 'Owner',
+                    'invite' => now(),
+                    'is_active' => $is_active,
+                ]);
+//           update lai cot is_active khi tao ws moi
+            WorkspaceMember::query()
+                ->where('user_id', auth()->id())
+                ->whereNot('id', $workspaceMember->id)
+                ->update(['is_active' => 0]);
             DB::commit();
 
-            return redirect()->route('homes.home');
+            return redirect()->route('home');
+
         } catch (\Exception $exception) {
             DB::rollBack();
-            dd($exception->getMessage());
+//            dd($exception->getMessage());
             return back()->with('error', 'Error: ' . $exception->getMessage());
         }
     }
@@ -66,9 +92,10 @@ class WorkspaceController extends Controller
      * Display the specified resource.
      */
     public
-        function show(
+    function show(
         string $id
-    ) {
+    )
+    {
         //        $model = Workspace::query()->findOrFail($id);
 //         return view('workspaces.edit',compact('model'));
 //        $data = $request->except('image');
@@ -82,9 +109,10 @@ class WorkspaceController extends Controller
      * Show the form for editing the specified resource.
      */
     public
-        function edit(
+    function edit(
         string $id
-    ) {
+    )
+    {
         $model = Workspace::query()->findOrFail($id);
         return view('workspaces.edit', compact('model'));
     }
@@ -93,10 +121,11 @@ class WorkspaceController extends Controller
      * Update the specified resource in storage.
      */
     public
-        function update(
+    function update(
         Request $request,
-        string $id
-    ) {
+        string  $id
+    )
+    {
         $model = Workspace::query()->findOrFail($id);
     }
 
@@ -104,9 +133,10 @@ class WorkspaceController extends Controller
      * Remove the specified resource from storage.
      */
     public
-        function destroy(
+    function destroy(
         string $id
-    ) {
+    )
+    {
         //
     }
 

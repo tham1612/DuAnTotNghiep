@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AuthorizeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,23 +51,41 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     public function WorkspaceMember()
     {
         return $this->hasMany(WorkspaceMember::class);
     }
+
     public function workspaces()
     {
         return $this->belongsToMany(Workspace::class, 'workspace_members', 'user_id', 'workspace_id');
     }
+
+    public function Board()
+    {
+        return $this->belongsToMany(Board::class);
+    }
+
+    public function BoardMember()
+    {
+        return $this->hasMany(BoardMember::class);
+    }
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_members')->withPivot('follow');
+    }
+
 //    kieemr tra xem nguoiwf dung dax cso workspace chuaw
     public function hasWorkspace()
     {
         $userId = Auth::id();
 
-        $isWorkspace = WorkspaceMember::where('user_id', $userId)
-            ->where('authorize', 1)
+
+        $isWorkspace = WorkspaceMember::query()
+            ->where('user_id', $userId)
             ->exists();
-        return $isWorkspace ? 1 : 0;
+        return $isWorkspace;
     }
 
 //    public function getWorkspace()

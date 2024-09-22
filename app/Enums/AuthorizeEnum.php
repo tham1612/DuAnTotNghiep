@@ -11,9 +11,9 @@ use BenSampo\Enum\Enum;
  */
 final class AuthorizeEnum extends Enum
 {
-    const Member = 0;
-    const Owner = 1;
-    const Viewer = 2;
+    const Member = 'Member';
+    const Owner = 'Owner';
+    const Viewer = 'Viewer';
 
     /**
      * Trả về nhãn thân thiện cho từng giá trị Enum

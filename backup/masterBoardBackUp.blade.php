@@ -29,11 +29,6 @@
     <!-- custom Css-->
     <link href="{{asset('theme/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
 
-  
-
-    <!-- glightbox css -->
-    <link rel="stylesheet" href="{{asset('theme/assets/libs/glightbox/css/glightbox.min.css')}}">
-
     @yield('style')
 </head>
 <style>
@@ -98,7 +93,7 @@
     <!-- ============================================================== -->
     <!-- Start right Content here -->
     <!-- ============================================================== -->
-    <div class="main-content" style="margin-top: -10px">
+    <div class="main-content" style="">
         <div class="page-content">
             <div class="container-fluid">
 

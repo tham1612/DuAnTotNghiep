@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('catalogs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(\App\Models\Board::class)->constrained();
-            $table->string('name');
-            $table->string('image')->nullable();
-            $table->integer(column: 'position');
-            $table->softDeletes();
+        Schema::create('links', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('type');
+            $table->integer('source');
+            $table->integer('target');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalogs');
+        Schema::dropIfExists('links');
     }
 };

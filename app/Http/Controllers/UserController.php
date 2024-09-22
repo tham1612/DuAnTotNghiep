@@ -10,39 +10,29 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function edit($id)
+    const PATH_UPLOAD_IMAGE = 'users';
+
+    public function edit(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::query()->findOrFail($id);
         return view('users.profile', compact('user'));
     }
 
-    public function update(UpdateUserRequest $request, $id)
+    public function update(UpdateUserRequest $request,string $id)
     {
-        $validatedData = $request->validated();
-
-        $user = User::findOrFail($id);
-
-        // Cập nhật dữ liệu
-        $user->name = $validatedData['name'];
-        $user->fullName = $validatedData['fullName'];
-        $user->phone = $validatedData['phone'];
-        $user->introduce = $validatedData['introduce'];
-        $user->address = $validatedData['address'];
-        $user->email = $validatedData['email'];
-        $user->social_name = $validatedData['social_name'];
+        $user = User::query()->findOrFail($id);
+        $validatedData = $request->except('image');
 
         // Xử lý ảnh
         if ($request->hasFile('image')) {
-            $newImagePath = Storage::put('users.', $request->file('image'));
-
+            $validatedData['image'] = Storage::put(self::PATH_UPLOAD_IMAGE, $request->image);
             $currentImage = $user->image;
             if ($currentImage && Storage::exists($currentImage)) {
                 Storage::delete($currentImage);
             }
-            $user->image = $newImagePath;
         }
 
-        $user->save();
+        $user->update($validatedData);
 
         return redirect()->route('user', $id)
             ->with('success', 'Thông tin người dùng đã được cập nhật');

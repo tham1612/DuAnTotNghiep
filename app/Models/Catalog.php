@@ -16,8 +16,15 @@ class Catalog extends Model
         'image',
         'position',
     ];
+
     public function taskLinks()
     {
         return $this->morphMany(TaskLink::class, 'linkable');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
 }

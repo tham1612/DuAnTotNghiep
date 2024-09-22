@@ -1,5 +1,4 @@
 var myModalEl,
-
     kanbanboard,
     scroll,
     addNewBoard,
@@ -7,7 +6,6 @@ var myModalEl,
     profileField,
     reader,
     tasks_list = [
-        // document.getElementById("kanbanboard"), xóa phần này thì k thể kéo thả list
         document.getElementById("unassigned-task"),
         document.getElementById("todo-task"),
         document.getElementById("inprogress-task"),
@@ -16,7 +14,7 @@ var myModalEl,
         document.getElementById("new-task"),
     ];
 
-const testId = document.getElementsByClassName('tasks-box');
+var targetTaskId = document.getElementsByClassName('tasks-box');
 
 function noTaskImage() {
     Array.from(document.querySelectorAll("#kanbanboard .tasks-list")).forEach(
@@ -96,17 +94,24 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
 }),
     (drake = dragula(tasks_list)
         .on("drag", function (e) {
-            // lấy id của task
-            // console.log(testId.dataset.valueOf())
+            // lấy id task bị keo
+            targetTaskId = event.target.closest('.tasks-box').dataset.value;
+            console.log(targetTaskId)
             e.className = e.className.replace("ex-moved", "");
         })
-        .on("drop", function (e) {
+        .on("drop", function (e, target) {
             // Lấy data-value của danh sách (task list) mà task được thả vào
             const targetList = e.parentElement.closest('.tasks-list'); // Lấy phần tử cha (tasks-list) chứa task vừa được thả
             if (targetList) {
-                const listValue = targetList.dataset.value; // Giả sử bạn đã thêm data-value cho tasks-list
-                console.log("Task " + testId[0].dataset.value + " được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
+                // lấy id catalog được thả vào
+                const listValue = targetList.dataset.value;
+                console.log("Task " + targetTaskId + " được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
             }
+            // lấy vị trí cuối cùng trong danh sách
+            const tasks = Array.from(target.children);
+            const newIndex = tasks.indexOf(e);
+            console.log(newIndex)
+
             e.className += " ex-moved";
         })
         .on("over", function (e, a) {

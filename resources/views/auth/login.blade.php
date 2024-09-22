@@ -11,8 +11,7 @@
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
                             <a href="{{ url('/') }}" class="d-inline-block auth-logo">
-                                <img src="{{ asset('theme/assets/theme/clients/reader/images/logo.png') }}" alt=""
-                                    height="50">
+                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="" height="50">
                             </a>
                         </div>
                         <p class="mt-3 fs-15 fw-medium">Welcome</p>
@@ -61,11 +60,11 @@
                                                 class="form-control @error('password') is-invalid @enderror password-input"
                                                 name="password" required autocomplete="current-password"
                                                 placeholder="Enter password">
-
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button"><i class="ri-eye-fill align-middle"></i></button>
-
+                                                class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted password-addon"
+                                                type="button" id="togglePassword">
+                                                <i class="ri-eye-fill align-middle" id="eyeIcon"></i>
+                                            </button>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -115,7 +114,7 @@
                     <div class="mt-4 text-center">
                         <p class="mb-0">Don't have an account ? <a href="{{ route('register') }}"
                                 class="fw-semibold text-primary text-decoration-underline">
-                                Signup </a></p>
+                                Sign Up </a></p>
                     </div>
 
                 </div>
