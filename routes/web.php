@@ -81,17 +81,15 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
 
-
-                Route::get('inboxs', function () {
-                    return view('Inboxs.index');
-                })->name('inbox');
-
             });
         Route::resource('catalogs', CatalogControler::class);
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 
     });
-
+    
+Route::get('inboxs', function () {
+    return view('Inboxs.index');
+})->name('inbox');
 
 Auth::routes();
 
