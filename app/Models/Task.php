@@ -20,12 +20,12 @@ class Task extends Model
         'image',
         'priority',
         'risk',
-        'complete',
         'duration',
         'progress',
         'start_date',
         'parent',
-        'sortorder'
+        'sortorder',
+
     ];
     protected $casts = [
         'priority' => IndexEnum::class,
@@ -35,6 +35,16 @@ class Task extends Model
 
     public function getOpenAttribute(){
         return true;
+    }
+
+    public function catalog()
+    {
+        return $this->belongsTo(Catalog::class);
+    }
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'task_members')->withPivot('follow');
     }
 
 }

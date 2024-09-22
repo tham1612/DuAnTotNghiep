@@ -1,4 +1,4 @@
-@extends('layouts.masterHome')
+@extends('layouts.master')
 @section('title')
     Workspace - TaskFlow
 @endsection
@@ -14,14 +14,13 @@
 
                     <div class="row">
                         <form method="POST" action="{{route('workspaces.store')}}"
-                              class="col-6 d-flex flex-column justify-content-between">
+                              class="col-6 d-flex flex-column justify-content-between" onsubmit="disableButtonOnSubmit()">
+                            @csrf
                             <h3 class="modal-title fw-bold" id="workspaceModalLabel">Hãy xây dựng một Không gian làm
                                 việc</h3>
                             <p class="fs-15">Tăng năng suất của bạn bằng cách giúp mọi người dễ dàng truy cập bảng ở một
                                 vị
                                 trí.</p>
-
-                            @csrf
                             <div class="mb-3 mt-3">
                                 <label for="workspaceName" class="form-label">Tên Không gian làm việc</label>
                                 <input type="text" id="workspaceName" class="form-control"
@@ -56,8 +55,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+{{--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>--}}
+{{--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>--}}
 
     <script>
         const workspaceNameInput = document.getElementById('workspaceName');
@@ -69,7 +68,6 @@
             continueButton.disabled = !isNameFilled;
         }
 
-
         workspaceNameInput.addEventListener('input', validateForm);
 
 
@@ -80,6 +78,10 @@
             });
             myModal.show();
         });
+        function disableButtonOnSubmit() {
+            continueButton.disabled = true;
+            return true; // Vẫn cho phép submit form
+        }
     </script>
 
 @endsection

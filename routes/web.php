@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
+use \App\Http\Controllers\CatalogControler;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,80 +20,65 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
+
+
     return view('welcome');
 });
-Route::get('workspaces/create', [WorkspaceController::class, 'create'])
-    ->middleware('auth');
-Route::post('workspaces/store', [WorkspaceController::class, 'store'])
-    ->middleware('auth')
-    ->name('workspaces.store');
+
 Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
         Route::prefix('workspaces')
             ->as('workspaces.')
             ->group(function () {
-                Route::get('/', [WorkspaceController::class, 'index'])
+                Route::resource('/', WorkspaceController::class);
+                Route::get('/{id}', [WorkspaceController::class, 'index'])
                     ->name('index');
-                Route::get('show/{id}', [WorkspaceController::class, 'show'])
-                    ->name('show');
-                Route::get('{id}/edit', [WorkspaceController::class, 'edit'])
-                    ->name('edit');
-                Route::put('{id}/update', [WorkspaceController::class, 'update'])
-                    ->name('update');
-                Route::delete('{id}/destroy', [WorkspaceController::class, 'destroy'])
-                    ->name('destroy');
-
+                Route::get('create', [WorkspaceController::class, 'create'])
+                    ->withoutMiddleware('isWorkspace')
+                    ->name('create');
+                Route::post('store', [WorkspaceController::class, 'store'])
+                    ->withoutMiddleware('isWorkspace')
+                    ->name('store');
             });
+
+
+
         Route::get('/homes/dashboard', function () {
             return view('homes.dashboard');
-        });
-        Route::get('/homes/dashboard_board', function () {
-            return view('homes.dashboard_board');
-        });
+        })->name('homes.dashboard');
+
         Route::get('/home', function () {
             return view('homes.home');
-        })->name('homes.home');
+        })->name('home');
 
         Route::get('/chat',function(){
             return view('chat.index');
         })->name('chat');
 
 
-        Route::get('/user/{id}', [UserController::class, 'edit'])->name('user');
-        Route::put('/user/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::get('/user/{id}', [UserController::class, 'edit'])
+        ->name('user');
+        Route::put('/user/{id}', [UserController::class, 'update'])
+        ->name('users.update');
         Route::prefix('b')
             ->as('b.')
             ->group(function () {
+                Route::get('create', [BoardController::class, 'create'])->name('create');
+                Route::post('store', [BoardController::class, 'store'])->name('store');
+                Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
+                Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
 
-                Route::get('/', function () {
-                    return view('boards.index');
-                })->name('index');
-                Route::get('create', [BoardController::class, 'create'])
-                    ->name('create');
-                Route::post('store', [BoardController::class, 'store'])
-                    ->name('store');
-
-                Route::get('table', function () {
-                    return view('tables.index');
-                })->name('table');
-
-                Route::get('ganttChart', function () {
-                    return view('ganttCharts.index');
-                })->name('ganttChart');
-
-                Route::get('list', function () {
-                    return view('lists.index');
-                })->name('list');
 
                 Route::get('inboxs', function () {
                     return view('Inboxs.index');
                 })->name('inbox');
 
             });
-        Route::resource('catalogs',\App\Http\Controllers\CatalogControler::class);
-
+        Route::resource('catalogs', CatalogControler::class);
+        Route::resource('tasks',\App\Http\Controllers\TaskController::class);
 
     });
 
 
 Auth::routes();
+

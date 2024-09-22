@@ -18,7 +18,7 @@ class BoardSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        for ($WorkspaceID = 0; $WorkspaceID < 100; $WorkspaceID++) {
+        for ($WorkspaceID = 1; $WorkspaceID < 100; $WorkspaceID++) {
             $name = fake()->text(100);
             $description = fake()->text(200);
             $access = \App\Enums\AccessEnum::getValues();
@@ -39,21 +39,23 @@ class BoardSeeder extends Seeder
                 'complete' => fake()->numberBetween(0, 100),
             ]);
         }
-        for ($userID  = 0; $userID  < 10; $userID ++){
-            for ($BoardID  = 0; $BoardID  < 100; $BoardID ++){
-               BoardMember::query()->create([
-                   'user_id' => $userID,
-                   'board_id' => $BoardID,
-                   'authorize' => fake()->boolean(20),
-                   'is_star' => fake()->boolean(10),
-                   'follow' => fake()->boolean(50),
-                   'invite' => fake()->date(),
-               ]);
+        for ($userID = 1; $userID < 10; $userID++) {
+            for ($BoardID = 1; $BoardID < 100; $BoardID++) {
+                $authorize = \App\Enums\AuthorizeEnum::getValues();
+                $randomAuthorize = $authorize[array_rand($authorize)];
+                BoardMember::query()->create([
+                    'user_id' => $userID,
+                    'board_id' => $BoardID,
+                    'authorize' => $randomAuthorize,
+                    'is_star' => fake()->boolean(10),
+                    'follow' => fake()->boolean(50),
+                    'invite' => fake()->date(),
+                ]);
             }
-            for ($BoardID  = 0; $BoardID  < 100; $BoardID ++){
+            for ($BoardID = 1; $BoardID < 100; $BoardID++) {
                 Catalog::query()->create([
                     'board_id' => $BoardID,
-                    'name' =>  fake()->text(100),
+                    'name' => fake()->text(100),
                     'image' => fake()->optional()->imageUrl(),
                     'position' => fake()->numberBetween(1, 5),
                 ]);

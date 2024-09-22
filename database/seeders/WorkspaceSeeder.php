@@ -18,7 +18,7 @@ class WorkspaceSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 01; $i < 10; $i++) {
             $name = fake()->text(100);
             $description = fake()->text(200);
             $access = \App\Enums\AccessEnum::getValues();
@@ -34,7 +34,7 @@ class WorkspaceSeeder extends Seeder
                 'link_invite' => $link_invite
             ]);
         }
-        for ($userID  = 0; $userID  < 10; $userID ++){
+        for ($userID  = 01; $userID  < 10; $userID ++){
             for ($WorkspaceID  = 0; $WorkspaceID  < 10; $WorkspaceID ++){
                 $authorize = \App\Enums\AuthorizeEnum::getValues();
                 $randomAuthorize = $authorize[array_rand($authorize)];

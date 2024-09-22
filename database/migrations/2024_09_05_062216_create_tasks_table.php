@@ -14,17 +14,16 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Catalog::class)->constrained();
-            $table->string('title');
+            $table->string('text');
             $table->text('description')->nullable();
             $table->integer('position');
             $table->string('image')->nullable();
             $table->enum('priority', \App\Enums\IndexEnum::getValues());
             $table->enum('risk', \App\Enums\IndexEnum::getValues());
-            $table->integer('complete')->default(0);
             $table->integer('duration');
-            $table->float('progress');
+            $table->float('progress')->default(0);
             $table->dateTime('start_date');
-            $table->integer('parent');
+            $table->integer('parent')->nullable();
             $table->integer('sortorder')->default(0);
             $table->softDeletes();
             $table->timestamps();

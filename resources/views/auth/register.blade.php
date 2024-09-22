@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    Regisster
+    REGISTER
 @endsection
 @section('content')
     <div class="auth-page-content">
@@ -10,7 +10,7 @@
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
                             <a href="#" class="d-inline-block auth-logo">
-                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="" height="20">
+                                <img src="{{ asset('theme/assets/images/logo-light.png') }}" alt="" height="50">
                             </a>
                         </div>
                         <p class="mt-3 fs-15 fw-medium">TaskFlow - quản lí công viêc</p>
@@ -65,10 +65,12 @@
                                                 onpaste="return false" placeholder="Enter password" id="password-input"
                                                 aria-describedby="passwordInput" name="password" required
                                                 autocomplete="new-password">
+
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button" id="password-addon-1"><i
-                                                    class="ri-eye-fill align-middle"></i></button>
+                                                class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted password-addon"
+                                                type="button" id="togglePassword">
+                                                <i class="ri-eye-fill align-middle" id="eyeIcon"></i>
+                                            </button>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -84,10 +86,12 @@
                                                 class="form-control pe-5 password-input @error('password_confirmation') is-invalid @enderror"
                                                 id="confirm-password-input" aria-describedby="confirmPasswordInput"
                                                 name="password_confirmation" required autocomplete="new-password">
+
                                             <button
-                                                class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                type="button" id="password-addon-2"><i
-                                                    class="ri-eye-fill align-middle"></i></button>
+                                                class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted password-addon"
+                                                type="button" id="togglePassword">
+                                                <i class="ri-eye-fill align-middle" id="eyeIcon"></i>
+                                            </button>
                                             @error('password_confirmation')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -129,7 +133,7 @@
                     <div class="mt-4 text-center">
                         <p class="mb-0">Already have an account ? <a href="{{ route('login') }}"
                                 class="fw-semibold text-primary text-decoration-underline">
-                                Signin </a></p>
+                                Sign In </a></p>
                     </div>
 
                 </div>

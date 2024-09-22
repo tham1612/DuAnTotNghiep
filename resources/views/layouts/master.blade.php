@@ -10,24 +10,24 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{asset('theme/assets/images/favicon.ico')}}">
+    <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}">
 
     <!-- Layout config Js -->
-    <script src="{{asset('theme/assets/js/layout.js')}}"></script>
+    <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
-    <link href="{{asset('theme/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- Icons Css -->
-    <link href="{{asset('theme/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- App Css-->
-    <link href="{{asset('theme/assets/css/app.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
-    <link href="{{asset('theme/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
-
+    <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
 
 
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 </head>
+
 <body>
 <div id="app">
     <div class="auth-page-wrapper pt-5">
@@ -38,35 +38,19 @@
             <div class="shape">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
                      viewBox="0 0 1440 120">
-                    <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+                    <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z">
+                    </path>
                 </svg>
             </div>
         </div>
 
         <!-- auth page content -->
         @yield('content')
+        @yield('main')
 
         <!-- end auth page content -->
     </div>
 </div>
-        <!-- footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <p class="mb-0 text-muted">&copy;
-                                <script>document.write(new Date().getFullYear())</script>
-                               TaskFlow <i class="mdi mdi-heart text-danger"></i>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- end Footer -->
-
-
 
 
 <script src="{{asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -77,11 +61,14 @@
 <script src="{{asset('theme/assets/js/plugins.js')}}"></script>
 
 <!-- particles js -->
-<script src="{{asset('theme/assets/libs/particles.js/particles.js')}}"></script>
+<script src="{{ asset('theme/assets/libs/particles.js/particles.js') }}"></script>
 <!-- particles app js -->
-<script src="{{asset('theme/assets/js/pages/particles.app.js')}}"></script>
+<script src="{{ asset('theme/assets/js/pages/particles.app.js') }}"></script>
 <!-- password-addon init -->
-<script src="{{asset('theme/assets/js/pages/password-addon.init.js')}}"></script>
+<script src="{{ asset('theme/assets/js/pages/password-addon.init.js') }}"></script>
 
+<!-- App js -->
+{{--<script src="{{asset('theme/assets/js/app.js')}}"></script>--}}
 </body>
+
 </html>
