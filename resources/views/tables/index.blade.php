@@ -6,9 +6,9 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                {{--                <div class="card-header">--}}
-                {{--                    <h5 class="card-title mb-0">Basic Datatables</h5>--}}
-                {{--                </div>--}}
+                {{--                <div class="card-header"> --}}
+                {{--                    <h5 class="card-title mb-0">Basic Datatables</h5> --}}
+                {{--                </div> --}}
                 @if (session('success'))
                     <div class="alert alert-success m-4" id="success-alert">
                         {{ session('success') }}
@@ -16,140 +16,135 @@
                 @endif
 
                 <div class="card-body">
-                    <table id="example"
-                           class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                           style="width:100%">
+                    <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                        style="width:100%">
                         <thead>
-                        <tr>
-                            <th>Thẻ</th>
-                            <th>Danh sách</th>
-                            <th>Nhãn</th>
-                            <th>Thành viên</th>
-                            <th>Ngày hết hạn</th>
-                            <th>Thao tác</th>
+                            <tr>
+                                <th>Thẻ</th>
+                                <th>Danh sách</th>
+                                <th>Nhãn</th>
+                                <th>Thành viên</th>
+                                <th>Ngày hết hạn</th>
+                                <th>Thao tác</th>
 
-                        </tr>
+                            </tr>
                         </thead>
 
                         <tbody>
 
-                        @foreach($tasks as $task)
+                            @foreach ($tasks as $task)
+                                <tr>
 
-                            <tr>
-
-                                <td data-bs-toggle="modal"
-                                    data-bs-target="#detailCardModal">{{$task->text}}
-                                </td>
-                                <td class="col-2">
-                                    <select name="" id="" class="form-select ">
-                                        @foreach($catalogs as $catalog)
-                                            <option
-                                                @selected($catalog->id == $task->catalog_id)
-                                                value="{{ $catalog->id }}">{{ $catalog->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <div id="tag1"
-                                         data-bs-toggle="dropdown" aria-expanded="false" class=" cursor-pointer">
-                                        <span class="badge bg-danger">Gấp</span>
-                                        <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
-                                            @include('dropdowns.tag')
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="col-2">
-                                    <div id="member1"
-                                         data-bs-toggle="dropdown" aria-expanded="false" class=" cursor-pointer">
-                                        <div class="avatar-group" id="newMembar">
-
-                                            @foreach($taskMembers as $taskMember)
-                                                <a href="javascript: void(0);" class="avatar-group-item"
-                                                   data-bs-toggle="tooltip"
-                                                   data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
-                                                    <img src="{{ asset('storage/' .$taskMember->image) }}"
-                                                         alt=""
-                                                         class="rounded-circle avatar-xs"/>
-                                                </a>
+                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal">{{ $task->text }}
+                                    </td>
+                                    <td class="col-2">
+                                        <select name="" id="" class="form-select ">
+                                            @foreach ($catalogs as $catalog)
+                                                <option @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
+                                                    {{ $catalog->name }}</option>
                                             @endforeach
-
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Frank">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Tonya">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Thomas">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Herbert">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            class=" cursor-pointer">
+                                            <span class="badge bg-danger">Gấp</span>
+                                            <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
+                                                @include('dropdowns.tag')
+                                            </div>
                                         </div>
-                                        <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
-                                            @include('dropdowns.member')
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class=" col-2">
-                                    <input type="datetime-local" name=""  value="{{$task->start_date}}" id="" class="form-control">
-                                </td>
+                                    </td>
+                                    <td class="col-2">
+                                        <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            class=" cursor-pointer">
+                                            <div class="avatar-group" id="newMembar">
 
-                                <td class="col-1 text-center">
-                                    <a href="javascript:void(0);" class="text-muted" id="settingTask1"
-                                       data-bs-toggle="dropdown" aria-expanded="false"><i
-                                            class="ri-more-fill"></i></a>
-                                    <ul class="dropdown-menu" aria-labelledby="settingTask1">
-                                        <li>
-                                            <a class="dropdown-item" href="#"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                Mở thẻ</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#"><i
-                                                    class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                Chỉnh sửa nhãn</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Thay đổi thành viên</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Chỉnh sửa ngày</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Sao chép</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Lưu trữ</a>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        @endforeach
+                                                @foreach ($taskMembers as $taskMember)
+                                                    <a href="javascript: void(0);" class="avatar-group-item"
+                                                        data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                        data-bs-placement="top" title="Nancy">
+                                                        <img src="{{ asset('storage/' . $taskMember->image) }}"
+                                                            alt="" class="rounded-circle avatar-xs" />
+                                                    </a>
+                                                @endforeach
+
+                                                {{--                                            <a href="javascript: void(0);" class="avatar-group-item" --}}
+                                                {{--                                               data-bs-toggle="tooltip" --}}
+                                                {{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Frank"> --}}
+                                                {{--                                                <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}" --}}
+                                                {{--                                                     alt="" --}}
+                                                {{--                                                     class="rounded-circle avatar-xs"/> --}}
+                                                {{--                                            </a> --}}
+                                                {{--                                            <a href="javascript: void(0);" class="avatar-group-item" --}}
+                                                {{--                                               data-bs-toggle="tooltip" --}}
+                                                {{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Tonya"> --}}
+                                                {{--                                                <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}" --}}
+                                                {{--                                                     alt="" --}}
+                                                {{--                                                     class="rounded-circle avatar-xs"/> --}}
+                                                {{--                                            </a> --}}
+                                                {{--                                            <a href="javascript: void(0);" class="avatar-group-item" --}}
+                                                {{--                                               data-bs-toggle="tooltip" --}}
+                                                {{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Thomas"> --}}
+                                                {{--                                                <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}" --}}
+                                                {{--                                                     alt="" --}}
+                                                {{--                                                     class="rounded-circle avatar-xs"/> --}}
+                                                {{--                                            </a> --}}
+                                                {{--                                            <a href="javascript: void(0);" class="avatar-group-item" --}}
+                                                {{--                                               data-bs-toggle="tooltip" --}}
+                                                {{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Herbert"> --}}
+                                                {{--                                                <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}" --}}
+                                                {{--                                                     alt="" --}}
+                                                {{--                                                     class="rounded-circle avatar-xs"/> --}}
+                                                {{--                                            </a> --}}
+                                            </div>
+                                            <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
+                                                @include('dropdowns.member')
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class=" col-2">
+                                        <input type="datetime-local" name="" value="{{ $task->start_date }}"
+                                            id="" class="form-control">
+                                    </td>
+
+                                    <td class="col-1 text-center">
+                                        <a href="javascript:void(0);" class="text-muted" id="settingTask1"
+                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                        <ul class="dropdown-menu" aria-labelledby="settingTask1">
+                                            <li>
+                                                <a class="dropdown-item" href="#"><i
+                                                        class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                    Mở thẻ</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#"><i
+                                                        class="ri-edit-2-line align-bottom me-2 text-muted"></i>
+                                                    Chỉnh sửa nhãn</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
+                                                        class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                    Thay đổi thành viên</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
+                                                        class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                    Chỉnh sửa ngày</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
+                                                        class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                    Sao chép</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
+                                                        class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                    Lưu trữ</a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            @endforeach
 
                         </tbody>
                     </table>
@@ -158,9 +153,8 @@
         </div><!--end col-->
     </div><!--end row-->
 
-    <button class="btn btn-primary"
-            data-bs-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false" data-bs-offset="70,10">
+    <button class="btn btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        data-bs-offset="70,10">
         <i class="ri-add-line me-1"></i>
         Thêm
     </button>
@@ -169,12 +163,12 @@
         <div class="my-2 cursor-pointer">
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{route('catalogs.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
+                <form action="{{ route('catalogs.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
                     <h5 class="text-center">Thêm danh sách</h5>
                     <div class="mb-2">
                         <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
-                               placeholder="Nhập tên danh sách..."/>
+                            placeholder="Nhập tên danh sách..." />
                     </div>
                     <input type="hidden" name="board_id" value="{{ $board->id }}">
 
@@ -182,7 +176,7 @@
                         <button type="submit" class="btn btn-primary">
                             Thêm danh sách
                         </button>
-                        {{--                        <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>--}}
+                        {{--                        <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i> --}}
                     </div>
                 </form>
             </div>
@@ -195,7 +189,7 @@
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
                         <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                               placeholder="Nhập tên thẻ..."/>
+                            placeholder="Nhập tên thẻ..." />
                     </div>
                     <div class="mb-2">
                         <select name="" id="" class="form-select">
@@ -216,14 +210,13 @@
         </div>
 
     </div>
-
 @endsection
 
 @section('style')
     <!--datatable css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
     <!--datatable responsive css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
 @endsection
@@ -239,5 +232,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
-    <script src="{{asset('theme/assets/js/pages/datatables.init.js')}}"></script>
+    <script src="{{ asset('theme/assets/js/pages/datatables.init.js') }}"></script>
 @endsection
