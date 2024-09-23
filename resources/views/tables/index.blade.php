@@ -14,7 +14,6 @@
                         {{ session('success') }}
                     </div>
                 @endif
-
                 <div class="card-body">
                     <table id="example"
                            class="table table-bordered dt-responsive nowrap table-striped align-middle"
