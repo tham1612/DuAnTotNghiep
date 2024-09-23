@@ -46,7 +46,7 @@ class TaskController extends Controller
         $data['sortorder']=$maxSortorder +1;
         $data['risk']=$data['risk'] ?? 'Medium';
         $data['priority']=$data['priority'] ?? 'Medium';
-//        dd($data);
+    //    dd($data);
         Task::query()->create($data);
         return back()
             ->with('success', 'Thêm mới danh sách thành công vào bảng');

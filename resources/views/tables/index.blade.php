@@ -190,7 +190,7 @@
                     @csrf
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
-                        <input type="text" class="form-control" id="exampleDropdownFormEmail"
+                        <input type="text" name="text" class="form-control" id="exampleDropdownFormEmail"
                                placeholder="Nhập tên thẻ..."/>
                     </div>
                     <div class="mb-2">
