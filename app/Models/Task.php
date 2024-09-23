@@ -23,6 +23,7 @@ class Task extends Model
         'duration',
         'progress',
         'start_date',
+        'end_date',
         'parent',
         'sortorder',
 

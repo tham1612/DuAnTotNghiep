@@ -64,7 +64,8 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                        href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}" role="tab"
-                       aria-controls="pills-home" aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}">
+                       aria-controls="pills-home"
+                       aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}">
                         <i class="ri-dashboard-line"></i> Overview
                     </a>
                 </li>
@@ -211,33 +212,27 @@
                 <section class="d-flex">
                     <!-- thêm thành viên & chia sẻ link bảng -->
                     <div class="d-flex justify-content-center align-items-center cursor-pointer me-2">
-                        <div class="col-auto ms-sm-auto">
+                        <div class="col-auto ms-sm-auto" >
                             <div class="avatar-group" id="newMembar">
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
-                                    <img src="{{asset('theme/assets/images/users/avatar-5.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs"/>
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Frank">
-                                    <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs"/>
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Tonya">
-                                    <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs"/>
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Thomas">
-                                    <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs"/>
-                                </a>
-                                <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                   data-bs-trigger="hover" data-bs-placement="top" title="Herbert">
-                                    <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}" alt=""
-                                         class="rounded-circle avatar-xs" />
-                                </a>
+                                @php  $boardMembers=$board->users->unique('id'); @endphp
+                                @foreach($boardMembers as $boardMember)
+                                    <a href="javascript: void(0);" class="avatar-group-item"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-trigger="hover" data-bs-placement="top"
+                                       title="{{$boardMember->name}}">
+                                        @if ($boardMember->image)
+                                            <img src="{{ asset('storage/' .$boardMember->image) }}"
+                                                 alt=""
+                                                 class="rounded-circle avatar-xs "/>
+                                        @else
+                                            <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center  avatar-xs"
+                                                 style="width: 40px;height: 40px">
+                                                {{ strtoupper(substr($boardMember->name, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </a>
+                                @endforeach
+
                             </div>
                         </div>
                         <div class="bg-primary p-2 rounded">
