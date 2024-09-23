@@ -20,7 +20,7 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        for ($CatalogID = 01; $CatalogID < 100; $CatalogID++) {
+        for ($CatalogID = 01; $CatalogID < 5; $CatalogID++) {
             $access = \App\Enums\IndexEnum::getValues();
             $randomAccess = $access[array_rand($access)];
             Task::query()->create([
@@ -39,7 +39,7 @@ class TaskSeeder extends Seeder
                 'start_date'=>now(),
             ]);
         }
-        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+        for ($TaskID = 01; $TaskID < 5; $TaskID++) {
             for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskMember::query()->create([
                     'task_id' =>$TaskID,
@@ -48,7 +48,7 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+        for ($TaskID = 01; $TaskID < 5; $TaskID++) {
             for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskComment::query()->create([
                     'task_id' =>$TaskID,
@@ -60,7 +60,7 @@ class TaskSeeder extends Seeder
             }
         }
        $data=TaskComment::query()->get();
-        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+        for ($TaskID = 01; $TaskID < 5; $TaskID++) {
             for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskComment::query()->create([
                     'task_id' =>$TaskID,
@@ -71,7 +71,7 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-        for ($TaskID = 01; $TaskID < 100; $TaskID++) {
+        for ($TaskID = 01; $TaskID < 10; $TaskID++) {
             for ($UserID = 01; $UserID < 10; $UserID++) {
                 TaskAttachment::query()->create([
                     'task_id' =>$TaskID,
@@ -80,7 +80,7 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-        for ($TaskID = 01; $TaskID < 100; $TaskID++){
+        for ($TaskID = 01; $TaskID < 5; $TaskID++){
             if (fake()->boolean()){
                 TaskLink::query()->create([
                     'task_id' => $TaskID,
