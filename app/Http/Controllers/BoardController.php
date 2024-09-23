@@ -98,7 +98,7 @@ class BoardController extends Controller
 //dd($tasks );
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board')),
-            'list' => view('lists.index', compact('board')),
+            'list' => view('lists.index', compact('board','catalogs', 'tasks','taskMembers')),
             'gantt' => view('ganttCharts.index', compact('board','catalogs', 'tasks','taskMembers')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks','taskMembers')),
             default => view('boards.index', compact('board')),

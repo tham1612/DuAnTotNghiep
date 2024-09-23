@@ -790,16 +790,14 @@
                         <a class="dropdown-item" href=""><i
                                 class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Messages</span></a>
-                        <a class="dropdown-item" href=""><i
-                                class=" ri-group-line text-muted fs-16 align-middle me-1"></i>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
+                                class="ri-group-line text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Tạo không gian làm việc</span></a>
                         <form action="{{ route('logout') }}" method="post" class="dropdown-item">
                             @csrf
                             <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
                             <button type="submit" class="bg-transparent border-0">Logout</button>
                         </form>
-
-
                     </div>
                 </div>
             </div>
