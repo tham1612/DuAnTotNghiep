@@ -59,7 +59,7 @@
                                     <div id="member1"
                                          data-bs-toggle="dropdown" aria-expanded="false" class=" cursor-pointer">
                                         <div class="avatar-group" id="newMembar">
-
+                                           @php $taskMembers=$task->members  @endphp
                                             @foreach($taskMembers as $taskMember)
                                                 <a href="javascript: void(0);" class="avatar-group-item"
                                                    data-bs-toggle="tooltip"
