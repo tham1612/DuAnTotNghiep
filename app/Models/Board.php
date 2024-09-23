@@ -44,5 +44,13 @@ class Board extends Model
     {
         return $this->morphMany(TaskLink::class, 'linkable');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }
