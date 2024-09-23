@@ -32,12 +32,7 @@ class Board extends Model
 
     public function users()
     {
-        $this->belongsToMany(User::class);
-    }
-
-    public function boardMembers()
-    {
-        $this->hasMany(BoardMember::class);
+        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id');
     }
 
     public function catalogs()
