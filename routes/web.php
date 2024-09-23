@@ -56,10 +56,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
 
-
-        Route::get('/homes/dashboard', function () {
-            return view('homes.dashboard');
-        })->name('homes.dashboard');
+            Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::get('/home', function () {
             return view('homes.home');
@@ -88,10 +85,9 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 
     });
-    
+
 Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 
 Auth::routes();
-
