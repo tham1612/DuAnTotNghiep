@@ -32,20 +32,7 @@ class Board extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'board_members')
-            ->withPivot('authorize', 'invite')
-            ->withTimestamps();
-    }
-    // Quan hệ với Workspace
-    public function workspace()
-    {
-        return $this->belongsTo(Workspace::class);
-    }
-
-    // Quan hệ với BoardMember (nhiều thành viên trong bảng)
-    public function boardMembers()
-    {
-        return $this->hasMany(BoardMember::class);
+        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id');
     }
 
     public function catalogs()

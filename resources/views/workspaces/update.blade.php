@@ -73,7 +73,7 @@
                                     </div>
                                     <input type="text" name="name" class="form-control bg-light border-0"
                                         id="name" minlength="5" maxlength="100"
-                                        placeholder="{{ $workspaceChecked->name }}" required />
+                                        value="{{ $workspaceChecked->name }}" required />
                                     <div class="invalid-feedback">Tên là bắt buộc và phải chứa ít nhất 5 ký tự.</div>
                                 </div>
                                 <div>
