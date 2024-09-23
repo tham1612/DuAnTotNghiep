@@ -11,26 +11,23 @@ class TaskController extends Controller
 {
     public function store(Request $request)
     {
-        Log::info('Request received', $request->all()); // Ghi lại request nhận được
-
-        try {
-            $task = Task::query()->create($request->all());
-            Log::info('Task saved successfully', ['task_id' => $task->id]); // Ghi lại sau khi lưu task thành công
-        } catch (\Exception $e) {
-            Log::error('Error saving task', ['error' => $e->getMessage()]);
-            return response()->json(
-                [
-                    'error' => 'Internal Server Error',
-                    'msg' => $e->getMessage(),
-                    'request' => $request->all(),
-                ]
-                , 500);
-        }
-
-        return response()->json([
-            "action" => "inserted",
-            'val' => $task,
-        ]);
+        // $request->validate([
+        //     'catalog_id' => 'required|integer|exists:catalogs,id',
+        //     'text' => 'required|string|max:255',
+        //     'description' => 'nullable|string',
+        //     'position' => 'required|integer',
+        //     'priority' => 'required|in:Low,Medium,High',
+        //     'risk' => 'required|in:Low,Medium,High',
+        //     'duration' => 'required|integer',
+        //     'progress' => 'nullable|numeric|min:0|max:1',
+        //     'start_date'=>'required|date',
+        //     'parent' => 'nullable|integer'
+        //   ]);
+        //   $taskData = $request->all();
+        //   $taskData['sortorder'] = Task::max('sortorder') + 1;
+        //   $taskData['progress'] = $request->input('progress',0);
+        //   $task = Task::create($taskData);
+        //   return response()->json(['action' => 'inserted', 'tid' => $task->id]);
     }
 
     public function update($id, Request $request)

@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/data', [GanttController::class, 'data']); // Lấy dữ liệu Gantt
+Route::get('/boards/{boardId}/tasks', [GanttController::class, 'data']);
 Route::resource('task', TaskController::class);
 Route::resource('link', LinkController::class);
 
