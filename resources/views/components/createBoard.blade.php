@@ -24,13 +24,14 @@
             <div class="modal-body" style="margin-top: -50px">
                 @php
                     $userId = \Illuminate\Support\Facades\Auth::id();
-                    $workspaces = \App\Models\Workspace::query()
 
-                    ->whereHas('users', function ($query) use ($userId) {
-                          $query
-                          ->where('user_id', $userId)
-                              ->whereIn('authorize', ['Owner', 'Member']);
-                      })->get();
+                      $workspace = \App\Models\Workspace::query()
+                          ->whereHas('users', function ($query) use ($userId) {
+                              $query->where('user_id', $userId)
+                                    ->where('is_active', 1);
+                          })
+                          ->get();
+
                 @endphp
                 <form class="p-3" action="{{route('b.store')}}" method="POST">
                     @csrf
@@ -49,12 +50,9 @@
                     <div class="mt-3">
                         <label for="" class="form-label">Không gian làm việc</label>
                         <select name="workspace_id" id="" class="form-select">
-                            <option value="">---lựa chọn ---- </option>
-                            @foreach($workspaces as $workspace)
-                                <option value="{{$workspace->id}}">{{$workspace->name}}</option>
+                            @foreach ($workspace as $workspace1)
+                                <option value="{{ $workspace1->id }}">{{ $workspace1->name }}</option>
                             @endforeach
-
-
                         </select>
                     </div>
                     <div class="mt-3">
