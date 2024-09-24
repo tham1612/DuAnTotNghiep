@@ -66,54 +66,23 @@
                         <h5 class="text-center">Thêm Task</h5>
 
                         <div class="mb-2">
-                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..." required />
+                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..."
+                                required />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label"for="">Ngày bắt đầu</label>
+                            <input type="date" class="form-control" name="start_date" placeholder=""
+                                required />
+                        </div>
+                        <div class="mb-2">
+                             <label class="form-label"for="">Ngày kết thúc</label>
+                            <input type="date" class="form-control" name="end_date" placeholder=""
+                                required />
                         </div>
 
                         <div class="mb-2">
-                            <textarea class="form-control" name="description" placeholder="Nhập mô tả"></textarea>
-                        </div>
-
-                        <div class="mb-2">
-                            <input type="number" class="form-control" name="position" placeholder="Nhập vị trí" required />
-                        </div>
-
-                        <div class="mb-2">
-                            <select name="priority" class="form-select" required>
-                                <option value="">Chọn mức độ ưu tiên</option>
-                                <option value="Low">Thấp</option>
-                                <option value="Medium">Trung bình</option>
-                                <option value="High">Cao</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-2">
-                            <select name="risk" class="form-select" required>
-                                <option value="">Chọn mức độ rủi ro</option>
-                                <option value="Low">Thấp</option>
-                                <option value="Medium">Trung bình</option>
-                                <option value="High">Cao</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-2">
-                            <input type="number" class="form-control" name="duration" placeholder="Nhập khoảng thời gian (phút)" required />
-                        </div>
-
-                        <div class="mb-2">
-                            <input type="date" class="form-control" name="start_date" placeholder="Chọn ngày bắt đầu" required />
-                        </div>
-
-                        <div class="mb-2">
-                            <input type="number" class="form-control" name="progress" placeholder="Tiến độ (%)" min="0" max="100" step="0.01" />
-                        </div>
-
-                        <div class="mb-2">
-                            <input type="number" class="form-control" name="parent" placeholder="Task cha (nếu có)" />
-                        </div>
-
-                        <div class="mb-2">
-                            <select name="catalog_id" id="catalog_id" class="form-select" required>
-                                <option value="">Chọn catalog</option>
+                            <select name="catalog_id" id="" class="form-select">
+                                <option value="">---Lựa chọn---</option>
                                 @foreach ($catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
@@ -134,7 +103,7 @@
         <script type="text/javascript">
             gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
             gantt.config.order_branch = true;
-            gantt.config.order_branch_free = true;
+            // gantt.config.order_branch_free = true;
             var boardId = "{{ $board->id }}"; // Gán giá trị ID của Board từ server
             gantt.init("gantt_here");
             gantt.load("/api/boards/" + boardId + "/tasks");
@@ -146,6 +115,32 @@
             gantt.showLightbox = function(taskId) {
                 openCustomModal(taskId); // Gọi modal tùy chỉnh
             };
+            gantt.config.columns = [{
+                    name: "text",
+                    label: "Thẻ",
+                    tree: true,
+                    width: '*'
+                }, // Cột tên nhiệm vụ
+                {
+                    name: "catalog",
+                    label: "Danh Sách",
+                    align: "center",
+                    width: 200,
+                    template: function(task) {
+                        var catalog = getCatalogById(task.catalog_id); // Hàm lấy tên catalog
+                        return catalog ? catalog.name :
+                        "Không có danh sách"; // Hiển thị tên catalog, hoặc thông báo nếu không có
+                    }
+                }
+            ];
+
+            // Giả sử bạn đã có dữ liệu catalogs từ server
+            var catalogs = @json($catalogs);
+
+            // Hàm để lấy catalog theo ID
+            function getCatalogById(catalog_id) {
+                return catalogs.find(catalog => catalog.id == catalog_id);
+            }
 
             // Hàm để mở modal tùy chỉnh
             function openCustomModal(taskId) {
