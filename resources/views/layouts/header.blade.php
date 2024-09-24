@@ -787,7 +787,7 @@
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Profile</span>
                         </a>
-                        <a class="dropdown-item" href=""><i
+                        <a class="dropdown-item" href=" {{route('chat')}}"><i
                                 class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i

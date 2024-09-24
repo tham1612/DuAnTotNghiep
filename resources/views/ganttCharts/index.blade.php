@@ -61,44 +61,17 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form  method="POST"  action="{{ route('tasks.store') }}" enctype="multipart/form-data" >
+                    <form action="{{route('tasks.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
                         @csrf
-                        <h5 class="text-center">Thêm Task</h5>
+                        <h5 class="text-center">Thêm thẻ</h5>
                         <div class="mb-2">
-                            <input type="text" class="form-control" id="" name="text"
-                                placeholder="Nhập tên thẻ..." />
+                            <input type="text" class="form-control" id="exampleDropdownFormEmail" name="text"
+                                   placeholder="Nhập tên thẻ..."/>
                         </div>
                         <div class="mb-2">
-                            <input type="text" class="form-control" id="" name="duration"
-                                placeholder="Nhập khoảng thời gian" />
-                        </div>
-                        <div class="mb-2">
-                            <input type="date" class="form-control" id="" name="start_date"
-                                placeholder="chọn ngày bắt đầu " />
-                        </div>
-                        <div class="mb-2">
-                            <select name="priority" class="form-select" required>
-                                <option value="">Chọn mức độ ưu tiên</option>
-                                <option value="Low">Thấp</option>
-                                <option value="Medium">Trung bình</option>
-                                <option value="High">Cao</option>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <select name="risk" class="form-select" required>
-                                <option value="">Chọn mức độ rủi ro</option>
-                                <option value="Low">Thấp</option>
-                                <option value="Medium">Trung bình</option>
-                                <option value="High">Cao</option>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <input type="number" class="form-control" name="progress" placeholder="Tiến độ (%)" min="0" max="100" step="0.01" />
-                        </div>
-                        <div class="mb-2">
-                            <select name="catalog_id" id="catalog_id" class="form-select">
-                                <option value="">Chọn catalog</option>
-                                @foreach ($catalogs as $catalog)
+                            <select name="catalog_id" id="" class="form-select">
+                                <option value="">---Lựa chọn---</option>
+                                @foreach($catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
