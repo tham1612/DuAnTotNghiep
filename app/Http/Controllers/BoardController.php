@@ -6,6 +6,7 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -116,7 +117,7 @@ class BoardController extends Controller
 
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board')),
-            'list' => view('lists.index', compact('board')),
+            'list' => view('lists.index', compact('board','catalogs', 'tasks')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
             default => view('boards.index', compact('board')),
