@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -83,7 +84,9 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -118,7 +121,7 @@ class BoardController extends Controller
 
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board')),
-            'list' => view('lists.index', compact('board','catalogs', 'tasks')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
             default => view('boards.index', compact('board')),
@@ -140,4 +143,6 @@ class BoardController extends Controller
     {
         //
     }
+
+
 }
