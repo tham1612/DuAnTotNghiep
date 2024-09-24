@@ -34,6 +34,8 @@ class Task extends Model
     ];
     protected $appends = ["open"];
 
+    protected $dates = ['start_date', 'end_date'];
+    
     public function getOpenAttribute(){
         return true;
     }
