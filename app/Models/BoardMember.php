@@ -35,5 +35,4 @@ class BoardMember extends Model
     }
 
 
-
 }
