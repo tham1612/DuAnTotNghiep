@@ -37,14 +37,16 @@
                                 <td data-bs-toggle="modal"
                                     data-bs-target="#detailCardModal">{{$task->text}}
                                 </td>
-                                <td class="col-2">
-                                    <select name="" id="" class="form-select ">
-                                        @foreach($catalogs as $catalog)
-                                            <option
-                                                @selected($catalog->id == $task->catalog_id)
-                                                value="{{ $catalog->id }}">{{ $catalog->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <td class="col-2" data-bs-toggle="modal"
+                                    data-bs-target="#detailCardModal">
+                                    {{ \Illuminate\Support\Str::limit($task->catalog->name, 30) }}
+{{--                                    <select name="" id="" class="form-select ">--}}
+{{--                                        @foreach($catalogs as $catalog)--}}
+{{--                                            <option--}}
+{{--                                                @selected($catalog->id == $task->catalog_id)--}}
+{{--                                                value="{{ $catalog->id }}">{{ $catalog->name }}</option>--}}
+{{--                                        @endforeach--}}
+{{--                                    </select>--}}
                                 </td>
                                 <td>
                                     <div id="tag1"
@@ -69,35 +71,6 @@
                                                          class="rounded-circle avatar-xs"/>
                                                 </a>
                                             @endforeach
-
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Frank">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-3.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Tonya">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-10.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Thomas">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-8.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
-{{--                                            <a href="javascript: void(0);" class="avatar-group-item"--}}
-{{--                                               data-bs-toggle="tooltip"--}}
-{{--                                               data-bs-trigger="hover" data-bs-placement="top" title="Herbert">--}}
-{{--                                                <img src="{{asset('theme/assets/images/users/avatar-2.jpg')}}"--}}
-{{--                                                     alt=""--}}
-{{--                                                     class="rounded-circle avatar-xs"/>--}}
-{{--                                            </a>--}}
                                         </div>
                                         <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
                                             @include('dropdowns.member')

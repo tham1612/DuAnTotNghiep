@@ -112,6 +112,7 @@ class BoardController extends Controller
          * */
 
         $tasks = $catalogs->pluck('tasks')->flatten();
+
         //        $taskMembers=$tasks->pluck('members')->flatten();
 
         return match ($viewType) {
