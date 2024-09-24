@@ -102,8 +102,7 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="mb-3">
-                                                <label for="fullName" class="form-label">Full
-                                                    Name</label>
+                                                <label for="fullName" class="form-label">Họ và tên:</label>
                                                 <input type="text"
                                                        class="form-control  @error('fullName') is-invalid @enderror"
                                                        name="fullName" id="fullName" placeholder="Enter your fullname"
@@ -116,8 +115,7 @@
                                         <!--end col-->
                                         <div class="col-lg-6">
                                             <div class="mb-3">
-                                                <label for="name" class="form-label">
-                                                    Name</label>
+                                                <label for="name" class="form-label">Tên:</label>
                                                 <input type="text" name="name"
                                                        class="form-control  @error('name') is-invalid @enderror "
                                                        id="name" placeholder="Enter your name"
@@ -130,8 +128,7 @@
                                         <!--end col-->
                                         <div class="col-lg-6">
                                             <div class="mb-3">
-                                                <label for="phone" class="form-label">Phone
-                                                    Number</label>
+                                                <label for="phone" class="form-label">Số điện thoại:</label>
                                                 <input type="text"
                                                        class="form-control  @error('phone') is-invalid @enderror "
                                                        name="phone" id="phone" placeholder="Enter your phone number"
@@ -144,12 +141,11 @@
                                         <!--end col-->
                                         <div class="col-lg-6">
                                             <div class="mb-3">
-                                                <label for="email" class="form-label">Email
-                                                </label>
+                                                <label for="email" class="form-label">Email:</label>
                                                 <input type="email"
                                                        class="form-control  @error('email') is-invalid @enderror "
                                                        id="email" placeholder="Enter your email" name="email"
-                                                       value="{{ old('email', $user->email) }}">
+                                                       value="{{ old('email', $user->email) }}" disabled>
                                                 @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -157,8 +153,7 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="mb-3">
-                                                <label for="address" class="form-label">
-                                                    Address</label>
+                                                <label for="address" class="form-label">Địa chỉ:</label>
                                                 <input type="text"
                                                        class="form-control  @error('address') is-invalid @enderror "
                                                        placeholder="Enter your address" name="address"
@@ -171,7 +166,7 @@
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label for="social_name"
-                                                       class="form-label  @error('social_name') is-invalid @enderror  ">Social_name</label>
+                                                       class="form-label  @error('social_name') is-invalid @enderror">Tên mạng xã hội:</label>
                                                 <input type="text" class="form-control" name="social_name"
                                                        id="social_name" placeholder="PH33245 Đinh Thị Minh Nguyệt"
                                                        value="{{ old('social_name', $user->social_name) }}"/>
@@ -182,7 +177,7 @@
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="mb-3 pb-2">
-                                                <label for="introduce" class="form-label">Introduce</label>
+                                                <label for="introduce" class="form-label">Giới thiệu về bản thân:</label>
                                                 <textarea name="introduce"
                                                           class="form-control  @error('introduce') is-invalid @enderror"
                                                           id="introduce"
@@ -196,7 +191,7 @@
                                         <!--end col-->
                                         <div class="col-lg-12">
                                             <div class="hstack gap-2 justify-content-start">
-                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                <button type="submit" class="btn btn-primary">Cập nhật</button>
                                             </div>
                                         </div>
                                         <!--end col-->
