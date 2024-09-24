@@ -7,6 +7,7 @@ use App\Models\BoardMember;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -20,7 +21,24 @@ class BoardController extends Controller
 
     public function index()
     {
-        //
+        $userId = Auth::id();
+
+        // Lấy tất cả các bảng mà người dùng thuộc về workspace, kèm theo thông tin về việc có được đánh dấu sao không
+        $boards = Board::with(['workspace', 'boardMembers'])
+            ->whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
+                $query->where('is_active', 1)->where('user_id', $userId);
+            })
+            ->get()
+            ->map(function ($board) use ($userId) {
+                // Kiểm tra xem bảng có được đánh dấu sao không
+                $board->is_star = $board->boardMembers->contains(fn($member) => $member->user_id == $userId && $member->is_star == 1);
+                return $board;
+            });
+
+        // Tách danh sách bảng sao
+        $board_star = $boards->filter(fn($board) => $board->is_star);
+
+        return view('homes.dashboard', compact('boards', 'board_star'));
     }
 
     /**
@@ -64,9 +82,7 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -82,10 +98,12 @@ class BoardController extends Controller
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
+            'users',
             'catalogs',
             'catalogs.tasks',
             'catalogs.tasks.members'
         ]);
+        $boardMembers = $board->users->unique('id');
         // Lấy danh sách catalogs
         $catalogs = $board->catalogs;
         /*
@@ -94,13 +112,13 @@ class BoardController extends Controller
          * */
 
         $tasks = $catalogs->pluck('tasks')->flatten();
-        $taskMembers=$tasks->pluck('members')->flatten();
-//dd($tasks );
+        //        $taskMembers=$tasks->pluck('members')->flatten();
+
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board')),
             'list' => view('lists.index', compact('board')),
-            'gantt' => view('ganttCharts.index', compact('board','catalogs', 'tasks','taskMembers')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','taskMembers')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
             default => view('boards.index', compact('board')),
         };
     }

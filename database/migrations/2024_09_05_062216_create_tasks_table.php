@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->enum('priority', \App\Enums\IndexEnum::getValues());
             $table->enum('risk', \App\Enums\IndexEnum::getValues());
-            $table->integer('duration');
             $table->float('progress')->default(0);
-            $table->dateTime('start_date');
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
             $table->integer('parent')->nullable();
             $table->integer('sortorder')->default(0);
             $table->softDeletes();
