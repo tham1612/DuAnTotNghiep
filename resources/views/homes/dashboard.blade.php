@@ -118,10 +118,11 @@
                                     </div>
                                     <div class="text-center pb-3">
                                         @if ($board && $board->image)
-                                        <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
-                                    @else
-                                        <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt="" height="32">
-                                    @endif
+                                            <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
+                                        @else
+                                            <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
+                                                height="32">
+                                        @endif
 
                                     </div>
                                 </div>
@@ -130,16 +131,20 @@
                                     <h5 class="fs-14 mb-3"><a href="" class="text-body">{{ $board->name }}</a></h5>
                                     <div class="row gy-3">
                                         <div class="col-6">
-                                            <div>
-                                                <p class="text-muted mb-1">Status</p>
-                                                <div class="badge bg-warning-subtle text-warning fs-12">
-                                                    {{ $board->status ?? 'Inprogress' }}</div>
+                                            <p class="text-muted mb-1">Theo dõi</p>
+                                            <div class="badge bg-primary fs-12">
+                                                @if ($board->follow == 0)
+                                                    <i class="ri-eye-off-line"></i> <!-- Mắt bị gạch nếu follow = 0 -->
+                                                @else
+                                                    <i class="ri-eye-line"></i> <!-- Màu cam nổi bật nếu follow = 1 -->
+                                                @endif
                                             </div>
                                         </div>
+
                                         <div class="col-6">
                                             <div>
-                                                <p class="text-muted mb-1">Deadline</p>
-                                                <h5 class="fs-14">{{ $board->created_at }}</h5>
+                                                <p class="text-muted mb-1">Ngày tạo</p>
+                                                <h5 class="fs-14">{{ $board->created_at->format('d-m-Y') }}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -204,9 +209,11 @@
                         <div class="card-body">
                             <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
                                 <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-                                    <button type="button" class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}">
+                                    <button type="button"
+                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}">
                                         <span class="avatar-title bg-transparent fs-15">
-                                            <i class="ri-star-fill {{ $board->is_star ? 'text-warning' : 'text-muted' }}"></i>
+                                            <i
+                                                class="ri-star-fill {{ $board->is_star ? 'text-warning' : 'text-muted' }}"></i>
                                         </span>
                                     </button>
 
@@ -233,10 +240,11 @@
                                 </div>
                                 <div class="text-center pb-3">
                                     @if ($board && $board->image)
-                                    <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
-                                @else
-                                    <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt="" height="32">
-                                @endif
+                                        <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
+                                    @else
+                                        <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
+                                            height="32">
+                                    @endif
 
                                 </div>
                             </div>
@@ -246,18 +254,22 @@
                                     <a href="" class="text-body">{{ $board->name }}</a>
                                 </h5>
                                 <div class="row gy-3">
+
                                     <div class="col-6">
-                                        <div>
-                                            <p class="text-muted mb-1">Status</p>
-                                            <div class="badge bg-warning-subtle text-warning fs-12">
-                                                {{ $board->status ?? 'Inprogress' }}
-                                            </div>
+                                        <p class="text-muted mb-1">Theo dõi</p>
+                                        <div class="badge bg-primary fs-12">
+                                            @if ($board->follow == 0)
+                                                <i class="ri-eye-off-line"></i> <!-- Mắt bị gạch nếu follow = 0 -->
+                                            @else
+                                                <i class="ri-eye-line"></i> <!-- Màu cam nổi bật nếu follow = 1 -->
+                                            @endif
                                         </div>
                                     </div>
+
                                     <div class="col-6">
                                         <div>
-                                            <p class="text-muted mb-1">Deadline</p>
-                                            <h5 class="fs-14">{{ $board->created_at }}</h5>
+                                            <p class="text-muted mb-1">Ngày tạo</p>
+                                            <h5 class="fs-14">{{ $board->created_at->format('d-m-Y') }}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -291,7 +303,7 @@
                                     </div>
                                     <div class="flex-shrink-0">
                                         <div><i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                         20/20
+                                            20/20
                                         </div>
                                     </div>
                                 </div>
