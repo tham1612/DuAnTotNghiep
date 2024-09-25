@@ -34,6 +34,7 @@ class BoardController extends Controller
             ->map(function ($board) use ($userId) {
                 // Kiểm tra xem bảng có được đánh dấu sao không
                 $board->is_star = $board->boardMembers->contains(fn($member) => $member->user_id == $userId && $member->is_star == 1);
+
                 return $board;
             });
 
@@ -65,13 +66,16 @@ class BoardController extends Controller
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
         try {
             DB::beginTransaction();
+
             $board = Board::query()->create($data);
+
             BoardMember::query()->create([
                 'user_id' => auth()->id(),
                 'board_id' => $board->id,
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
+
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -84,9 +88,7 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -143,6 +145,4 @@ class BoardController extends Controller
     {
         //
     }
-
-
 }
