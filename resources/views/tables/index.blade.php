@@ -110,7 +110,7 @@
                                                     @endif
                                                 @else
                                                     <span>
-                                                        <i class="bx bxs-user-plus cursor-pointer"
+                                                        <i class="bx fs-20 bxs-user-plus cursor-pointer"
                                                            data-bs-toggle="tooltip"
                                                            title="Thêm thành viên"></i>
                                                     </span>
