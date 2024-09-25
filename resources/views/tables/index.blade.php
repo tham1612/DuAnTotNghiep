@@ -123,29 +123,29 @@
                                         </div>
                                     </td>
 
-                                    <td class=" col-2">
+                                    <td class="col-2">
                                         <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}taskForm">
+                                              id="{{ $task->id }}startTaskForm">
                                             @csrf
                                             @method('PUT')
                                             <input type="datetime-local" name="start_date"
                                                    value="{{ $task->start_date }}"
                                                    id="startDateInput" class="form-control no-arrow"
-                                                   onchange="document.getElementById('{{ $task->id }}taskForm').submit();">
+                                                   onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
                                         </form>
-
                                     </td>
-                                    <td class=" col-2">
+
+                                    <td class="col-2">
                                         <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}taskForm">
+                                              id="{{ $task->id }}endTaskForm">
                                             @csrf
                                             @method('PUT')
                                             <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
                                                    id="endDateInput" class="form-control no-arrow"
-                                                   onchange="document.getElementById('{{ $task->id }}taskForm').submit();">
+                                                   onchange="document.getElementById('{{ $task->id }}endTaskForm').submit();">
                                         </form>
-
                                     </td>
+
 
                                     <td class="col-1 text-center">
                                         <a href="javascript:void(0);" class="text-muted" id="settingTask1"
@@ -321,9 +321,9 @@
             });
         });
 
-        function submitForm() {
-            document.getElementById('{{ $task->id ??null }}taskForm').submit(); // Submit form khi giá trị thay đổi
-        }
+        {{--function submitForm() {--}}
+        {{--    document.getElementById('{{ $task->id ??null }}taskForm').submit(); // Submit form khi giá trị thay đổi--}}
+        {{--}--}}
 
     </script>
 @endsection
