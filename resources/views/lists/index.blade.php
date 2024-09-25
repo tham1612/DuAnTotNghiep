@@ -12,9 +12,11 @@
                 </div>
                 <!-- Menu sẽ ẩn ban đầu -->
                 <div id="verticalMenu" class="list-group d-none" data-simplebar style="max-height: 400px; width:300px">
-                    @foreach ($catalogs as $catalog)
-                        <a class="list-group-item list-group-item-action" href="#{{ $catalog->id }}">{{ $catalog->name }} </a>
-                    @endforeach
+                    @if(!empty($catalogs))
+                        @foreach ($catalogs as $catalog)
+                            <a class="list-group-item list-group-item-action" href="#{{ $catalog->id }}">{{ $catalog->name }} </a>
+                        @endforeach
+                    @endif
                     {{-- <a class="list-group-item list-group-item-action" href="#list-item-1">{{ $catalog->name }} </a>
                     <a class="list-group-item list-group-item-action" href="#list-item-2">Inprogress</a>
                     <a class="list-group-item list-group-item-action" href="#list-item-3">To do</a>
@@ -46,6 +48,7 @@
 
     <div class="col-lg-12">
         <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;">
+            @if(!empty($catalogs))
             @foreach ($catalogs as $catalog)
                 <div class="card" id="{{ $catalog->id }}">
                     <div class="card-header border-0">
@@ -411,6 +414,7 @@
                     <!--end card-body-->
                 </div>
             @endforeach
+            @endif
         </div>
     </div>
     <!--end task-board-->
