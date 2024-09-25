@@ -33,11 +33,11 @@ class UpdateUserRequest extends FormRequest
             ],
             'introduce' => 'nullable|string|max:1000',
             'address' => 'nullable|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($this->route('id')),
-            ],
+            // 'email' => [
+            //     'required',
+            //     'email',
+            //     Rule::unique('users')->ignore($this->route('id')),
+            // ],
             'social_id' => 'nullable|string|max:255',
             'social_name' => 'nullable|string|max:255',
             'image' => 'nullable|image',
@@ -51,7 +51,7 @@ class UpdateUserRequest extends FormRequest
             'phone.numeric' => 'Số điện thoại phải là một số.',
             'phone.digits' => 'Số điện thoại phải là 10 chữ số.',
             'phone.regex' => 'Số điện thoại phải bắt đầu bằng số 0 và có tổng cộng 10 chữ số.',
-            'email.required' => 'Email là bắt buộc.',
+            // 'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Định dạng email không hợp lệ.',
             'email.unique' => 'Email này đã được sử dụng.',
         ];
