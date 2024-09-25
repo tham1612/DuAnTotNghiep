@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use App\Models\BoardMember;
-use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,15 +23,21 @@ class BoardController extends Controller
     {
         $userId = Auth::id();
 
-        // Lấy tất cả các bảng mà người dùng thuộc về workspace, kèm theo thông tin về việc có được đánh dấu sao không
-        $boards = Board::with(['workspace', 'boardMembers'])
-            ->whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
+        // Lấy tất cả các bảng mà người dùng thuộc về workspace
+        $boards = Board::whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
                 $query->where('is_active', 1)->where('user_id', $userId);
             })
             ->get()
+            ->load(['workspace', 'boardMembers' => function ($query) use ($userId) {
+                // Chỉ tải các thành viên của bảng là người dùng hiện tại
+                $query->where('user_id', $userId);
+            }])
             ->map(function ($board) use ($userId) {
                 // Kiểm tra xem bảng có được đánh dấu sao không
-                $board->is_star = $board->boardMembers->contains(fn($member) => $member->user_id == $userId && $member->is_star == 1);
+                $board->is_star = $board->boardMembers->contains(fn($member) => $member->is_star == 1);
+
+                // Kiểm tra follow = 1
+                $board->follow = $board->boardMembers->contains(fn($member) => $member->follow == 1);
 
                 return $board;
             });
@@ -43,6 +47,8 @@ class BoardController extends Controller
 
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -66,16 +72,13 @@ class BoardController extends Controller
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
         try {
             DB::beginTransaction();
-
             $board = Board::query()->create($data);
-
             BoardMember::query()->create([
                 'user_id' => auth()->id(),
                 'board_id' => $board->id,
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
-
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -118,12 +121,11 @@ class BoardController extends Controller
          * */
 
         $tasks = $catalogs->pluck('tasks')->flatten();
-
         //        $taskMembers=$tasks->pluck('members')->flatten();
 
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
+            'list' => view('lists.index', compact('board')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
             default => view('boards.index', compact('board')),
