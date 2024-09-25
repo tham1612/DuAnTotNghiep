@@ -51,7 +51,7 @@
                     <div class="card-header border-0">
                         <div class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1">
-                                <h6 class="fs-14 text-uppercase fw-semibold mb-0"  value="{{ $catalog->id }}">{{ $catalog->name }} 
+                                <h6 class="fs-14 text-uppercase fw-semibold mb-0"  value="{{ $catalog->id }}">{{ $catalog->name }}
                                     <small class="badge bg-warning align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
                                 </h6>
                                 <div class="d-flex ms-4">
@@ -191,8 +191,8 @@
                                                 <div class="flex-grow-1">
                                                     <select class="form-control text-uppercase fw-semibold mb-0">
                                                         @foreach(\App\Enums\IndexEnum::getValues() as $priority)
-                                                            <option 
-                                                                @selected($task->priority == $priority) 
+                                                            <option
+                                                                @selected($task->priority == $priority)
                                                                 value="{{ $priority }}">
                                                                 {{ $priority }}
                                                             </option>
