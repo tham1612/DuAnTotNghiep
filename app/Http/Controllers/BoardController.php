@@ -23,15 +23,22 @@ class BoardController extends Controller
     {
         $userId = Auth::id();
 
-        // Lấy tất cả các bảng mà người dùng thuộc về workspace, kèm theo thông tin về việc có được đánh dấu sao không
-        $boards = Board::with(['workspace', 'boardMembers'])
-            ->whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
+        // Lấy tất cả các bảng mà người dùng thuộc về workspace
+        $boards = Board::whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
                 $query->where('is_active', 1)->where('user_id', $userId);
             })
             ->get()
+            ->load(['workspace', 'boardMembers' => function ($query) use ($userId) {
+                // Chỉ tải các thành viên của bảng là người dùng hiện tại
+                $query->where('user_id', $userId);
+            }])
             ->map(function ($board) use ($userId) {
                 // Kiểm tra xem bảng có được đánh dấu sao không
-                $board->is_star = $board->boardMembers->contains(fn($member) => $member->user_id == $userId && $member->is_star == 1);
+                $board->is_star = $board->boardMembers->contains(fn($member) => $member->is_star == 1);
+
+                // Kiểm tra follow = 1
+                $board->follow = $board->boardMembers->contains(fn($member) => $member->follow == 1);
+
                 return $board;
             });
 
@@ -40,6 +47,8 @@ class BoardController extends Controller
 
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
