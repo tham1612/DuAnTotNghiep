@@ -15,14 +15,16 @@
                     </div>
                 @endif
                 <div class="card-body">
-                    <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                    <table id="task-list" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                            style="width:100%">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Thẻ</th>
                             <th>Danh sách</th>
                             <th>Nhãn</th>
                             <th>Thành viên</th>
+                            <th>Ngày bắt đầu </th>
                             <th>Ngày hết hạn</th>
                             <th>Thao tác</th>
 
@@ -33,7 +35,7 @@
 
                         @foreach ($tasks as $task)
                             <tr>
-
+                                <td>{{ $task->id }}</td>
                                 <td data-bs-toggle="modal"
                                     data-bs-target="#detailCardModal">{{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                 </td>
@@ -64,20 +66,19 @@
                                 <td class="col-2">
                                     <div id="member1" data-bs-toggle="dropdown" aria-expanded="false" class="cursor-pointer">
                                         <div class="avatar-group d-flex justify-content-center" id="newMembar">
-                                            @php $taskMembers = $task->members @endphp
-                                            @if($taskMembers->isNotEmpty())
-                                                @foreach($taskMembers as $taskMember)
+                                            @if($task->members->isNotEmpty())
+                                                @foreach($task->members as $member)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                        data-bs-toggle="tooltip"
-                                                       data-bs-trigger="hover" data-bs-placement="top" title="{{$taskMember->name}}">
-                                                        @if ($taskMember->image)
-                                                            <img src="{{ asset('storage/' .$taskMember->image) }}"
+                                                       data-bs-trigger="hover" data-bs-placement="top" title="{{$member->name}}">
+                                                        @if ($member->image)
+                                                            <img src="{{ asset('storage/' .$member->image) }}"
                                                                  alt=""
                                                                  class="rounded-circle avatar-xs"/>
                                                         @else
                                                             <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
                                                                  style="width: 40px;height: 40px">
-                                                                {{ strtoupper(substr($taskMember->name, 0, 1)) }}
+                                                                {{ strtoupper(substr($member->name, 0, 1)) }}
                                                             </div>
                                                         @endif
 
@@ -99,7 +100,16 @@
                                     <form action="{{ route('tasks.update', $task->id) }}" method="POST" id="{{$task->id}}taskForm">
                                         @csrf
                                         @method('PUT')
-                                        <input type="datetime-local" name="end_date" value="{{ $task->end_date }}" id="startDateInput"
+                                        <input type="datetime-local" name="start_date" value="{{ $task->start_date }}" id="startDateInput"
+                                               class="form-control" onchange="document.getElementById('{{$task->id}}taskForm').submit();">
+                                    </form>
+
+                                </td>
+                                <td class=" col-2">
+                                    <form action="{{ route('tasks.update', $task->id) }}" method="POST" id="{{$task->id}}taskForm">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="datetime-local" name="end_date" value="{{ $task->end_date }}" id="endDateInput"
                                                class="form-control" onchange="document.getElementById('{{$task->id}}taskForm').submit();">
                                     </form>
 
@@ -233,8 +243,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
-    <script src="{{ asset('theme/assets/js/pages/datatables.init.js') }}"></script>
+    {{-- <script src="{{ asset('theme/assets/js/pages/datatables.init.js') }}"></script> --}}
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            new DataTable("#task-list", {
+                order: [
+                    [0, 'desc'],
+                ]
+             });
+        });
+
         function submitForm() {
             document.getElementById('{{$task->id}}taskForm').submit(); // Submit form khi giá trị thay đổi
         }
