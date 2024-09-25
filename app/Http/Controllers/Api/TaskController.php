@@ -33,22 +33,36 @@ class TaskController extends Controller
     public function update($id, Request $request)
     {
         $task = Task::find($id);
-
         $task->text = $request->text;
         $task->start_date = $request->start_date;
-        $task->duration = $request->duration;
+
+        // Tính toán end_date dựa trên start_date và duration (nếu duration vẫn gửi từ client)
+        if ($request->has('duration')) {
+            $task->end_date = \Carbon\Carbon::parse($request->start_date)
+                               ->addDays($request->duration);
+        }
+
+        // Nếu client gửi end_date, cập nhật end_date
+        if ($request->has('end_date')) {
+            $task->end_date = $request->end_date;
+        }
+
         $task->progress = $request->has("progress") ? $request->progress : 0;
         $task->parent = $request->parent;
 
+        // Lưu lại task
         $task->save();
+
+        // Nếu có target, cập nhật thứ tự task
         if ($request->has("target")) {
             $this->updateOrder($id, $request->target);
         }
-
         return response()->json([
             "action" => "updated"
         ]);
     }
+
+
 
     private function updateOrder($taskId, $target)
     {

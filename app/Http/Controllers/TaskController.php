@@ -10,10 +10,10 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
+     public function index($id, Request $request)
+     {
 
-    // }
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -51,25 +51,19 @@ class TaskController extends Controller
         return back()
             ->with('success', 'Thêm mới danh sách thành công vào bảng');
     }
-
-    public function update($id, Request $request)
+    public function show()
     {
-        $task = Task::find($id);
+    }
 
-        $task->text = $request->text;
-        $task->start_date = $request->start_date;
-        $task->duration = $request->duration;
-        $task->progress = $request->has("progress") ? $request->progress : 0;
-        $task->parent = $request->parent;
+        public function update($id, Request $request)
+    {
+        $data=$request->except(['_token', '_method']);
 
-        $task->save();
-        if ($request->has("target")) {
-            $this->updateOrder($id, $request->target);
-        }
+        Task::query()
+            ->where('id', $id)
+            ->update($data);
+        return redirect()->back()->with('success', 'Task đã được cập nhật thành công');
 
-        return response()->json([
-            "action" => "updated"
-        ]);
     }
 
     private function updateOrder($taskId, $target)

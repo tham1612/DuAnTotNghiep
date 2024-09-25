@@ -61,27 +61,39 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form action="{{route('tasks.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
+                    <form method="POST" action="{{ route('tasks.store') }}">
                         @csrf
-                        <h5 class="text-center">Thêm thẻ</h5>
+                        <h5 class="text-center">Thêm Task</h5>
+
                         <div class="mb-2">
-                            <input type="text" class="form-control" id="exampleDropdownFormEmail" name="text"
-                                   placeholder="Nhập tên thẻ..."/>
+                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..."
+                                required />
                         </div>
+                        <div class="mb-2">
+                            <label class="form-label"for="">Ngày bắt đầu</label>
+                            <input type="date" class="form-control" name="start_date" placeholder=""
+                                required />
+                        </div>
+                        <div class="mb-2">
+                             <label class="form-label"for="">Ngày kết thúc</label>
+                            <input type="date" class="form-control" name="end_date" placeholder=""
+                                required />
+                        </div>
+
                         <div class="mb-2">
                             <select name="catalog_id" id="" class="form-select">
                                 <option value="">---Lựa chọn---</option>
-                                @foreach($catalogs as $catalog)
+                                @foreach ($catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="mb-2 d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                Thêm thẻ
-                            </button>
+                            <button type="submit" class="btn btn-primary">Thêm Task</button>
                         </div>
                     </form>
+
                 </div>
             </div>
             <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="addCatalog1">
@@ -91,7 +103,7 @@
         <script type="text/javascript">
             gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
             gantt.config.order_branch = true;
-            gantt.config.order_branch_free = true;
+            // gantt.config.order_branch_free = true;
             var boardId = "{{ $board->id }}"; // Gán giá trị ID của Board từ server
             gantt.init("gantt_here");
             gantt.load("/api/boards/" + boardId + "/tasks");
@@ -103,6 +115,32 @@
             gantt.showLightbox = function(taskId) {
                 openCustomModal(taskId); // Gọi modal tùy chỉnh
             };
+            gantt.config.columns = [{
+                    name: "text",
+                    label: "Thẻ",
+                    tree: true,
+                    width: '*'
+                }, // Cột tên nhiệm vụ
+                {
+                    name: "catalog",
+                    label: "Danh Sách",
+                    align: "center",
+                    width: 200,
+                    template: function(task) {
+                        var catalog = getCatalogById(task.catalog_id); // Hàm lấy tên catalog
+                        return catalog ? catalog.name :
+                        "Không có danh sách"; // Hiển thị tên catalog, hoặc thông báo nếu không có
+                    }
+                }
+            ];
+
+            // Giả sử bạn đã có dữ liệu catalogs từ server
+            var catalogs = @json($catalogs);
+
+            // Hàm để lấy catalog theo ID
+            function getCatalogById(catalog_id) {
+                return catalogs.find(catalog => catalog.id == catalog_id);
+            }
 
             // Hàm để mở modal tùy chỉnh
             function openCustomModal(taskId) {
