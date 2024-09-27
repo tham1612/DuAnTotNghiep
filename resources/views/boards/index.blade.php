@@ -221,7 +221,7 @@
                     @csrf
                     <div class="mb-2">
                         <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
-                               placeholder="Nhập tên danh sách..."/>
+                               placeholder="Nhập tên danh sách..."/>z
                         <input type="hidden" name="board_id" value="{{$board->id}}">
                     </div>
                     <div class="mb-2 d-flex align-items-center">

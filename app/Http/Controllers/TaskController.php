@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,7 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
         $data=$request->except(['position','priority','risk','sortorder',]);
         $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
