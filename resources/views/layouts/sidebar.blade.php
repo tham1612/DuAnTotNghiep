@@ -4,6 +4,7 @@
     $workspaces = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
+        ->where('workspace_members.is_accept_invite', NULL)
         ->whereNot('workspace_members.is_active', 1)
         ->get();
 
