@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToWorkspace;
+use App\Http\Requests\UpdateWorkspaceRequest;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
@@ -191,7 +192,7 @@ class WorkspaceController extends Controller
         return view('workspaces.update', compact('userId', 'userName', 'workspaceChecked', 'icon', 'access', 'ws_desrip'));
     }
 
-    public function editWorkspace(Request $request)
+    public function editWorkspace(UpdateWorkspaceRequest $request)
     {
         $userId = Auth::id();
 

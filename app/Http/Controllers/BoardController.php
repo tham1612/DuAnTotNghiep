@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\User;
@@ -61,7 +62,7 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBoardRequest $request)
     {
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
