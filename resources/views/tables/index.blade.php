@@ -39,22 +39,18 @@
                                     <td data-bs-toggle="modal" data-bs-target="#detailCardModal">
                                         {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                     </td>
+                                    <form id="updateTaskForm_{{ $task->id }}">
+                                        @csrf
+                                        @method('PUT')
                                     <td>
-                                        <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}updateTaskForm">
-                                            @csrf
-                                            @method('PUT')
-                                            <select name="catalog_id" id="catalogSelect" class="form-select no-arrow"
-                                                    onchange="document.getElementById('{{ $task->id }}updateTaskForm').submit();">
+                                            <select name="catalog_id" id="catalogSelect_{{ $task->id }}" class="form-select no-arrow"
+                                                    onchange="updateTaskCatalog({{ $task->id }});">
                                                 @foreach ($catalogs as $catalog)
-                                                    <option
-                                                        @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
+                                                    <option @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
                                                         {{ $catalog->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
-
-                                        </form>
                                     </td>
                                     <td>
                                         <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
@@ -124,29 +120,19 @@
                                     </td>
 
                                     <td class="col-2">
-                                        <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}startTaskForm">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="datetime-local" name="start_date"
+                                            <input type="datetime-local" name="start_date" id="start_date_{{ $task->id }}"
                                                    value="{{ $task->start_date }}"
-                                                   id="startDateInput" class="form-control no-arrow"
-                                                   onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
-                                        </form>
+                                                  class="form-control no-arrow"
+                                                   onchange="updateTaskCatalog({{ $task->id }});">
                                     </td>
 
                                     <td class="col-2">
-                                        <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}endTaskForm">
-                                            @csrf
-                                            @method('PUT')
                                             <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
-                                                   id="endDateInput" class="form-control no-arrow"
-                                                   onchange="document.getElementById('{{ $task->id }}endTaskForm').submit();">
-                                        </form>
+                                                   id="end_date_{{ $task->id }}" class="form-control no-arrow"
+                                                   onchange="updateTaskCatalog({{ $task->id }});">
                                     </td>
 
-
+                                    </form>
                                     <td class="col-1 text-center">
                                         <a href="javascript:void(0);" class="text-muted" id="settingTask1"
                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
@@ -324,6 +310,51 @@
         {{--function submitForm() {--}}
         {{--    document.getElementById('{{ $task->id ??null }}taskForm').submit(); // Submit form khi giá trị thay đổi--}}
         {{--}--}}
+        {{--function updateTaskCatalog({{ $task->id ?? null }}) {--}}
+        {{--    var formData = new FormData(document.getElementById('updateTaskForm_' + {{ $task->id }}));--}}
+        {{--    var catalogId = document.getElementById('catalogSelect_' + {{ $task->id }}).value;--}}
+        {{--    var start_date = document.getElementById('start_date_' + {{ $task->id }}).value;--}}
+        {{--    var end_date = document.getElementById('end_date_' + {{ $task->id }}).value;--}}
+
+        {{--    $.ajax({--}}
+        {{--        url: `tasks/{$task->id }`, // URL tới route cập nhật task--}}
+        {{--        type: "POST",--}}
+        {{--        headers: {--}}
+        {{--            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
+        {{--        },--}}
+        {{--        data: {--}}
+        {{--            _method: 'PUT', // Vì phương thức PUT không hỗ trợ trực tiếp qua form, cần chỉ định--}}
+        {{--            catalog_id: catalogId--}}
+        {{--        },--}}
+        {{--        success: function(response) {--}}
+        {{--            console.log('Task updated successfully:', response);--}}
+        {{--        },--}}
+        {{--        error: function(xhr) {--}}
+        {{--            console.error('An error occurred:', xhr.responseText);--}}
+        {{--        }--}}
+        {{--    });--}}
+        {{--}--}}
+        function updateTask({{ $task->id ?? null }}) {
+
+            var formData = new FormData(document.getElementById('updateTaskForm_' + {{$task->id}}));
+
+            $.ajax({
+                url: `tasks/{$task->id }`,
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Task updated successfully:', response);
+                },
+                error: function(xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        }
 
     </script>
 @endsection
