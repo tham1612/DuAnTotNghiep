@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
 use \App\Http\Controllers\CatalogControler;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -62,13 +63,11 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
 
-            Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
+        Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
 
-        Route::get('/home', function () {
-            return view('homes.home');
-        })->name('home');
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        Route::get('/chat',function(){
+        Route::get('/chat', function () {
             return view('chat.index');
         })->name('chat');
 
@@ -87,7 +86,6 @@ Route::middleware(['auth', 'isWorkspace'])
             });
         Route::resource('catalogs', CatalogControler::class);
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
-
     });
 
 Route::get('inboxs', function () {
