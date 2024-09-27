@@ -24,32 +24,42 @@ class BoardController extends Controller
     {
         $userId = Auth::id();
 
-        // Lấy tất cả các bảng mà người dùng thuộc về workspace
-        $boards = Board::whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
-                $query->where('is_active', 1)->where('user_id', $userId);
+        // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
+        $boards = Board::where(function ($query) use ($userId) {
+                $query->where('created_at', $userId) // Người tạo
+                      ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                          $query->where('user_id', $userId); // Thành viên
+                      });
             })
+            ->with(['workspace', 'boardMembers'])
             ->get()
-            ->load(['workspace', 'boardMembers' => function ($query) use ($userId) {
-                // Chỉ tải các thành viên của bảng là người dùng hiện tại
-                $query->where('user_id', $userId);
-            }])
             ->map(function ($board) use ($userId) {
-                // Kiểm tra xem bảng có được đánh dấu sao không
-                $board->is_star = $board->boardMembers->contains(fn($member) => $member->is_star == 1);
+                // Tính tổng số thành viên trong bảng
+                $board->total_members = $board->boardMembers->count();
 
-                // Kiểm tra follow = 1
-                $board->follow = $board->boardMembers->contains(fn($member) => $member->follow == 1);
+                // Kiểm tra xem user có đánh dấu sao cho bảng này không
+                $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
+                    return $member->user_id == $userId && $member->is_star == 1;
+                });
+
+                // Kiểm tra xem user có theo dõi bảng này không (follow = 1)
+                $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
+                    return $member->user_id == $userId && $member->follow == 1;
+                });
 
                 return $board;
             });
 
-        // Tách danh sách bảng sao
-        $board_star = $boards->filter(fn($board) => $board->is_star);
+        // Lọc danh sách các bảng mà user đã đánh dấu sao
+        $board_star = $boards->filter(function ($board) use ($userId) {
+            return $board->boardMembers->contains(function ($member) use ($userId) {
+                return $member->user_id == $userId && $member->is_star == 1;
+            });
+        });
 
+        // Trả về view với danh sách bảng và các bảng đã đánh dấu sao
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
-
-
 
     /**
      * Show the form for creating a new resource.
