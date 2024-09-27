@@ -116,29 +116,28 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="text-center pb-3">
+                                    <div class="text-center pb-3" style="height: 50px;">
                                         @if ($board && $board->image)
                                             <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
                                         @else
-                                            <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
-                                                height="32">
                                         @endif
-
                                     </div>
                                 </div>
 
                                 <div class="py-3">
-                                    <h5 class="fs-14 mb-3"><a href="" class="text-body">{{ $board->name }}</a></h5>
+                                    <h5 class="fs-14 mb-3">
+                                        <a href="" class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
+                                    </h5>
                                     <div class="row gy-3">
                                         <div class="col-6">
                                             <p class="text-muted mb-1">Theo dõi</p>
-                                            <div class="badge bg-primary fs-12">
+                                            <button class="btn btn-primary px-2 py-1 fs-12">
                                                 @if ($board->follow == 0)
-                                                    <i class="ri-eye-off-line"></i> <!-- Mắt bị gạch nếu follow = 0 -->
+                                                    <i class="ri-eye-off-line"></i>
                                                 @else
-                                                    <i class="ri-eye-line"></i> <!-- Màu cam nổi bật nếu follow = 1 -->
+                                                    <i class="ri-eye-line"></i>
                                                 @endif
-                                            </div>
+                                            </button>
                                         </div>
 
                                         <div class="col-6">
@@ -150,43 +149,76 @@
                                     </div>
 
                                     <div class="d-flex align-items-center mt-3">
-                                        <p class="text-muted mb-0 me-2">Team :</p>
+                                        <p class="text-muted mb-0 me-2">Team
+                                        </p>
                                         <div class="avatar-group">
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                                title="">
-                                                <div class="avatar-xxs">
-                                                    <div class="avatar-title rounded-circle bg-danger"></div>
-                                                </div>
-                                            </a>
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                                title="Add Members">
-                                                <div class="avatar-xxs">
-                                                    <div
-                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
-                                                        +</div>
-                                                </div>
-                                            </a>
+                                            @php
+                                                // Giới hạn số thành viên hiển thị
+                                                $maxDisplay = 3;
+                                                $count = 0;
+                                            @endphp
+
+                                            @foreach ($board->boardMembers as $member)
+                                                @if ($count < $maxDisplay)
+                                                    <a href="javascript: void(0);" class="avatar-group-item"
+                                                        data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                        data-bs-placement="top" title="{{ $member->user->name }}">
+                                                        <div class="avatar-xxs">
+                                                            <div class="avatar-title rounded-circle bg-danger">
+                                                                @if ($member->user->avatar_url)
+                                                                    <img src="{{ $member->user->avatar_url }}"
+                                                                        alt="{{ $member->user->name }}"
+                                                                        class="rounded-circle" width="16">
+                                                                @else
+                                                                    <div class="avatar-title rounded-circle bg-danger">
+                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    @php $count++; @endphp
+                                                @endif
+                                            @endforeach
+
+                                            <!-- Nút hiển thị số thành viên còn lại -->
+                                            @if ($board->boardMembers->count() > $maxDisplay)
+                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                    data-bs-placement="top"
+                                                    title="{{ $board->boardMembers->count() - $maxDisplay }} more members">
+                                                    <div class="avatar-xxs">
+                                                        <div
+                                                            class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                            +{{ $board->boardMembers->count() - $maxDisplay }}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
+
+
                                 </div>
                                 <div>
                                     <div class="d-flex mb-2">
                                         <div class="flex-grow-1">
-                                            <div>Tasks</div>
+                                            <div>Tiến độ</div>
                                         </div>
                                         <div class="flex-shrink-0">
                                             <div><i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                                {{ $board->tasks_count }} / {{ $board->total_tasks }}</div>
+                                                {{ $board->complete }}/100 <!-- Hiển thị phần trăm hoàn thành -->
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="progress progress-sm animated-progress">
                                         <div class="progress-bar bg-success" role="progressbar"
-                                            aria-valuenow="{{ $board->progress }}" aria-valuemin="0" aria-valuemax="100"
-                                            style="width: {{ $board->progress }}%;"></div>
+                                            aria-valuenow="{{ $board->complete }}" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ $board->complete }}%;"></div>
+                                        <!-- Sử dụng trường complete -->
                                     </div><!-- /.progress -->
                                 </div>
+
                             </div>
                             <!-- end card body -->
                         </div>
@@ -209,7 +241,7 @@
                         <div class="card-body">
                             <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
                                 <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-                                    <button type="button"
+                                    <button type="button" id="favourite-btn"
                                         class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}">
                                         <span class="avatar-title bg-transparent fs-15">
                                             <i
@@ -238,34 +270,32 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-center pb-3">
+                                <div class="text-center pb-3" style="height: 50px;">
                                     @if ($board && $board->image)
                                         <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
                                     @else
-                                        <img src="{{ asset('theme/assets/images/brands/dribbble.png') }}" alt=""
-                                            height="32">
                                     @endif
-
                                 </div>
                             </div>
 
                             <div class="py-3">
                                 <h5 class="fs-14 mb-3">
-                                    <a href="" class="text-body">{{ $board->name }}</a>
+                                    <a href=""
+                                        class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                 </h5>
+
                                 <div class="row gy-3">
 
                                     <div class="col-6">
                                         <p class="text-muted mb-1">Theo dõi</p>
-                                        <div class="badge bg-primary fs-12">
+                                        <button class="btn btn-primary  px-2 py-1 fs-12">
                                             @if ($board->follow == 0)
-                                                <i class="ri-eye-off-line"></i> <!-- Mắt bị gạch nếu follow = 0 -->
+                                                <i class="ri-eye-off-line"></i>
                                             @else
-                                                <i class="ri-eye-line"></i> <!-- Màu cam nổi bật nếu follow = 1 -->
+                                                <i class="ri-eye-line"></i>
                                             @endif
-                                        </div>
+                                        </button>
                                     </div>
-
                                     <div class="col-6">
                                         <div>
                                             <p class="text-muted mb-1">Ngày tạo</p>
@@ -273,47 +303,72 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="d-flex align-items-center mt-3">
-                                    <p class="text-muted mb-0 me-2">Team :</p>
+                                    <p class="text-muted mb-0 me-2">Team
+                                    </p>
                                     <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="">
-                                            <div class="avatar-xxs">
-                                                <div class="avatar-title rounded-circle bg-danger">
+                                        @php
+                                            // Giới hạn số thành viên hiển thị
+                                            $maxDisplay = 3;
+                                            $count = 0;
+                                        @endphp
+
+                                        @foreach ($board->boardMembers as $member)
+                                            @if ($count < $maxDisplay)
+                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                    data-bs-placement="top" title="{{ $member->user->name }}">
+                                                    <div class="avatar-xxs">
+                                                        <div class="avatar-title rounded-circle bg-danger">
+                                                            @if ($member->user->avatar_url)
+                                                                <img src="{{ $member->user->avatar_url }}"
+                                                                    alt="{{ $member->user->name }}"
+                                                                    class="rounded-circle" width="16">
+                                                            @else
+                                                                <div class="avatar-title rounded-circle bg-danger">
+                                                                    {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                @php $count++; @endphp
+                                            @endif
+                                        @endforeach
+
+                                        <!-- Nút hiển thị số thành viên còn lại -->
+                                        @if ($board->boardMembers->count() > $maxDisplay)
+                                            <a href="javascript: void(0);" class="avatar-group-item"
+                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                                title="{{ $board->boardMembers->count() - $maxDisplay }} more members">
+                                                <div class="avatar-xxs">
+                                                    <div
+                                                        class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
+                                                        +{{ $board->boardMembers->count() - $maxDisplay }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                            data-bs-trigger="hover" data-bs-placement="top" title="Add Members">
-                                            <div class="avatar-xxs">
-                                                <div
-                                                    class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
-                                                    +
-                                                </div>
-                                            </div>
-                                        </a>
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <div class="d-flex mb-2">
                                     <div class="flex-grow-1">
-                                        <div>Tasks</div>
+                                        <div>Tiến độ</div>
                                     </div>
                                     <div class="flex-shrink-0">
                                         <div><i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                            20/20
+                                            {{ $board->complete }}/100 <!-- Hiển thị phần trăm hoàn thành -->
                                         </div>
                                     </div>
                                 </div>
                                 <div class="progress progress-sm animated-progress">
                                     <div class="progress-bar bg-success" role="progressbar"
-                                        aria-valuenow="{{ $board->progress }}" aria-valuemin="0" aria-valuemax="100"
-                                        style="width: 30%;"></div>
+                                        aria-valuenow="{{ $board->complete }}" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: {{ $board->complete }}%;"></div> <!-- Sử dụng trường complete -->
                                 </div><!-- /.progress -->
                             </div>
-
                         </div>
                         <!-- end card body -->
                     </div>
