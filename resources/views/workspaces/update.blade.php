@@ -73,7 +73,7 @@
                                     </div>
                                     <input type="text" name="name" class="form-control bg-light border-0"
                                         id="name" minlength="5" maxlength="100"
-                                        placeholder="{{ $workspaceChecked->name }}" required />
+                                        value="{{ $workspaceChecked->name }}" required />
                                     <div class="invalid-feedback">Tên là bắt buộc và phải chứa ít nhất 5 ký tự.</div>
                                 </div>
                                 <div>
@@ -93,7 +93,9 @@
                         <!--end col-->
                         <div class="col-lg-5 ms-auto">
                             <div class="mt-5">
+
                                 {{-- <button class="btn btn-primary ms-3 mt-4" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
+
                                     aria-expanded="false" data-bs-offset="0,-50">
                                     <i class="ri-add-line align-bottom me-1"></i>Mời thành viên vào Không gian làm việc
                                 </button>
@@ -111,6 +113,7 @@
                                             <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                         </div>
                                     </form>
+
                                 </div> --}}
 
                                 <div class="bg-primary p-2 rounded text-center">
@@ -265,8 +268,7 @@
                                                                     </div>
                                                                 </li>
                                                                 @foreach ($wsp_member as $item)
-                                                                    <br>
-                                                                    <li class="d-flex">
+                                                                    <li class="d-flex mt-1 mb-1" >
                                                                         <div class="col-1">
                                                                             <a href="javascript: void(0);"
                                                                                 class="avatar-group-item"
@@ -298,9 +300,9 @@
                                                                                     {{ $item->name }}
                                                                                     @if ($item->user_id == $userId)
                                                                                         <span
-                                                                                            class="text-black">(bạn)</span>
+                                                                                            class="text-success">(bạn)</span>
                                                                                     @else
-                                                                                        <span>(thành viên)</span>
+                                                                                        <span class="text-black">(thành viên)</span>
                                                                                     @endif
 
                                                                                 </p>
@@ -368,7 +370,7 @@
                                                                             </section>
                                                                         </div>
                                                                         <div class="col-4 d-flex justify-content-end">
-                                                                            <form action="{{ route('accept_member') }}"
+                                                                            <form onsubmit="disableButtonOnSubmit()" action="{{ route('accept_member') }}"
                                                                                 method="post">
                                                                                 @method('PUT')
                                                                                 @csrf
@@ -385,13 +387,13 @@
                                                                             </form>
                                                                             <form
                                                                                 action="{{ route('refuse_member', $item->wm_id) }}"
+                                                                                onsubmit="disableButtonOnSubmit()"
                                                                                 method="post">
                                                                                 @method('DELETE')
                                                                                 @csrf
                                                                                 <button class="btn btn-danger"
                                                                                     type="submit">Từ chối</button>
                                                                             </form>
-
                                                                         </div>
                                                                     </li>
                                                                     <br>
@@ -469,7 +471,7 @@
                             aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <form action="{{ route('update_ws_access') }}" method="post">
+                                    <form onsubmit="disableButtonOnSubmit()" action="{{ route('update_ws_access') }}" method="post">
                                         @csrf
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="customModalLabel">Chọn khả năng hiển thị trong
@@ -529,6 +531,8 @@
         </div>
         <!--end col-->
     </div>
+
+    </div>
 @endsection
 
 @section('title')
@@ -547,4 +551,7 @@
 
     <!-- Sweet Alerts js -->
     <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
+@endsection
+@section('style')
+<style></style>
 @endsection

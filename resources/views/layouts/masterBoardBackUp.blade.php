@@ -29,6 +29,11 @@
     <!-- custom Css-->
     <link href="{{asset('theme/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css"/>
 
+  
+
+    <!-- glightbox css -->
+    <link rel="stylesheet" href="{{asset('theme/assets/libs/glightbox/css/glightbox.min.css')}}">
+
     @yield('style')
 </head>
 <style>
