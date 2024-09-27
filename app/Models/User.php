@@ -76,7 +76,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Task::class, 'task_members')->withPivot('follow');
     }
 
-//    kieemr tra xem nguoiwf dung dax cso workspace chuaw
+    //    kieemr tra xem nguoiwf dung dax cso workspace chuaw
     public function hasWorkspace()
     {
         $userId = Auth::id();
@@ -88,14 +88,12 @@ class User extends Authenticatable
         return $isWorkspace;
     }
 
-//    public function getWorkspace()
-//    {
-//        // Lấy các workspace mà người dùng hiện tại là thành viên hoặc owner
-//        return Workspace::whereHas('users', function ($query) {
-//            $query->where('user_id', $this->id)
-//                ->whereIn('authorize', [0, 1]); // authorize = 0 hoặc 1
-//        })->get();
-//    }
-
-
+    //    public function getWorkspace()
+    //    {
+    //        // Lấy các workspace mà người dùng hiện tại là thành viên hoặc owner
+    //        return Workspace::whereHas('users', function ($query) {
+    //            $query->where('user_id', $this->id)
+    //                ->whereIn('authorize', [0, 1]); // authorize = 0 hoặc 1
+    //        })->get();
+    //    }
 }

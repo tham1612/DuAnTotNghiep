@@ -11,47 +11,58 @@ class TaskController extends Controller
 {
     public function store(Request $request)
     {
-        Log::info('Request received', $request->all()); // Ghi lại request nhận được
-
-        try {
-            $task = Task::query()->create($request->all());
-            Log::info('Task saved successfully', ['task_id' => $task->id]); // Ghi lại sau khi lưu task thành công
-        } catch (\Exception $e) {
-            Log::error('Error saving task', ['error' => $e->getMessage()]);
-            return response()->json(
-                [
-                    'error' => 'Internal Server Error',
-                    'msg' => $e->getMessage(),
-                    'request' => $request->all(),
-                ]
-                , 500);
-        }
-
-        return response()->json([
-            "action" => "inserted",
-            'val' => $task,
-        ]);
+        // $request->validate([
+        //     'catalog_id' => 'required|integer|exists:catalogs,id',
+        //     'text' => 'required|string|max:255',
+        //     'description' => 'nullable|string',
+        //     'position' => 'required|integer',
+        //     'priority' => 'required|in:Low,Medium,High',
+        //     'risk' => 'required|in:Low,Medium,High',
+        //     'duration' => 'required|integer',
+        //     'progress' => 'nullable|numeric|min:0|max:1',
+        //     'start_date'=>'required|date',
+        //     'parent' => 'nullable|integer'
+        //   ]);
+        //   $taskData = $request->all();
+        //   $taskData['sortorder'] = Task::max('sortorder') + 1;
+        //   $taskData['progress'] = $request->input('progress',0);
+        //   $task = Task::create($taskData);
+        //   return response()->json(['action' => 'inserted', 'tid' => $task->id]);
     }
 
     public function update($id, Request $request)
     {
         $task = Task::find($id);
-
         $task->text = $request->text;
         $task->start_date = $request->start_date;
-        $task->duration = $request->duration;
+
+        // Tính toán end_date dựa trên start_date và duration (nếu duration vẫn gửi từ client)
+        if ($request->has('duration')) {
+            $task->end_date = \Carbon\Carbon::parse($request->start_date)
+                               ->addDays($request->duration);
+        }
+
+        // Nếu client gửi end_date, cập nhật end_date
+        if ($request->has('end_date')) {
+            $task->end_date = $request->end_date;
+        }
+
         $task->progress = $request->has("progress") ? $request->progress : 0;
         $task->parent = $request->parent;
 
+        // Lưu lại task
         $task->save();
+
+        // Nếu có target, cập nhật thứ tự task
         if ($request->has("target")) {
             $this->updateOrder($id, $request->target);
         }
-
         return response()->json([
             "action" => "updated"
         ]);
     }
+
+
 
     private function updateOrder($taskId, $target)
     {

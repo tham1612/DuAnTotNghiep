@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
 use \App\Http\Controllers\CatalogControler;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,10 +21,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-
-
     return view('welcome');
-});
+})->middleware('guest');
 
 Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
@@ -63,14 +62,15 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
 
-
-        Route::get('/homes/dashboard', function () {
-            return view('homes.dashboard');
-        })->name('homes.dashboard');
+            Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::get('/home', function () {
             return view('homes.home');
         })->name('home');
+
+        Route::get('/chat',function(){
+            return view('chat.index');
+        })->name('chat');
 
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
@@ -84,7 +84,6 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
-
             });
         Route::resource('catalogs', CatalogControler::class);
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
@@ -96,4 +95,3 @@ Route::get('inboxs', function () {
 })->name('inbox');
 
 Auth::routes();
-

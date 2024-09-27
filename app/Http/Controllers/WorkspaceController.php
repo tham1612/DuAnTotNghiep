@@ -197,7 +197,7 @@ class WorkspaceController extends Controller
             ->where('workspace_id', $workspaceChecked->workspace_id)
             ->whereNot('is_accept_invite', NULL)->get();
 
-        dd($wsp_invite);
+        // dd($wsp_invite);
         //lấy số người có trong bảng nhưng không có trong wsp
 
         // dd($wsp_owner);
@@ -234,10 +234,10 @@ class WorkspaceController extends Controller
             throw $e;
         }
     }
+
     //Xóa người dùng gửi lời mời vào wsp
     public function refuse_member($wm_id)
     {
-        dd($wm_id);
         try {
             DB::table('workspace_members')->where('id', $wm_id)->delete();
             return redirect()->route('showFormEditWorkspace');

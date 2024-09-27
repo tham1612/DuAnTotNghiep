@@ -4,15 +4,8 @@ var myModalEl,
     addNewBoard,
     addMember,
     profileField,
-    reader,
-    tasks_list = [
-        document.getElementById("unassigned-task"),
-        document.getElementById("todo-task"),
-        document.getElementById("inprogress-task"),
-        document.getElementById("reviews-task"),
-        document.getElementById("completed-task"),
-        document.getElementById("new-task"),
-    ];
+    reader
+    ;
 
 var targetTaskId = document.getElementsByClassName('tasks-box');
 
