@@ -121,6 +121,7 @@ class BoardController extends Controller
             'users',
             'catalogs',
             'catalogs.tasks',
+            'catalogs.tasks.catalog:id,name',
             'catalogs.tasks.members'
         ]);
         $boardMembers = $board->users->unique('id');
@@ -133,7 +134,6 @@ class BoardController extends Controller
 
         $tasks = $catalogs->pluck('tasks')->flatten();
         //        $taskMembers=$tasks->pluck('members')->flatten();
-
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board','catalogs', 'tasks')),
             'list' => view('lists.index', compact('board','catalogs', 'tasks')),
