@@ -247,7 +247,7 @@ class WorkspaceController extends Controller
         }
     }
     // logic chỉnh sửa ws
-    public function editWorkspace(Request $request)
+    public function editWorkspace(UpdateWorkspaceRequest $request)
     {
         $userId = Auth::id();
 
