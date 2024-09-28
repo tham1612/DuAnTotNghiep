@@ -4,6 +4,7 @@
     $workspaces = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
+        ->where('workspace_members.is_accept_invite', NULL)
         ->whereNot('workspace_members.is_active', 1)
         ->get();
 
@@ -25,10 +26,18 @@
         aria-expanded="false" data-bs-offset="0,20">
 
         @if ($workspaceChecked)
-            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                style="width: 25px;height: 25px">
-                {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
-            </div>
+            @if ($workspaceChecked->image)
+            <img
+                src="{{ asset('storage/' . $workspaceChecked->image) }}"
+                alt=""
+                class="rounded avatar-sm" style="width: 25px;height: 25px">
+        @else
+                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                     style="width: 25px;height: 25px">
+                    {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
+                </div>
+        @endif
+
             <span class="fs-15 ms-2 text-white" id="swicthWs">
                 {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 16) }}
                 <i class=" ri-arrow-drop-down-line fs-20"></i>
@@ -38,7 +47,10 @@
             <ul class="dropdown-menu dropdown-menu-md p-3" data-simplebar style="max-height: 600px; width:300px">
                 <li class="d-flex">
                     @if ($workspaceChecked->image)
-                        Ảnh
+                        <img
+                            src="{{ asset('storage/' . $workspaceChecked->image) }}"
+                            alt=""
+                            class="rounded avatar-sm">
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                             style="width: 40px;height: 40px">
@@ -66,6 +78,10 @@
                 @foreach ($workspaces as $workspace)
                     <li class="d-flex">
                         @if ($workspace->image)
+                            <img
+                                src="{{ asset('storage/' . $workspace->image) }}"
+                                alt=""
+                                class="rounded-circle avatar-sm">
                         @else
                             <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                 style="width: 40px;height: 40px">

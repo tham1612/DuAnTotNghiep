@@ -21,22 +21,23 @@
                     aria-label="Close"
                 ></button>
             </div>
-            <div class="modal-body" style="margin-top: -50px" id="taskDropdownMenu"> 
+            <div class="modal-body" style="margin-top: -50px">
                 @php
                     $userId = \Illuminate\Support\Facades\Auth::id();
-            
-                    $workspace = \App\Models\Workspace::query()
-                        ->whereHas('users', function ($query) use ($userId) {
-                            $query->where('user_id', $userId)
-                                  ->where('is_active', 1);
-                        })
-                        ->get();
+
+                      $workspace = \App\Models\Workspace::query()
+                          ->whereHas('users', function ($query) use ($userId) {
+                              $query->where('user_id', $userId)
+                                    ->where('is_active', 1);
+                          })
+                          ->get();
+
                 @endphp
-                <form id="createForm" class="p-3" action="{{ route('b.store') }}" method="POST">
+                <form class="p-3" action="{{route('b.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
                     @method('POST')
                     <div class="mt-3">
-                        <label for="name" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
+                        <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
                         <input
                             type="text"
                             class="form-control @error('name') is-invalid @enderror"
@@ -50,16 +51,16 @@
                         @enderror
                     </div>
                     <div class="mt-3">
-                        <label for="workspace_id" class="form-label">Không gian làm việc</label>
-                        <select name="workspace_id" id="workspace_id" class="form-select">
+                        <label for="" class="form-label">Không gian làm việc</label>
+                        <select name="workspace_id" id="" class="form-select">
                             @foreach ($workspace as $workspace1)
                                 <option value="{{ $workspace1->id }}">{{ $workspace1->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mt-3">
-                        <label for="access" class="form-label">Quyền xem</label>
-                        <select name="access" id="access" class="form-select">
+                        <label for="" class="form-label">Quyền xem</label>
+                        <select name="access" id="" class="form-select">
                             @foreach(\App\Enums\AccessEnum::getLimitedChoices() as $access)
                                 <option value="{{ $access }}">
                                     {{ \App\Enums\AccessEnum::coerce($access)->label() }}
@@ -67,11 +68,13 @@
                             @endforeach
                         </select>
                     </div>
+
                     <div class="mt-3 card">
-                        <button type="submit" class="btn btn-primary">Tạo mới</button>
+                        <button class="btn btn-primary">Tạo mới</button>
                     </div>
+                    <!--end col-->
                 </form>
-            </div>            
+            </div>
         </div>
     </div>
 </div>

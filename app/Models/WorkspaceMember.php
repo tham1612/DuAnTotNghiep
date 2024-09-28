@@ -18,11 +18,13 @@ class WorkspaceMember extends Model
         'workspace_id',
         'authorize',
         'invite',
-        'is_active'
+        'is_active',
+        'is_accept_invite'
     ];
     protected $casts = [
         'authorize' => AuthorizeEnum::class,
         'is_active' => 'boolean',
+        'is_accept_invite' => 'boolean',
 
     ];
     public function user()
