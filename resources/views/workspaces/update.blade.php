@@ -32,7 +32,7 @@
                                                 alt="logo light">
                                         </span>
                                     </label>
- 
+
                                     <div class="d-flex align-items-center">
                                         <div class="profile-user position-relative d-inline-block mx-auto mb-4">
                                             @if ($workspaceChecked->image)
@@ -93,29 +93,6 @@
                         <!--end col-->
                         <div class="col-lg-5 ms-auto">
                             <div class="mt-5">
-
-                                {{-- <button class="btn btn-primary ms-3 mt-4" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
-
-                                    aria-expanded="false" data-bs-offset="0,-50">
-                                    <i class="ri-add-line align-bottom me-1"></i>Mời thành viên vào Không gian làm việc
-                                </button>
-                                <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset3">
-                                    <form action="{{ route('invite_workspace', $workspaceChecked->id) }}" method="POST">
-                                        @csrf
-                                        <div class="mb-2">
-                                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                                placeholder="Nhập email người dùng ..." name="email" />
-                                        </div>
-                                        <div class="mb-2 d-flex align-items-center">
-                                            <button type="submit" class="btn btn-primary">
-                                                Thêm thành viên
-                                            </button>
-                                            <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                                        </div>
-                                    </form>
-
-                                </div> --}}
-
                                 <div class="bg-primary p-2 rounded text-center">
                                     <i class="ri-user-add-line text-white"></i>
                                     <a href="#addmemberModal" data-bs-toggle="modal" class="avatar-group-item">
@@ -152,6 +129,7 @@
                                                                 <select name="authorize" id=""
                                                                     class="form-select">
                                                                     <option value="Member">Thành Viên</option>
+                                                                    <option value="Sub-Owner">Phó nhóm</option>
                                                                     <option value="Viewer">Người Xem</option>
                                                                 </select>
                                                             </div>
