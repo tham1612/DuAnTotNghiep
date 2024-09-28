@@ -32,11 +32,11 @@
                                                 alt="logo light">
                                         </span>
                                     </label>
-
+ 
                                     <div class="d-flex align-items-center">
                                         <div class="profile-user position-relative d-inline-block mx-auto mb-4">
                                             @if ($workspaceChecked->image)
-                                                <img class="rounded-circle avatar-xl img-thumbnail user-profile-imager"
+                                                <img class="rounded avatar-xl img-thumbnail user-profile-imager"
                                                     src="{{ \Illuminate\Support\Facades\Storage::url($workspaceChecked->image) }}"
                                                     alt="Avatar" />
                                             @else
