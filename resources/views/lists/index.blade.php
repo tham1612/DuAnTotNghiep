@@ -223,18 +223,19 @@
                                                 </div>
                                             </td>
                                             <form id="updatelistTaskForm_{{ $task->id }}">
-                                            <td class="col-1">
+                                                <td class="col-2">
                                                     <input type="datetime-local" name="start_date"
+                                                           id="start_date_{{ $task->id }}"
                                                            value="{{ $task->start_date }}"
-                                                           id="start_date_{{ $task->id }}" class="form-control no-arrow"
-                                                           onchange="updateTaskList{{ $task->id }};">
-                                            </td>
-
-                                            <td class="col-1">
-                                                    <input type="datetime-local" name="end_date_{{ $task->id }}" value="{{ $task->end_date }}"
-                                                           id="end_date" class="form-control no-arrow"
-                                                           onchange="updateTaskList({{ $task->id }});">
-                                            </td>
+                                                           class="form-control no-arrow"
+                                                           onchange="updateTaskList({{ $task->id }})">
+                                                </td>
+        
+                                                <td class="col-2">
+                                                    <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
+                                                           id="end_date_{{ $task->id }}" class="form-control no-arrow"
+                                                           onchange="updateTaskList({{ $task->id }})">
+                                                </td>
                                             <td class="">
                                                     <select name="priority" id="priority_{{ $task->id }}" class="form-select no-arrow"
                                                             onchange="updateTaskList({{ $task->id }});">

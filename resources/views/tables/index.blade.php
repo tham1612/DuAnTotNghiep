@@ -21,9 +21,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Thẻ</th>
-                                <th>Danh sách</th>
                                 <th>Nhãn</th>
                                 <th>Thành viên</th>
+                                <th>Danh sách</th>
                                 <th>Ngày bắt đầu</th>
                                 <th>Ngày hết hạn</th>
                                 <th>Thao tác</th>
