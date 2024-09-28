@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
@@ -265,10 +266,25 @@
         </script>
     @endif
 
-@yield('script')
+
 
 <!-- App js -->
 <script src="{{ asset('theme/assets/js/app.js') }}"></script>
+
+
+<script >
+    $(document).ready(function (){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    })
+</script>
+
+
+@yield('script')
+
 </body>
 
 </html>

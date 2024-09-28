@@ -181,7 +181,7 @@
                                                                     @php $count++; @endphp
                                                                 @endif
                                                             @endforeach
-        
+
                                                             @if ($task->members->count() > $maxDisplay)
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
@@ -203,41 +203,28 @@
                                                             </span>
                                                         @endif
                                                     </div>
-        
+
                                                     <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
                                                         @include('dropdowns.member')
                                                     </div>
                                                 </div>
                                             </td>
+                                            <form id="updatelistTaskForm_{{ $task->id }}">
                                             <td class="col-1">
-                                                <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                      id="{{ $task->id }}startTaskForm">
-                                                    @csrf
-                                                    @method('PUT')
                                                     <input type="datetime-local" name="start_date"
                                                            value="{{ $task->start_date }}"
-                                                           id="startDateInput" class="form-control no-arrow"
-                                                           onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
-                                                </form>
+                                                           id="start_date_{{ $task->id }}" class="form-control no-arrow"
+                                                           onchange="updateTaskList{{ $task->id }};">
                                             </td>
-        
+
                                             <td class="col-1">
-                                                <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                      id="{{ $task->id }}endTaskForm">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
-                                                           id="endDateInput" class="form-control no-arrow"
-                                                           onchange="document.getElementById('{{ $task->id }}endTaskForm').submit();">
-                                                </form>
+                                                    <input type="datetime-local" name="end_date_{{ $task->id }}" value="{{ $task->end_date }}"
+                                                           id="end_date" class="form-control no-arrow"
+                                                           onchange="updateTaskList({{ $task->id }});">
                                             </td>
                                             <td class="">
-                                                <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                      id="{{ $task->id }}updateTaskForm">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <select name="priority" id="prioritySelect" class="form-select no-arrow"
-                                                            onchange="document.getElementById('{{ $task->id }}updateTaskForm').submit();">
+                                                    <select name="priority" id="priority_{{ $task->id }}" class="form-select no-arrow"
+                                                            onchange="updateTaskList({{ $task->id }});">
                                                             @foreach(\App\Enums\IndexEnum::getValues() as $priority)
                                                                 <option
                                                                     @selected($task->priority == $priority)
@@ -246,26 +233,19 @@
                                                                 </option>
                                                             @endforeach
                                                     </select>
-        
-                                                </form>
                                             </td>
                                             <td>
-                                                <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                      id="{{ $task->id }}updateTaskForm1">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <select name="catalog_id" id="catalogSelect" class="form-select no-arrow"
-                                                            onchange="document.getElementById('{{ $task->id }}updateTaskForm1').submit();">
+                                                <select name="catalog_id" id="catalog_id_{{ $task->id }}" class="form-select no-arrow"
+                                                            onchange="updateTaskList({{ $task->id }});">
                                                         @foreach ($catalogs as $catalog)
                                                             <option
                                                                 @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
                                                                 {{ $catalog->name }}
                                                             </option>
                                                         @endforeach
-                                                    </select>
-        
-                                                </form>
+                                                </select>
                                             </td>
+                                            </form>
                                             <td class="">
                                                 <a href="javascript: void(0);">
                                                     <button class="btn ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
@@ -483,5 +463,26 @@
                 dropdownMenu.classList.toggle('show'); // Hiển thị/ẩn dropdown
             });
         });
+        function updateTaskList(taskId) {
+            var formData = {
+                catalog_id: $('#catalog_id_' + taskId).val(),
+                start_date: $('#start_date_' + taskId).val(),
+                end_date: $('#end_date_' + taskId).val(),
+                priority: $('#priority_' + taskId).val(),
+            };
+            console.log(taskId);
+            $.ajax({
+                url: `/tasks/` + taskId,
+                method: "PUT",
+                dataType: 'json',
+                data: formData,
+                success: function (response) {
+                    console.log('Task updated successfully:', response);
+                },
+                error: function (xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        }
     </script>
 @endsection
