@@ -35,7 +35,7 @@
                         @if(!empty($tasks))
                             @foreach ($tasks as $task)
                                 <tr>
-                                    <td>{{ $task->id }}</td>
+                                    <td>{{ $task->position }}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
                                         {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                     </td>
