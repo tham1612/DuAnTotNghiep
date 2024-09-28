@@ -32,32 +32,16 @@
                         </thead>
 
                         <tbody>
-                            @if ($tasks)
+                            @if(!empty($tasks))
                                 @foreach ($tasks as $task)
                                     <tr>
                                         <td>{{ $task->id }}</td>
-                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal" class="col-2">
+                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                         </td>
                                         <td>
-                                            <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                id="{{ $task->id }}updateTaskForm">
-                                                @csrf
-                                                @method('PUT')
-                                                <select name="catalog_id" id="catalogSelect" class="form-select no-arrow"
-                                                    onchange="document.getElementById('{{ $task->id }}updateTaskForm').submit();">
-                                                    @foreach ($catalogs as $catalog)
-                                                        <option @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
-                                                            {{ $catalog->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-
-                                            </form>
-                                        </td>
-                                        <td>
                                             <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
-                                                class=" cursor-pointer">
+                                                 class=" cursor-pointer">
                                                 <span class="badge bg-danger">Gấp</span>
                                                 <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
                                                     @include('dropdowns.tag')
@@ -66,7 +50,7 @@
                                         </td>
                                         <td class="col-2">
                                             <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
-                                                class="cursor-pointer">
+                                                 class="cursor-pointer">
                                                 <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                     @if ($task->members->isNotEmpty())
                                                         @php
@@ -77,14 +61,14 @@
                                                         @foreach ($task->members as $member)
                                                             @if ($count < $maxDisplay)
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                    data-bs-placement="top" title="{{ $member->name }}">
+                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                   data-bs-placement="top" title="{{ $member->name }}">
                                                                     @if ($member->image)
                                                                         <img src="{{ asset('storage/' . $member->image) }}"
-                                                                            alt=""
-                                                                            class="rounded-circle avatar-xs" />
+                                                                             alt="" class="rounded-circle avatar-xs"/>
                                                                     @else
-                                                                        <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                        <div
+                                                                            class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
                                                                             style="width: 40px;height: 40px">
                                                                             {{ strtoupper(substr($member->name, 0, 1)) }}
                                                                         </div>
@@ -93,13 +77,14 @@
                                                                 @php $count++; @endphp
                                                             @endif
                                                         @endforeach
-
+    
                                                         @if ($task->members->count() > $maxDisplay)
                                                             <a href="javascript: void(0);" class="avatar-group-item"
-                                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="{{ $task->members->count() - $maxDisplay }} more">
+                                                               data-bs-toggle="tooltip" data-bs-placement="top"
+                                                               title="{{ $task->members->count() - $maxDisplay }} more">
                                                                 <div class="avatar-xs">
-                                                                    <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
+                                                                    <div
+                                                                        class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
                                                                         style="width: 40px; height: 40px;">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
@@ -109,45 +94,47 @@
                                                     @else
                                                         <span>
                                                             <i class="bx fs-20 bxs-user-plus cursor-pointer"
-                                                                data-bs-toggle="tooltip" title="Thêm thành viên"></i>
+                                                               data-bs-toggle="tooltip"
+                                                               title="Thêm thành viên"></i>
                                                         </span>
                                                     @endif
                                                 </div>
-
                                                 <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
                                                     @include('dropdowns.member')
                                                 </div>
                                             </div>
                                         </td>
-
-                                        <td class="col-2">
-                                            <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                id="{{ $task->id }}startTaskForm">
-                                                @csrf
-                                                @method('PUT')
+                                        <form id="updateTaskForm{{ $task->id }}">
+                                            <td>
+                                                <select name="catalog_id" id="catalog_id_{{ $task->id }}"
+                                                        class="form-select no-arrow"
+                                                        onchange="updateTask({{ $task->id }})">
+                                                    @foreach ($catalogs as $catalog)
+                                                        <option
+                                                            @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
+                                                            {{ $catalog->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+    
+                                            <td class="col-2">
                                                 <input type="datetime-local" name="start_date"
-                                                    value="{{ $task->start_date }}" id="startDateInput"
-                                                    class="form-control no-arrow"
-                                                    onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
-                                            </form>
-                                        </td>
-
-                                        <td class="col-2">
-                                            <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                                id="{{ $task->id }}endTaskForm">
-                                                @csrf
-                                                @method('PUT')
+                                                       id="start_date_{{ $task->id }}"
+                                                       value="{{ $task->start_date }}"
+                                                       class="form-control no-arrow"
+                                                       onchange="updateTask({{ $task->id }})">
+                                            </td>
+    
+                                            <td class="col-2">
                                                 <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
-                                                    id="endDateInput" class="form-control no-arrow"
-                                                    onchange="document.getElementById('{{ $task->id }}endTaskForm').submit();">
-                                            </form>
-                                        </td>
-
-
+                                                       id="end_date_{{ $task->id }}" class="form-control no-arrow"
+                                                       onchange="updateTask({{ $task->id }})">
+                                            </td>
+                                        </form>
                                         <td class="col-1 text-center">
                                             <a href="javascript:void(0);" class="text-muted" id="settingTask1"
-                                                data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a>
+                                               data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="settingTask1">
                                                 <li>
                                                     <a class="dropdown-item" href="#"><i
@@ -184,7 +171,7 @@
                                     </tr>
                                 @endforeach
                             @endif
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -317,8 +304,6 @@
     <!-- Buttons for Excel, PDF, and Print -->
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
-
-
     <script>
         $(document).ready(function() {
             $('#task-table').DataTable({
@@ -384,5 +369,27 @@
                 ]
             });
         });
+
+        function updateTask(taskId) {
+            var formData = {
+                catalog_id: $('#catalog_id_' + taskId).val(),
+                start_date: $('#start_date_' + taskId).val(),
+                end_date: $('#end_date_' + taskId).val(),
+            };
+            console.log(taskId);
+            $.ajax({
+                url: `/tasks/` + taskId,
+                method: "PUT",
+                dataType: 'json',
+                data: formData,
+                success: function (response) {
+                    console.log('Task updated successfully:', response);
+                },
+                error: function (xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        }
+
     </script>
 @endsection
