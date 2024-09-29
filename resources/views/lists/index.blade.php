@@ -45,11 +45,7 @@
             </div>
         </div>
     </div>
-    @if (session('success'))
-        <div class="alert alert-success m-4" id="success-alert">
-            {{ session('success') }}
-        </div>
-    @endif
+
     <div class="col-lg-12" id="example" class="display">
         <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;">
             @if(!empty($catalogs))
@@ -181,7 +177,7 @@
                                                                     @php $count++; @endphp
                                                                 @endif
                                                             @endforeach
-        
+
                                                             @if ($task->members->count() > $maxDisplay)
                                                                 <a href="javascript: void(0);" class="avatar-group-item"
                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
@@ -203,7 +199,7 @@
                                                             </span>
                                                         @endif
                                                     </div>
-        
+
                                                     <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
                                                         @include('dropdowns.member')
                                                     </div>
@@ -220,7 +216,7 @@
                                                            onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
                                                 </form>
                                             </td>
-        
+
                                             <td class="col-1">
                                                 <form action="{{ route('tasks.update', $task->id) }}" method="POST"
                                                       id="{{ $task->id }}endTaskForm">
@@ -246,7 +242,7 @@
                                                                 </option>
                                                             @endforeach
                                                     </select>
-        
+
                                                 </form>
                                             </td>
                                             <td>
@@ -263,7 +259,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-        
+
                                                 </form>
                                             </td>
                                             <td class="">

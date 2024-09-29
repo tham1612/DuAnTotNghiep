@@ -25,8 +25,8 @@ class BoardController extends Controller
 
         // Lấy tất cả các bảng mà người dùng thuộc về workspace
         $boards = Board::whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
-                $query->where('is_active', 1)->where('user_id', $userId);
-            })
+            $query->where('is_active', 1)->where('user_id', $userId);
+        })
             ->get()
             ->load(['workspace', 'boardMembers' => function ($query) use ($userId) {
                 // Chỉ tải các thành viên của bảng là người dùng hiện tại
@@ -47,7 +47,6 @@ class BoardController extends Controller
 
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
-
 
 
     /**
@@ -91,7 +90,9 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -109,9 +110,12 @@ class BoardController extends Controller
         $board->load([
             'users',
             'catalogs',
-            'catalogs.tasks',
+            'catalogs.tasks' => function($query) {
+                $query->orderBy('position', 'asc');
+            },
             'catalogs.tasks.members'
         ]);
+
         $boardMembers = $board->users->unique('id');
         // Lấy danh sách catalogs
         $catalogs = $board->catalogs;
@@ -120,15 +124,15 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-        $tasks = $catalogs->pluck('tasks')->flatten();
+        $tasks = $catalogs->pluck('tasks')->flatten()->sortByDesc('position');
         //        $taskMembers=$tasks->pluck('members')->flatten();
 
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board','catalogs', 'tasks')),
-            'list' => view('lists.index', compact('board','catalogs', 'tasks')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
-            default => view('boards.index', compact('board')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks')),
         };
     }
 
