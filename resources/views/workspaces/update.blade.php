@@ -72,8 +72,8 @@
                                         <label for="name">Tên*</label>
                                     </div>
                                     <input type="text" name="name" class="form-control bg-light border-0"
-                                        id="name" minlength="5" maxlength="100"
-                                        value="{{ $workspaceChecked->name }}" required />
+                                        id="name" minlength="5" maxlength="100" value="{{ $workspaceChecked->name }}"
+                                        required />
                                     <div class="invalid-feedback">Tên là bắt buộc và phải chứa ít nhất 5 ký tự.</div>
                                 </div>
                                 <div>
@@ -129,7 +129,7 @@
                                                                 <select name="authorize" id=""
                                                                     class="form-select">
                                                                     <option value="Member">Thành Viên</option>
-                                                                    <option value="Sub-Owner">Phó nhóm</option>
+                                                                    <option value="Sub_Owner">Phó nhóm</option>
                                                                     <option value="Viewer">Người Xem</option>
                                                                 </select>
                                                             </div>
@@ -168,23 +168,31 @@
                                                             class="nav-item d-flex align-items-center justify-content-between">
                                                             <a class="nav-link active" data-bs-toggle="tab"
                                                                 href="#home1" role="tab">
-                                                                Thành viên trong bảng
+                                                                Thành viên trong không gian làm việc
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">2</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wsp_member_count + 1 }}</span>
                                                         </li>
-                                                        <li class="nav-item">
+                                                        <li
+                                                            class="nav-item d-flex align-items-center justify-content-between">
                                                             <a class="nav-link" data-bs-toggle="tab" href="#profile1"
                                                                 role="tab">
                                                                 Yêu cầu tham gia
                                                             </a>
+                                                            <span
+                                                                class="badge bg-dark align-items-center justify-content-center d-flex"
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wsp_invite_count }}</span>
                                                         </li>
-                                                        <li class="nav-item">
+                                                        <li
+                                                            class="nav-item d-flex align-items-center justify-content-between">
                                                             <a class="nav-link" data-bs-toggle="tab" href="#profile2"
                                                                 role="tab">
                                                                 Người xem
                                                             </a>
+                                                            <span
+                                                                class="badge bg-dark align-items-center justify-content-center d-flex"
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wsp_viewer_count }}</span>
                                                         </li>
 
                                                     </ul>
@@ -246,7 +254,7 @@
                                                                     </div>
                                                                 </li>
                                                                 @foreach ($wsp_member as $item)
-                                                                    <li class="d-flex mt-1 mb-1" >
+                                                                    <li class="d-flex mt-1 mb-1">
                                                                         <div class="col-1">
                                                                             <a href="javascript: void(0);"
                                                                                 class="avatar-group-item"
@@ -278,9 +286,13 @@
                                                                                     {{ $item->name }}
                                                                                     @if ($item->user_id == $userId)
                                                                                         <span
-                                                                                            class="text-success">(bạn)</span>
+                                                                                            class="text-success">(Bạn)</span>
+                                                                                    @elseif($item->authorize === 'Sub_Owner')
+                                                                                        <span class="text-primary">(Phó
+                                                                                            nhóm)</span>
                                                                                     @else
-                                                                                        <span class="text-black">(thành viên)</span>
+                                                                                        <span class="text-black">(Thành
+                                                                                            viên)</span>
                                                                                     @endif
 
                                                                                 </p>
@@ -348,7 +360,8 @@
                                                                             </section>
                                                                         </div>
                                                                         <div class="col-4 d-flex justify-content-end">
-                                                                            <form onsubmit="disableButtonOnSubmit()" action="{{ route('accept_member') }}"
+                                                                            <form onsubmit="disableButtonOnSubmit()"
+                                                                                action="{{ route('accept_member') }}"
                                                                                 method="post">
                                                                                 @method('PUT')
                                                                                 @csrf
@@ -380,35 +393,65 @@
                                                         </div>
                                                         <div class="tab-pane" id="profile2" role="tabpanel">
                                                             <ul style="margin-left: -32px;">
-                                                                <li class="d-flex justify-content-between">
-                                                                    <div class="col-1">
-                                                                        <a href="javascript: void(0);"
-                                                                            class="avatar-group-item"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-trigger="hover"
-                                                                            data-bs-placement="top" title="Nancy">
-                                                                            <img src="{{ Storage::url(\Illuminate\Support\Facades\Auth::user()->image) ? Storage::url(\Illuminate\Support\Facades\Auth::user()->image) : '' }}"
-                                                                                alt=""
-                                                                                class="rounded-circle avatar-xs" />
-                                                                        </a>
-                                                                    </div>
-                                                                    <div class="col-7 d-flex flex-column">
-                                                                        <section class="fs-12">
-                                                                            <p style="margin-bottom: 0px;">vinhpq
-                                                                                <span>(bạn)</span>
-                                                                            </p>
-                                                                            <span>@vinhphi</span>
-                                                                            <span><i
-                                                                                    class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                            <span>Quản trị viên không gian làm
-                                                                                việc</span>
-                                                                        </section>
-                                                                    </div>
-                                                                    <div class="col-4 d-flex justify-content-end">
-                                                                        <button class="btn btn-primary me-2">Duyệt</button>
-                                                                        <button class="btn btn-danger">Từ chối</button>
-                                                                    </div>
-                                                                </li>
+                                                                @foreach ($wsp_viewer as $item)
+                                                                    <li class="d-flex justify-content-between">
+                                                                        <div class="col-1">
+                                                                            <a href="javascript: void(0);"
+                                                                                class="avatar-group-item"
+                                                                                data-bs-toggle="tooltip"
+                                                                                data-bs-trigger="hover"
+                                                                                data-bs-placement="top" title="Nancy">
+                                                                                @if ($item->image)
+                                                                                    <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                                                        alt=""
+                                                                                        class="rounded-circle avatar-xs" />
+                                                                                @else
+                                                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                                        style="width: 25px;height: 25px">
+                                                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
+                                                                                    </div>
+                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                        id="swicthWs">
+                                                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
+                                                                                        <i
+                                                                                            class=" ri-arrow-drop-down-line fs-20"></i>
+                                                                                    </span>
+                                                                                @endif
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col-7 d-flex flex-column">
+                                                                            <section class="fs-12">
+                                                                                <p style="margin-bottom: 0px;"
+                                                                                    class="text-black">
+                                                                                    {{ $item->name }}
+                                                                                    <span class="text-black">(Người xem)</span>
+                                                                                </p>
+                                                                                <span>@ {{ $item->name }}</span>
+                                                                                <span><i
+                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
+                                                                                <span>Tham quan không gian làm việc</span>
+                                                                            </section>
+                                                                        </div>
+                                                                        <div class="col-4 d-flex justify-content-end">
+                                                                            {{-- <form onsubmit="disableButtonOnSubmit()"
+                                                                                action="{{ route('accept_member') }}"
+                                                                                method="post">
+                                                                                @method('PUT')
+                                                                                @csrf
+                                                                                <input type="hidden"
+                                                                                    value="{{ $item->user_id }}"
+                                                                                    name="user_id">
+                                                                                <input type="hidden"
+                                                                                    value="{{ $item->workspace_id }}"
+                                                                                    name="workspace_id">
+                                                                                <input type="hidden" value="NULL"
+                                                                                    name="type_update">
+                                                                                <button class="btn btn-primary me-2"
+                                                                                    type="submit">Thêm thành viên</button>
+                                                                            </form> --}}
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
                                                             </ul>
                                                         </div>
 
@@ -441,7 +484,7 @@
 
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#customModal">
-                            Open Settings
+                            Mở cài đặt
                         </button>
 
                         <!-- Modal -->
@@ -449,7 +492,8 @@
                             aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <form onsubmit="disableButtonOnSubmit()" action="{{ route('update_ws_access') }}" method="post">
+                                    <form onsubmit="disableButtonOnSubmit()" action="{{ route('update_ws_access') }}"
+                                        method="post">
                                         @csrf
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="customModalLabel">Chọn khả năng hiển thị trong
@@ -464,7 +508,7 @@
                                                     id="privateOption" value="private"
                                                     {{ $workspaceChecked->access == 'private' ? 'checked' : '' }}>
                                                 <label class="form-check-label option-label" for="privateOption">
-                                                    <span class="option-icon">🔒</span> Riêng tư
+                                                    <i class="ri-lock-2-line fs-20 text-danger"></i>Riêng tư
                                                 </label>
                                                 <p class="option-description">
                                                     Đây là Không gian làm việc riêng tư. Chỉ những người trong Không
@@ -478,7 +522,7 @@
                                                     id="publicOption" value="public"
                                                     {{ $workspaceChecked->access == 'public' ? 'checked' : '' }}>
                                                 <label class="form-check-label option-label" for="publicOption">
-                                                    <span class="option-icon">🟢</span> Công khai
+                                                    <i class="ri-earth-line fs-20 text-success"></i>Công khai
                                                 </label>
                                                 <p class="option-description">
                                                     Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới
@@ -490,8 +534,8 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                                data-bs-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                                         </div>
                                     </form>
                                 </div>
@@ -531,5 +575,5 @@
     <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
 @endsection
 @section('style')
-<style></style>
+    <style></style>
 @endsection
