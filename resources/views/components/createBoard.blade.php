@@ -33,19 +33,22 @@
                           ->get();
 
                 @endphp
-                <form class="p-3" action="{{route('b.store')}}" method="POST">
+                <form class="p-3" action="{{route('b.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
-                    @method('POST')
+
                     <div class="mt-3">
                         <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
                         <input
                             type="text"
-                            class="form-control"
-                            id="title-board"
+                            class="form-control @error('name') is-invalid @enderror"
+                            id="name"
                             placeholder="Nhập tiêu đề bảng"
-                            autofocus
+                            value="{{ old('name') }}"
                             name="name"
                         />
+                        @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mt-3">
                         <label for="" class="form-label">Không gian làm việc</label>
@@ -67,7 +70,7 @@
                     </div>
 
                     <div class="mt-3 card">
-                        <button class="btn btn-primary">Tạo mới</button>
+                        <button class="btn btn-primary" type="submit">Tạo mới</button>
                     </div>
                     <!--end col-->
                 </form>
