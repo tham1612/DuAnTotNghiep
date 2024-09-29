@@ -131,7 +131,7 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-        $tasks = $catalogs->pluck('tasks')->flatten();
+        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board','catalogs', 'tasks')),

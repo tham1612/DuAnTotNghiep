@@ -85,7 +85,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
             });
         Route::resource('catalogs', CatalogControler::class);
-        Route::resource('tasks', \App\Http\Controllers\TaskController::class);
+        Route::resource('tasks', TaskController::class);
     });
 
 Route::get('inboxs', function () {

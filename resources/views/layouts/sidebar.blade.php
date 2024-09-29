@@ -4,7 +4,7 @@
     $workspaces = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
-        ->where('workspace_members.is_accept_invite', NULL)
+        ->where('workspace_members.is_accept_invite', null)
         ->whereNot('workspace_members.is_active', 1)
         ->get();
 
@@ -13,6 +13,14 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
         ->first();
+    $workspaceMemberChecked = \App\Models\WorkspaceMember::query()
+    ->where('workspace_id', $workspaceChecked->workspace_id)
+    ->where('user_id', $userId)
+    ->where('authorize', 'Owner', 'Sub_Owner')
+    ->pluck('user_id') // Sử dụng pluck thay vì fluck
+    ->first(); // Lấy giá trị đầu tiên
+
+        // dd($workspaceMemberChecked);
 
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
         $workspaceBoards = \App\Models\Workspace::query()
@@ -27,16 +35,14 @@
 
         @if ($workspaceChecked)
             @if ($workspaceChecked->image)
-            <img
-                src="{{ asset('storage/' . $workspaceChecked->image) }}"
-                alt=""
-                class="rounded avatar-sm" style="width: 25px;height: 25px">
-        @else
+                <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt="" class="rounded avatar-sm"
+                    style="width: 25px;height: 25px">
+            @else
                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                     style="width: 25px;height: 25px">
+                    style="width: 25px;height: 25px">
                     {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                 </div>
-        @endif
+            @endif
 
             <span class="fs-15 ms-2 text-white" id="swicthWs">
                 {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 16) }}
@@ -47,9 +53,7 @@
             <ul class="dropdown-menu dropdown-menu-md p-3" data-simplebar style="max-height: 600px; width:300px">
                 <li class="d-flex">
                     @if ($workspaceChecked->image)
-                        <img
-                            src="{{ asset('storage/' . $workspaceChecked->image) }}"
-                            alt=""
+                        <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt=""
                             class="rounded avatar-sm">
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
@@ -65,22 +69,22 @@
                         </p>
                     </section>
                 </li>
-                <li class="d-flex">
+                {{-- <li class="d-flex">
                     <a href="#">Thêm thành viên</a>
-                </li>
+                </li> --}}
                 <li class="d-flex">
-                    <a href="{{ route('showFormEditWorkspace') }}"
-                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
-                        việc</a>
+                    @if ($workspaceMemberChecked)
+                        <a href="{{ route('showFormEditWorkspace') }}"
+                            onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                            việc</a>
+                    @endif
                 </li>
                 <li class="border mb-3"></li>
 
                 @foreach ($workspaces as $workspace)
                     <li class="d-flex">
                         @if ($workspace->image)
-                            <img
-                                src="{{ asset('storage/' . $workspace->image) }}"
-                                alt=""
+                            <img src="{{ asset('storage/' . $workspace->image) }}" alt=""
                                 class="rounded-circle avatar-sm">
                         @else
                             <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
