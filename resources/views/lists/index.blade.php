@@ -50,13 +50,10 @@
             </div>
         </div>
     </div>
-    @if (session('success'))
-        <div class="alert alert-success m-4" id="success-alert">
-            {{ session('success') }}
-        </div>
-    @endif
-    <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;">
-        @if (!empty($catalogs))
+    <div class="col-lg-12" id="example" class="display">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;">
+            @if(!empty($catalogs))
+
             @foreach ($catalogs as $catalog)
                 <div class="card" id="{{ $catalog->id }}">
                     <div class="card-header border-0">
@@ -247,6 +244,8 @@
                                                                 </option>
                                                             @endforeach
                                                     </select>
+
+
                                             </td>
                                             <td>
                                                 <select name="catalog_id" id="catalog_id_{{ $task->id }}" class="form-select no-arrow"
@@ -257,7 +256,9 @@
                                                                 {{ $catalog->name }}
                                                             </option>
                                                         @endforeach
+
                                                 </select>
+
                                             </td>
                                             </form>
                                             <td class="">

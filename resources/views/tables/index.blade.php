@@ -6,14 +6,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                {{--                <div class="card-header"> --}}
-                {{--                    <h5 class="card-title mb-0">Basic Datatables</h5> --}}
-                {{--                </div> --}}
-                @if (session('success'))
-                    <div class="alert alert-success m-4" id="success-alert">
-                        {{ session('success') }}
-                    </div>
-                @endif
+
                 <div class="card-body">
                     <table id="task-table" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                         style="width:100%">
@@ -32,20 +25,21 @@
                         </thead>
 
                         <tbody>
-                            @if(!empty($tasks))
-                                @foreach ($tasks as $task)
-                                    <tr>
-                                        <td>{{ $task->id }}</td>
-                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
-                                            {{ \Illuminate\Support\Str::limit($task->text, 30) }}
-                                        </td>
-                                        <td>
-                                            <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
-                                                 class=" cursor-pointer">
-                                                <span class="badge bg-danger">Gấp</span>
-                                                <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
-                                                    @include('dropdowns.tag')
-                                                </div>
+
+                        @if(!empty($tasks))
+                            @foreach ($tasks as $task)
+                                <tr>
+                                    <td>{{ $task->position }}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
+                                        {{ \Illuminate\Support\Str::limit($task->text, 30) }}
+                                    </td>
+                                    <td>
+                                        <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
+                                             class=" cursor-pointer">
+                                            <span class="badge bg-danger">Gấp</span>
+                                            <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
+                                                @include('dropdowns.tag')
+
                                             </div>
                                         </td>
                                         <td class="col-2">

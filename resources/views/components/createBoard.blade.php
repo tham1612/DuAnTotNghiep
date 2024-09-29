@@ -35,7 +35,7 @@
                 @endphp
                 <form class="p-3" action="{{route('b.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
-                    @method('POST')
+
                     <div class="mt-3">
                         <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
                         <input
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="mt-3 card">
-                        <button class="btn btn-primary">Tạo mới</button>
+                        <button class="btn btn-primary" type="submit">Tạo mới</button>
                     </div>
                     <!--end col-->
                 </form>
