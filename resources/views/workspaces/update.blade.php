@@ -32,7 +32,7 @@
                                                 alt="logo light">
                                         </span>
                                     </label>
- 
+
                                     <div class="d-flex align-items-center">
                                         <div class="profile-user position-relative d-inline-block mx-auto mb-4">
                                             @if ($workspaceChecked->image)
