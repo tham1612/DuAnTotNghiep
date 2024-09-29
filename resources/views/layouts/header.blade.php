@@ -764,7 +764,7 @@
                             aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                                @if (auth()->user()->image)
-                                <img class="rounded-circle header-profile-user"
+                                <img class="rounded header-profile-user"
                                      src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->image)}}"
                                      alt="Avatar"/>
                             @else
