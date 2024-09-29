@@ -233,33 +233,42 @@
                                                            id="end_date_{{ $task->id }}" class="form-control no-arrow"
                                                            onchange="updateTaskList({{ $task->id }})">
                                                 </td>
-                                            <td class="">
-                                                    <select name="priority" id="priority_{{ $task->id }}" class="form-select no-arrow"
-                                                            onchange="updateTaskList({{ $task->id }});">
-                                                            @foreach(\App\Enums\IndexEnum::getValues() as $priority)
-                                                                <option
-                                                                    @selected($task->priority == $priority)
-                                                                    value="{{ $priority }}">
-                                                                    {{ $priority }}
-                                                                </option>
-                                                            @endforeach
-                                                    </select>
-
-
-                                            </td>
-                                            <td>
-                                                <select name="catalog_id" id="catalog_id_{{ $task->id }}" class="form-select no-arrow"
-                                                            onchange="updateTaskList({{ $task->id }});">
-                                                        @foreach ($catalogs as $catalog)
-                                                            <option @selected($catalog->id == $task->catalog_id)
-                                                                value="{{ $catalog->id }}">
-                                                                {{ $catalog->name }}
+                                                <td class="">
+                                                    <span class="badge fs-14
+                                                        @if ($task->priority == 'High')
+                                                            bg-danger   <!-- Đỏ cho ưu tiên cao -->
+                                                        @elseif ($task->priority == 'Medium')
+                                                            bg-warning  <!-- Vàng cho ưu tiên trung bình -->
+                                                        @elseif ($task->priority == 'Low')
+                                                            bg-success  <!-- Xanh lá cho ưu tiên thấp -->
+                                                        @else
+                                                            ''          <!-- Không có màu nếu không khớp -->
+                                                        @endif"
+                                                        onclick="toggleSelect({{ $task->id }});">
+                                                        {{$task->priority}}
+                                                    </span>
+                                                    
+                                                    <select name="priority" id="priority_{{ $task->id }}" class="form-select no-arrow" style="display: none;" onchange="updatePriority(this, {{ $task->id }});">
+                                                        @foreach(\App\Enums\IndexEnum::getValues() as $priority)
+                                                            <option value="{{$priority}}" @selected($task->priority == $priority)>
+                                                                {{$priority}}
                                                             </option>
                                                         @endforeach
+                                                    </select>
+                                                </td>  
+                                                <td>
+                                                    <select name="catalog_id" id="catalog_id_{{ $task->id }}" class="form-select no-arrow"
+                                                                onchange="updateTaskList({{ $task->id }});">
+                                                            @foreach ($catalogs as $catalog)
+                                                                <option @selected($catalog->id == $task->catalog_id)
+                                                                    value="{{ $catalog->id }}">
+                                                                    {{ $catalog->name }}
+                                                                </option>
+                                                            @endforeach
 
-                                                </select>
+                                                    </select>
 
-                                            </td>
+                                                </td>
                                             </form>
                                             <td class="">
                                                 <a href="javascript: void(0);">
@@ -403,7 +412,36 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 @endsection
 @section('script')
-    <script>
+    <script> 
+        function toggleSelect(taskId) {
+            const select = document.getElementById(`priority_${taskId}`);
+            const badge = select.previousElementSibling;
+
+            if (select.style.display === "none") {
+                select.style.display = "block"; // Hiện select
+                badge.style.display = "none"; // Ẩn span
+            }
+        }
+        // cập nhật lại span khi chọn slect
+        function updatePriority(selectElement, taskId) {
+            const badge = selectElement.previousElementSibling;
+            const selectedValue = selectElement.value;
+            badge.innerHTML = selectedValue;
+            if (selectedValue === 'High') {
+                badge.className = 'badge fs-14 bg-danger'; 
+            } else if (selectedValue === 'Medium') {
+                badge.className = 'badge fs-14 bg-warning'; 
+            } else if (selectedValue === 'Low') {
+                badge.className = 'badge fs-14 bg-success'; 
+            } else {
+                badge.className = 'badge fs-14'; 
+            }
+            // Ẩn select và hiển thị lại span
+            selectElement.style.display = "none";
+            badge.style.display = "block"; 
+        }
+
+        // ẩn hiện menu catalogs
         document.getElementById('menuIcon').addEventListener('click', function() {
             const verticalMenu = document.getElementById('verticalMenu');
 
