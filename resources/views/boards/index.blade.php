@@ -40,10 +40,9 @@
                     </div>
                 </div>
                 <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="{{$data->name}}" class="tasks" style="min-height: 50px">
+                    <div id="{{$data->name}}" class="tasks">
                         <!-- task item -->
                         @foreach($data->tasks as $task)
-
                             <div class="card tasks-box cursor-pointer" data-value="{{$task->id}}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
@@ -97,48 +96,50 @@
                                                  style=" background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}'); ">
                                             </div>
                                         @endif
-                                        <!-- giao việc -->
-                                        <div class="flex-shrink-0 d-flex align-items-center">
-                                            <i class="ri-account-circle-line fs-20 me-2"></i>
-                                            <div class="avatar-group">
-                                                <a href="javascript: void(0);" class="avatar-group-item"
-                                                   data-bs-toggle="tooltip"
-                                                   data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
-                                                    <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                         alt=""
-                                                         class="rounded-circle avatar-xxs"/>
-                                                </a>
-                                                <a href="javascript: void(0);" class="avatar-group-item"
-                                                   data-bs-toggle="tooltip"
-                                                   data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
-                                                    <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                         alt=""
-                                                         class="rounded-circle avatar-xxs"/>
-                                                </a>
+                                        <!-- giao việc cho thành viên-->
+                                        @if(false)
+                                            <div class="flex-shrink-0 d-flex align-items-center">
+                                                <i class="ri-account-circle-line fs-20 me-2"></i>
+                                                <div class="avatar-group">
+                                                    <a href="javascript: void(0);" class="avatar-group-item"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-trigger="hover" data-bs-placement="top" title="Alexis">
+                                                        <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
+                                                             alt=""
+                                                             class="rounded-circle avatar-xxs"/>
+                                                    </a>
+                                                    <a href="javascript: void(0);" class="avatar-group-item"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-trigger="hover" data-bs-placement="top" title="Nancy">
+                                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
+                                                             alt=""
+                                                             class="rounded-circle avatar-xxs"/>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                         <!-- ngày bắt đầu & kết thúc -->
-                                        <div class="flex-grow-1 d-flex align-items-center">
-                                            <i class="ri-calendar-event-line fs-20 me-2"></i>
-                                            @if($task->start_date && $task->end_date)
-                                                @php
-                                                    $start_date = \Carbon\Carbon::parse($task->start_date);
-                                                    $end_date = \Carbon\Carbon::parse($task->end_date);
-                                                    $start = $start_date->format('d') . ' tháng ' . $start_date->format('m');
-                                                    $end = $end_date->format('d') . ' tháng ' . $end_date->format('m');
-                                                @endphp
+                                        @if($task->start_date && $task->end_date)
+                                            @php
+                                                $start_date = \Carbon\Carbon::parse($task->start_date);
+                                                $end_date = \Carbon\Carbon::parse($task->end_date);
+                                                $start = $start_date->format('d') . ' tháng ' . $start_date->format('m');
+                                                $end = $end_date->format('d') . ' tháng ' . $end_date->format('m');
+                                            @endphp
+                                            <div class="flex-grow-1 d-flex align-items-center">
+                                                <i class="ri-calendar-event-line fs-20 me-2"></i>
                                                 <span
                                                     class="badge bg-success text-whites-12"> {{$start}} - {{$end}}
                                                 </span>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                         <!-- nhãn -->
-                                        <div class="flex-grow-1 d-flex align-items-center">
-                                            <i class="ri-price-tag-3-line fs-20 me-2"></i>
-                                            @if($task->tag)
+                                        @if($task->tag)
+                                            <div class="flex-grow-1 d-flex align-items-center">
+                                                <i class="ri-price-tag-3-line fs-20 me-2"></i>
                                                 <span class="badge bg-success text-whites-12"> làm nhanh </span>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="card-footer border-top-dashed">

@@ -245,28 +245,32 @@
                 notification_content.innerHTML = "Theo dõi";
         });
 
-    const due_date_checkbox = document.querySelector('#due_date_checkbox');
-            const due_date_success = document.querySelector('#due_date_success');
-            const due_date_due = document.querySelector('#due_date_due');
-            due_date_checkbox.addEventListener('click', () => {
-                due_date_due.classList.toggle('d-none');
-                due_date_success.classList.toggle('d-none');
-            });
-            function disableButtonOnSubmit() {
-                continueButton.disabled = true;
-                return true; // Vẫn cho phép submit form
+        const due_date_checkbox = document.querySelector('#due_date_checkbox');
+        const due_date_success = document.querySelector('#due_date_success');
+        const due_date_due = document.querySelector('#due_date_due');
+        due_date_checkbox.addEventListener('click', () => {
+            due_date_due.classList.toggle('d-none');
+            due_date_success.classList.toggle('d-none');
+        });
+
+        function disableButtonOnSubmit() {
+            continueButton.disabled = true;
+            return true; // Vẫn cho phép submit form
+        }
+
+        // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+        setTimeout(function () {
+            var alertElement = document.getElementById('notification-messenger');
+            if (alertElement) {
+                alertElement.style.display = 'none';
             }
-            // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
-            setTimeout(function() {
-                var alertElement = document.getElementById('success-alert');
-                if (alertElement) {
-                    alertElement.style.display = 'none';
-                }
-            }, 3000);
-        </script>
-    @endif
+        }, 5000);
+    </script>
+@endif
 
 
+<!-- notifications init -->
+<script src="{{asset('theme/assets/js/pages/notifications.init.js')}}"></script>
 
 <!-- App js -->
 <script src="{{ asset('theme/assets/js/app.js') }}"></script>
