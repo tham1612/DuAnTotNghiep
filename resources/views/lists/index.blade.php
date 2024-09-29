@@ -157,7 +157,7 @@
                                             <td class="col-2">
                                                 <div class="d-flex">
                                                     <div class="flex-grow-1" data-bs-toggle="modal"
-                                                        data-bs-target="#detailCardModal">
+                                                        data-bs-target="#detailCardModal{{ $task->id }}">
                                                         {{ \Illuminate\Support\Str::limit($task->text, 20) }}
                                                     </div>
                                                 </div>
@@ -227,7 +227,7 @@
                                                            class="form-control no-arrow"
                                                            onchange="updateTaskList({{ $task->id }})">
                                                 </td>
-        
+
                                                 <td class="col-2">
                                                     <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
                                                            id="end_date_{{ $task->id }}" class="form-control no-arrow"

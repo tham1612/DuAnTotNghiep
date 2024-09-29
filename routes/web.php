@@ -83,6 +83,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
+                Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
             });
         Route::resource('catalogs', CatalogControler::class);
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
