@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
 use \App\Http\Controllers\CatalogControler;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -50,17 +51,23 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('editWorkspace');
         Route::post('update_ws_access', [WorkspaceController::class, 'update_ws_access'])
             ->name('update_ws_access');
-        Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite']);
+            //dùng cho modal duyệt thành viên trong chỉnh sửa wsp
+        Route::put('accept_member', [WorkspaceController::class, 'accept_member'])
+            ->name('accept_member');
+        Route::delete('refuse_member/{id}', [WorkspaceController::class, 'refuse_member'])
+            ->name('refuse_member');
+            //thằng này thì sử lý logic khi người dùng kick và link được mời hoặc kick vào link_Pinvite của wsp
+        Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite'])
+            ->withoutMiddleware('auth');
+
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
 
-            Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
+        Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
 
-        Route::get('/home', function () {
-            return view('homes.home');
-        })->name('home');
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        Route::get('/chat',function(){
+        Route::get('/chat', function () {
             return view('chat.index');
         })->name('chat');
 
@@ -79,7 +86,9 @@ Route::middleware(['auth', 'isWorkspace'])
             });
         Route::resource('catalogs', CatalogControler::class);
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);
+
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
+
     });
 
 Route::get('inboxs', function () {

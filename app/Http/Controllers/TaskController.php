@@ -46,7 +46,10 @@ class TaskController extends Controller
         Task::query()
             ->where('id', $id)
             ->update($data);
-        return redirect()->back()->with('success', 'Task đã được cập nhật thành công');
+            return response()->json([
+                'message' => 'Task đã được cập nhật thành công',
+                'success' => true
+            ]);
 
     }
 

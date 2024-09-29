@@ -14,9 +14,9 @@
                         <tr>
                             <th>ID</th>
                             <th>Thẻ</th>
-                            <th>Danh sách</th>
                             <th>Nhãn</th>
                             <th>Thành viên</th>
+                            <th>Danh sách</th>
                             <th>Ngày bắt đầu</th>
                             <th>Ngày hết hạn</th>
                             <th>Thao tác</th>
@@ -25,29 +25,12 @@
                         </thead>
 
                         <tbody>
-                        @if($tasks)
+                        @if(!empty($tasks))
                             @foreach ($tasks as $task)
                                 <tr>
-                                    <td>{{ $task->id }}</td>
-                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal">
+                                    <td>{{ $task->position }}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
                                         {{ \Illuminate\Support\Str::limit($task->text, 30) }}
-                                    </td>
-                                    <td>
-                                        <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}updateTaskForm">
-                                            @csrf
-                                            @method('PUT')
-                                            <select name="catalog_id" id="catalogSelect" class="form-select no-arrow"
-                                                    onchange="document.getElementById('{{ $task->id }}updateTaskForm').submit();">
-                                                @foreach ($catalogs as $catalog)
-                                                    <option
-                                                        @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
-                                                        {{ $catalog->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-
-                                        </form>
                                     </td>
                                     <td>
                                         <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
@@ -109,37 +92,39 @@
                                                     </span>
                                                 @endif
                                             </div>
-
                                             <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="member1">
                                                 @include('dropdowns.member')
                                             </div>
                                         </div>
                                     </td>
+                                    <form id="updateTaskForm{{ $task->id }}">
+                                        <td>
+                                            <select name="catalog_id" id="catalog_id_{{ $task->id }}"
+                                                    class="form-select no-arrow"
+                                                    onchange="updateTask({{ $task->id }})">
+                                                @foreach ($catalogs as $catalog)
+                                                    <option
+                                                        @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
+                                                        {{ $catalog->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
 
-                                    <td class="col-2">
-                                        <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}startTaskForm">
-                                            @csrf
-                                            @method('PUT')
+                                        <td class="col-2">
                                             <input type="datetime-local" name="start_date"
+                                                   id="start_date_{{ $task->id }}"
                                                    value="{{ $task->start_date }}"
-                                                   id="startDateInput" class="form-control no-arrow"
-                                                   onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
-                                        </form>
-                                    </td>
+                                                   class="form-control no-arrow"
+                                                   onchange="updateTask({{ $task->id }})">
+                                        </td>
 
-                                    <td class="col-2">
-                                        <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                              id="{{ $task->id }}endTaskForm">
-                                            @csrf
-                                            @method('PUT')
+                                        <td class="col-2">
                                             <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
-                                                   id="endDateInput" class="form-control no-arrow"
-                                                   onchange="document.getElementById('{{ $task->id }}endTaskForm').submit();">
-                                        </form>
-                                    </td>
-
-
+                                                   id="end_date_{{ $task->id }}" class="form-control no-arrow"
+                                                   onchange="updateTask({{ $task->id }})">
+                                        </td>
+                                    </form>
                                     <td class="col-1 text-center">
                                         <a href="javascript:void(0);" class="text-muted" id="settingTask1"
                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
@@ -314,9 +299,26 @@
             });
         });
 
-        {{--function submitForm() {--}}
-        {{--    document.getElementById('{{ $task->id ??null }}taskForm').submit(); // Submit form khi giá trị thay đổi--}}
-        {{--}--}}
+        function updateTask(taskId) {
+            var formData = {
+                catalog_id: $('#catalog_id_' + taskId).val(),
+                start_date: $('#start_date_' + taskId).val(),
+                end_date: $('#end_date_' + taskId).val(),
+            };
+            console.log(taskId);
+            $.ajax({
+                url: `/tasks/` + taskId,
+                method: "PUT",
+                dataType: 'json',
+                data: formData,
+                success: function (response) {
+                    console.log('Task updated successfully:', response);
+                },
+                error: function (xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        }
 
     </script>
 @endsection
