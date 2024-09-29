@@ -2,44 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Activitylog\Facades\CauserResolver;
-use Spatie\Activitylog\Models\Activity;
+use Illuminate\Support\Facades\Log;
+
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-     public function index($id, Request $request)
-     {
+    public function index($id, Request $request)
+    {
 
-     }
+    }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $data=$request->except(['position','priority','risk','sortorder',]);
+        $data = $request->except(['position', 'priority', 'risk', 'sortorder',]);
         $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
             ->max('position');
-        $data['position']=$maxPosition +1;
+        $data['position'] = $maxPosition + 1;
         $maxSortorder = \App\Models\Task::where('catalog_id', $request->catalog_id)
             ->max('sortorder');
-        $data['sortorder']=$maxSortorder +1;
-        $data['risk']=$data['risk'] ?? 'Medium';
-        $data['priority']=$data['priority'] ?? 'Medium';
-        $task = Task::query()->create($data);
-
-        activity('người dùng tạo task mới')
-        ->causedBy(Auth::user()) // người thực hiện hành động
-        ->perFormedOn($task) // Đối tượng bị tác động
-        ->withProperties(['name' => $task->text,'user_name' => Auth::user()->name])// thuộc tính thêm
-        ->log('Người dùng đã tạo thêm 1 task mới ');
-        return back()->with('success', 'Thêm mới Task thành công');
+        $data['sortorder'] = $maxSortorder + 1;
+        $data['risk'] = $data['risk'] ?? 'Medium';
+        $data['priority'] = $data['priority'] ?? 'Medium';
+        Task::query()->create($data);
+        return back()
+            ->with('success', 'Thêm mới danh sách thành công vào bảng');
     }
+
     public function show()
     {
         // $activities = Activity::all();
@@ -50,20 +46,76 @@ class TaskController extends Controller
     {
         $data = $request->except(['_token', '_method']);
 
-        // Lấy thông tin Task trước khi cập nhật để so sánh
-        $task = Task::find($id);
-        $oldData = $task->toArray(); // Lưu lại dữ liệu cũ
+        Task::query()
+            ->where('id', $id)
+            ->update($data);
+            return response()->json([
+                'message' => 'Task đã được cập nhật thành công',
+                'success' => true
+            ]);
 
-        // Cập nhật Task
-        $task->update($data);
-
-        // Ghi lại log khi cập nhật Task
-        activity('người dùng đã cập nhập task')
-            ->causedBy(Auth::user()) // Người thực hiện hành động
-            ->performedOn($task) // Task bị cập nhật
-            ->withProperties(['old_data' => $oldData, 'new_data' => $data]) // Lưu dữ liệu trước và sau khi cập nhật
-            ->log('Người dùng đã cập nhật Task'); // Mô tả hành động
-
-        return redirect()->back()->with('success', 'Task đã được cập nhật thành công');
     }
+
+    public function updatePosition(Request $request, string $id)
+    {
+        $data = $request->all();
+        $model = Task::query()->findOrFail($id);
+//        dd($data,$id);
+        $data['position'] = $request->position + 1;
+
+        $positionOldSameCatalog = Task::query()
+            ->select('position', 'id')
+            ->findOrFail($id);
+//        dd($positionOldSameCatalog->position);
+
+        if ($request['catalog_id_old'] != $data['catalog_id']) {
+//            dd($data['position']);
+            $positionChangeNew = Task::query()
+                ->whereNotBetween('position', [1, $data['position'] - 1])
+                ->where('catalog_id', $data['catalog_id'])
+                ->get();
+
+            $positionChangeOld = Task::query()
+                ->where('position', '>', $positionOldSameCatalog->position)
+                ->where('catalog_id', $data['catalog_id_old'])
+                ->get();
+
+//            dd($positionChangeOld->toArray());
+            // cap nhat vi tri o catalog moi
+            foreach ($positionChangeNew as $item) {
+                Task::query()
+                    ->where('id', $item->id)
+                    ->update([
+                        'position' => $item->position + 1
+                    ]);
+            }
+            // cap nhat lai vi tri o catalog cu
+            foreach ($positionChangeOld as $item) {
+                Task::query()
+                    ->where('id', $item->id)
+                    ->update([
+                        'position' => $item->position - 1
+                    ]);
+            }
+        } else {
+
+            $positionChange = Task::query()
+                ->whereBetween('position', $positionOldSameCatalog->position > $data['position'] ? [$data['position'], $positionOldSameCatalog->position] : [$positionOldSameCatalog->position, $data['position']])
+                ->where('catalog_id', $data['catalog_id'])
+                ->whereNot('id', $id)
+                ->get();
+
+            foreach ($positionChange as $item) {
+                Task::query()
+                    ->where('id', $item->id)
+                    ->update([
+                        'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
+                    ]);
+            }
+
+        }
+        $model->update($data);
+        return redirect()->route('b.edit', $id)->with('success', 'Cập nhật thành công!!');
+    }
+
 }

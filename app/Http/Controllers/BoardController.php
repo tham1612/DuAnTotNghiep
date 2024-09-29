@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\User;
@@ -23,6 +24,7 @@ class BoardController extends Controller
     {
         $userId = Auth::id();
 
+
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
                 $query->where('created_at', $userId) // Người tạo
@@ -31,6 +33,7 @@ class BoardController extends Controller
                       });
             })
             ->with(['workspace', 'boardMembers'])
+
             ->get()
             ->map(function ($board) use ($userId) {
                 // Tính tổng số thành viên trong bảng
@@ -60,6 +63,7 @@ class BoardController extends Controller
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -71,7 +75,7 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBoardRequest $request)
     {
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
@@ -101,7 +105,9 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -120,8 +126,14 @@ class BoardController extends Controller
             'users',
             'catalogs',
             'catalogs.tasks',
+            'catalogs.tasks.catalog:id,name',
+            'catalogs.tasks' => function($query) {
+                $query->orderBy('position', 'asc');
+            },
+
             'catalogs.tasks.members'
         ]);
+
         $boardMembers = $board->users->unique('id');
         // Lấy danh sách catalogs
         $catalogs = $board->catalogs;
@@ -130,15 +142,16 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-        $tasks = $catalogs->pluck('tasks')->flatten();
-        //        $taskMembers=$tasks->pluck('members')->flatten();
 
+        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+
+        //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board','catalogs', 'tasks')),
-            'list' => view('lists.index', compact('board','catalogs', 'tasks')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
-            default => view('boards.index', compact('board')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks')),
         };
     }
 
