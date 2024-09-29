@@ -134,8 +134,8 @@ class BoardController extends Controller
         //        $taskMembers=$tasks->pluck('members')->flatten();
 
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board')),
-            'list' => view('lists.index', compact('board')),
+            'dashboard' => view('homes.dashboard_board', compact('board','catalogs', 'tasks')),
+            'list' => view('lists.index', compact('board','catalogs', 'tasks')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
             default => view('boards.index', compact('board')),

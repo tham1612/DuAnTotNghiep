@@ -16,23 +16,23 @@
                 @endif
                 <div class="card-body">
                     <table id="task-list" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                        style="width:100%">
+                           style="width:100%">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Thẻ</th>
-                                <th>Danh sách</th>
-                                <th>Nhãn</th>
-                                <th>Thành viên</th>
-                                <th>Ngày bắt đầu </th>
-                                <th>Ngày hết hạn</th>
-                                <th>Thao tác</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Thẻ</th>
+                            <th>Danh sách</th>
+                            <th>Nhãn</th>
+                            <th>Thành viên</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày hết hạn</th>
+                            <th>Thao tác</th>
 
-                            </tr>
+                        </tr>
                         </thead>
 
                         <tbody>
-
+                        @if($tasks)
                             @foreach ($tasks as $task)
                                 <tr>
                                     <td>{{ $task->id }}</td>
@@ -41,13 +41,14 @@
                                     </td>
                                     <td>
                                         <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                            id="{{ $task->id }}updateTaskForm">
+                                              id="{{ $task->id }}updateTaskForm">
                                             @csrf
                                             @method('PUT')
                                             <select name="catalog_id" id="catalogSelect" class="form-select no-arrow"
-                                                onchange="document.getElementById('{{ $task->id }}updateTaskForm').submit();">
+                                                    onchange="document.getElementById('{{ $task->id }}updateTaskForm').submit();">
                                                 @foreach ($catalogs as $catalog)
-                                                    <option @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
+                                                    <option
+                                                        @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
                                                         {{ $catalog->name }}
                                                     </option>
                                                 @endforeach
@@ -57,7 +58,7 @@
                                     </td>
                                     <td>
                                         <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
-                                            class=" cursor-pointer">
+                                             class=" cursor-pointer">
                                             <span class="badge bg-danger">Gấp</span>
                                             <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
                                                 @include('dropdowns.tag')
@@ -66,7 +67,7 @@
                                     </td>
                                     <td class="col-2">
                                         <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
-                                            class="cursor-pointer">
+                                             class="cursor-pointer">
                                             <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                 @if ($task->members->isNotEmpty())
                                                     @php
@@ -77,13 +78,14 @@
                                                     @foreach ($task->members as $member)
                                                         @if ($count < $maxDisplay)
                                                             <a href="javascript: void(0);" class="avatar-group-item"
-                                                                data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                data-bs-placement="top" title="{{ $member->name }}">
+                                                               data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                               data-bs-placement="top" title="{{ $member->name }}">
                                                                 @if ($member->image)
                                                                     <img src="{{ asset('storage/' . $member->image) }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                         alt="" class="rounded-circle avatar-xs"/>
                                                                 @else
-                                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                    <div
+                                                                        class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
                                                                         style="width: 40px;height: 40px">
                                                                         {{ strtoupper(substr($member->name, 0, 1)) }}
                                                                     </div>
@@ -95,10 +97,11 @@
 
                                                     @if ($task->members->count() > $maxDisplay)
                                                         <a href="javascript: void(0);" class="avatar-group-item"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="{{ $task->members->count() - $maxDisplay }} more">
+                                                           data-bs-toggle="tooltip" data-bs-placement="top"
+                                                           title="{{ $task->members->count() - $maxDisplay }} more">
                                                             <div class="avatar-xs">
-                                                                <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
+                                                                <div
+                                                                    class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
                                                                     style="width: 40px; height: 40px;">
                                                                     +{{ $task->members->count() - $maxDisplay }}
                                                                 </div>
@@ -107,8 +110,9 @@
                                                     @endif
                                                 @else
                                                     <span>
-                                                        <i class="bx bxs-user-plus cursor-pointer" data-bs-toggle="tooltip"
-                                                            title="Thêm thành viên"></i>
+                                                        <i class="bx fs-20 bxs-user-plus cursor-pointer"
+                                                           data-bs-toggle="tooltip"
+                                                           title="Thêm thành viên"></i>
                                                     </span>
                                                 @endif
                                             </div>
@@ -119,32 +123,33 @@
                                         </div>
                                     </td>
 
-                                    <td class=" col-2">
+                                    <td class="col-2">
                                         <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                            id="{{ $task->id }}taskForm">
+                                              id="{{ $task->id }}startTaskForm">
                                             @csrf
                                             @method('PUT')
-                                            <input type="datetime-local" name="start_date" value="{{ $task->start_date }}"
-                                                id="startDateInput" class="form-control no-arrow"
-                                                onchange="document.getElementById('{{ $task->id }}taskForm').submit();">
+                                            <input type="datetime-local" name="start_date"
+                                                   value="{{ $task->start_date }}"
+                                                   id="startDateInput" class="form-control no-arrow"
+                                                   onchange="document.getElementById('{{ $task->id }}startTaskForm').submit();">
                                         </form>
-
                                     </td>
-                                    <td class=" col-2">
+
+                                    <td class="col-2">
                                         <form action="{{ route('tasks.update', $task->id) }}" method="POST"
-                                            id="{{ $task->id }}taskForm">
+                                              id="{{ $task->id }}endTaskForm">
                                             @csrf
                                             @method('PUT')
                                             <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
-                                                id="endDateInput" class="form-control no-arrow"
-                                                onchange="document.getElementById('{{ $task->id }}taskForm').submit();">
+                                                   id="endDateInput" class="form-control no-arrow"
+                                                   onchange="document.getElementById('{{ $task->id }}endTaskForm').submit();">
                                         </form>
-
                                     </td>
+
 
                                     <td class="col-1 text-center">
                                         <a href="javascript:void(0);" class="text-muted" id="settingTask1"
-                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                           data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
                                         <ul class="dropdown-menu" aria-labelledby="settingTask1">
                                             <li>
                                                 <a class="dropdown-item" href="#"><i
@@ -180,7 +185,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-
+                        @endif
                         </tbody>
                     </table>
                 </div>
@@ -189,7 +194,7 @@
     </div><!--end row-->
 
     <button class="btn btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-        data-bs-offset="70,10">
+            data-bs-offset="70,10">
         <i class="ri-add-line me-1"></i>
         Thêm
     </button>
@@ -203,7 +208,7 @@
                     <h5 class="text-center">Thêm danh sách</h5>
                     <div class="mb-2">
                         <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
-                            placeholder="Nhập tên danh sách..." />
+                               placeholder="Nhập tên danh sách..."/>
                     </div>
                     <input type="hidden" name="board_id" value="{{ $board->id }}">
 
@@ -225,7 +230,7 @@
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
                         <input type="text" name="text" class="form-control" id="exampleDropdownFormEmail"
-                            placeholder="Nhập tên thẻ..." />
+                               placeholder="Nhập tên thẻ..."/>
                     </div>
                     <div class="mb-2">
                         <select name="catalog_id" id="" class="form-select">
@@ -252,9 +257,9 @@
 
 @section('style')
     <!--datatable css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"/>
     <!--datatable responsive css-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
     <style>
@@ -308,7 +313,7 @@
 
     {{-- <script src="{{ asset('theme/assets/js/pages/datatables.init.js') }}"></script> --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             new DataTable("#task-list", {
                 order: [
                     [0, 'desc'],
@@ -316,8 +321,9 @@
             });
         });
 
-        function submitForm() {
-            document.getElementById('{{ $task->id }}taskForm').submit(); // Submit form khi giá trị thay đổi
-        }
+        {{--function submitForm() {--}}
+        {{--    document.getElementById('{{ $task->id ??null }}taskForm').submit(); // Submit form khi giá trị thay đổi--}}
+        {{--}--}}
+
     </script>
 @endsection

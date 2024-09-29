@@ -22,20 +22,21 @@ class GanttController extends Controller
 
         // Lấy các task thuộc về những catalog_ids này, sắp xếp theo sortorder và kiểm tra duration khác 0
         $tasks = Task::whereIn('catalog_id', $catalogIds)
-        ->orderBy('sortorder')
-        ->get()
-        ->map(function($task) {
-          $startDate = $task->start_date instanceof \Carbon\Carbon ? $task->start_date: \Carbon\Carbon::parse($task->start_date);
-          $endDate = $task->end_date instanceof \Carbon\Carbon ? $task->end_date : \Carbon\Carbon::parse($task->end_date);
+            ->whereNotNull('start_date')
+            ->whereNotNull('end_date')
+            ->orderBy('sortorder')
+            ->get()
+            ->map(function ($task) {
+                $startDate = $task->start_date instanceof \Carbon\Carbon ? $task->start_date : \Carbon\Carbon::parse($task->start_date);
+                $endDate = $task->end_date instanceof \Carbon\Carbon ? $task->end_date : \Carbon\Carbon::parse($task->end_date);
 
-            $task->duration = $startDate && $endDate
-                ? $startDate->diffInDays($endDate)
-                : 0;
-            return $task;
-        })
-        ->filter(function($task) {
-            return $task->duration > 0;
-        });
+                $task->duration = $startDate->diffInDays($endDate);
+                return $task;
+            })
+            ->filter(function ($task) {
+                return $task->duration > 0;
+            });
+
 
 
         $links = TaskLink::all();
