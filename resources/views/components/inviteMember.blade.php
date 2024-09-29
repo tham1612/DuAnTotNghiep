@@ -64,6 +64,11 @@
                                     Yêu cầu tham gia
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#profile2" role="tab">
+                                    Người xem
+                                </a>
+                            </li>
 
                         </ul>
 
@@ -101,6 +106,35 @@
                                 </ul>
                             </div>
                             <div class="tab-pane" id="profile1" role="tabpanel">
+                                <ul style="margin-left: -32px;">
+                                    <li class="d-flex justify-content-between">
+                                        <div class="col-1">
+                                            <a href="javascript: void(0);" class="avatar-group-item"
+                                                data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                data-bs-placement="top" title="Nancy">
+                                                <img src="{{ Storage::url(\Illuminate\Support\Facades\Auth::user()->image) ? Storage::url(\Illuminate\Support\Facades\Auth::user()->image) : '' }}"
+                                                    alt="" class="rounded-circle avatar-xs" />
+                                            </a>
+                                        </div>
+                                        <div class="col-7 d-flex flex-column">
+                                            <section class="fs-12">
+                                                <p style="margin-bottom: 0px;">vinhpq
+                                                    <span>(bạn)</span>
+                                                </p>
+                                                <span>@vinhphi</span>
+                                                <span><i class="ri-checkbox-blank-circle-fill"></i></span>
+                                                <span>Quản trị viên không gian làm
+                                                    việc</span>
+                                            </section>
+                                        </div>
+                                        <div class="col-4 d-flex justify-content-end">
+                                            <button class="btn btn-primary me-2">Duyệt</button>
+                                            <button class="btn btn-danger">Từ chối</button>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane" id="profile2" role="tabpanel">
                                 <ul style="margin-left: -32px;">
                                     <li class="d-flex justify-content-between">
                                         <div class="col-1">
