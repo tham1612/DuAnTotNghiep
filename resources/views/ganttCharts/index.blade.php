@@ -61,7 +61,7 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}">
+                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="disableButtonOnSubmit()">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
 
@@ -148,18 +148,6 @@
                 var modalElement = document.getElementById('detailCardModal');
 
                 if (modalElement) {
-                    // Lấy task từ Gantt chart bằng taskId (giả sử bạn có taskId)
-                    // var task = gantt.getTask(taskId);
-
-                    // Đưa dữ liệu vào input trong modal
-                    // var inputElement = document.getElementById("borderInput");
-                    // if (inputElement) {
-                    //     inputElement.value = task.text;
-                    // } else {
-                    //     console.error("Phần tử input không tìm thấy!");
-                    // }
-
-                    // Mở modal Bootstrap
                     var modalInstance = new bootstrap.Modal(modalElement);
                     modalInstance.show();
                 } else {
