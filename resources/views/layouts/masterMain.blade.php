@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
@@ -244,31 +245,50 @@
                 notification_content.innerHTML = "Theo dõi";
         });
 
-    const due_date_checkbox = document.querySelector('#due_date_checkbox');
-            const due_date_success = document.querySelector('#due_date_success');
-            const due_date_due = document.querySelector('#due_date_due');
-            due_date_checkbox.addEventListener('click', () => {
-                due_date_due.classList.toggle('d-none');
-                due_date_success.classList.toggle('d-none');
-            });
-            function disableButtonOnSubmit() {
-                continueButton.disabled = true;
-                return true; // Vẫn cho phép submit form
-            }
-            // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
-            setTimeout(function() {
-                var alertElement = document.getElementById('success-alert');
-                if (alertElement) {
-                    alertElement.style.display = 'none';
-                }
-            }, 3000);
-        </script>
-    @endif
+        const due_date_checkbox = document.querySelector('#due_date_checkbox');
+        const due_date_success = document.querySelector('#due_date_success');
+        const due_date_due = document.querySelector('#due_date_due');
+        due_date_checkbox.addEventListener('click', () => {
+            due_date_due.classList.toggle('d-none');
+            due_date_success.classList.toggle('d-none');
+        });
 
-@yield('script')
+        function disableButtonOnSubmit() {
+            continueButton.disabled = true;
+            return true; // Vẫn cho phép submit form
+        }
+
+        // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+        setTimeout(function () {
+            var alertElement = document.getElementById('notification-messenger');
+            if (alertElement) {
+                alertElement.style.display = 'none';
+            }
+        }, 5000);
+    </script>
+@endif
+
+
+<!-- notifications init -->
+<script src="{{asset('theme/assets/js/pages/notifications.init.js')}}"></script>
 
 <!-- App js -->
 <script src="{{ asset('theme/assets/js/app.js') }}"></script>
+
+
+<script >
+    $(document).ready(function (){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    })
+</script>
+
+
+@yield('script')
+
 </body>
 
 </html>
