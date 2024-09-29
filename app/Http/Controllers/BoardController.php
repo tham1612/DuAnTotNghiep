@@ -125,7 +125,8 @@ class BoardController extends Controller
         $board->load([
             'users',
             'catalogs',
-
+            'catalogs.tasks',
+            'catalogs.tasks.catalog:id,name',
             'catalogs.tasks' => function($query) {
                 $query->orderBy('position', 'asc');
             },
