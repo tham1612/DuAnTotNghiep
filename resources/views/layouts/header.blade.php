@@ -805,3 +805,21 @@
 
     </div>
 </header>
+<div class="bg-light" aria-live="polite" aria-atomic="true"
+     style="position: fixed; top: 70px;right: 10px; z-index: 100">
+    @if (session('success'))
+{{--        @foreach(session('success') as $notification)--}}
+            <div class="toast fade show bg-success-subtle" role="alert" aria-live="assertive" aria-atomic="true"  data-bs-toggle="toast"
+                 id="notification-messenger">
+                <div class="toast-header">
+                    <img src="{{asset('theme/assets/images/logo-sm.png')}}" class="rounded me-2" alt="..." height="20">
+                    <span class="fw-semibold me-auto">Task Flow.</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body fw-bolder text-success" >
+                    {{session('success')}}
+                </div>
+            </div>
+{{--        @endforeach--}}
+    @endif
+</div>
