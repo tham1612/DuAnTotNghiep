@@ -26,25 +26,25 @@
 
                         <tbody>
 
-                        @if(!empty($tasks))
-                            @foreach ($tasks as $task)
-                                <tr>
-                                    <td>{{ $task->position }}</td>
-                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
-                                        {{ \Illuminate\Support\Str::limit($task->text, 30) }}
-                                    </td>
-                                    <td>
-                                        <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
-                                             class=" cursor-pointer">
-                                            <span class="badge bg-danger">Gấp</span>
-                                            <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
-                                                @include('dropdowns.tag')
+                            @if (!empty($tasks))
+                                @foreach ($tasks as $task)
+                                    <tr>
+                                        <td>{{ $task->position }}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
+                                            {{ \Illuminate\Support\Str::limit($task->text, 30) }}
+                                        </td>
+                                        <td>
+                                            <div id="tag1" data-bs-toggle="dropdown" aria-expanded="false"
+                                                class=" cursor-pointer">
+                                                <span class="badge bg-danger">Gấp</span>
+                                                <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="tag1">
+                                                    @include('dropdowns.tag')
 
-                                            </div>
+                                                </div>
                                         </td>
                                         <td class="col-2">
                                             <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
-                                                 class="cursor-pointer">
+                                                class="member cursor-pointer">
                                                 <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                     @if ($task->members->isNotEmpty())
                                                         @php
@@ -54,15 +54,15 @@
                                                         @endphp
                                                         @foreach ($task->members as $member)
                                                             @if ($count < $maxDisplay)
-                                                                <a href="javascript: void(0);" class="avatar-group-item"
-                                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                   data-bs-placement="top" title="{{ $member->name }}">
+                                                                <a href="" class="avatar-group-item member-task"
+                                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                    data-bs-placement="top" title="{{ $member->name }}">
                                                                     @if ($member->image)
                                                                         <img src="{{ asset('storage/' . $member->image) }}"
-                                                                             alt="" class="rounded-circle avatar-xs"/>
+                                                                            alt=""
+                                                                            class="rounded-circle avatar-xs" />
                                                                     @else
-                                                                        <div
-                                                                            class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                        <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
                                                                             style="width: 40px;height: 40px">
                                                                             {{ strtoupper(substr($member->name, 0, 1)) }}
                                                                         </div>
@@ -71,14 +71,13 @@
                                                                 @php $count++; @endphp
                                                             @endif
                                                         @endforeach
-    
+
                                                         @if ($task->members->count() > $maxDisplay)
                                                             <a href="javascript: void(0);" class="avatar-group-item"
-                                                               data-bs-toggle="tooltip" data-bs-placement="top"
-                                                               title="{{ $task->members->count() - $maxDisplay }} more">
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="{{ $task->members->count() - $maxDisplay }} more">
                                                                 <div class="avatar-xs">
-                                                                    <div
-                                                                        class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
+                                                                    <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
                                                                         style="width: 40px; height: 40px;">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
@@ -88,8 +87,7 @@
                                                     @else
                                                         <span>
                                                             <i class="bx fs-20 bxs-user-plus cursor-pointer"
-                                                               data-bs-toggle="tooltip"
-                                                               title="Thêm thành viên"></i>
+                                                                data-bs-toggle="tooltip" title="Thêm thành viên"></i>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -101,34 +99,33 @@
                                         <form id="updateTaskForm{{ $task->id }}">
                                             <td>
                                                 <select name="catalog_id" id="catalog_id_{{ $task->id }}"
-                                                        class="form-select no-arrow"
-                                                        onchange="updateTask({{ $task->id }})">
+                                                    class="form-select no-arrow"
+                                                    onchange="updateTask({{ $task->id }})">
                                                     @foreach ($catalogs as $catalog)
-                                                        <option
-                                                            @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
+                                                        <option @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
                                                             {{ $catalog->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
                                             </td>
-    
+
                                             <td class="col-2">
                                                 <input type="datetime-local" name="start_date"
-                                                       id="start_date_{{ $task->id }}"
-                                                       value="{{ $task->start_date }}"
-                                                       class="form-control no-arrow"
-                                                       onchange="updateTask({{ $task->id }})">
+                                                    id="start_date_{{ $task->id }}" value="{{ $task->start_date }}"
+                                                    class="form-control no-arrow"
+                                                    onchange="updateTask({{ $task->id }})">
                                             </td>
-    
+
                                             <td class="col-2">
                                                 <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
-                                                       id="end_date_{{ $task->id }}" class="form-control no-arrow"
-                                                       onchange="updateTask({{ $task->id }})">
+                                                    id="end_date_{{ $task->id }}" class="form-control no-arrow"
+                                                    onchange="updateTask({{ $task->id }})">
                                             </td>
                                         </form>
                                         <td class="col-1 text-center">
                                             <a href="javascript:void(0);" class="text-muted" id="settingTask1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                    class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="settingTask1">
                                                 <li>
                                                     <a class="dropdown-item" href="#"><i
@@ -165,7 +162,7 @@
                                     </tr>
                                 @endforeach
                             @endif
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -302,68 +299,46 @@
         $(document).ready(function() {
             $('#task-table').DataTable({
                 dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'csv',
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ].map(function(extension){
+                    return{
+                        extend: extension,
                         exportOptions: {
                             format: {
                                 body: function(data, row, column, node) {
-                                    // Kiểm tra nếu là cột select hoặc dropdown
-                                    if ($(node).is('select') || $(node).is('.dropdown-menu')) {
-                                        // Trả về giá trị được chọn
-                                        return $(node).find('option:selected').text() || $(node)
-                                            .find('.active').text();
+                                    if ($(node).is('td') && $(node).find('.member-task').length) {
+                                        let memberList = [];
+                                        $(node).find('.member-task').each(function() {
+                                            let memberName = $(this).attr('data-bs-original-title');
+                                            if (memberName) {
+                                                memberList.push(memberName.trim());
+                                            }
+                                        });
+                                        if (memberList.length > 0) {
+                                            return memberList.join(', ');
+                                        } else {
+                                            return '';
+                                        }
                                     }
-                                    return data; // Trả về giá trị gốc cho các cột khác
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        exportOptions: {
-                            format: {
-                                body: function(data, row, column, node) {
-                                    if ($(node).is('select') || $(node).is('.dropdown-menu')) {
-                                        return $(node).find('option:selected').text() || $(node)
-                                            .find('.active').text();
+                                    if ($(node).is('td') && $(node).find('select').length) {
+                                        return $(node).find('select option:selected').text();
                                     }
-                                    return data;
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            format: {
-                                body: function(data, row, column, node) {
-                                    if ($(node).is('select') || $(node).is('.dropdown-menu')) {
-                                        return $(node).find('option:selected').text() || $(node)
-                                            .find('.active').text();
+                                    if ($(node).is('td') && $(node).find('.dropdown-menu').length) {
+                                        return $(node).find('.dropdown-menu .active').text() || $(node).find('.badge').text();
                                     }
-                                    return data;
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            format: {
-                                body: function(data, row, column, node) {
-                                    if ($(node).is('select') || $(node).is('.dropdown-menu')) {
-                                        return $(node).find('option:selected').text() || $(node)
-                                            .find('.active').text();
+                                    if ($(node).is('td') && $(node).find('input[type="datetime-local"]').length) {
+                                        return $(node).find('input[type="datetime-local"]').val();
                                     }
-                                    return data;
+                                    return $.trim($(node).text());
                                 }
                             }
                         }
                     }
-                ]
+                })
             });
         });
-
+        
         function updateTask(taskId) {
             var formData = {
                 catalog_id: $('#catalog_id_' + taskId).val(),
@@ -376,14 +351,13 @@
                 method: "PUT",
                 dataType: 'json',
                 data: formData,
-                success: function (response) {
+                success: function(response) {
                     console.log('Task updated successfully:', response);
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     console.error('An error occurred:', xhr.responseText);
                 }
             });
         }
-
     </script>
 @endsection
