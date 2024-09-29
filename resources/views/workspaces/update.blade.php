@@ -84,7 +84,7 @@
                                 <div>
                                     <div class="mb-2">
                                         <textarea name="description" class="form-control bg-light" id="description" rows="3" placeholder="Mô tả">{{ $workspaceChecked->description }}</textarea>
-                                        
+
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-2">Lưu</button>

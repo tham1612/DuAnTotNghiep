@@ -82,16 +82,16 @@
                                                                         @endif
                                                                     @endforeach
 
-                                                                    @if (count($taskMembers) > $maxDisplay)
+                                                                    @if ($task->members->count() > $maxDisplay)
                                                                         <a href="javascript: void(0);"
                                                                            class="avatar-group-item"
                                                                            data-bs-toggle="tooltip"
                                                                            data-bs-placement="top"
-                                                                           title="{{ count($taskMembers) - $maxDisplay }} more">
+                                                                           title="{{ $task->members->count() - $maxDisplay }} more">
                                                                             <div class="avatar-sm">
                                                                                 <div
                                                                                     class="avatar-title rounded-circle">
-                                                                                    +{{ count($taskMembers) - $maxDisplay }}
+                                                                                    +{{ $task->members->count() - $maxDisplay }}
                                                                                 </div>
                                                                             </div>
                                                                         </a>
