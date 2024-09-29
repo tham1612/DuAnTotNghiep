@@ -4,10 +4,10 @@ var myModalEl,
     addNewBoard,
     addMember,
     profileField,
-    reader
-    ;
+    reader;
 
-var targetTaskId = document.getElementsByClassName('tasks-box');
+var taskId = document.getElementsByClassName('tasks-box');
+var catalog_id_old, catalog_id;
 
 function noTaskImage() {
     Array.from(document.querySelectorAll("#kanbanboard .tasks-list")).forEach(
@@ -87,9 +87,13 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
 }),
     (drake = dragula(tasks_list)
         .on("drag", function (e) {
+            // catalog truoc do
+            const targetList = e.parentElement.closest('.tasks-list');
+            catalog_id_old = targetList.dataset.value;
             // lấy id task bị keo
-            targetTaskId = event.target.closest('.tasks-box').dataset.value;
-            console.log(targetTaskId)
+            console.log('catalog_old ' + catalog_id_old);
+            taskId = event.target.closest('.tasks-box').dataset.value;
+            console.log(taskId)
             e.className = e.className.replace("ex-moved", "");
         })
         .on("drop", function (e, target) {
@@ -97,14 +101,32 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             const targetList = e.parentElement.closest('.tasks-list'); // Lấy phần tử cha (tasks-list) chứa task vừa được thả
             if (targetList) {
                 // lấy id catalog được thả vào
-                const listValue = targetList.dataset.value;
-                console.log("Task " + targetTaskId + " được thả vào danh sách với giá trị:", listValue); // Xuất giá trị của danh sách ra console
+                catalog_id = targetList.dataset.value;
+                console.log("Task " + taskId + " được thả vào danh sách với giá trị:", catalog_id); // Xuất giá trị của danh sách ra console
             }
             // lấy vị trí cuối cùng trong danh sách
             const tasks = Array.from(target.children);
-            const newIndex = tasks.indexOf(e);
-            console.log(newIndex)
+            const position = tasks.indexOf(e);
+            console.log('vị trí được thả', position)
 
+            $(document).ready(function () {
+                $.ajax({
+                    url: `/tasks/updatePosition/${taskId}` ,
+                    type: "PUT",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: "json",
+                    data: {
+                        position,
+                        catalog_id_old,
+                        catalog_id
+                    },
+                    success: function (response) {
+                        console.log(response);
+                    }
+                })
+            })
             e.className += " ex-moved";
         })
         .on("over", function (e, a) {
