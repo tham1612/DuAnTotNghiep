@@ -227,7 +227,7 @@
                                                            class="form-control no-arrow"
                                                            onchange="updateTaskList({{ $task->id }})">
                                                 </td>
-        
+
                                                 <td class="col-2">
                                                     <input type="datetime-local" name="end_date" value="{{ $task->end_date }}"
                                                            id="end_date_{{ $task->id }}" class="form-control no-arrow"
