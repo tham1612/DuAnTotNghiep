@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+// use function Laravel\Prompts\select;
 
 class BoardController extends Controller
 {
@@ -124,12 +126,13 @@ class BoardController extends Controller
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
             'users',
+            // 'members',
             'catalogs',
             'catalogs.tasks',
             'catalogs.tasks.catalog:id,name',
-            'catalogs.tasks' => function($query) {
-                $query->orderBy('position', 'asc');
-            },
+           'catalogs.tasks' => function($query) {
+               $query->orderBy('position', 'asc');
+           },
 
             'catalogs.tasks.members'
         ]);
@@ -146,13 +149,19 @@ class BoardController extends Controller
 
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
+        $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+            ->where('user_id',auth()->id())
+            ->value('is_star');
+
+
+
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks','member_Is_star')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
         };
     }
 
@@ -161,7 +170,35 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->except(['_token', '_method']);
+        Board::query()
+            ->where('id', $id)
+            ->update($data);
+        return response()->json([
+            'message' => 'Board đã được cập nhật thành công',
+            'success' => true
+        ]);
+
+    }
+    public function updateBoardMember(Request $request, string $id)
+    {
+        $data = $request->only(['user_id', 'board_id']);
+
+
+        $boardMember = BoardMember::where('board_id', $data['board_id'])
+            ->where('user_id', $data['user_id'])
+            ->first();
+
+        if ($boardMember) {
+            $newIsStar = $boardMember->is_star == 1 ? 0 : 1;
+            $boardMember->update(['is_star' => $newIsStar]);
+
+            return response()->json([
+                'message' => 'Người dùng đã theo dõi bảng',
+                'success' => true
+            ]);
+        }
+
     }
 
     /**
