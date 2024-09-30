@@ -60,30 +60,37 @@
                                             </div>
                                         </div>
                                         <div class="ms-3">
-                                            <h5 class="m-0">không gian làm việc của {{ $workspaceChecked->wsp_name }}</h5>
-                                            <span class="text-muted small"><i
-                                                    class="bi bi-globe"></i>{{ $access }}</span>
+                                            <<<<<<< HEAD <h5 class="m-0">không gian làm việc của
+                                                {{ $workspaceChecked->wsp_name }}</h5>
+                                                =======
+                                                <h5 class="m-0">Không gian làm việc của {{ $userName }}</h5>
+                                                >>>>>>> main
+                                                <span class="text-muted small"><i
+                                                        class="bi bi-globe"></i>{{ $access }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
                                     <div>
-                                        <label for="name">Tên*</label>
+                                        <label for="name">Tên không gian làm việc</label>
                                     </div>
-                                    <input type="text" name="name" class="form-control bg-light border-0"
-                                        id="name" minlength="5" maxlength="100" value="{{ $workspaceChecked->name }}"
-                                        required />
-                                    <div class="invalid-feedback">Tên là bắt buộc và phải chứa ít nhất 5 ký tự.</div>
+
+                                    <input type="text" name="name"
+                                        class="form-control bg-light @error('name') is-invalid @enderror" id="name"
+                                        value="{{ old('name', $workspaceChecked->name) }}" />
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+
                                 </div>
                                 <div>
                                     <label for="description">Mô tả</label>
                                 </div>
                                 <div>
                                     <div class="mb-2">
-                                        <textarea name="description" class="form-control bg-light border-0" id="description" rows="3" placeholder="Mô tả"
-                                            required>{{ $workspaceChecked->description }}</textarea>
-                                        <div class="invalid-feedback">Vui lòng nhập mô tả.</div>
+                                        <textarea name="description" class="form-control bg-light" id="description" rows="3" placeholder="Mô tả">{{ $workspaceChecked->description }}</textarea>
+
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-2">Lưu</button>
@@ -424,7 +431,8 @@
                                                                                 <p style="margin-bottom: 0px;"
                                                                                     class="text-black">
                                                                                     {{ $item->name }}
-                                                                                    <span class="text-black">(Người xem)</span>
+                                                                                    <span class="text-black">(Người
+                                                                                        xem)</span>
                                                                                 </p>
                                                                                 <span>@ {{ $item->name }}</span>
                                                                                 <span><i
