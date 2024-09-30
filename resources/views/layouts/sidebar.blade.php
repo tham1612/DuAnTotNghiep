@@ -14,13 +14,13 @@
         ->where('workspace_members.is_active', 1)
         ->first();
     $workspaceMemberChecked = \App\Models\WorkspaceMember::query()
-    ->where('workspace_id', $workspaceChecked->workspace_id)
-    ->where('user_id', $userId)
-    ->where('authorize', 'Owner', 'Sub_Owner')
-    ->pluck('user_id') // Sử dụng pluck thay vì fluck
-    ->first(); // Lấy giá trị đầu tiên
+        ->where('workspace_id', $workspaceChecked->workspace_id)
+        ->where('user_id', $userId)
+        ->where('authorize', 'Owner', 'Sub_Owner')
+        ->pluck('user_id') // Sử dụng pluck thay vì fluck
+        ->first(); // Lấy giá trị đầu tiên
 
-        // dd($workspaceMemberChecked);
+    // dd($workspaceMemberChecked);
 
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
         $workspaceBoards = \App\Models\Workspace::query()
@@ -73,11 +73,9 @@
                     <a href="#">Thêm thành viên</a>
                 </li> --}}
                 <li class="d-flex">
-                    @if ($workspaceMemberChecked)
-                        <a href="{{ route('showFormEditWorkspace') }}"
-                            onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
-                            việc</a>
-                    @endif
+                    <a href="{{ route('showFormEditWorkspace') }}"
+                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                        việc</a>
                 </li>
                 <li class="border mb-3"></li>
 

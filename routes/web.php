@@ -51,12 +51,12 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('editWorkspace');
         Route::post('update_ws_access', [WorkspaceController::class, 'update_ws_access'])
             ->name('update_ws_access');
-            //dùng cho modal duyệt thành viên trong chỉnh sửa wsp
+        //dùng cho modal duyệt thành viên trong chỉnh sửa wsp
         Route::put('accept_member', [WorkspaceController::class, 'accept_member'])
             ->name('accept_member');
         Route::delete('refuse_member/{id}', [WorkspaceController::class, 'refuse_member'])
             ->name('refuse_member');
-            //thằng này thì sử lý logic khi người dùng kick và link được mời hoặc kick vào link_Pinvite của wsp
+        //thằng này thì sử lý logic khi người dùng kick và link được mời hoặc kick vào link_Pinvite của wsp
         Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite'])
             ->withoutMiddleware('auth');
 
@@ -85,7 +85,11 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
             });
         Route::resource('catalogs', CatalogControler::class);
+
         Route::resource('tasks', TaskController::class);
+
+        Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
+
     });
 
 Route::get('inboxs', function () {

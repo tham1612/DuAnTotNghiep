@@ -174,7 +174,7 @@ class WorkspaceController extends Controller
         $user = Auth::user();
         $userName = $user->name;
         $workspaceChecked = Workspace::query()
-            ->select('*', 'workspaces.id as id', 'workspace_members.id as wm_id')
+            ->select('*', 'workspaces.id as id', 'workspace_members.id as wm_id', 'workspaces.name as wsp_name')
             ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
             ->where('workspace_members.user_id', $userId)
             ->where('workspace_members.is_active', 1)
