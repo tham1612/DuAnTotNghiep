@@ -25,8 +25,6 @@ class BoardController extends Controller
     public function index()
     {
         $userId = Auth::id();
-
-
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
             $query->where('created_at', $userId) // Người tạo
