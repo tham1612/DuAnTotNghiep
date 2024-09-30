@@ -29,11 +29,11 @@ class BoardController extends Controller
 
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) // Người tạo
-                      ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                          $query->where('user_id', $userId); // Thành viên
-                      });
-            })
+            $query->where('created_at', $userId) // Người tạo
+                ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                    $query->where('user_id', $userId); // Thành viên
+                });
+        })
             ->with(['workspace', 'boardMembers'])
 
             ->get()
@@ -146,6 +146,7 @@ class BoardController extends Controller
          * */
 
 
+
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
         $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
@@ -207,4 +208,6 @@ class BoardController extends Controller
     {
         //
     }
+
+
 }
