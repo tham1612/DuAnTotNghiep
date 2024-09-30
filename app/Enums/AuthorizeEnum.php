@@ -17,6 +17,7 @@ final class AuthorizeEnum extends Enum
     const Sub_Owner = 'Sub_Owner';
     const Viewer = 'Viewer';
 
+
     /**
      * Trả về nhãn thân thiện cho từng giá trị Enum
      */
