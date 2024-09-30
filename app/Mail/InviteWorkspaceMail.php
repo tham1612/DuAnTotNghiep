@@ -16,12 +16,14 @@ class InviteWorkspaceMail extends Mailable
     public $workspaceName;
     public $linkInvite;
     public $email;
+    public $authorize;
 
-    public function __construct($workspaceName, $linkInvite, $email)
+    public function __construct($workspaceName, $linkInvite, $email, $authorize)
     {
         $this->workspaceName = $workspaceName;
         $this->linkInvite = $linkInvite;
         $this->email = $email;
+        $this->authorize = $authorize;
     }
 
     public function build()
