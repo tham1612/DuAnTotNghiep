@@ -248,7 +248,7 @@
                                                         {{$task->priority}}
                                                     </span>
                                                     
-                                                    <select name="priority" id="priority_{{ $task->id }}" class="form-select no-arrow" style="display: none;" onchange="updatePriority(this, {{ $task->id }});">
+                                                    <select name="priority" id="priority_{{ $task->id }}" class="form-select no-arrow" style="display: none;" onchange="updateTaskList({{ $task->id }})">
                                                         @foreach(\App\Enums\IndexEnum::getValues() as $priority)
                                                             <option value="{{$priority}}" @selected($task->priority == $priority)>
                                                                 {{$priority}}
@@ -422,25 +422,7 @@
                 badge.style.display = "none"; // Ẩn span
             }
         }
-        // cập nhật lại span khi chọn slect
-        function updatePriority(selectElement, taskId) {
-            const badge = selectElement.previousElementSibling;
-            const selectedValue = selectElement.value;
-            badge.innerHTML = selectedValue;
-            if (selectedValue === 'High') {
-                badge.className = 'badge fs-14 bg-danger'; 
-            } else if (selectedValue === 'Medium') {
-                badge.className = 'badge fs-14 bg-warning'; 
-            } else if (selectedValue === 'Low') {
-                badge.className = 'badge fs-14 bg-success'; 
-            } else {
-                badge.className = 'badge fs-14'; 
-            }
-            // Ẩn select và hiển thị lại span
-            selectElement.style.display = "none";
-            badge.style.display = "block"; 
-        }
-
+        
         // ẩn hiện menu catalogs
         document.getElementById('menuIcon').addEventListener('click', function() {
             const verticalMenu = document.getElementById('verticalMenu');
