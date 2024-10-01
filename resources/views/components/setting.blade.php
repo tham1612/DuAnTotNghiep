@@ -93,7 +93,8 @@
                                     <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
                                     {{ $activity->description ?? 'Không có mô tả' }}
                                 </p>
-                                <small class="text-muted">{{ $activity->created_at->diffForHumans() ?? 'Không xác định thời gian' }}</small>
+                                <small class="text-muted">{{ $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}</small>
+
                             </div>
                         </li>
                     @endforeach
