@@ -60,11 +60,9 @@
                                             </div>
                                         </div>
                                         <div class="ms-3">
-                                            <<<<<<< HEAD <h5 class="m-0">không gian làm việc của
+                                            <h5 class="m-0">
                                                 {{ $workspaceChecked->wsp_name }}</h5>
-                                                =======
-                                                <h5 class="m-0">Không gian làm việc của {{ $userName }}</h5>
-                                                >>>>>>> main
+
                                                 <span class="text-muted small"><i
                                                         class="bi bi-globe"></i>{{ $access }}</span>
                                         </div>
