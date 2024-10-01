@@ -109,7 +109,7 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             const position = tasks.indexOf(e);
             console.log('vị trí được thả', position)
 
-            $(document).ready(function () {
+            // $(document).ready(function () {
                 $.ajax({
                     url: `/tasks/updatePosition/${taskId}` ,
                     type: "PUT",
@@ -126,7 +126,7 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
                         console.log(response);
                     }
                 })
-            })
+            // })
             e.className += " ex-moved";
         })
         .on("over", function (e, a) {
