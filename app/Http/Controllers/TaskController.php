@@ -154,7 +154,7 @@ class TaskController extends Controller
             ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
         $model->update($data);
-        return redirect()->route('b.edit', $id)->with('success', 'Cập nhật thành công!!');
+        return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
 
 }
