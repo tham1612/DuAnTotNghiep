@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Spatie\Activitylog\Models\Activity;
 
 class BoardController extends Controller
 {
@@ -24,15 +24,13 @@ class BoardController extends Controller
     public function index()
     {
         $userId = Auth::id();
-
-
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) // Người tạo
-                      ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                          $query->where('user_id', $userId); // Thành viên
-                      });
-            })
+            $query->where('created_at', $userId) // Người tạo
+                ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                    $query->where('user_id', $userId); // Thành viên
+                });
+        })
             ->with(['workspace', 'boardMembers'])
 
             ->get()
@@ -125,12 +123,13 @@ class BoardController extends Controller
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
             'users',
+            // 'members',
             'catalogs',
             'catalogs.tasks',
             'catalogs.tasks.catalog:id,name',
-            'catalogs.tasks' => function($query) {
-                $query->orderBy('position', 'asc');
-            },
+           'catalogs.tasks' => function($query) {
+               $query->orderBy('position', 'asc');
+           },
 
             'catalogs.tasks.members'
         ]);
@@ -144,27 +143,16 @@ class BoardController extends Controller
          * */
 
 
+
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
-        // $activities = Activity::where('log_name', 'board_' . $id)->latest()->get();
-        // $activities = Activity::where('board_id', $id)->get();
-        $activities = Activity::where(function ($query) use ($id) {
-            $query->where('board_id', $id)           // Lấy hoạt động của bảng
-                  ->orWhere('catalog_id', $id)       // Lấy hoạt động của danh sách liên quan đến bảng
-                  ->orWhere('task_id', $id);         // Lấy hoạt động của task liên quan đến bảng
-        })->latest()->get();
-
-
-        // dd(Activity::where('log_name', 'board_' . $id)->latest()->toSql());
-
 
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks','activities')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks','activities')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks','activities')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','activities')),
-            // 'activity' =>view('components.setting',compact()),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks','activities')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks')),
         };
     }
 
@@ -173,7 +161,35 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->except(['_token', '_method']);
+        Board::query()
+            ->where('id', $id)
+            ->update($data);
+        return response()->json([
+            'message' => 'Board đã được cập nhật thành công',
+            'success' => true
+        ]);
+
+    }
+    public function updateBoardMember(Request $request, string $id)
+    {
+        $data = $request->only(['user_id', 'board_id']);
+
+
+        $boardMember = BoardMember::where('board_id', $data['board_id'])
+            ->where('user_id', $data['user_id'])
+            ->first();
+
+        if ($boardMember) {
+            $newIsStar = $boardMember->is_star == 1 ? 0 : 1;
+            $boardMember->update(['is_star' => $newIsStar]);
+
+            return response()->json([
+                'message' => 'Người dùng đã theo dõi bảng',
+                'success' => true
+            ]);
+        }
+
     }
 
     /**
@@ -183,4 +199,6 @@ class BoardController extends Controller
     {
         //
     }
+
+
 }

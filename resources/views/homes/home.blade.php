@@ -803,48 +803,54 @@
                     </div>
                 </div>
                 <div data-simplebar style="max-height: 500px;">
-                    @foreach ($board_star as $board)
-                        <div class="card mb-2">
-                            <div class="card-body">
-                                <div class="d-flex mb-3">
-                                    <div class="flex-shrink-0 avatar-sm">
-                                        <div class="avatar-title bg-light rounded">
-                                            @if ($board && $board->image)
-                                                <img src="{{ \Storage::url($board->image) }}" alt=""
-                                                    height="32">
-                                            @else
-                                            @endif
+                    @if ($board_star->isEmpty())
+                        <p>Không có bảng nào được đánh dấu là nổi bật.</p>
+                    @else
+                        @foreach ($board_star as $board)
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0 avatar-sm">
+                                            <div class="avatar-title bg-light rounded">
+                                                @if ($board && $board->image)
+                                                    <img src="{{ \Storage::url($board->image) }}" alt=""
+                                                        height="32">
+                                                @else
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h5 class="fs-15 mb-1"><a href=""
+                                                    class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
+                                            </h5>
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem
+                                                chi
+                                                tiết
+                                                <i class="ri-arrow-right-up-line align-bottom"></i></a>
                                         </div>
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h5 class="fs-15 mb-1"><a href=""
-                                                class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
-                                        </h5>
-                                    </div>
-                                    <div>
-                                        <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem chi
-                                            tiết
-                                            <i class="ri-arrow-right-up-line align-bottom"></i></a>
-                                    </div>
-                                </div>
-                                <h6 class="text-muted mb-0">Người theo dõi <span
-                                        class="badge bg-success-subtle text-secondary">{{ $board->total_followers }}</span>
-                                </h6>
-                            </div>
-                            <div class="card-body border-top border-top-dashed">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
-                                        </h6>
-                                    </div>
-                                    <h6 class="flex-shrink-0 text-danger mb-0"><i class="ri-time-line align-bottom"></i>
-                                        05
-                                        ngày
+                                    <h6 class="text-muted mb-0">Người theo dõi <span
+                                            class="badge bg-success-subtle text-secondary">{{ $board->total_followers }}</span>
                                     </h6>
                                 </div>
+                                <div class="card-body border-top border-top-dashed">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
+                                            </h6>
+                                        </div>
+                                        <h6 class="flex-shrink-0 text-danger mb-0"><i
+                                                class="ri-time-line align-bottom"></i>
+                                            05
+                                            ngày
+                                        </h6>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
 
                 </div>
                 <!--end card-->
@@ -860,49 +866,54 @@
                     </div>
                 </div>
                 <div data-simplebar style="max-height: 500px;">
-                    @foreach ($boards as $board)
-                        <div class="card mb-2">
-                            <div class="card-body">
-                                <div class="d-flex mb-3">
-                                    <div class="flex-shrink-0 avatar-sm">
-                                        <div class="avatar-title bg-light rounded">
-                                            @if ($board && $board->image)
-                                                <img src="{{ \Storage::url($board->image) }}" alt=""
-                                                    height="32">
-                                            @else
-                                            @endif
+                    @if ($boards->isEmpty())
+                        <p>Không có bảng nào được đánh dấu là nổi bật.</p>
+                    @else
+                        @foreach ($boards as $board)
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0 avatar-sm">
+                                            <div class="avatar-title bg-light rounded">
+                                                @if ($board && $board->image)
+                                                    <img src="{{ \Storage::url($board->image) }}" alt=""
+                                                        height="32">
+                                                @else
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h5 class="fs-15 mb-1"><a href=""
+                                                    class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
+                                            </h5>
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem
+                                                chi
+                                                tiết
+                                                <i class="ri-arrow-right-up-line align-bottom"></i></a>
                                         </div>
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h5 class="fs-15 mb-1"><a href=""
-                                                class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
-                                        </h5>
-                                    </div>
-                                    <div>
-                                        <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem chi
-                                            tiết
-                                            <i class="ri-arrow-right-up-line align-bottom"></i></a>
-                                    </div>
-                                </div>
-                                <h6 class="text-muted mb-0">Người theo dõi <span
-                                        class="badge bg-success-subtle text-secondary">{{ $board->total_followers }}</span>
-                                </h6>
-                            </div>
-                            <div class="card-body border-top border-top-dashed">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
-                                        </h6>
-                                    </div>
-                                    <h6 class="flex-shrink-0 text-danger mb-0"><i class="ri-time-line align-bottom"></i>
-                                        05
-                                        ngày
+                                    <h6 class="text-muted mb-0">Người theo dõi <span
+                                            class="badge bg-success-subtle text-secondary">{{ $board->total_followers }}</span>
                                     </h6>
                                 </div>
+                                <div class="card-body border-top border-top-dashed">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
+                                            </h6>
+                                        </div>
+                                        <h6 class="flex-shrink-0 text-danger mb-0"><i
+                                                class="ri-time-line align-bottom"></i>
+                                            05
+                                            ngày
+                                        </h6>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-
+                        @endforeach
+                    @endif
                 </div>
                 <!--end card-->
             </div>

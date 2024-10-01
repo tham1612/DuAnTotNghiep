@@ -40,15 +40,16 @@
                     </div>
                 </div>
                 <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="{{ $data->name }}" class="tasks">
+                    <div id="{{$data->name}}" class="tasks">
                         <!-- task item -->
                         @foreach ($data->tasks as $task)
                             <div class="card tasks-box cursor-pointer" data-value="{{ $task->id }}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
-                                        <h6 class="fs-15 mb-0 flex-grow-1 text-truncate task-title" data-bs-toggle="modal"
+                                        <h6 class="fs-15 mb-0 flex-grow-1 text-truncate task-title"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#detailCardModal">
-                                            {{ $task->text }}
+                                            {{$task->text}}
                                         </h6>
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
@@ -204,7 +205,7 @@
                 </div>
             </div>
         @endforeach
-      
+
 
         <div class="rounded-3 p-2 bg-info-subtle" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
@@ -240,10 +241,10 @@
     <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
 @endsection
 @section('script')
-    <script !src="">
+    <script>
         var tasks_list = [
-            @foreach ($board->catalogs as $data)
-                document.getElementById("{{ $data->name }}"),
+            @foreach($board->catalogs as $data)
+            document.getElementById("{{$data->name}}"),
             @endforeach
         ]
     </script>

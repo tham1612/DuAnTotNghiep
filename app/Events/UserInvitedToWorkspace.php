@@ -20,12 +20,14 @@ class UserInvitedToWorkspace
     public $workspaceName;
     public $email;
     public $linkInvite;
+    public $authorize;
 
-    public function __construct($workspaceName, $email, $linkInvite)
+    public function __construct($workspaceName, $email, $linkInvite, $authorize)
     {
         $this->workspaceName = $workspaceName;
         $this->email = $email;
         $this->linkInvite = $linkInvite;
+        $this->authorize = $authorize;
     }
 
     /**
