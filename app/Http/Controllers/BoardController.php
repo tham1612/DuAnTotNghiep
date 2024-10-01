@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\Models\Activity;
 
 class BoardController extends Controller
 {
@@ -92,6 +93,12 @@ class BoardController extends Controller
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
+            // ghi lại hoạt động của bảng
+            activity()
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -142,17 +149,17 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-
+         $activity = Activity::all()->last();
 
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks','activity')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks','activity')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks','activity')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','activity')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks','activity')),
         };
     }
 

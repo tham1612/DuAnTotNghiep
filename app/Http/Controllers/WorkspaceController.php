@@ -78,6 +78,11 @@ class WorkspaceController extends Controller
                     'invite' => now(),
                     'is_active' => $is_active,
                 ]);
+            activity('Workspace Created')
+                ->causedBy(Auth::user())  // Ghi nhận người thực hiện
+                ->performedOn($workspace) // Liên kết với workspace được tạo
+                ->withProperties(['workspace_name' => $workspace->name]) // Thông tin bổ sung
+                ->log('Người dùng đã tạo không gian làm việc mới.');
             //           update lai cot is_active khi tao ws moi
             WorkspaceMember::query()
                 ->where('user_id', auth()->id())
@@ -88,12 +93,12 @@ class WorkspaceController extends Controller
 
             // lưu lại hoạt động
             activity('Board Create')
-            ->causedBy(Auth::user())
-            ->withProperties('board_name',$workspace->name)
-            ->tap(function(Activity $activity)use ($workspace){
-             $activity->Workspace_id = $workspace->id;
-            })
-            ->log('người dùng đã tạo bảng mới trong ws');
+                ->causedBy(Auth::user())
+                ->withProperties('board_name', $workspace->name)
+                ->tap(function (Activity $activity) use ($workspace) {
+                    $activity->Workspace_id = $workspace->id;
+                })
+                ->log('người dùng đã tạo bảng mới trong ws');
 
 
             //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời
@@ -115,12 +120,12 @@ class WorkspaceController extends Controller
                         // ghi lại hoạt động khi thêm người dùng vào ws
 
                         activity('Thêm người dùng vào WS')
-                        ->causedBy(Auth::user())
-                        ->withProperties(['added_user_id'=> $user->id])
-                        ->tap(function (Activity $activity) use ($workspace){
-                            $activity->Workspace_id = $workspace->id;
-                        })
-                        ->log('add người thành công vào ws');
+                            ->causedBy(Auth::user())
+                            ->withProperties(['added_user_id' => $user->id])
+                            ->tap(function (Activity $activity) use ($workspace) {
+                                $activity->Workspace_id = $workspace->id;
+                            })
+                            ->log('add người thành công vào ws');
 
                         //query workspace_member vừa tạo
                         $wm = WorkspaceMember::query()
@@ -156,7 +161,6 @@ class WorkspaceController extends Controller
 
 
             return redirect()->route('home');
-
         } catch (\Exception $exception) {
             DB::rollBack();
             dd($exception->getMessage());
@@ -168,7 +172,7 @@ class WorkspaceController extends Controller
      * sử lý xóa không gian làm việc
      */
     public
-        function delete(
+    function delete(
         $id
     ) {
         $userId = Auth::id();
@@ -178,6 +182,12 @@ class WorkspaceController extends Controller
                 ->whereNot('id', $id)->first();
             $ws = WorkspaceMember::query()->find($id);
             $ws->delete();
+
+            activity('Workspace Deleted')
+                ->causedBy(Auth::user())
+                ->withProperties(['workspace_name' => $ws->name]) // Sử dụng biến $ws thay vì $workspace
+                ->log('Người dùng đã xóa không gian làm việc.');
+
 
             //xử lý logic sau khi xóa
             WorkspaceMember::query()
@@ -192,7 +202,6 @@ class WorkspaceController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
-
     }
     // show form chỉnh sửa ws
     public function showFormEditWorkspace()
@@ -275,9 +284,25 @@ class WorkspaceController extends Controller
                                     việc mới có thể thêm và chỉnh sửa các bảng của không gian làm việc.";
         }
 
-        return view('workspaces.update',
-        compact('userId', 'userName', 'workspaceChecked', 'icon','wsp_viewer_count','wsp_viewer',
-        'access', 'ws_desrip', 'wsp_owner', 'wsp_member', 'wsp_invite', 'userId', 'wsp_member_count', 'wsp_invite_count'));
+        return view(
+            'workspaces.update',
+            compact(
+                'userId',
+                'userName',
+                'workspaceChecked',
+                'icon',
+                'wsp_viewer_count',
+                'wsp_viewer',
+                'access',
+                'ws_desrip',
+                'wsp_owner',
+                'wsp_member',
+                'wsp_invite',
+                'userId',
+                'wsp_member_count',
+                'wsp_invite_count'
+            )
+        );
     }
 
     //Duyệt người dùng gửi lời mời vào wsp
@@ -319,7 +344,7 @@ class WorkspaceController extends Controller
                 ->where('workspace_members.is_active', 1)
                 ->firstOrFail(); // Sử dụng firstOrFail để ném ngoại lệ nếu không tìm thấy
 
-                $validatedData = $request->except('image');
+            $validatedData = $request->except('image');
             if ($request->hasFile('image')) {
                 $validatedData['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
 
@@ -330,6 +355,12 @@ class WorkspaceController extends Controller
             }
             // Cập nhật workspace
             $workspace->update($validatedData);
+            // Thêm ghi lại hoạt động khi chỉnh sửa workspace
+            activity('Workspace Updated')
+                ->causedBy(Auth::user()) // Người thực hiện
+                ->performedOn($workspace) // Workspace được chỉnh sửa
+                ->withProperties(['updated_fields' => $validatedData]) // Các trường đã được chỉnh sửa
+                ->log('Người dùng đã chỉnh sửa workspace.');
             return redirect()->route('showFormEditWorkspace')->with('msg', 'Thay đổi thành công');
         } catch (\Exception $e) {
             // Xử lý ngoại lệ, có thể log lỗi hoặc thông báo cho người dùng
@@ -351,7 +382,6 @@ class WorkspaceController extends Controller
         } catch (\Throwable $th) {
             return redirect()->route('showFormEditWorkspace')->withErrors(['msg' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
-
     }
 
     //gửi mail mời thành viên
@@ -380,6 +410,14 @@ class WorkspaceController extends Controller
         $authorize = $request->input('authorize');
         // Gửi sự kiện để kích hoạt việc gửi email
         event(new UserInvitedToWorkspace($workspaceName, $email, $linkInvite, $authorize));
+
+        // Thêm ghi lại hoạt động khi gửi lời mời
+        activity('Workspace Invitation Sent')
+            ->causedBy(Auth::user())  // Người thực hiện
+            ->performedOn($workspace) // Workspace liên quan
+            ->withProperties(['invited_email' => $email]) // Thông tin người được mời
+            ->log('Người dùng đã gửi lời mời thành viên vào workspace.');
+
 
         return redirect()->route('showFormEditWorkspace')->with('msg', 'Đã gửi email thêm thành viên !!!');
     }
@@ -412,7 +450,12 @@ class WorkspaceController extends Controller
                                     'invite' => now(),
                                     'is_active' => 1,
                                 ]);
-
+                                // ghi lại hoạt động thêm người vào ws
+                                activity('Member Added to Workspace')
+                                    ->causedBy(Auth::user()) // Người thực hiện hành động
+                                    ->performedOn($workspace) // Liên kết với workspace
+                                    ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
+                                    ->log('Người dùng đã được thêm vào workspace.');
                                 //query workspace_member vừa tạo
                                 $wm = WorkspaceMember::query()
                                     ->where('workspace_members.user_id', $user_check->id)
@@ -429,11 +472,9 @@ class WorkspaceController extends Controller
                                     ->update(['is_active' => 1]);
 
                                 return redirect()->route('home')->with('msg', "Bạn đã được thêm vào trong không gian làm việc. \"{$workspace->id}\" !!!");
-
                             } catch (\Throwable $th) {
                                 throw $th;
                             }
-
                         }
 
                         // Người dùng đã đăng nhập nhưng email khác
@@ -482,10 +523,5 @@ class WorkspaceController extends Controller
             Session::put('invited', 'case3');
             return redirect()->route('login');
         }
-
-
     }
-
-
-
 }
