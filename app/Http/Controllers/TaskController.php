@@ -113,7 +113,7 @@ class TaskController extends Controller
 
         }
         $model->update($data);
-        return redirect()->route('b.edit', $id)->with('success', 'Cập nhật thành công!!');
+        return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
 
 }
