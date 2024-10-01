@@ -110,6 +110,7 @@
 
                 {{-- các màn hình hiển thị --}}
                 @yield('main')
+               
 
                 @include('components.createBoard')
                 @include('components.createTemplateBoard')

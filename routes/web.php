@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
@@ -83,6 +84,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
+                Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
             });
         Route::resource('catalogs', CatalogControler::class);
         Route::resource('tasks', \App\Http\Controllers\TaskController::class);

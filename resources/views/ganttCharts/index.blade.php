@@ -100,11 +100,19 @@
             </div>
 
         </div>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="activityCanvas" aria-labelledby="activityCanvasLabel"
+            style="width: 350px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+        </div>
         <script type="text/javascript">
             gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
             gantt.config.order_branch = true;
             // gantt.config.order_branch_free = true;
-            var boardId = "{{ $board->id }}"; // Gán giá trị ID của Board từ server
+            var boardId = "{{ $board->id}}"; // Gán giá trị ID của Board từ server
             gantt.init("gantt_here");
             gantt.load("/api/boards/" + boardId + "/tasks");
             // Cập nhật dataProcessor để thao tác với đúng URL
