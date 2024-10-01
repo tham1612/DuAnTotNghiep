@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
+use Spatie\Activitylog\Contracts\Activity;
+
 use function Laravel\Prompts\table;
 
 
@@ -82,6 +84,18 @@ class WorkspaceController extends Controller
                 ->whereNot('id', $workspaceMember->id)
                 ->update(['is_active' => 0]);
 
+
+
+            // lưu lại hoạt động
+            activity('Board Create')
+            ->causedBy(Auth::user())
+            ->withProperties('board_name',$workspace->name)
+            ->tap(function(Activity $activity)use ($workspace){
+             $activity->Workspace_id = $workspace->id;
+            })
+            ->log('người dùng đã tạo bảng mới trong ws');
+
+
             //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời
             if (Session::get('invited') == "case2") {
                 $user = Auth::user();
@@ -96,6 +110,17 @@ class WorkspaceController extends Controller
                             'invite' => now(),
                             'is_active' => 1,
                         ]);
+
+                        // ghi lại hoạt động khi thêm người dùng vào ws
+
+                        activity('Thêm người dùng vào WS')
+                        ->causedBy(Auth::user())
+                        ->withProperties(['added_user_id'=> $user->id])
+                        ->tap(function (Activity $activity) use ($workspace){
+                            $activity->Workspace_id = $workspace->id;
+                        })
+                        ->log('add người thành công vào ws');
+
                         //query workspace_member vừa tạo
                         $wm = WorkspaceMember::query()
                             ->where('workspace_members.user_id', $user->id)
