@@ -278,7 +278,7 @@
             alertElement.style.display = 'none';
         }
     }, 5000);
-    
+
     $(document).ready(function (){
         $.ajaxSetup({
             headers: {
