@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\Task;
@@ -43,14 +44,14 @@ class TaskController extends Controller
         $data['priority'] = $data['priority'] ?? 'Medium';
         Task::query()->create($data);
         return back()
-            ->with('success', 'Thêm mới danh sách thành công vào bảng');
+            ->with('success', 'Thêm mới thẻ thành công vào danh sách');
     }
 
     public function show()
     {
     }
 
-    public function update($id, Request $request)
+    public function update($id, UpdateTaskRequest $request)
     {
         $data = $request->except(['_token', '_method']);
 
