@@ -6,7 +6,7 @@
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
 
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
-                   @if( $member_Is_star == 1) active @endif"
+                   {{-- @if( $member_Is_star == 1) active @endif" --}}
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
                     <span class="avatar-title bg-transparent fs-15" >

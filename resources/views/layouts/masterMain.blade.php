@@ -110,7 +110,7 @@
 
                 {{-- các màn hình hiển thị --}}
                 @yield('main')
-               
+
 
                 @include('components.createBoard')
                 @include('components.createTemplateBoard')
@@ -279,7 +279,7 @@
             alertElement.style.display = 'none';
         }
     }, 5000);
-    
+
     $(document).ready(function (){
         $.ajaxSetup({
             headers: {

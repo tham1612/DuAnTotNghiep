@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Models\Catalog;
 use App\Models\Task;
@@ -33,16 +34,22 @@ class TaskController extends Controller
         $data['risk'] = $data['risk'] ?? 'Medium';
         $data['priority'] = $data['priority'] ?? 'Medium';
         $task = Task::query()->create($data);
+        // ghi lại hoạt động khi thêm
         activity('thêm mới task')
+            ->performedOn($task)
             ->causedBy(Auth::user())
-            ->withProperties(['task_name' => $task->name])
+            ->withProperties(['task_name' => $task->text,'board_id' => $task->catalog->board_id,])
+
             ->tap(function (Activity $activity) use ($task) {
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
+                $activity->board_id = $task->catalog->board_id;
             })
-            ->log('task đã được thêm vào danh sách');
+            ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
+            // event(new TaskUpdated($task));
         return back()
             ->with('success', 'Thêm mới danh sách thành công vào bảng');
+
     }
 
     public function show()
@@ -60,12 +67,22 @@ class TaskController extends Controller
             ->update($data);
         $task = Task::query()->findOrFail($id);
         activity('Cập nhật task')
+            ->performedOn($task)
             ->causedBy(Auth::user())
             ->withProperties([
                 'task_id' => $task->id,
+                'task_name'=>$task->text,
+                'board_id' => $task->catalog->board_id,
                 'updated_data' => $data
             ])
-            ->log('Task đã được cập nhật');
+            ->tap(function (Activity $activity) use ($task) {
+                $activity->catalog_id = $task->catalog_id;
+                $activity->task_id = $task->id;
+                $activity->board_id = $task->catalog->board_id;
+            })
+            ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+            Log::info('Event TaskUpdated fired for task ID: ' . $task->id);
+            // event(new TaskUpdated($task));
         return response()->json([
             'message' => 'Task đã được cập nhật thành công',
             'success' => true
@@ -149,6 +166,7 @@ class TaskController extends Controller
             ->withProperties([
                 'task_id' => $id,
                 'catalog_id' => $data['catalog_id'],
+
                 'tasks_affected' => $positionChange->pluck('id')->toArray(),
             ])
             ->log('Vị trí các task trong cùng catalog đã thay đổi.');

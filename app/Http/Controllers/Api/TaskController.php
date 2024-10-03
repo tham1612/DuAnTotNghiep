@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\TaskUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Spatie\Activitylog\Contracts\Activity;
+
+use function Laravel\Prompts\text;
 
 class TaskController extends Controller
 {
@@ -52,11 +57,27 @@ class TaskController extends Controller
 
         // Lưu lại task
         $task->save();
+        Log::info('Event TaskUpdated fired for task ID: ' . $task->id);
+        // event(new TaskUpdated($task));
 
         // Nếu có target, cập nhật thứ tự task
         if ($request->has("target")) {
             $this->updateOrder($id, $request->target);
         }
+        activity('Cập nhật task')
+        ->performedOn($task)
+        ->causedBy(Auth::user())
+        ->withProperties([
+            'task_id' => $task->id,
+            'task_name'=>$task->text,
+            'board_id' => $task->catalog->board_id,
+        ])
+        ->tap(function (Activity $activity) use ($task) {
+            $activity->catalog_id = $task->catalog_id;
+            $activity->task_id = $task->id;
+            $activity->board_id = $task->catalog->board_id;
+        })
+        ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
         return response()->json([
             "action" => "updated"
         ]);
@@ -84,10 +105,29 @@ class TaskController extends Controller
         Task::where("sortorder", ">=", $targetOrder)->increment("sortorder");
 
         $updatedTask = Task::find($taskId);
+        $oldOrder = $updatedTask->sortorder;
         $updatedTask->sortorder = $targetOrder;
         $updatedTask->save();
-    }
 
+        activity('Cập nhật thứ tự task')
+        ->causedBy(Auth::user()) // Người dùng thực hiện hành động
+        ->performedOn($updatedTask) // Task được cập nhật
+        ->withProperties([
+            'task_id' => $updatedTask->id,
+            'task_name' => $updatedTask->text,
+            'old_order' => $oldOrder,
+            'new_order' => $targetOrder,
+            'board_id' => $updatedTask->catalog->board_id,
+        ])
+        ->tap(function (Activity $activity) use ($updatedTask) {
+            $activity->catalog_id = $updatedTask->catalog_id;
+            $activity->task_id = $updatedTask->id;
+            $activity->board_id = $updatedTask->catalog->board_id;
+        })
+        ->log('Task đã được cập nhật thứ tự');
+
+
+    }
 
     public function destroy($id)
     {

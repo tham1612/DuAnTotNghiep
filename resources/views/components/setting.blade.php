@@ -83,7 +83,7 @@
             <div class="offcanvas-body p-0 overflow-hidden">
                 <div data-simplebar style="height: calc(100vh - 112px)">
                     <ul style="list-style: none;" class="p-3">
-                        @foreach ($activities as $activity)
+                        @foreach($activities as $activity)
                         <li class="d-flex align-items-start mb-3">
                             <div class="me-3">
                                 <img src="{{ asset('path_to_avatar/' . ($activity->causer->avatar ?? 'default_avatar.png')) }}" alt="avatar" class="rounded-circle" width="40" height="40">
@@ -92,8 +92,15 @@
                                 <p class="mb-1">
                                     <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
                                     {{ $activity->description ?? 'Không có mô tả' }}
+                                    <p>Hoạt động trên bảng: {{ $activity->properties['board_id'] }}</p>
+                                    {{-- <p>Tên catalog: {{ $activity->properties['catalog_name'] ?? 'Không có tên danh sách' }}</p> --}}
+                                    {{-- <p>Task được thêm:{{ $activity->properties['text'] }}</p> --}}
                                 </p>
-                                <small class="text-muted">{{ $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}</small>
+                                <small class="text-muted">
+                                    {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                                </small>
+
+                               
 
                             </div>
                         </li>
