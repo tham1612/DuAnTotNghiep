@@ -253,18 +253,7 @@
             due_date_success.classList.toggle('d-none');
         });
 
-        function disableButtonOnSubmit() {
-            continueButton.disabled = true;
-            return true; // Vẫn cho phép submit form
-        }
 
-        // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
-        setTimeout(function () {
-            var alertElement = document.getElementById('notification-messenger');
-            if (alertElement) {
-                alertElement.style.display = 'none';
-            }
-        }, 5000);
     </script>
 @endif
 
@@ -277,6 +266,19 @@
 
 
 <script >
+    function disableButtonOnSubmit() {
+        continueButton.disabled = true;
+        return true; // Vẫn cho phép submit form
+    }
+
+    // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+    setTimeout(function () {
+        var alertElement = document.getElementById('notification-messenger');
+        if (alertElement) {
+            alertElement.style.display = 'none';
+        }
+    }, 5000);
+
     $(document).ready(function (){
         $.ajaxSetup({
             headers: {

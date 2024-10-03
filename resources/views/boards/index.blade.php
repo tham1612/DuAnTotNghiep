@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="{{$data->name}}" class="tasks">
+                    <div id="{{$data->name.$data->id}}" class="tasks">
                         <!-- task item -->
                         @foreach($data->tasks as $task)
                             <div class="card tasks-box cursor-pointer" data-value="{{$task->id}}">
@@ -48,7 +48,7 @@
                                     <div class="d-flex mb-2">
                                         <h6 class="fs-15 mb-0 flex-grow-1 text-truncate task-title"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal">
+                                            data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{$task->text}}
                                         </h6>
                                         <div class="dropdown">
@@ -243,10 +243,10 @@
     <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}"/>
 @endsection
 @section('script')
-    <script !src="">
+    <script>
         var tasks_list = [
             @foreach($board->catalogs as $data)
-            document.getElementById("{{$data->name}}"),
+            document.getElementById("{{$data->name.$data->id}}"),
             @endforeach
         ]
     </script>
