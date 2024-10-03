@@ -44,7 +44,7 @@
                             id="name"
                             placeholder="Nhập tiêu đề bảng"
                             value="{{ old('board.name') }}"
-                            name="board[name]"
+                            name="name"
                         />
                         @error('board.name')
                         <div class="invalid-feedback">{{ $message }}</div>

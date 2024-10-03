@@ -83,7 +83,7 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBoardRequest $request)
+    public function store(Request $request)
     {
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
