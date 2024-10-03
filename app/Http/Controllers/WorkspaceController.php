@@ -146,6 +146,14 @@ class WorkspaceController extends Controller
         $id
     ) {
         $userId = Auth::id();
+         $workspaceAuthozire = WorkspaceMember::query()
+        ->select('authorize')
+        ->where('user_id', $userId)
+        ->where('is_active', 1)
+        ->first();
+        if($workspaceAuthozire !== AuthorizeEnum::Owner() || $workspaceAuthozire !== AuthorizeEnum::Sub_Owner()){
+            return redirect()->route('showFormEditWorkspace')->with('error', 'Bạn không có quyền xóa không gian làm việc');
+        }
         try {
             $ws_replace = WorkspaceMember::query()
                 ->where('workspace_members.user_id', $userId)
@@ -174,6 +182,7 @@ class WorkspaceController extends Controller
         $userId = Auth::id();
         $user = Auth::user();
         $userName = $user->name;
+
         $workspaceChecked = Workspace::query()
             ->select('*', 'workspaces.id as id', 'workspace_members.id as wm_id', 'workspaces.name as wsp_name')
             ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
@@ -330,6 +339,14 @@ class WorkspaceController extends Controller
     public function update_ws_access(Request $request)
     {
         $userId = Auth::id();
+        $workspaceAuthozire = WorkspaceMember::query()
+            ->select('authorize')
+            ->where('user_id', $userId)
+            ->where('is_active', 1)
+            ->first();
+        if ($workspaceAuthozire !== AuthorizeEnum::Owner() || $workspaceAuthozire !== AuthorizeEnum::Sub_Owner()) {
+            return redirect()->route('showFormEditWorkspace')->with('error', 'Bạn không có quyền xóa không gian làm việc');
+        }
         try {
             Workspace::query()
                 ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')

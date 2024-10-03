@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -13,8 +14,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+// use function Laravel\Prompts\select;
+
 class BoardController extends Controller
 {
+    protected $googleApiClient;
+
+    public function __construct(GoogleApiClientController $googleApiClient)
+    {
+        $this->googleApiClient = $googleApiClient;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -23,17 +33,14 @@ class BoardController extends Controller
     public function index()
     {
         $userId = Auth::id();
-
-
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
             $query->where('created_at', $userId) // Người tạo
-                ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId); // Thành viên
-                });
+            ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                $query->where('user_id', $userId); // Thành viên
+            });
         })
             ->with(['workspace', 'boardMembers'])
-
             ->get()
             ->map(function ($board) use ($userId) {
                 // Tính tổng số thành viên trong bảng
@@ -77,6 +84,7 @@ class BoardController extends Controller
      */
     public function store(StoreBoardRequest $request)
     {
+        dd($request->all());
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -124,10 +132,11 @@ class BoardController extends Controller
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
             'users',
+            // 'members',
             'catalogs',
             'catalogs.tasks',
             'catalogs.tasks.catalog:id,name',
-            'catalogs.tasks' => function($query) {
+            'catalogs.tasks' => function ($query) {
                 $query->orderBy('position', 'asc');
             },
 
@@ -141,18 +150,66 @@ class BoardController extends Controller
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
-
-
-
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
+        $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+            ->where('user_id', auth()->id())
+            ->value('is_star');
+
+//
+        // dd($this->googleApiClient->getClient());
+        $client = $this->googleApiClient->getClient();
+
+        $accessToken = session('google_access_token');
+//        dd($accessToken);
+        if ($accessToken) {
+            $client->setAccessToken($accessToken);
+            if ($client->isAccessTokenExpired()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+
+                session(['google_access_token' => $client->getAccessToken()]);
+                // Cập nhật token mới vào database
+                //            User::query()
+                //                ->where('id', auth()->id())
+                //                ->update([
+                //                    'remember_token' => json_encode($client->getAccessToken())
+                //                ]);
+            }
+
+            $service = new \Google_Service_Calendar($client);
+
+            $calendarId = 'primary'; // Lịch chính
+            $optParams = [
+                // 'maxResults' => 10, // Giới hạn số lượng sự kiện trả về
+                'orderBy' => 'startTime',
+                'singleEvents' => true, // Chỉ lấy các sự kiện đơn lẻ, không lấy các chuỗi sự kiện lặp lại
+                // 'timeMin' => date('c'), // Chỉ lấy các sự kiện từ thời điểm hiện tại trở đi
+            ];
+
+            $events = $service->events->listEvents($calendarId, $optParams);
+            $events = $events->getItems(); // Lấy các sự kiện trả về
+            $listEvent = array();
+            foreach ($events as $event) {
+                $listEvent[] = [
+                    'email' => $event->getCreator()->getEmail(),
+                    'id_google_calendar' => $event->getId(),
+                    'title' => $event->getSummary(),
+                    'start' => $event->getStart()->getDateTime() ?: $event->getStart()->getDate(),
+                    'end' => $event->getEnd()->getDateTime() ?: $event->getEnd()->getDate(),
+                    'description' => $event->getDescription(),
+                ];
+            }
+        }
+
+//
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks', 'member_Is_star')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
         };
     }
 
@@ -161,7 +218,36 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->except(['_token', '_method']);
+        Board::query()
+            ->where('id', $id)
+            ->update($data);
+        return response()->json([
+            'message' => 'Board đã được cập nhật thành công',
+            'success' => true
+        ]);
+
+    }
+
+    public function updateBoardMember(Request $request, string $id)
+    {
+        $data = $request->only(['user_id', 'board_id']);
+
+
+        $boardMember = BoardMember::where('board_id', $data['board_id'])
+            ->where('user_id', $data['user_id'])
+            ->first();
+
+        if ($boardMember) {
+            $newIsStar = $boardMember->is_star == 1 ? 0 : 1;
+            $boardMember->update(['is_star' => $newIsStar]);
+
+            return response()->json([
+                'message' => 'Người dùng đã theo dõi bảng',
+                'success' => true
+            ]);
+        }
+
     }
 
     /**

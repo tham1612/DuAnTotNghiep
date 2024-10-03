@@ -1,13 +1,18 @@
 @php
     $boardIsStars = \App\Models\Board::query()
-               ->select('boards.name AS board_name', 'workspaces.name AS workspace_name', 'boards.id AS board_id','boards.image AS board_image')
-               ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-               ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
-               ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-               ->where('workspace_members.is_active', 1)
-               ->where('workspace_members.id', \Illuminate\Support\Facades\Auth::id())
-               ->where('board_members.is_star', 1)
-               ->get();
+        ->select(
+            'boards.name AS board_name',
+            'workspaces.name AS workspace_name',
+            'boards.id AS board_id',
+            'boards.image AS board_image',
+        )
+        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
+        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
+        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
+        ->where('workspace_members.is_active', 1)
+        ->where('workspace_members.id', \Illuminate\Support\Facades\Auth::id())
+        ->where('board_members.is_star', 1)
+        ->get();
 
 @endphp
 <header id="page-topbar">
@@ -16,7 +21,7 @@
             <div class="d-flex">
                 <!--        ẩn hiện side-bar-->
                 <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
-                        id="topnav-hamburger-icon">
+                    id="topnav-hamburger-icon">
                     <span class="hamburger-icon">
                         <span></span>
                         <span></span>
@@ -28,10 +33,10 @@
                 <form class="app-search d-none d-md-block">
                     <div class="position-relative">
                         <input type="text" class="form-control" placeholder="Tìm kiếm" autocomplete="off"
-                               id="search-options" value=""/>
+                            id="search-options" value="" />
                         <span class="mdi mdi-magnify search-widget-icon"></span>
                         <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none"
-                              id="search-close-options"></span>
+                            id="search-close-options"></span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
                         <div data-simplebar style="max-height: 320px">
@@ -85,7 +90,7 @@
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
                                         <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                             class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">Angela Bernier</h6>
                                             <span class="fs-11 mb-0 text-muted">Manager</span>
@@ -96,7 +101,7 @@
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
                                         <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                             class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">David Grasso</h6>
                                             <span class="fs-11 mb-0 text-muted">Web Designer</span>
@@ -107,7 +112,7 @@
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
                                         <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                             class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-xs" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">Mike Bunch</h6>
                                             <span class="fs-11 mb-0 text-muted">React Developer</span>
@@ -126,9 +131,8 @@
                 {{--  Bảng hoạt động gần đây              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
-                            id="recently-home" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                            aria-haspopup="true"
-                            aria-expanded="false">
+                        id="recently-home" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
+                        aria-expanded="false">
                         <p class="dropdown-item">
                             Gần đây
                             <i class=" ri-arrow-drop-down-line fs-20"></i>
@@ -136,19 +140,19 @@
 
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
-                         aria-labelledby="recently-home">
+                        aria-labelledby="recently-home">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
-                                                <a href="{{route('b.edit', ['viewType' => 'list', 'id' => 1])}}"
-                                                   class="text-reset">Dự án
+                                                <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => 1]) }}"
+                                                    class="text-reset">Dự án
                                                     tốt nghiệp</a>
                                             </h6>
                                             <p class="mb-0 fs-12 w-100 text-muted">
@@ -159,7 +163,7 @@
                                         </div>
                                         <div class="ps-2">
                                             <button type="button"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                 <i class="ri-star-fill fs-16"></i>
                                             </button>
                                         </div>
@@ -170,7 +174,7 @@
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -183,7 +187,7 @@
                                         </div>
                                         <div class="ps-2">
                                             <button type="button"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                 <i class="ri-star-fill fs-16"></i>
                                             </button>
                                         </div>
@@ -194,7 +198,7 @@
                                     <div class="d-flex align-items-center">
 
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
 
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
@@ -208,7 +212,7 @@
                                         </div>
                                         <div class="ps-2">
                                             <button type="button"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                 <i class="ri-star-fill fs-16"></i>
                                             </button>
                                         </div>
@@ -221,37 +225,37 @@
                 {{--  bảng được đánh dấu sao              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3"
-                            style="width: 150px" id="page-header-cart-dropdown" data-bs-toggle="dropdown"
-                            data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                        style="width: 150px" id="page-header-cart-dropdown" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                         <p>Đã đánh dấu sao <i class=" ri-arrow-drop-down-line fs-20"></i></p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
-                         aria-labelledby="page-header-cart-dropdown">
+                        aria-labelledby="page-header-cart-dropdown">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
-                                @foreach($boardIsStars as $boardIsStar)
+                                @foreach ($boardIsStars as $boardIsStar)
                                     <div
                                         class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                         <div class="d-flex align-items-center">
 
                                             <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                                 class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                                class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
 
                                             <div class="flex-grow-1">
                                                 <h6 class="mt-0 mb-1 fs-14">
                                                     {{--    Liên kết đến bảng                                            --}}
-                                                    <a href="{{route('b.edit', ['viewType' => 'list', 'id' => $boardIsStar->board_id])}}"
-                                                       class="text-reset">
-                                                        {{$boardIsStar->board_name}}
+                                                    <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardIsStar->board_id]) }}"
+                                                        class="text-reset">
+                                                        {{ $boardIsStar->board_name }}
                                                     </a>
                                                 </h6>
                                                 <p class="mb-0 fs-12 w-100 text-muted">
-                                                    {{$boardIsStar->workspace_name}}
+                                                    {{ $boardIsStar->workspace_name }}
                                                 </p>
                                             </div>
                                             <div class="ps-2">
-                                                <button type="button" data-value="{{$boardIsStar->board_id}}"
-                                                        class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                <button type="button" data-value="{{ $boardIsStar->board_id }}"
+                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                     <i class="ri-star-fill fs-16"></i>
                                                 </button>
                                             </div>
@@ -265,19 +269,19 @@
                 {{--  Mẫu              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3"
-                            style="width: 100px" id="template-home" data-bs-toggle="dropdown"
-                            data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                        style="width: 100px" id="template-home" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                         <p class="">Mẫu <i class=" ri-arrow-drop-down-line fs-20"></i></p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
-                         aria-labelledby="template-home">
+                        aria-labelledby="template-home">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                     data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
+                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -291,10 +295,10 @@
                                     </div>
                                 </div>
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                     data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
+                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -308,10 +312,10 @@
                                     </div>
                                 </div>
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                     data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
+                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -331,16 +335,16 @@
                 {{--  Tạo bảng              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn bg-info-subtle btn-icon btn-topbar btn-ghost-secondary pt-3"
-                            style="width: 100px" id="create-home" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                            aria-haspopup="true" aria-expanded="false">
+                        style="width: 100px" id="create-home" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                        aria-haspopup="true" aria-expanded="false">
                         <p class="" style="color: var(--vz-heading-color)">Tạo mới</p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart cursor-pointer"
-                         aria-labelledby="create-home">
+                        aria-labelledby="create-home">
                         <div data-simplebar>
                             <div class="p-2">
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                                     data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
+                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
                                     <div class="d-flex flex-column ">
                                         <section>
                                             <i class="ri-dashboard-line fs-15"></i>
@@ -354,7 +358,7 @@
                                     </div>
                                 </div>
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                                     data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal">
+                                    data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal">
                                     <div class="d-flex flex-column ">
                                         <section>
                                             <i class="ri-dashboard-fill fs-15"></i>
@@ -407,15 +411,15 @@
 
                 <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
-                            id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
-                            data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                        id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                         <i class="bx bx-bell fs-22"></i>
                         <span
                             class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">3<span
                                 class="visually-hidden">unread messages</span></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                         aria-labelledby="page-header-notifications-dropdown">
+                        aria-labelledby="page-header-notifications-dropdown">
                         <div class="dropdown-head bg-primary bg-pattern rounded-top">
                             <div class="p-3">
                                 <div class="row align-items-center">
@@ -436,19 +440,19 @@
                                     id="notificationItemsTab" role="tablist">
                                     <li class="nav-item waves-effect waves-light">
                                         <a class="nav-link active" data-bs-toggle="tab" href="#all-noti-tab"
-                                           role="tab" aria-selected="true">
+                                            role="tab" aria-selected="true">
                                             All (4)
                                         </a>
                                     </li>
                                     <li class="nav-item waves-effect waves-light">
                                         <a class="nav-link" data-bs-toggle="tab" href="#messages-tab" role="tab"
-                                           aria-selected="false">
+                                            aria-selected="false">
                                             Messages
                                         </a>
                                     </li>
                                     <li class="nav-item waves-effect waves-light">
                                         <a class="nav-link" data-bs-toggle="tab" href="#alerts-tab" role="tab"
-                                           aria-selected="false">
+                                            aria-selected="false">
                                             Alerts
                                         </a>
                                     </li>
@@ -483,9 +487,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="all-notification-check01"/>
+                                                        id="all-notification-check01" />
                                                     <label class="form-check-label"
-                                                           for="all-notification-check01"></label>
+                                                        for="all-notification-check01"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -516,9 +520,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="all-notification-check02"/>
+                                                        id="all-notification-check02" />
                                                     <label class="form-check-label"
-                                                           for="all-notification-check02"></label>
+                                                        for="all-notification-check02"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -548,9 +552,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="all-notification-check03"/>
+                                                        id="all-notification-check03" />
                                                     <label class="form-check-label"
-                                                           for="all-notification-check03"></label>
+                                                        for="all-notification-check03"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -580,9 +584,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="all-notification-check04"/>
+                                                        id="all-notification-check04" />
                                                     <label class="form-check-label"
-                                                           for="all-notification-check04"></label>
+                                                        for="all-notification-check04"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -598,7 +602,7 @@
                             </div>
 
                             <div class="tab-pane fade py-2 ps-2" id="messages-tab" role="tabpanel"
-                                 aria-labelledby="messages-tab">
+                                aria-labelledby="messages-tab">
                                 <div data-simplebar style="max-height: 300px" class="pe-2">
                                     <div class="text-reset notification-item d-block dropdown-item">
                                         <div class="d-flex">
@@ -624,9 +628,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="messages-notification-check01"/>
+                                                        id="messages-notification-check01" />
                                                     <label class="form-check-label"
-                                                           for="messages-notification-check01"></label>
+                                                        for="messages-notification-check01"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -657,9 +661,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="messages-notification-check02"/>
+                                                        id="messages-notification-check02" />
                                                     <label class="form-check-label"
-                                                           for="messages-notification-check02"></label>
+                                                        for="messages-notification-check02"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -690,9 +694,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="messages-notification-check03"/>
+                                                        id="messages-notification-check03" />
                                                     <label class="form-check-label"
-                                                           for="messages-notification-check03"></label>
+                                                        for="messages-notification-check03"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -702,7 +706,7 @@
                                         <div class="d-flex">
 
                                             <img src="{{ asset('theme/assets/images/users/avatar-8.jpg') }}"
-                                                 class="me-3 rounded-circle avatar-xs" alt="user-pic"/>
+                                                class="me-3 rounded-circle avatar-xs" alt="user-pic" />
 
                                             <div class="flex-grow-1">
                                                 <a href="#!" class="stretched-link">
@@ -723,9 +727,9 @@
                                             <div class="px-2 fs-15">
                                                 <div class="form-check notification-check">
                                                     <input class="form-check-input" type="checkbox" value=""
-                                                           id="messages-notification-check04"/>
+                                                        id="messages-notification-check04" />
                                                     <label class="form-check-label"
-                                                           for="messages-notification-check04"></label>
+                                                        for="messages-notification-check04"></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -740,7 +744,7 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade p-4" id="alerts-tab" role="tabpanel"
-                                 aria-labelledby="alerts-tab"></div>
+                                aria-labelledby="alerts-tab"></div>
 
                             <div class="notification-actions" id="notification-actions">
                                 <div class="d-flex text-muted justify-content-center">
@@ -750,7 +754,7 @@
                                     </div>
                                     Result
                                     <button type="button" class="btn btn-link link-danger p-0 ms-3"
-                                            data-bs-toggle="modal" data-bs-target="#removeNotificationModal">
+                                        data-bs-toggle="modal" data-bs-target="#removeNotificationModal">
                                         Remove
                                     </button>
                                 </div>
@@ -761,17 +765,17 @@
 
                 <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
+                        aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                               @if (auth()->user()->image)
+                            @if (auth()->user()->image)
                                 <img class="rounded header-profile-user"
-                                     src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->image)}}"
-                                     alt="Avatar"/>
+                                    src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                    alt="Avatar" />
                             @else
                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                     style="width: 40px;height: 40px">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
+                                    style="width: 40px;height: 40px">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
                             @endif
 
                             <span class="text-start ms-xl-2">
@@ -787,7 +791,7 @@
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Profile</span>
                         </a>
-                        <a class="dropdown-item" href=" {{route('chat')}}"><i
+                        <a class="dropdown-item" href=" {{ route('chat') }}"><i
                                 class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
@@ -806,20 +810,40 @@
     </div>
 </header>
 <div class="bg-light" aria-live="polite" aria-atomic="true"
-     style="position: fixed; top: 70px;right: 10px; z-index: 100">
+    style="position: fixed; top: 70px;right: 10px; z-index: 100">
     @if (session('success'))
-{{--        @foreach(session('success') as $notification)--}}
-            <div class="toast fade show bg-success-subtle" role="alert" aria-live="assertive" aria-atomic="true"  data-bs-toggle="toast"
-                 id="notification-messenger">
-                <div class="toast-header">
-                    <img src="{{asset('theme/assets/images/logo-sm.png')}}" class="rounded me-2" alt="..." height="20">
-                    <span class="fw-semibold me-auto">Task Flow.</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body fw-bolder text-success" >
-                    {{session('success')}}
-                </div>
+        {{--        @foreach (session('success') as $notification) --}}
+        <div class="toast fade show bg-success-subtle" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-toggle="toast" id="notification-messenger">
+            <div class="toast-header">
+                <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
+                    height="20">
+                <span class="fw-semibold me-auto">Task Flow.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-{{--        @endforeach--}}
+            <div class="toast-body fw-bolder text-success">
+                {{ session('success') }}
+            </div>
+        </div>
+        {{--        @endforeach --}}
+    @endif
+</div>
+<div class="bg-light" aria-live="polite" aria-atomic="true"
+    style="position: fixed; top: 70px;right: 10px; z-index: 100">
+    @if ($errors->any())
+        <div class="toast fade show bg-danger-subtle" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-toggle="toast" id="notification-messenger">
+            <div class="toast-header">
+                <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
+                    height="20">
+                <span class="fw-semibold me-auto">Task Flow.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body fw-bolder text-danger">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </div>
+        </div>
     @endif
 </div>
