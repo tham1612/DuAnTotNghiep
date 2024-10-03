@@ -7,13 +7,9 @@
     "require": {
         "php": "^8.1",
         "bensampo/laravel-enum": "^6.11",
-<<<<<<< HEAD
         "beyondcode/laravel-websockets": "^1.14",
-=======
         "google/apiclient": "^2.17",
->>>>>>> e1430dc69438c1eb15f976235c452d4237bd4f29
         "guzzlehttp/guzzle": "^7.2",
-        "guzzlehttp/psr7": "2.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
