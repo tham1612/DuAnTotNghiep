@@ -4,24 +4,18 @@
             <div class="d-flex justify-content-between align-items-center">
 
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
-
+                    @php $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+                                ->where('user_id', auth()->id())
+                                ->value('is_star');
+                     @endphp
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
-                   {{-- @if( $member_Is_star == 1) active @endif" --}}
+                    @if( $member_Is_star == 1) active @endif"
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
                     <span class="avatar-title bg-transparent fs-15" >
                         <i class="ri-star-fill fs-20 mx-2"></i>
                     </span>
                 </button>
-{{--                <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn--}}
-{{--                   @if( $member_Is_star == 1) active @endif"--}}
-{{--                        onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"--}}
-{{--                        id="is_star_{{ $board->id }}">--}}
-{{--                    <span class="avatar-title bg-transparent fs-15">--}}
-{{--                        <i class="ri-star-fill fs-20 mx-2"></i>--}}
-{{--                    </span>--}}
-{{--                </button>--}}
-
                 <div class="mx-2 cursor-pointer" id="dropdownToggle" aria-expanded="false" data-bs-offset="10,20">
                     <i id="accessIcon_{{ $board->id }}"
                        class="
