@@ -22,12 +22,12 @@ class StoreBoardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'board.name' => 'required|string|max:255',
         ];
     }
     public function messages(){
         return [
-            'name.required' => 'Vui lòng nhập tên bảng.'
+            'board.name.required' => 'Vui lòng nhập tên bảng.'
         ];
     }
 }

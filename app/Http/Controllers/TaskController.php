@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
-use App\Models\Catalog;
+use App\Http\Requests\UpdateTaskRequest;
+use App\Jobs\CreateGoogleApiClientEvent;
+use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +17,13 @@ use Spatie\Activitylog\Models\Activity;
 
 class TaskController extends Controller
 {
+    protected $googleApiClient;
+
+    public function __construct(GoogleApiClientController $googleApiClient)
+    {
+        $this->googleApiClient = $googleApiClient;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +59,6 @@ class TaskController extends Controller
             // event(new TaskUpdated($task));
         return back()
             ->with('success', 'Thêm mới danh sách thành công vào bảng');
-
     }
 
     public function show()
@@ -58,35 +67,18 @@ class TaskController extends Controller
         // return
     }
 
-    public function update($id, Request $request)
+    public function update($id, UpdateTaskRequest $request)
     {
         $data = $request->except(['_token', '_method']);
 
          Task::query()
             ->where('id', $id)
             ->update($data);
-        $task = Task::query()->findOrFail($id);
-        activity('Cập nhật task')
-            ->performedOn($task)
-            ->causedBy(Auth::user())
-            ->withProperties([
-                'task_id' => $task->id,
-                'task_name'=>$task->text,
-                'board_id' => $task->catalog->board_id,
-                'updated_data' => $data
-            ])
-            ->tap(function (Activity $activity) use ($task) {
-                $activity->catalog_id = $task->catalog_id;
-                $activity->task_id = $task->id;
-                $activity->board_id = $task->catalog->board_id;
-            })
-            ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
-            Log::info('Event TaskUpdated fired for task ID: ' . $task->id);
-            // event(new TaskUpdated($task));
-        return response()->json([
-            'message' => 'Task đã được cập nhật thành công',
-            'success' => true
-        ]);
+            return response()->json([
+                'message' => 'Task đã được cập nhật thành công',
+                'success' => true
+            ]);
+
     }
 
     public function updatePosition(Request $request, string $id)
@@ -175,4 +167,106 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
 
+    public function createEvent(Request $request)
+    {
+        $startDate = $request->start == 'Invalid date' ? $request->end : $request->start;
+        $endDate = $request->end;
+        $accessToken = session('google_access_token');
+        $eventData = [
+            'summary' => $request->summary,
+            'start' => [
+                'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
+            ],
+            'end' => [
+                'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
+            ],
+            'description' => $request->description,
+            'reminders' => [
+                'useDefault' => false,
+                'overrides' => [
+                    ['method' => 'email', 'minutes' => 24 * 60], // Gửi email nhắc nhở trước 24 giờ
+                    ['method' => 'popup', 'minutes' => 10],      // Hiện popup nhắc nhở trước 10 phút
+                ],
+            ],
+        ];
+        //        dd($eventData, $startDate, $endDate);
+        // Thêm người tham gia (attendees)
+        $attendees = [];
+        if (!empty($request->attendees)) {
+            // Tách email nếu có nhiều
+            $emails = explode(',', $request->attendees);
+            foreach ($emails as $email) {
+                $attendees[] = ['email' => trim($email)];
+            }
+        }
+        // dd($eventData, $attendees, $accessToken);
+        CreateGoogleApiClientEvent::dispatch($eventData, $attendees, $accessToken);
+
+        return response()->json(['msg' => 'them thanh cong']);
+    }
+
+    public function updateEvent(Request $request, string $id)
+    {
+
+        $attendees = [];
+        $accessToken = session('google_access_token');
+        $eventId = $request->id_gg_canlendar;
+        if ($request->changeDate) {
+            $eventData = [
+                'start' => [
+                    'dateTime' => Carbon::parse($request->start, 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                    'timeZone' => 'Asia/Ho_Chi_Minh',
+                ],
+                'end' => [
+                    'dateTime' => Carbon::parse($request->end, 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                    'timeZone' => 'Asia/Ho_Chi_Minh',
+                ],
+            ];
+        } else {
+            $eventData = [
+                'summary' => $request->summary,
+                'start' => ['dateTime' => Carbon::parse($request->start, 'Asia/Ho_Chi_Minh')->toIso8601String()],
+                'end' => ['dateTime' => Carbon::parse($request->end, 'Asia/Ho_Chi_Minh')->toIso8601String()],
+                'description' => $request->description,
+            ];
+            // Thêm người tham gia (attendees)
+
+            if (!empty($request->attendees)) {
+                foreach ($request->attendees as $email) {
+                    // Tách email nếu có nhiều
+                    $emails = explode(',', $email);
+                    foreach ($emails as $email) {
+                        $attendees[] = ['email' => trim($email)];
+                    }
+                }
+            }
+        }
+
+        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken);
+
+
+        return response()->json(['msg' => 'cap thanh cong']);
+    }
+
+
+    public function deleteEvent(string $id)
+    {
+        $client = $this->googleApiClient->getClient();
+        //        $accessToken =  User::query()->where('user_id', auth()->id())->value('access_token');
+        $accessToken = session('google_access_token');
+        if ($accessToken) {
+            $client->setAccessToken($accessToken);
+
+            if ($client->isAccessTokenExpired()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+                //                 User::query()->where('user_id', auth()->id())->update([
+                //                    'remember_token' => json_encode($client->getAccessToken())
+                //                ]);
+            }
+            $service = new \Google_Service_Calendar($client);
+
+            $service->events->delete('primary', $id);
+        }
+        return response()->json(['msg' => 'xoa thanh cong']);
+    }
 }
