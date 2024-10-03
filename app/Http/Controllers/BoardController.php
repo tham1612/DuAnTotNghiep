@@ -13,10 +13,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\Models\Activity;
+
 // use function Laravel\Prompts\select;
 
 class BoardController extends Controller
 {
+    protected $googleApiClient;
+
+    public function __construct(GoogleApiClientController $googleApiClient)
+    {
+        $this->googleApiClient = $googleApiClient;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -28,12 +37,11 @@ class BoardController extends Controller
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
             $query->where('created_at', $userId) // Người tạo
-                ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId); // Thành viên
-                });
+            ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                $query->where('user_id', $userId); // Thành viên
+            });
         })
             ->with(['workspace', 'boardMembers'])
-
             ->get()
             ->map(function ($board) use ($userId) {
                 // Tính tổng số thành viên trong bảng
@@ -93,6 +101,12 @@ class BoardController extends Controller
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
+            // ghi lại hoạt động của bảng
+            activity('Người dùng đã tạo bảng ')
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -128,9 +142,9 @@ class BoardController extends Controller
             'catalogs',
             'catalogs.tasks',
             'catalogs.tasks.catalog:id,name',
-           'catalogs.tasks' => function($query) {
-               $query->orderBy('position', 'asc');
-           },
+            'catalogs.tasks' => function ($query) {
+                $query->orderBy('position', 'asc');
+            },
 
             'catalogs.tasks.members'
         ]);
@@ -143,23 +157,76 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-
-
+         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+         $activities = Activity::where('properties->board_id', $boardId)->get();
+         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+         $boardName = $board->name; // Lấy tên của board
+         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
         $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-            ->where('user_id',auth()->id())
+            ->where('user_id', auth()->id())
             ->value('is_star');
 
+//
+        // dd($this->googleApiClient->getClient());
+        $client = $this->googleApiClient->getClient();
 
+        $accessToken = session('google_access_token');
+//        dd($accessToken);
+        if ($accessToken) {
+            $client->setAccessToken($accessToken);
+            if ($client->isAccessTokenExpired()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
 
+                session(['google_access_token' => $client->getAccessToken()]);
+                // Cập nhật token mới vào database
+                //            User::query()
+                //                ->where('id', auth()->id())
+                //                ->update([
+                //                    'remember_token' => json_encode($client->getAccessToken())
+                //                ]);
+            }
+
+            $service = new \Google_Service_Calendar($client);
+
+            $calendarId = 'primary'; // Lịch chính
+            $optParams = [
+                // 'maxResults' => 10, // Giới hạn số lượng sự kiện trả về
+                'orderBy' => 'startTime',
+                'singleEvents' => true, // Chỉ lấy các sự kiện đơn lẻ, không lấy các chuỗi sự kiện lặp lại
+                // 'timeMin' => date('c'), // Chỉ lấy các sự kiện từ thời điểm hiện tại trở đi
+            ];
+
+            $events = $service->events->listEvents($calendarId, $optParams);
+            $events = $events->getItems(); // Lấy các sự kiện trả về
+            $listEvent = array();
+            foreach ($events as $event) {
+                $listEvent[] = [
+                    'email' => $event->getCreator()->getEmail(),
+                    'id_google_calendar' => $event->getId(),
+                    'title' => $event->getSummary(),
+                    'start' => $event->getStart()->getDateTime() ?: $event->getStart()->getDate(),
+                    'end' => $event->getEnd()->getDateTime() ?: $event->getEnd()->getDate(),
+                    'description' => $event->getDescription(),
+                ];
+            }
+        }
+
+//
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks','member_Is_star')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks','member_Is_star')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks','activities')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks','activities')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks','activities')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','activities')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks','activities','member_Is_star')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks', 'member_Is_star')),
+          
         };
     }
 
@@ -178,6 +245,7 @@ class BoardController extends Controller
         ]);
 
     }
+
     public function updateBoardMember(Request $request, string $id)
     {
         $data = $request->only(['user_id', 'board_id']);

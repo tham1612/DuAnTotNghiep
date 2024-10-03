@@ -6,13 +6,21 @@
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
 
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
-                   @if( $member_Is_star == 1) active @endif"
+                   {{-- @if( $member_Is_star == 1) active @endif" --}}
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
                     <span class="avatar-title bg-transparent fs-15" >
                         <i class="ri-star-fill fs-20 mx-2"></i>
                     </span>
                 </button>
+{{--                <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn--}}
+{{--                   @if( $member_Is_star == 1) active @endif"--}}
+{{--                        onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"--}}
+{{--                        id="is_star_{{ $board->id }}">--}}
+{{--                    <span class="avatar-title bg-transparent fs-15">--}}
+{{--                        <i class="ri-star-fill fs-20 mx-2"></i>--}}
+{{--                    </span>--}}
+{{--                </button>--}}
 
                 <div class="mx-2 cursor-pointer" id="dropdownToggle" aria-expanded="false" data-bs-offset="10,20">
                     <i id="accessIcon_{{ $board->id }}"
@@ -23,12 +31,12 @@
                             ri-shield-user-fill fs-20 text-primary
                         @endif">
                     </i>
-                        <span id="accessText_{{ $board->id }}">
+                    <span id="accessText_{{ $board->id }}">
                             @if($board->access == 'private')
-                                 Riêng tư
-                            @elseif($board->access == 'public')
-                                 Công khai
-                            @endif
+                            Riêng tư
+                        @elseif($board->access == 'public')
+                            Công khai
+                        @endif
                         </span>
                     <!-- Dropdown menu -->
                     <form id="updateBoardForm{{$board->id}}" onsubmit="submitForm({{ $board->id }}); return false;">
@@ -36,7 +44,8 @@
                             style="width: 35%; display: none;">
                             @foreach(\App\Enums\AccessEnum::getValues() as $access)
                                 <li class="mb-2">
-                                    <label class="dropdown-item w-100 d-flex align-items-start" for="{{ $access }}Option">
+                                    <label class="dropdown-item w-100 d-flex align-items-start"
+                                           for="{{ $access }}Option">
                                         <input class="form-check-input me-2 mt-1" type="radio" name="access"
                                                id="Option{{ $board->id }}" value="{{ $access }}"
                                             {{ $board->access == $access ? 'checked' : '' }}>
@@ -45,13 +54,16 @@
                                                 <i class="ri-lock-2-line fs-20 text-danger"></i>
                                                 <strong>Riêng tư</strong>
                                                 <p class="fs-13 w-100">
-                                                    Chỉ thành viên bảng thông tin mới có quyền xem bảng thông tin này. Quản trị viên của Không gian làm việc có thể đóng bảng thông tin hoặc xóa thành viên.
+                                                    Chỉ thành viên bảng thông tin mới có quyền xem bảng thông tin này.
+                                                    Quản trị viên của Không gian làm việc có thể đóng bảng thông tin
+                                                    hoặc xóa thành viên.
                                                 </p>
                                             @elseif($access == 'public')
                                                 <i class="ri-earth-line fs-20 text-success"></i>
                                                 <strong>Công khai</strong>
                                                 <p class="fs-13 w-100">
-                                                    Tất cả thành viên của Không gian làm việc TaskFlow có thể xem và sửa bảng thông tin này.
+                                                    Tất cả thành viên của Không gian làm việc TaskFlow có thể xem và sửa
+                                                    bảng thông tin này.
                                                 </p>
                                             @endif
                                         </div>
@@ -120,13 +132,14 @@
                         <i class="ri-layout-3-line"></i> Table
                     </a>
                 </li>
-
-
-                {{--                <li class="nav-item" role="presentation"> --}}
-                {{--                    <a class="nav-link" id="pills-calendar-tab" href="calendar.html" role="tab" --}}
-                {{--                       aria-controls="pills-calendar" aria-selected="false"><i class="ri-calendar-line"></i> --}}
-                {{--                        Calendar</a> --}}
-                {{--                </li> --}}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ request()->get('type') == 'calendar' ? 'active' : '' }}"
+                       href="{{ route('b.edit', ['viewType' => 'calendar', 'id' => $board->id]) }}" role="tab"
+                       aria-controls="pills-gantt"
+                       aria-selected="{{ request()->get('type') == 'calendar' ? 'true' : 'false' }}">
+                        <i class="ri-menu-2-line"></i> Calendar
+                    </a>
+                </li>
             </ul>
             <div class="col-auto ms-auto d-flex justify-content-end align-items-center">
                 <!--  bộ lọc -->
@@ -317,7 +330,7 @@
         }
     });
 
-    function updateIsStar(boardId, userId, ) {
+    function updateIsStar(boardId, userId,) {
 
         $.ajax({
             url: `/b/${boardId}/updateBoardMember`,
@@ -334,16 +347,17 @@
             }
         });
     }
+
     function submitForm(boardId) {
 
-      var formData ={
-          access:$('input[name="access"]:checked').val(),
-      }
+        var formData = {
+            access: $('input[name="access"]:checked').val(),
+        }
         $.ajax({
             url: `/b/${boardId}/update`,
             method: 'PUT',
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 $('#dropdownMenu').hide();
                 if (formData.access === 'private') {
                     $('#accessIcon_' + boardId).removeClass().addClass('ri-lock-2-line fs-20 text-danger');
@@ -353,7 +367,7 @@
                     $('#accessText_' + boardId).text('Công khai');
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('Lỗi xảy ra:', xhr.responseText);
             }
         });
