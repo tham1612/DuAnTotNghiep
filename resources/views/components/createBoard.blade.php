@@ -40,13 +40,13 @@
                         <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
                         <input
                             type="text"
-                            class="form-control @error('name') is-invalid @enderror"
+                            class="form-control @error('board.name') is-invalid @enderror"
                             id="name"
                             placeholder="Nhập tiêu đề bảng"
-                            value="{{ old('name') }}"
-                            name="name"
+                            value="{{ old('board.name') }}"
+                            name="board[name]"
                         />
-                        @error('name')
+                        @error('board.name')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

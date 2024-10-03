@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleApiClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,12 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::resource('catalogs', CatalogControler::class);
 
         Route::resource('tasks', TaskController::class);
+
+        Route::post('/create-event', [TaskController::class, 'createEvent']);
+        Route::put('/update-event/{id}', [TaskController::class, 'updateEvent'])->name('update');
+        Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
+        Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
+        Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
 
