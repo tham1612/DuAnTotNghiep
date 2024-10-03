@@ -164,10 +164,6 @@ class BoardController extends Controller
          $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
-        $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-            ->where('user_id', auth()->id())
-            ->value('is_star');
-
 //
         // dd($this->googleApiClient->getClient());
         $client = $this->googleApiClient->getClient();
@@ -211,22 +207,19 @@ class BoardController extends Controller
                     'description' => $event->getDescription(),
                 ];
             }
+
         }
 
-//
+
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks','activities')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks','activities')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks','activities')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks','activities')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks','activities','member_Is_star')),
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks', 'member_Is_star')),
-          
+             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities')),
+            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks')),
+            default => view('boards.index', compact('board', 'catalogs', 'activities')),
+
         };
     }
 

@@ -78,11 +78,11 @@
         </div><!--end col-->
     </div>
 
-    <div class="row">
+    <div class="row" id="highlighted-boards">
         <div class="d-flex">
             <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5>
         </div>
-        <div class="row" id="highlighted-boards" >
+        <div class="row"  >
             @if ($board_star->isEmpty())
                 <p>Không có bảng nào được đánh dấu là nổi bật.</p>
             @else
@@ -92,14 +92,6 @@
                             <div class="card-body">
                                 <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
                                     <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-{{--                                        <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn--}}
-{{--                                           @if( $member_Is_star == 1) active @endif"--}}
-{{--                                                                        onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"--}}
-{{--                                                                        id="is_star_{{ $board->id }}">--}}
-{{--                                            <span class="avatar-title bg-transparent fs-15" >--}}
-{{--                                                <i class="ri-star-fill fs-20 mx-2"></i>--}}
-{{--                                            </span>--}}
-{{--                                        </button>--}}
                                         <button type="button" class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }} "
                                                 onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})" id="is_star_{{ $board->id }}">
                                             <span class="avatar-title bg-transparent fs-15">
@@ -397,6 +389,7 @@
 @endsection
 @section('script')
     <script>
+
         feather.replace();
         document.addEventListener("DOMContentLoaded", function() {
             const counters = document.querySelectorAll('.counter-value');
@@ -437,6 +430,7 @@
         //         });
         //     });
         // });
+
         function updateIsStar2(boardId, userId, ) {
 
             $.ajax({
@@ -447,29 +441,48 @@
                     user_id: userId,
                 },
                 success: function (response) {
+
                     console.log('Người dùng đã đánh dấu bảng nối bật:', response);
-                    index();
                 },
                 error: function (xhr) {
                     console.error('An error occurred:', xhr.responseText);
                 }
             });
         }
-        function index(){
-            $.ajax({
-                url: `/homes/dashboard`,
-                type: 'GET',
-                success: function (response) {
-                    // Giả sử bạn có một div để chứa các bảng nổi bật
-                    $('#highlighted-boards').html(response.html);  // Thay thế nội dung của phần tử này bằng danh sách mới
-                },
-                error: function (error) {
-                    console.error('Không thể cập nhật danh sách bảng nổi bật:', error);
-                }
-            });
+
+        // function updateUI(){
+        //     $.ajax({
+        //         url: `/homes/dashboard`,
+        //         type: 'GET',
+        //         success: function (response) {
+        //             // Giả sử bạn có một div để chứa các bảng nổi bật
+        //             $('#highlighted-boards').html(response.html);  // Thay thế nội dung của phần tử này bằng danh sách mới
+        //         },
+        //         error: function (error) {
+        //             console.error('Không thể cập nhật danh sách bảng nổi bật:', error);
+        //         }
+        //     });
+        // }
+        function pollForUpdates() {
+            setInterval(function() {
+                $.ajax({
+                    url: `/homes/dashboard`,
+                    method: 'GET',
+                    success: function(response) {
+                        // Nếu có thay đổi, cập nhật giao diện
+                        if (response.hasUpdates) {
+                            $('#highlighted-boards').html(response.newHTML);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error checking for updates:', xhr.responseText);
+                    }
+                });
+            }, 5000);  // Kiểm tra mỗi 5 giây
         }
-
-
+        $(document).ready(function() {
+            pollForUpdates();  // Gọi polling khi trang được tải
+        });
     </script>
 
     <!-- apexcharts -->
