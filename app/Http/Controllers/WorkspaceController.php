@@ -249,9 +249,25 @@ class WorkspaceController extends Controller
                                     việc mới có thể thêm và chỉnh sửa các bảng của không gian làm việc.";
         }
 
-        return view('workspaces.update',
-        compact('userId', 'userName', 'workspaceChecked', 'icon','wsp_viewer_count','wsp_viewer',
-        'access', 'ws_desrip', 'wsp_owner', 'wsp_member', 'wsp_invite', 'userId', 'wsp_member_count', 'wsp_invite_count'));
+        return view(
+            'workspaces.update',
+            compact(
+                'userId',
+                'userName',
+                'workspaceChecked',
+                'icon',
+                'wsp_viewer_count',
+                'wsp_viewer',
+                'access',
+                'ws_desrip',
+                'wsp_owner',
+                'wsp_member',
+                'wsp_invite',
+                'userId',
+                'wsp_member_count',
+                'wsp_invite_count'
+            )
+        );
     }
 
     //Duyệt người dùng gửi lời mời vào wsp
@@ -293,7 +309,7 @@ class WorkspaceController extends Controller
                 ->where('workspace_members.is_active', 1)
                 ->firstOrFail(); // Sử dụng firstOrFail để ném ngoại lệ nếu không tìm thấy
 
-                $validatedData = $request->except('image');
+            $validatedData = $request->except('image');
             if ($request->hasFile('image')) {
                 $validatedData['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
 
