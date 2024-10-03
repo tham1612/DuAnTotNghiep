@@ -418,8 +418,28 @@
                                             <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                                         </section>
                                         <div class="ps-4">
-                                    <textarea name="" cols="25" rows="5" class="form-control bg-light"
-                                              placeholder="Viết bình luận..."></textarea>
+                                    {{-- <textarea name="" cols="25" rows="5" class="form-control bg-light"
+                                              placeholder="Viết bình luận...">
+                                            </textarea> --}}
+                                            {{-- @foreach ($activities as $activity)
+                                            <li class="d-flex align-items-start mb-3">
+                                                <div class="me-3">
+                                                    <img src="{{ asset('path_to_avatar/' . ($activity->causer->avatar ?? 'default_avatar.png')) }}" alt="avatar" class="rounded-circle" width="40" height="40">
+                                                </div>
+                                                <div>
+                                                    <p class="mb-1">
+                                                        <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
+                                                        {{ $activity->description ?? 'Không có mô tả' }}
+                                                    </p>
+                                                    <small class="text-muted">
+                                                        {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                                                    </small>
+
+
+
+                                                </div>
+                                            </li>
+                                        @endforeach --}}
                                         </div>
                                     </div>
                                 </div>

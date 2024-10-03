@@ -28,7 +28,12 @@
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start">
                     <i class="ri-line-chart-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Hoạt động</p>
+                    {{-- <a href="{{ route('b.boards.activities', ['boardId' => $board->id]) }}"><p class="ms-3 fs-15 mt-3">Hoạt động</p></a> --}}
+                    <a href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#activityCanvas">
+                        <p class="ms-3 fs-15 mt-3">Hoạt động</p>
+                    </a>
+
+
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start">
                     <i class="ri-archive-line fs-22"></i>
@@ -61,6 +66,7 @@
             </ul>
         </div>
     </div>
+
     <!-- <div class="offcanvas-foorter border p-3 text-center">
       <a href="javascript:void(0);" class="link-success"
         >View All Activity
@@ -68,3 +74,39 @@
       ></a>
     </div> -->
 </div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="activityCanvas" aria-labelledby="activityCanvasLabel"
+            style="width: 350px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body p-0 overflow-hidden">
+                <div data-simplebar style="height: calc(100vh - 112px)">
+                    <ul style="list-style: none;" class="p-3">
+                        @foreach($activities as $activity)
+                        <li class="d-flex align-items-start mb-3">
+                            <div class="me-3">
+                                <img src="{{ asset('path_to_avatar/' . ($activity->causer->avatar ?? 'default_avatar.png')) }}" alt="avatar" class="rounded-circle" width="40" height="40">
+                            </div>
+                            <div>
+                                <p class="mb-1">
+                                    <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
+                                    {{ $activity->description ?? 'Không có mô tả' }}
+                                    <p>Hoạt động trên bảng: {{ $activity->properties['board_id'] }}</p>
+                                    {{-- <p>Tên catalog: {{ $activity->properties['catalog_name'] ?? 'Không có tên danh sách' }}</p> --}}
+                                    {{-- <p>Task được thêm:{{ $activity->properties['text'] }}</p> --}}
+                                </p>
+                                <small class="text-muted">
+                                    {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                                </small>
+
+                               
+
+                            </div>
+                        </li>
+                    @endforeach
+
+                    </ul>
+                </div>
+            </div>
+        </div>

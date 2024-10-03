@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleApiClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,11 +85,18 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
+                Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
             });
         Route::resource('catalogs', CatalogControler::class);
 
         Route::resource('tasks', TaskController::class);
+
+        Route::post('/create-event', [TaskController::class, 'createEvent']);
+        Route::put('/update-event/{id}', [TaskController::class, 'updateEvent'])->name('update');
+        Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
+        Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
+        Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
 
