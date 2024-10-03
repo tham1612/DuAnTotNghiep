@@ -41,13 +41,14 @@ class CatalogControler extends Controller
         $data['position']=$maxPosition +1;
         $catalog =  Catalog::query()->create($data);
         activity('thêm mới danh sách')
+        ->performedOn($catalog)
         ->causedBy(Auth::user())
-        ->withProperties(['catalog_name' => $catalog->name])
+        ->withProperties(['catalog_name' => $catalog->name,'board_id' => $request->board_id])
         ->tap(function (Activity $activity) use ($request,$catalog){
             $activity->board_id = $request->board_id;
             $activity->catalog_id = $catalog->id;
         })
-        ->log('danh sách đã được thêm vào bảng ');
+        ->log('danh sách đã được thêm:'.$catalog->name);
         return back()
             ->with('success', 'Thêm mới danh sách thành công vào bảng');
 

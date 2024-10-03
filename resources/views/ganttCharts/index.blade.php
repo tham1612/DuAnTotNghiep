@@ -153,7 +153,7 @@
             // Hàm để mở modal tùy chỉnh
             function openCustomModal(taskId) {
                 // Lấy phần tử modal dựa vào ID của nó
-                var modalElement = document.getElementById('detailCardModal');
+                var modalElement = document.getElementById('detailCardModal'+ taskId);
 
                 if (modalElement) {
                     var modalInstance = new bootstrap.Modal(modalElement);
