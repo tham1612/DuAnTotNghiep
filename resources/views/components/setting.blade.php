@@ -83,6 +83,7 @@
             <div class="offcanvas-body p-0 overflow-hidden">
                 <div data-simplebar style="height: calc(100vh - 112px)">
                     <ul style="list-style: none;" class="p-3">
+                        @if(!empty($activities))
                         @foreach($activities as $activity)
                         <li class="d-flex align-items-start mb-3">
                             <div class="me-3">
@@ -100,11 +101,12 @@
                                     {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
                                 </small>
 
-                               
+
 
                             </div>
                         </li>
                     @endforeach
+                        @endif
 
                     </ul>
                 </div>
