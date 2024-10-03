@@ -103,32 +103,32 @@
                                                     </div>
                                                 </section>
                                             </div>
-                                            <div class="p-3 ">
+                                            <div class="p-3">
                                                 <strong>Thông báo</strong>
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                    style="height: 35px; background-color: #c7c7c7" id="notification">
-                                                    <i class="ri-eye-line fs-22" id="notification_icon"></i>
-                                                    <p class="ms-2 mt-3" id="notification_content">Theo dõi</p>
-                                                    <div class="d-none" id="notification_follow">
-                                                        <i class="ri-check-line fs-22 bg-light ms-2 rounded "
-                                                           style="color: black"></i>
+                                                <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
+                                                     style="height: 35px; background-color: #c7c7c7" id="notification_{{$task->id}}">
+                                                    <i class="ri-eye-line fs-22" id="notification_icon_{{$task->id}}"></i>
+                                                    <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">Theo dõi</p>
+                                                    <div class="d-none" id="notification_follow_{{$task->id}}">
+                                                        <i class="ri-check-line fs-22 bg-light ms-2 rounded" style="color: black"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="p-3 ">
                                                 <strong>Ngày hết hạn</strong>
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                    style="height: 35px; background-color: #c7c7c7">
-                                            <input type="checkbox" id="due_date_checkbox" class="form-check-input"/>
-                                            <p class="ms-2 mt-3">20:00 28 thg 8</p>
-
-                                                    <span class="badge bg-success ms-2 d-none" id="due_date_success">Hoàn
-                                                tất</span>
-                                                    <span class="badge bg-danger ms-2" id="due_date_due">Quá hạn</span>
+                                                @php
+                                                    $now = \Carbon\Carbon::now();
+                                                    $endDate = \Carbon\Carbon::parse($task->end_date);
+                                                @endphp
+                                                <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
+                                                     style="height: 35px; background-color: #c7c7c7">
+                                                    <input type="checkbox" id="due_date_checkbox_{{ $task->id }}" class="form-check-input" />
+                                                    <p class="ms-2 mt-3">{{ $task->end_date }}</p>
+                                                    <span class="badge bg-success ms-2 {{ $now->gt($endDate) ? 'd-none' : '' }}" id="due_date_success_{{ $task->id }}">Hoàn tất</span>
+                                                    <span class="badge bg-danger ms-2 {{ $now->gt($endDate) ? '' : 'd-none' }}" id="due_date_due_{{ $task->id }}">Quá hạn</span>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                     <!-- mô tả -->
@@ -628,3 +628,63 @@
         </div>
     @endforeach
 @endif
+<script >
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationElements = document.querySelectorAll('[id^="notification_"]');
+
+        // Duyệt qua từng phần tử để thêm sự kiện click
+        notificationElements.forEach(notification => {
+            notification.addEventListener('click', function () {
+                // Lấy taskId từ id của phần tử
+                const taskId = this.id.split('_')[1];
+
+                // Lấy các phần tử liên quan
+                const followElement = document.getElementById(`notification_follow_${taskId}`);
+                const contentElement = document.getElementById(`notification_content_${taskId}`);
+                const iconElement = document.getElementById(`notification_icon_${taskId}`);
+
+                // Kiểm tra trạng thái hiện tại
+                if (followElement.classList.contains('d-none')) {
+                    // Nếu đang ẩn (chưa theo dõi), bật theo dõi
+                    followElement.classList.remove('d-none'); // Hiện icon dấu check
+                    contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
+                    iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon
+                } else {
+                    // Nếu đang hiển thị (đang theo dõi), bỏ theo dõi
+                    followElement.classList.add('d-none'); // Ẩn icon dấu check
+                    contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
+                    iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon về cũ
+                }
+
+                // In ra taskId để kiểm tra
+                console.log('Bạn đã click vào thông báo của task với ID:', taskId);
+            });
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const taskId = this.id.split('due_date_checkbox_')[1];  // Lấy taskId từ id của checkbox
+
+                const successBadge = document.getElementById(`due_date_success_${taskId}`);
+                const dueBadge = document.getElementById(`due_date_due_${taskId}`);
+
+                if (!successBadge || !dueBadge) {
+                    console.error('Không tìm thấy badge với id tương ứng:', taskId);
+                    return;
+                }
+
+                if (this.checked) {
+                    console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
+                    successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
+                    dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
+                } else {
+                    console.log('Chuyển sang "Quá hạn" cho task:', taskId);
+                    successBadge.classList.add('d-none'); // Ẩn "Hoàn tất"
+                    dueBadge.classList.remove('d-none'); // Hiện "Quá hạn"
+                }
+            });
+        });
+    });
+
+</script>
