@@ -61,7 +61,7 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}">
+                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="disableButtonOnSubmit()">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
 
@@ -100,11 +100,19 @@
             </div>
 
         </div>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="activityCanvas" aria-labelledby="activityCanvasLabel"
+            style="width: 350px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+        </div>
         <script type="text/javascript">
             gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
             gantt.config.order_branch = true;
             // gantt.config.order_branch_free = true;
-            var boardId = "{{ $board->id }}"; // Gán giá trị ID của Board từ server
+            var boardId = "{{ $board->id}}"; // Gán giá trị ID của Board từ server
             gantt.init("gantt_here");
             gantt.load("/api/boards/" + boardId + "/tasks");
             // Cập nhật dataProcessor để thao tác với đúng URL
@@ -145,21 +153,9 @@
             // Hàm để mở modal tùy chỉnh
             function openCustomModal(taskId) {
                 // Lấy phần tử modal dựa vào ID của nó
-                var modalElement = document.getElementById('detailCardModal');
+                var modalElement = document.getElementById('detailCardModal'+ taskId);
 
                 if (modalElement) {
-                    // Lấy task từ Gantt chart bằng taskId (giả sử bạn có taskId)
-                    // var task = gantt.getTask(taskId);
-
-                    // Đưa dữ liệu vào input trong modal
-                    // var inputElement = document.getElementById("borderInput");
-                    // if (inputElement) {
-                    //     inputElement.value = task.text;
-                    // } else {
-                    //     console.error("Phần tử input không tìm thấy!");
-                    // }
-
-                    // Mở modal Bootstrap
                     var modalInstance = new bootstrap.Modal(modalElement);
                     modalInstance.show();
                 } else {

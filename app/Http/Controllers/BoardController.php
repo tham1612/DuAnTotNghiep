@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\Models\Activity;
 
 // use function Laravel\Prompts\select;
 
@@ -82,7 +83,7 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBoardRequest $request)
+    public function store(Request $request)
     {
 
         $data = $request->except(['image', 'link_invite']);
@@ -102,6 +103,12 @@ class BoardController extends Controller
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
+            // ghi lại hoạt động của bảng
+            activity('Người dùng đã tạo bảng ')
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -151,11 +158,13 @@ class BoardController extends Controller
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
-        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
-        $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-            ->where('user_id', auth()->id())
-            ->value('is_star');
+         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+         $activities = Activity::where('properties->board_id', $boardId)->get();
+         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+         $boardName = $board->name; // Lấy tên của board
+         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
 //
         // dd($this->googleApiClient->getClient());
@@ -200,17 +209,19 @@ class BoardController extends Controller
                     'description' => $event->getDescription(),
                 ];
             }
+
         }
 
-//
+
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
-            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks', 'member_Is_star')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'member_Is_star')),
+             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities')),
+            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks')),
+            default => view('boards.index', compact('board', 'catalogs', 'activities')),
+
         };
     }
 

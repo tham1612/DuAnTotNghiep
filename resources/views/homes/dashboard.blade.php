@@ -78,11 +78,11 @@
         </div><!--end col-->
     </div>
 
-    <div class="row">
+    <div class="row" id="highlighted-boards">
         <div class="d-flex">
             <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5>
         </div>
-        <div class="row">
+        <div class="row"  >
             @if ($board_star->isEmpty())
                 <p>Không có bảng nào được đánh dấu là nổi bật.</p>
             @else
@@ -92,7 +92,8 @@
                             <div class="card-body">
                                 <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
                                     <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-                                        <button type="button" class="btn avatar-xs p-0 favourite-btn active">
+                                        <button type="button" class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }} "
+                                                onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})" id="is_star_{{ $board->id }}">
                                             <span class="avatar-title bg-transparent fs-15">
                                                 <i class="ri-star-fill"></i>
                                             </span>
@@ -245,7 +246,7 @@
                             <div class="card-body">
                                 <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
                                     <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-                                        <button type="button" id="favourite-btn"
+                                        <button type="button"  id="is_star_{{ $board->id }}"
                                             class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}">
                                             <span class="avatar-title bg-transparent fs-15">
                                                 <i
@@ -388,6 +389,7 @@
 @endsection
 @section('script')
     <script>
+
         feather.replace();
         document.addEventListener("DOMContentLoaded", function() {
             const counters = document.querySelectorAll('.counter-value');
@@ -409,6 +411,77 @@
 
                 updateCounter();
             });
+        });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     // Lấy tất cả các nút "sao" bằng class 'favourite-btn'
+        //     document.querySelectorAll('.favourite-btn').forEach(button => {
+        //         button.addEventListener('click', function () {
+        //             const buttonId = this.id.split('is_star_')[1];  // Lấy ID của board từ id của nút
+        //             console.log('Nút sao được click:', this.id);  // Kiểm tra log khi click
+        //
+        //             // Thêm hoặc xóa class 'active'
+        //             if (this.classList.contains('active')) {
+        //                 console.log('Bỏ class active');
+        //                 this.classList.remove('active'); // Bỏ class active
+        //             } else {
+        //                 console.log('Thêm class active');
+        //                 this.classList.add('active'); // Thêm class active
+        //             }
+        //         });
+        //     });
+        // });
+
+        function updateIsStar2(boardId, userId, ) {
+
+            $.ajax({
+                url: `/b/${boardId}/updateBoardMember`,
+                method: "PUT",
+                data: {
+                    board_id: boardId,
+                    user_id: userId,
+                },
+                success: function (response) {
+
+                    console.log('Người dùng đã đánh dấu bảng nối bật:', response);
+                },
+                error: function (xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        }
+
+        // function updateUI(){
+        //     $.ajax({
+        //         url: `/homes/dashboard`,
+        //         type: 'GET',
+        //         success: function (response) {
+        //             // Giả sử bạn có một div để chứa các bảng nổi bật
+        //             $('#highlighted-boards').html(response.html);  // Thay thế nội dung của phần tử này bằng danh sách mới
+        //         },
+        //         error: function (error) {
+        //             console.error('Không thể cập nhật danh sách bảng nổi bật:', error);
+        //         }
+        //     });
+        // }
+        function pollForUpdates() {
+            setInterval(function() {
+                $.ajax({
+                    url: `/homes/dashboard`,
+                    method: 'GET',
+                    success: function(response) {
+                        // Nếu có thay đổi, cập nhật giao diện
+                        if (response.hasUpdates) {
+                            $('#highlighted-boards').html(response.newHTML);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error checking for updates:', xhr.responseText);
+                    }
+                });
+            }, 5000);  // Kiểm tra mỗi 5 giây
+        }
+        $(document).ready(function() {
+            pollForUpdates();  // Gọi polling khi trang được tải
         });
     </script>
 
@@ -436,4 +509,17 @@
 
     <!--Swiper slider css-->
     <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        /* Khi nút có class "active", icon sao sẽ chuyển sang màu vàng */
+        .favourite-btn.active .avatar-title i {
+            color: gold !important; /* Dùng !important để đảm bảo không bị ghi đè */
+        }
+
+        /* Mặc định icon sao có màu xám nếu không có class active */
+        .favourite-btn .avatar-title i {
+            color: gray;
+        }
+
+
+    </style>
 @endsection
