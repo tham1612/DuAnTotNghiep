@@ -75,39 +75,33 @@
         <div data-simplebar style="height: calc(100vh - 112px)">
             <ul style="list-style: none;" class="p-3">
                 @if (!empty($activities))
-                    @foreach ($activities as $activity)
-                        <li class="d-flex align-items-start mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    {{-- @if ($activity->causer->avatar)
-                                        <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
-                                            alt="avatar" class="rounded-circle" width="40" height="40">
-                                    @else
-                                        <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                            style="width: 40px; height: 40px;">
-                                            {{ strtoupper(substr($activity->causer->name, 0, 1)) }}
-                                        </div>
-                                    @endif --}}
-                                </div>
+                @foreach ($activities as $activity)
+                    <li class="d-flex align-items-start mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                @if (!empty($activity->causer) && !empty($activity->causer->avatar))
+                                    <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
+                                         alt="avatar" class="rounded-circle" width="40" height="40">
+                                @else
+                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                         style="width: 40px; height: 40px;">
+                                        {{ strtoupper(substr($activity->causer->name ?? 'Hệ thống', 0, 1)) }}
+                                    </div>
+                                @endif
                             </div>
-                            <div>
-                                <p class="mb-1">
-                                    <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
-                                    {{ $activity->description ?? 'Không có mô tả' }}
-                                    {{-- <p>Hoạt động trên bảng: {{ $activity->properties['board_id'] }}</p> --}}
-                                    {{-- <p>Tên catalog: {{ $activity->properties['catalog_name'] ?? 'Không có tên danh sách' }}</p> --}}
-                                    {{-- <p>Task được thêm:{{ $activity->properties['text'] }}</p> --}}
-                                </p>
-                                <small class="text-muted">
-                                    {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
-                                </small>
-
-
-
-                            </div>
-                        </li>
-                    @endforeach
-                @endif
+                        </div>
+                        <div>
+                            <p class="mb-1">
+                                <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
+                                {{ $activity->description ?? 'Không có mô tả' }}
+                            </p>
+                            <small class="text-muted">
+                                {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                            </small>
+                        </div>
+                    </li>
+                @endforeach
+            @endif
 
             </ul>
         </div>
