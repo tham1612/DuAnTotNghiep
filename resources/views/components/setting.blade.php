@@ -79,7 +79,7 @@
                         <li class="d-flex align-items-start mb-3">
                             <div class="d-flex align-items-center">
                                 <div class="me-3">
-                                    @if ($activity->causer->avatar)
+                                    {{-- @if ($activity->causer->avatar)
                                         <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
                                             alt="avatar" class="rounded-circle" width="40" height="40">
                                     @else
@@ -87,7 +87,7 @@
                                             style="width: 40px; height: 40px;">
                                             {{ strtoupper(substr($activity->causer->name, 0, 1)) }}
                                         </div>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                             <div>

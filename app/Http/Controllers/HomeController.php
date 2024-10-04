@@ -53,7 +53,6 @@ class HomeController extends Controller
         // Tách danh sách bảng sao
         $board_star = $boards->filter(fn($board) => $board->is_star);
         $activities = Activity::all();
-        
         return view('homes.home', compact('boards', 'board_star','activities'));
     }
 

@@ -529,7 +529,7 @@
                             <div class="card-header border-bottom-dashed align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Hoạt động gần đây</h4>
                                 <div class="flex-shrink-0">
-                                    
+
                                 </div>
                             </div><!-- end cardheader -->
                             <div class="card-body p-0">
@@ -540,7 +540,7 @@
                                 <li class="d-flex align-items-start mb-3">
                                     <div class="d-flex align-items-center">
                                         <div class="me-3">
-                                            @if ($activity->causer->avatar)
+                                            {{-- @if ($activity->causer->avatar)
                                                 <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
                                                     alt="avatar" class="rounded-circle" width="40" height="40">
                                             @else
@@ -548,7 +548,7 @@
                                                     style="width: 40px; height: 40px;">
                                                     {{ strtoupper(substr($activity->causer->name, 0, 1)) }}
                                                 </div>
-                                            @endif
+                                            @endif --}}
                                         </div>
                                     </div>
                                     <div>
