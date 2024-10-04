@@ -12,6 +12,7 @@ class GoogleApiClientController extends Controller
     {
         $client = new Google_Client();
         $client->setAuthConfig(storage_path('app/google-calendar/credentials.json'));
+        // dd(storage_path('app/google-calendar/credentials.json'));
         $client->addScope(Google_Service_Calendar::CALENDAR);
         $client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));
         $client->setAccessType('offline'); // Lấy refresh token để dùng lâu dài
@@ -39,7 +40,7 @@ class GoogleApiClientController extends Controller
         //            ->where('id', auth()->id())
         //            ->update([
         //                'remember_token' => json_encode($client->getAccessToken())
-        //            ]);
+        // ]);
 
         return redirect()->route('home');
     }
