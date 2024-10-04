@@ -39,7 +39,7 @@ class GoogleApiClientController extends Controller
         //            ->where('id', auth()->id())
         //            ->update([
         //                'remember_token' => json_encode($client->getAccessToken())
-        //            ]);
+        //      21212121      ]);
 
         return redirect()->route('home');
     }
