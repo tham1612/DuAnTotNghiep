@@ -134,7 +134,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('homes.dashboard') }}">
+                    <a class="nav-link menu-link"
+                        href="">
+
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>
