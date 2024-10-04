@@ -58,7 +58,7 @@ class TaskController extends Controller
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
             // event(new TaskUpdated($task));
         return back()
-            ->with('success', 'Thêm mới danh sách thành công vào bảng');
+            ->with('success');
     }
 
     public function show()
