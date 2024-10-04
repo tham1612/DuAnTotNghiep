@@ -1,20 +1,10 @@
-<div
-        class="offcanvas offcanvas-end"
-        tabindex="-1"
-        id="offcanvasRight"
-        aria-labelledby="offcanvasRightLabel"
-        style="width: 350px;"
->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
+    style="width: 350px;">
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title text-center" id="offcanvasRightLabel">
             Cài đặt
         </h5>
-        <button
-                type="button"
-                class="btn-close text-reset"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)">
@@ -52,7 +42,8 @@
                     <i class=" ri-file-copy-line fs-22"></i>
                     <p class="ms-3 fs-15 mt-3">Sao chép bảng</p>
                 </li>
-                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="ri-subtract-line fs-22"></i>
                     <p class="ms-3 fs-15 mt-3">Đóng bảng thông tin</p>
                     <div class="dropdown-menu dropdown-menu-md p-3 w-100">
@@ -75,25 +66,35 @@
     </div> -->
 </div>
 <div class="offcanvas offcanvas-end" tabindex="-1" id="activityCanvas" aria-labelledby="activityCanvasLabel"
-            style="width: 350px;">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body p-0 overflow-hidden">
-                <div data-simplebar style="height: calc(100vh - 112px)">
-                    <ul style="list-style: none;" class="p-3">
-                        @if(!empty($activities))
-                        @foreach($activities as $activity)
+    style="width: 350px;">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0 overflow-hidden">
+        <div data-simplebar style="height: calc(100vh - 112px)">
+            <ul style="list-style: none;" class="p-3">
+                @if (!empty($activities))
+                    @foreach ($activities as $activity)
                         <li class="d-flex align-items-start mb-3">
-                            <div class="me-3">
-                                <img src="{{ asset('path_to_avatar/' . ($activity->causer->avatar ?? 'default_avatar.png')) }}" alt="avatar" class="rounded-circle" width="40" height="40">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    @if ($activity->causer->avatar)
+                                        <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
+                                            alt="avatar" class="rounded-circle" width="40" height="40">
+                                    @else
+                                        <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                            style="width: 40px; height: 40px;">
+                                            {{ strtoupper(substr($activity->causer->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                             <div>
                                 <p class="mb-1">
                                     <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
                                     {{ $activity->description ?? 'Không có mô tả' }}
-                                    <p>Hoạt động trên bảng: {{ $activity->properties['board_id'] }}</p>
+                                    {{-- <p>Hoạt động trên bảng: {{ $activity->properties['board_id'] }}</p> --}}
                                     {{-- <p>Tên catalog: {{ $activity->properties['catalog_name'] ?? 'Không có tên danh sách' }}</p> --}}
                                     {{-- <p>Task được thêm:{{ $activity->properties['text'] }}</p> --}}
                                 </p>
@@ -106,9 +107,9 @@
                             </div>
                         </li>
                     @endforeach
-                        @endif
+                @endif
 
-                    </ul>
-                </div>
-            </div>
+            </ul>
         </div>
+    </div>
+</div>

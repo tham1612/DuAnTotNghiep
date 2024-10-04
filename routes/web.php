@@ -68,7 +68,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::get('/home', [HomeController::class, 'index'])->name('home');
-
+       
         Route::get('/chat', function () {
             return view('chat.index');
         })->name('chat');
