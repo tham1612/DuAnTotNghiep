@@ -436,8 +436,7 @@
                 }
             });
         }
-
-        function updateFollow(boardId, userId, ) {
+        function updateFollow(boardId, userId) {
 
             $.ajax({
                 url: `/b/${boardId}/updateBoardMember2`,
