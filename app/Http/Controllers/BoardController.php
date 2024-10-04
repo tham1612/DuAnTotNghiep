@@ -87,7 +87,6 @@ class BoardController extends Controller
     {
 
         $data = $request->except(['image', 'link_invite']);
-        $data['name'] = $request->board['name'];
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
         }
