@@ -66,9 +66,9 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
-
         // Trả về view với danh sách bảng và các bảng đã đánh dấu sao
         return view('homes.dashboard', compact('boards', 'board_star'));
+
     }
 
 
@@ -254,8 +254,27 @@ class BoardController extends Controller
             $boardMember->update(['is_star' => $newIsStar]);
 
             return response()->json([
-                'message' => 'Người dùng đã theo dõi bảng',
+                'message' => 'Người dùng cập nhật dấu sao bảng thành công',
                 'success' => true
+            ]);
+        }
+
+    }
+    public function updateBoardMember2(Request $request, string $id)
+    {
+        $data = $request->only(['user_id', 'board_id']);
+
+
+        $boardMember = BoardMember::where('board_id', $data['board_id'])
+            ->where('user_id', $data['user_id'])
+            ->first();
+
+        if ($boardMember) {
+            $newFollow = $boardMember->follow == 1 ? 0 : 1;
+            $boardMember->update(['follow' =>$newFollow ]);
+
+            return response()->json([
+                'follow' => $boardMember->follow, // Trả về trạng thái follow mới
             ]);
         }
 
