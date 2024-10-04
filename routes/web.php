@@ -87,6 +87,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
                 Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
+                Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
             });
         Route::resource('catalogs', CatalogControler::class);
 

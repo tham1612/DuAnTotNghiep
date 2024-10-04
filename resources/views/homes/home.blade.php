@@ -803,6 +803,7 @@
                     </div>
                 </div>
                 <div data-simplebar style="max-height: 500px;">
+                    @if(!empty($board_star))
                     @if ($board_star->isEmpty())
                         <p>Không có bảng nào được đánh dấu là nổi bật.</p>
                     @else
@@ -816,6 +817,10 @@
                                                     <img src="{{ \Storage::url($board->image) }}" alt=""
                                                         height="32">
                                                 @else
+                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center text-black"
+                                                         style="width: 50px;height: 50px;">
+                                                        {{ strtoupper(substr($board->name, 0, 1)) }}
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
@@ -825,10 +830,12 @@
                                             </h5>
                                         </div>
                                         <div>
-                                            <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem
-                                                chi
-                                                tiết
-                                                <i class="ri-arrow-right-up-line align-bottom"></i></a>
+                                            <a class="nav-link badge bg-primary-subtle text-primary {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                               href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}" role="tab"
+                                               aria-controls="pills-home"
+                                               aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}">
+                                                <i class="ri-arrow-right-up-line align-bottom"></i> Xem chi tiết
+                                            </a>
                                         </div>
                                     </div>
                                     <h6 class="text-muted mb-0">Người theo dõi <span
@@ -851,6 +858,7 @@
                             </div>
                         @endforeach
                     @endif
+                    @endif
 
                 </div>
                 <!--end card-->
@@ -866,6 +874,7 @@
                     </div>
                 </div>
                 <div data-simplebar style="max-height: 500px;">
+                    @if(!empty($boards))
                     @if ($boards->isEmpty())
                         <p>Không có bảng nào được đánh dấu là nổi bật.</p>
                     @else
@@ -879,6 +888,10 @@
                                                     <img src="{{ \Storage::url($board->image) }}" alt=""
                                                         height="32">
                                                 @else
+                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center text-black"
+                                                         style="width: 50px;height: 50px;">
+                                                        {{ strtoupper(substr($board->name, 0, 1)) }}
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
@@ -888,10 +901,12 @@
                                             </h5>
                                         </div>
                                         <div>
-                                            <a href="javascript:void(0);" class="badge bg-primary-subtle text-primary">Xem
-                                                chi
-                                                tiết
-                                                <i class="ri-arrow-right-up-line align-bottom"></i></a>
+                                            <a class="nav-link badge bg-primary-subtle text-primary {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                               href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}" role="tab"
+                                               aria-controls="pills-home"
+                                               aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}">
+                                                <i class="ri-arrow-right-up-line align-bottom"></i> Xem chi tiết
+                                            </a>
                                         </div>
                                     </div>
                                     <h6 class="text-muted mb-0">Người theo dõi <span
@@ -913,6 +928,7 @@
                                 </div>
                             </div>
                         @endforeach
+                    @endif
                     @endif
                 </div>
                 <!--end card-->
