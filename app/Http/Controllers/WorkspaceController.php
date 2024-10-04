@@ -78,6 +78,7 @@ class WorkspaceController extends Controller
                     'invite' => now(),
                     'is_active' => $is_active,
                 ]);
+            
             activity('Workspace Created')
                 ->causedBy(Auth::user())  // Ghi nhận người thực hiện
                 ->performedOn($workspace) // Liên kết với workspace được tạo

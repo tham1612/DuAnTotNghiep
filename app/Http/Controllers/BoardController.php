@@ -102,7 +102,7 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
-            activity('Người dùng đã tạo bảng ')
+             activity('Người dùng đã tạo bảng ')
             ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
             ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
             ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
@@ -217,7 +217,7 @@ class BoardController extends Controller
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities')),
-            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks')),
+            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks','activities')),
             default => view('boards.index', compact('board', 'catalogs', 'activities')),
 
         };

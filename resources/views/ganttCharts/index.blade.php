@@ -61,23 +61,22 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="disableButtonOnSubmit()">
+                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
 
                         <div class="mb-2">
-                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..."
-                                required />
+                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..." required />
                         </div>
+
                         <div class="mb-2">
-                            <label class="form-label"for="">Ngày bắt đầu</label>
-                            <input type="date" class="form-control" name="start_date" placeholder=""
-                                required />
+                            <label class="form-label" for="">Ngày bắt đầu</label>
+                            <input type="datetime-local" class="form-control" name="start_date" id="start_date" required />
                         </div>
+
                         <div class="mb-2">
-                             <label class="form-label"for="">Ngày kết thúc</label>
-                            <input type="date" class="form-control" name="end_date" placeholder=""
-                                required />
+                            <label class="form-label" for="">Ngày kết thúc</label>
+                            <input type="datetime-local" class="form-control" name="end_date" id="end_date" required />
                         </div>
 
                         <div class="mb-2">
@@ -93,7 +92,6 @@
                             <button type="submit" class="btn btn-primary">Thêm Task</button>
                         </div>
                     </form>
-
                 </div>
             </div>
             <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="addCatalog1">
