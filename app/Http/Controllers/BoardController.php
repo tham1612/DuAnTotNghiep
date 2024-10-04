@@ -37,9 +37,9 @@ class BoardController extends Controller
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
             $query->where('created_at', $userId) // Người tạo
-            ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                $query->where('user_id', $userId); // Thành viên
-            });
+                ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                    $query->where('user_id', $userId); // Thành viên
+                });
         })
             ->with(['workspace', 'boardMembers'])
             ->get()
@@ -104,9 +104,9 @@ class BoardController extends Controller
             ]);
             // ghi lại hoạt động của bảng
             activity('Người dùng đã tạo bảng ')
-            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
             DB::commit();
             return redirect()->route('home');
@@ -158,19 +158,19 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-         $activities = Activity::where('properties->board_id', $boardId)->get();
-         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
-         $boardName = $board->name; // Lấy tên của board
-         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+        $activities = Activity::where('properties->board_id', $boardId)->get();
+        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+        $boardName = $board->name; // Lấy tên của board
+        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
-//
+        //
         // dd($this->googleApiClient->getClient());
         $client = $this->googleApiClient->getClient();
 
         $accessToken = session('google_access_token');
-//        dd($accessToken);
+        //        dd($accessToken);
         if ($accessToken) {
             $client->setAccessToken($accessToken);
             if ($client->isAccessTokenExpired()) {
@@ -214,11 +214,11 @@ class BoardController extends Controller
 
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities')),
-            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks')),
             default => view('boards.index', compact('board', 'catalogs', 'activities')),
 
         };
