@@ -109,8 +109,8 @@
                                             <tr>
                                                 <div
                                                     class="justify-content-between d-flex align-items-center mt-3 mb-4">
-                                                    <h5 class="mb-0 pb-1 text-decoration-underline">Mời bạn gia nhập
-                                                        không gian làm việc!</h5>
+                                                    <h5 class="mb-0 pb-1 text-decoration-underline">Xin chào! Hãy gia
+                                                        nhập không gian làm việc của chúng tôi!</h5>
                                                 </div>
                                             </tr>
                                             <hr>
@@ -119,7 +119,7 @@
                                                 <td class="content-block"
                                                     style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 20px; line-height: 1.5; font-weight: 500; vertical-align: top; margin: 0; padding: 0 0 10px;"
                                                     valign="top">
-                                                    Chào, Fen thân yêu nhé !!!
+                                                    Chào, Fen thân yêu nhé!!!
                                                 </td>
                                             </tr>
                                             <tr
@@ -127,8 +127,8 @@
                                                 <td class="content-block"
                                                     style="font-family: 'Roboto', sans-serif; color: #878a99; box-sizing: border-box; line-height: 1.5; font-size: 15px; vertical-align: top; margin: 0; padding: 0 0 10px;"
                                                     valign="top">
-                                                    Chúng tôi rất vui mừng thông báo rằng bạn đã được mời tham gia không
-                                                    gian làm việc của chúng tôi trên Task Flow
+                                                    Chúng tôi rất vui mừng thông báo rằng bạn đã được chấp nhận vào
+                                                    không gian làm việc Bảng {{ $boardName }} của chúng tôi trên Task Flow.
                                                 </td>
                                             </tr>
                                             <tr
@@ -137,21 +137,19 @@
                                                     style="font-family: 'Roboto', sans-serif; color: #878a99; box-sizing: border-box; line-height: 1.5; font-size: 15px; vertical-align: top; margin: 0; padding: 0 0 24px;"
                                                     valign="top">
                                                     Chúng tôi tin rằng sự tham gia của bạn sẽ mang lại giá trị lớn cho
-                                                    đội ngũ và giúp chúng ta hoàn thành mục tiêu một
-                                                    cách hiệu quả hơn.<br>
+                                                    đội ngũ và giúp chúng ta hoàn thành mục tiêu một cách hiệu quả
+                                                    hơn.<br>
                                                     Trong không gian làm việc này, bạn sẽ có thể:<br><br>
 
-                                                    - Theo dõi tiến độ dự án: Xem tất cả các nhiệm vụ và cập nhật
-                                                    trạng thái của chúng.<br>
-                                                    - Hợp tác dễ dàng: Chia sẻ ý tưởng, tài liệu và nhận phản hồi từ
-                                                    các thành viên khác trong thời gian thực.<br>
-                                                    - Lập kế hoạch thông minh: Sử dụng các công cụ lập kế hoạch để
-                                                    quản lý thời gian và ưu tiên nhiệm vụ của
-                                                    bạn.<br><br>
+                                                    - Theo dõi tiến độ dự án: Xem tất cả các nhiệm vụ và cập nhật trạng
+                                                    thái của chúng.<br>
+                                                    - Hợp tác dễ dàng: Chia sẻ ý tưởng, tài liệu và nhận phản hồi từ các
+                                                    thành viên khác trong thời gian thực.<br>
+                                                    - Lập kế hoạch thông minh: Sử dụng các công cụ lập kế hoạch để quản
+                                                    lý thời gian và ưu tiên nhiệm vụ của bạn.<br><br>
 
                                                     Hãy nhấn vào liên kết dưới đây để tham gia ngay bây giờ:
                                                 </td>
-
                                             </tr>
                                             <tr
                                                 style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
@@ -162,7 +160,7 @@
                                                         itemprop="url"
                                                         style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: .8125rem;font-weight: 400; color: #FFF; text-decoration: none; text-align: center; cursor: pointer; display: inline-block; border-radius: .25rem; text-transform: capitalize; background-color: #0ab39c; margin: 0; border-color: #0ab39c; border-style: solid; border-width: 1px; padding: .5rem .9rem;"
                                                         onMouseOver="this.style.background='#099885'"
-                                                        onMouseOut="this.style.background='#0ab39c'">Accept
+                                                        onMouseOut="this.style.background='#0ab39c'">Tham gia ngay
                                                         &#8594;</a>
                                                 </td>
                                             </tr>
@@ -173,19 +171,17 @@
                                                     style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px"
                                                     valign="top">
                                                     <div style="display: flex; align-items: center;">
-                                                        {{-- <img src="{{ asset('theme/assets/images/logo-light.png') }}"
-                                                            alt="" height="35" width="35"
-                                                            style="border-radius: 50px;"> --}}
                                                         <div style="margin-left: 8px;">
                                                             <span style="font-weight: 600;">Task Flow</span>
                                                             <p
                                                                 style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">
-                                                                Quản lý không gian làm việc :33 </p>
+                                                                Quản lý không gian làm việc của bảng: 33</p>
                                                         </div>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </table>
+
                                     </td>
                                 </tr>
                             </table>
