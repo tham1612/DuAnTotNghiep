@@ -89,6 +89,10 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
                 Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
+
+                Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
+                Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
+                    ->withoutMiddleware('auth');
             });
         Route::resource('catalogs', CatalogControler::class);
 

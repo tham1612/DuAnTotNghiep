@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\UserInvitedToWorkspace::class => [
             \App\Listeners\SendInviteEmail::class,
         ],
+        \App\Events\UserInvitedToBoard::class => [
+            \App\Listeners\SendInviteEmailBoard::class,
+        ],
     ];
 
     /**
