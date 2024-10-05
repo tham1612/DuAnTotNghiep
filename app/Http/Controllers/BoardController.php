@@ -31,29 +31,26 @@ class BoardController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'board.';
-
-    public function index()
+    public function index($workspaceId)
     {
         $userId = Auth::id();
-        // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
-        $boards = Board::where(function ($query) use ($userId) {
-            $query->where('created_at', $userId) // Người tạo
+
+        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
+        $boards = Board::where('workspace_id', $workspaceId)
+            ->where(function ($query) use ($userId) {
+                $query->where('created_at', $userId)
                 ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId); // Thành viên
+                    $query->where('user_id', $userId);
                 });
-        })
+            })
+
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
-                // Tính tổng số thành viên trong bảng
                 $board->total_members = $board->boardMembers->count();
-
-                // Kiểm tra xem user có đánh dấu sao cho bảng này không
                 $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->is_star == 1;
                 });
-
-                // Kiểm tra xem user có theo dõi bảng này không (follow = 1)
                 $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->follow == 1;
                 });
@@ -67,10 +64,13 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
-        // Trả về view với danh sách bảng và các bảng đã đánh dấu sao
-        return view('homes.dashboard', compact('boards', 'board_star'));
 
+        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
+        return view('homes.dashboard', compact('boards', 'board_star'));
     }
+
+
+
 
 
     /**
