@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
 use \App\Http\Controllers\CatalogControler;
+use App\Http\Controllers\ChatAIController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
@@ -66,10 +67,10 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
 
-        Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
+        Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::get('/home', [HomeController::class, 'index'])->name('home');
-       
+
         Route::get('/chat', function () {
             return view('chat.index');
         })->name('chat');
@@ -89,6 +90,10 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
                 Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
+
+                Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
+                Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
+                    ->withoutMiddleware('auth');
             });
         Route::resource('catalogs', CatalogControler::class);
 
@@ -101,13 +106,14 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
+        Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
     });
 
 Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
-
+Route::get('/ai-chat', [ChatAIController::class, 'chat']);
 Auth::routes();
 
 Route::controller(LoginGoogleController::class)->group(function(){

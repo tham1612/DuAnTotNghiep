@@ -111,7 +111,80 @@
                 {{-- các màn hình hiển thị --}}
                 @yield('main')
 
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
 
+                                <div class="live-preview">
+                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                                        aria-labelledby="offcanvasRightLabel">
+                                        <div class="offcanvas-header border-bottom">
+                                            <h5 class="offcanvas-title" id="offcanvasRightLabel">Chat AI
+                                            </h5>
+                                            <button type="button" class="btn-close text-reset"
+                                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body">
+                                            <div class="chat-conversation p-3 " id="chat-conversation">
+                                                <div id="responseBox">
+                                                    <!-- Tin nhắn của người dùng và phản hồi từ hệ thống sẽ được chèn vào đây -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="offcanvas-footer border text-center">
+                                            <!-- nhập tin nhắn -->
+                                            <div class="chat-input-section p-4">
+
+                                                <form id="chatinput-form" enctype="multipart/form-data">
+                                                    <div class="row g-0 align-items-center">
+                                                        <div class="col-auto">
+                                                            <div class="chat-input-links me-2">
+                                                                <div class="links-list-item">
+                                                                    <button type="button"
+                                                                        class="btn btn-link text-decoration-none emoji-btn"
+                                                                        id="emoji-btn">
+                                                                        <i class="bx bx-smile align-middle"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col">
+                                                            <div class="chat-input-feedback">
+                                                                Please Enter a Message
+                                                            </div>
+                                                            <input type="text"
+                                                                class="form-control chat-input bg-light border-light"
+                                                                id="prompt" placeholder="Nhập tin nhắn"
+                                                                autocomplete="off">
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="chat-input-links ms-2">
+                                                                <div class="links-list-item">
+                                                                    <button type="submit" id="sendBtn"
+                                                                        class="btn btn-success chat-send waves-effect waves-light">
+                                                                        <i class="ri-send-plane-2-fill align-bottom"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- container-fluid -->
+                                </div>
+
+                            </div>
+                            <!-- end main content-->
+
+                        </div>
+                    </div>
+                </div>
                 @include('components.createBoard')
                 @include('components.createTemplateBoard')
                 @include('components.workspace')
@@ -141,7 +214,73 @@
     </div>
 </div>
 
+        <!-- JAVASCRIPT -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+        <script>
+            $(document).ready(function() {
+                // Bắt sự kiện khi form được submit
+                $('#chatinput-form').on('submit', function(e) {
+                    e.preventDefault(); // Ngăn chặn form submit mặc định
+
+                    // Lấy giá trị từ ô nhập liệu
+                    let prompt = $('#prompt').val();
+
+                    // Kiểm tra xem người dùng có nhập gì không
+                    if (prompt.trim() === '') {
+                        alert('Vui lòng nhập câu hỏi!');
+                        return;
+                    }
+
+                    // Gửi yêu cầu AJAX đến server
+                    $.ajax({
+                        url: '/ai-chat', // Route để xử lý yêu cầu
+                        type: 'GET',
+                        data: {
+                            prompt: prompt
+                        },
+                        success: function(response) {
+                            // Thay thế các dấu ** bằng thẻ <strong> để làm in đậm
+                            let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+                            // Thay thế các ký tự xuống dòng (\n) bằng <br> để hiển thị đúng xuống dòng
+                            formattedResponse = formattedResponse.replace(/\n/g, '<br>');
+
+                            // Hiển thị tin nhắn của người dùng
+                            $('#responseBox').append(
+                                '<div class="user-message" style="text-align: right; margin-bottom: 10px;"><span style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
+                                prompt + '</span></div>');
+
+                            // Hiển thị phản hồi từ hệ thống
+                            $('#responseBox').append(
+                                '<div class="system-response" style="text-align: left; margin-bottom: 10px;"><span style="background-color: #ffffff; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
+                                formattedResponse + '</span></div>');
+
+                            // Xóa nội dung trong ô nhập liệu
+                            $('#prompt').val('');
+
+                            // Cuộn xuống cuối khung chat
+                            $('#chat-conversation').scrollTop($('#chat-conversation')[0].scrollHeight);
+                        },
+                        error: function(xhr, status, error) {
+                            // In ra chi tiết lỗi trong console để dễ dàng debug
+                            console.log(xhr.responseText);
+                            alert('Đã có lỗi xảy ra!');
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+        <!-- prismjs plugin -->
+        <script src="{{ asset('assets/libs/prismjs/prism.js') }}"></script>
+
+        <!-- glightbox js -->
+        <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>
+
+        <!-- fgEmojiPicker js -->
+        <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
 <script>
     const PATH_ROOT = "/theme/";
 
@@ -167,7 +306,8 @@
 <!--jquery cdn-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
+<!--select2 cdn-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @if (request()->is('b/*'))
     <!-- dragula init js -->
     <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
@@ -183,8 +323,8 @@
 
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
 
-    <!--select2 cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     <script>
@@ -230,28 +370,28 @@
             window.location.reload();
         });
 
-        //     xử lý theo dõi + ngày hết hạn của card
-        const notification = document.querySelector('#notification');
-        const notification_follow = document.querySelector('#notification_follow');
-        const notification_icon = document.querySelector('#notification_icon');
-        const notification_content = document.querySelector('#notification_content');
-        notification.addEventListener('click', () => {
-            notification_follow.classList.toggle('d-none');
-            notification_icon.classList.contains("ri-eye-line") ?
-                notification_icon.className = "ri-eye-off-line fs-22" :
-                notification_icon.className = "ri-eye-line fs-22";
-            notification_content.textContent === "Theo dõi" ?
-                notification_content.innerHTML = "Đang theo dõi" :
-                notification_content.innerHTML = "Theo dõi";
-        });
-
-        const due_date_checkbox = document.querySelector('#due_date_checkbox');
-        const due_date_success = document.querySelector('#due_date_success');
-        const due_date_due = document.querySelector('#due_date_due');
-        due_date_checkbox.addEventListener('click', () => {
-            due_date_due.classList.toggle('d-none');
-            due_date_success.classList.toggle('d-none');
-        });
+        // //     xử lý theo dõi + ngày hết hạn của card
+        // const notification = document.querySelector('#notification');
+        // const notification_follow = document.querySelector('#notification_follow');
+        // const notification_icon = document.querySelector('#notification_icon');
+        // const notification_content = document.querySelector('#notification_content');
+        // notification.addEventListener('click', () => {
+        //     notification_follow.classList.toggle('d-none');
+        //     notification_icon.classList.contains("ri-eye-line") ?
+        //         notification_icon.className = "ri-eye-off-line fs-22" :
+        //         notification_icon.className = "ri-eye-line fs-22";
+        //     notification_content.textContent === "Theo dõi" ?
+        //         notification_content.innerHTML = "Đang theo dõi" :
+        //         notification_content.innerHTML = "Theo dõi";
+        // });
+        //
+        // const due_date_checkbox = document.querySelector('#due_date_checkbox');
+        // const due_date_success = document.querySelector('#due_date_success');
+        // const due_date_due = document.querySelector('#due_date_due');
+        // due_date_checkbox.addEventListener('click', () => {
+        //     due_date_due.classList.toggle('d-none');
+        //     due_date_success.classList.toggle('d-none');
+        // });
 
 
     </script>
