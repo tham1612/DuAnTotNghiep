@@ -136,11 +136,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link"
-                        href="">
-
+                       href="{{ route ('homes.dashboard', $workspaceChecked -> id)}}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>
+
+
 
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                 @if (isset($workspaceBoards))

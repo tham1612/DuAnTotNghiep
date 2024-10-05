@@ -38,12 +38,11 @@ class BoardController extends Controller
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
-                $query->where('created_at', $userId)
+                $query->where('created_at', $userId) // Ensure 'created_by' is the correct field
                 ->orWhereHas('boardMembers', function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 });
             })
-
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -64,14 +63,12 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
+        // dd($workspaceId);
+
 
         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
-
-
-
-
 
     /**
      * Show the form for creating a new resource.
