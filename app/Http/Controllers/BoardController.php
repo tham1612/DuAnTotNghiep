@@ -66,9 +66,9 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
-
         // Trả về view với danh sách bảng và các bảng đã đánh dấu sao
         return view('homes.dashboard', compact('boards', 'board_star'));
+
     }
 
 
@@ -103,11 +103,11 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
+             activity('Người dùng đã tạo bảng ')
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -158,11 +158,14 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-        $activities = Activity::where('properties->board_id', $boardId)->get();
-        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
-        $boardName = $board->name; // Lấy tên của board
-        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+
+         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+         $activities = Activity::where('properties->board_id', $boardId)->get();
+        //  dd($activities);
+         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+         $boardName = $board->name; // Lấy tên của board
+         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
         //
@@ -218,8 +221,8 @@ class BoardController extends Controller
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks')),
-            default => view('boards.index', compact('board', 'catalogs', 'activities')),
+            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks','activities')),
+            default => view('boards.index', compact('board', 'catalogs', 'activities', 'id')),
 
         };
     }
@@ -254,8 +257,27 @@ class BoardController extends Controller
             $boardMember->update(['is_star' => $newIsStar]);
 
             return response()->json([
-                'message' => 'Người dùng đã theo dõi bảng',
+                'message' => 'Người dùng cập nhật dấu sao bảng thành công',
                 'success' => true
+            ]);
+        }
+
+    }
+    public function updateBoardMember2(Request $request, string $id)
+    {
+        $data = $request->only(['user_id', 'board_id']);
+
+
+        $boardMember = BoardMember::where('board_id', $data['board_id'])
+            ->where('user_id', $data['user_id'])
+            ->first();
+
+        if ($boardMember) {
+            $newFollow = $boardMember->follow == 1 ? 0 : 1;
+            $boardMember->update(['follow' =>$newFollow ]);
+
+            return response()->json([
+                'follow' => $boardMember->follow, // Trả về trạng thái follow mới
             ]);
         }
 
@@ -267,6 +289,17 @@ class BoardController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function inviteUserBoard(Request $request, $boardId){
+        $board = Board::query()
+            ->where('id', $boardId)
+            ->firstOrFail();
+
+        $email = $request->input('email');
+        $linkInvite = $board->link_invite;
+        $workspaceName = $board->name;
+        $authorize = $request->input('authorize');
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+// namespace App\Http\Controllers;
 
 // use App\Models\Board;
 // use Illuminate\Http\Request;
@@ -8,15 +8,9 @@ namespace App\Http\Controllers;
 
 // class ActivityController extends Controller
 // {
-//     public function boardActivities($boardId)
-//     {
-//         // Lấy dữ liệu bảng
-//         $board = Board::findOrFail($boardId);
-
-//         // Lấy các hoạt động liên quan đến bảng
-//         $activities = Activity::where('log_name', 'board_' . $boardId)->latest()->get();
-
-//         // Trả về view hiển thị hoạt động của bảng
-//         return view('boards.index', compact('board', 'activities'));
-//     }
+//    public function index(){
+//     $activities = Activity::all();
+//     //  dd($ativities);
+//      return view('homes/home',compact('activities'));
+//    }
 // }
