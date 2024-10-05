@@ -6,6 +6,7 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_accept_invite', null)
         ->whereNot('workspace_members.is_active', 1)
+        ->where('workspace_members.deleted_at', NULL)
         ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
@@ -134,7 +135,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('homes.dashboard') }}">
+                    <a class="nav-link menu-link"
+                        href="">
+
                         <i class="ri-dashboard-line"></i> <span data-key="">Dashboards</span>
                     </a>
                 </li>

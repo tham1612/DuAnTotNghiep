@@ -31,9 +31,11 @@
                                             <div>
                                                 <section class="d-flex mb-2">
                                                     <i class="ri-artboard-line fs-22"></i>
-                                                    <input type="text"
+                                                    <input type="text" name="text"
                                                            class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent"
-                                                           id="borderInput" value="{{$task->text}}"/>
+                                                           id="text_{{ $task->id }}" value="{{ $task->text }}"
+                                                           onchange="updateTask2({{ $task->id }})" />
+
                                                 </section>
 
                                                 <span class="ms-5">trong danh sách : <strong>{{$task->catalog->name}}</strong> </span>
@@ -105,11 +107,18 @@
                                             </div>
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
+                                                @php $memberFollow = \App\Models\TaskMember::where('task_id', $task->id)
+                                                        ->where('user_id', auth()->id())
+                                                        ->value('follow');
+                                                @endphp
                                                 <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                     style="height: 35px; background-color: #c7c7c7" id="notification_{{$task->id}}">
-                                                    <i class="ri-eye-line fs-22" id="notification_icon_{{$task->id}}"></i>
+                                                     style="height: 35px; background-color: #c7c7c7" id="notification_{{$task->id}}"
+                                                     onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
+                                                    <i class="@if($memberFollow == 0)
+                                                    ri-eye-off-line @elseif($memberFollow == 1) ri-eye-line @endif
+                                                    fs-22" id="notification_icon_{{$task->id}}"></i>
                                                     <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">Theo dõi</p>
-                                                    <div class="d-none" id="notification_follow_{{$task->id}}">
+                                                    <div @if( $memberFollow == 0) class="d-none" @endif id="notification_follow_{{$task->id}}">
                                                         <i class="ri-check-line fs-22 bg-light ms-2 rounded" style="color: black"></i>
                                                     </div>
                                                 </div>
@@ -122,10 +131,14 @@
                                                 @endphp
                                                 <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
                                                      style="height: 35px; background-color: #c7c7c7">
-                                                    <input type="checkbox" id="due_date_checkbox_{{ $task->id }}" class="form-check-input" />
+                                                    <input type="checkbox" id="due_date_checkbox_{{ $task->id }}" class="form-check-input"
+                                                           onchange="updateTask2({{ $task->id }})" name="progress"
+                                                           @if($task->progress == 100 ) checked @endif />
                                                     <p class="ms-2 mt-3">{{ $task->end_date }}</p>
-                                                    <span class="badge bg-success ms-2 {{ $now->gt($endDate) ? 'd-none' : '' }}" id="due_date_success_{{ $task->id }}">Hoàn tất</span>
-                                                    <span class="badge bg-danger ms-2 {{ $now->gt($endDate) ? '' : 'd-none' }}" id="due_date_due_{{ $task->id }}">Quá hạn</span>
+                                                    <span class="badge bg-success ms-2 {{ $now->gt($endDate) ? 'd-none' : '' }}"
+                                                          id="due_date_success_{{ $task->id }}">Hoàn tất</span>
+                                                    <span class="badge bg-danger ms-2 {{ $now->gt($endDate) ? '' : 'd-none' }}"
+                                                          id="due_date_due_{{ $task->id }}">Quá hạn</span>
                                                 </div>
                                             </div>
 
@@ -138,8 +151,8 @@
                                             <p class="fs-18 ms-2 mt-1">Mô tả</p>
                                         </section>
                                         <div class="ps-4">
-                                    <textarea name="" cols="25" rows="5" class="form-control bg-light"
-                                              placeholder="Thêm mô tả chi tiết">{{$task->description}}</textarea>
+                                    <textarea name="description" id="description_{{ $task->id}}" cols="25" rows="5" class="form-control bg-light"
+                                              placeholder="Thêm mô tả chi tiết" onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
                                         </div>
                                     </div>
                                     <!-- tệp -->
@@ -668,12 +681,13 @@
                     // Nếu đang ẩn (chưa theo dõi), bật theo dõi
                     followElement.classList.remove('d-none'); // Hiện icon dấu check
                     contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
-                    iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon
+                    iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line');// Thay đổi icon
                 } else {
                     // Nếu đang hiển thị (đang theo dõi), bỏ theo dõi
                     followElement.classList.add('d-none'); // Ẩn icon dấu check
                     contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
-                    iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon về cũ
+
+                    iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line');// Thay đổi icon về cũ
                 }
 
                 // In ra taskId để kiểm tra
@@ -706,5 +720,47 @@
             });
         });
     });
+    function updateTask2(taskId) {
+        var checkbox = document.getElementById('due_date_checkbox_' + taskId);
+        var formData = {
+            // catalog_id: $('#catalog_id_' + taskId).val(),
+            // start_date: $('#start_date_' + taskId).val(),
+            description: $('#description_' + taskId).val(),
+            text: $('#text_' + taskId).val(),
+            progress: checkbox.checked ? 100 : 0,
+
+        };
+        console.log(formData);
+        $.ajax({
+            url: `/tasks/` + taskId,
+            method: "PUT",
+            dataType: 'json',
+            data: formData,
+            success: function(response) {
+                console.log('Task updated successfully:', response);
+            },
+            error: function(xhr) {
+                console.error('An error occurred:', xhr.responseText);
+            }
+        });
+    }
+    function updateTaskMember(taskId, userId) {
+
+        $.ajax({
+            url: `/tasks/${taskId}/updateFolow`,
+            method: "PUT",
+            data: {
+                task_id: taskId,
+                user_id: userId,
+            },
+            success: function (response) {
+                console.log('Người dùng đã folow Task:', response);
+
+            },
+            error: function (xhr) {
+                console.error('An error occurred:', xhr.responseText);
+            }
+        });
+    }
 
 </script>
