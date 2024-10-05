@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserInvitedToBoard;
 use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
@@ -37,9 +38,9 @@ class BoardController extends Controller
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
             $query->where('created_at', $userId) // Người tạo
-            ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                $query->where('user_id', $userId); // Thành viên
-            });
+                ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                    $query->where('user_id', $userId); // Thành viên
+                });
         })
             ->with(['workspace', 'boardMembers'])
             ->get()
@@ -85,6 +86,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -102,11 +104,11 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
-             activity('Người dùng đã tạo bảng ')
-            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
+            activity('Người dùng đã tạo bảng ')
+                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -157,20 +159,22 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-         $activities = Activity::where('properties->board_id', $boardId)->get();
+
+        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+        $activities = Activity::where('properties->board_id', $boardId)->get();
         //  dd($activities);
-         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
-         $boardName = $board->name; // Lấy tên của board
-         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+        $boardName = $board->name; // Lấy tên của board
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
-//
+        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
+
+        //
         // dd($this->googleApiClient->getClient());
         $client = $this->googleApiClient->getClient();
 
         $accessToken = session('google_access_token');
-//        dd($accessToken);
+        //        dd($accessToken);
         if ($accessToken) {
             $client->setAccessToken($accessToken);
             if ($client->isAccessTokenExpired()) {
@@ -214,12 +218,12 @@ class BoardController extends Controller
 
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities')),
-            'calendar' => view('calendars.index', compact('listEvent','board', 'catalogs', 'tasks','activities')),
-            default => view('boards.index', compact('board', 'catalogs', 'activities')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'id')),
+            default => view('boards.index', compact('board', 'catalogs', 'activities', 'id')),
 
         };
     }
@@ -271,7 +275,7 @@ class BoardController extends Controller
 
         if ($boardMember) {
             $newFollow = $boardMember->follow == 1 ? 0 : 1;
-            $boardMember->update(['follow' =>$newFollow ]);
+            $boardMember->update(['follow' => $newFollow]);
 
             return response()->json([
                 'follow' => $boardMember->follow, // Trả về trạng thái follow mới
@@ -288,5 +292,108 @@ class BoardController extends Controller
         //
     }
 
+    public function inviteUserBoard(Request $request)
+    {
+        $boardId = $request->id;
+        dd($request->all(), $boardId);
+        $board = Board::query()
+            ->where('id', $boardId)
+            ->firstOrFail();
+
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->input('email');
+        $linkInvite = $board->link_invite;
+        $boardName = $board->name;
+        $authorize = $request->input('authorize');
+        event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
+        return back()->with('success', 'Đã gửi email thêm thành viên !!!');
+    }
+    public function acceptInviteBoard($uuid, $token, Request $request)
+    {
+        //xử lý khi admin gửi link invite cho người dùng
+        if ($request->email) {
+            $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            $user = User::query()->where('email', $request->email)->first();
+            $check_user_board = BoardMember::where('user_id', $user)->where('board_id', $board->id)
+                ->first();
+                //xử lý khi người dùng có tài khoản
+            if($user){
+                //xử lý khi người dùng chưa có trong bảng đó
+                if(!$check_user_board){
+                    //xử lý khi người dùng đã có tài khoản và đang đăng nhập
+                    if(Auth::check()){
+                        $user_check = Auth::user(); // Lấy thông tin người dùng hiện tại
+
+                        //xử lý người dùng khi đã đăng nhập đúng người dùng
+                        if ($user_check->email === $request->email) {
+                            try {
+                                //thêm người dùng vào workspace member
+                                BoardMember::create([
+                                    'user_id' => $user_check->id,
+                                    'board_id' => $board->id,
+                                    'authorize' => $request->authorize,
+                                    'invite' => now(),
+                                    'is_active' => 1,
+                                ]);
+                                // ghi lại hoạt động thêm người vào ws
+                                activity('Member Added to Workspace')
+                                    ->causedBy(Auth::user()) // Người thực hiện hành động
+                                    ->performedOn($workspace) // Liên kết với workspace
+                                    ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
+                                    ->log('Người dùng đã được thêm vào workspace.');
+                                //query workspace_member vừa tạo
+                                $wm = WorkspaceMember::query()
+                                    ->where('workspace_members.user_id', $user_check->id)
+                                    ->where('workspace_id', $workspace->id)
+                                    ->first();
+
+                                //xử lý update is_active
+                                WorkspaceMember::query()
+                                    ->where('user_id', $user_check->id)
+                                    ->whereNot('id', $wm->id)
+                                    ->update(['is_active' => 0]);
+                                WorkspaceMember::query()
+                                    ->where('id', $wm->id)
+                                    ->update(['is_active' => 1]);
+                                return redirect()->route('home')->with('msg', "Bạn đã được thêm vào trong không gian làm việc. \"{$workspace->id}\" !!!");
+                            } catch (\Throwable $th) {
+                                throw $th;
+                            }
+                        }
+
+                        // Người dùng đã đăng nhập nhưng email khác
+                        else {
+                            Auth::logout();
+                            Session::put('invited', "case1");
+                            Session::put('workspace_id', $workspace->id);
+                            Session::put('user_id', $user->id);
+                            Session::put('email_invited', $request->email);
+                            Session::put('authorize', $request->authorize);
+                            return redirect()->route('login');
+                        }
+                    }
+                    //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
+                    else {
+
+                    }
+                }
+                //xử lý khi người dùng đã có trong bảng đó rồi
+                else{
+
+                }
+            }
+            //xử lý khi người dùng không có tài khoản
+            else {
+
+            }
+        }
+        //xử lý khi người dùng có link invite và kick vô
+        else {
+
+        }
+    }
 
 }

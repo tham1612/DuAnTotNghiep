@@ -37,7 +37,7 @@ class CatalogControler extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
         }
-        $maxPosition = \App\Models\Catalog::where('board_id', $request->board_id)
+        $maxPosition = Catalog::where('board_id', $request->board_id)
             ->max('position');
         $data['position']=$maxPosition +1;
         $catalog =  Catalog::query()->create($data);
