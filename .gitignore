@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+vendor.rar
 .env
 composer.lock
 .env.backup
