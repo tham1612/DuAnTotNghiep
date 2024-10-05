@@ -64,7 +64,7 @@ class BoardController extends Controller
         });
 
         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
-        return view('homes.dashboard', compact('boards', 'board_star', 'workspaceId'));
+        return view('homes.dashboard', compact('boards', 'board_star'));
     }
 
 
