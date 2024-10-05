@@ -120,7 +120,7 @@
                                             <div class="modal-body">
 
                                                 <div class="row g-3">
-                                                    <form action="{{ route('invite_workspace', $workspaceChecked->id) }}"
+                                                    <form  onsubmit="disableButtonOnSubmit()" action="{{ route('invite_workspace', $workspaceChecked->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         <div class=" d-flex justify-content-between">

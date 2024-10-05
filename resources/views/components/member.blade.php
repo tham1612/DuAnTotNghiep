@@ -12,7 +12,10 @@
             <div class="modal-body">
                 <form>
                     <div class="row g-3">
-                        <form action="{{ route('b.invite_board', $id) }}" method="post">
+                        <form action="{{ route('b.invite_board') }}" method="post">
+                            @csrf
+                            @method('POST')
+                            <input type="hidden" name="id" value="{{ $board->id }}">
                             <div class=" d-flex justify-content-between">
                                 <div class="col-6">
                                     <input type="text" class="form-control" id="submissionidInput"
