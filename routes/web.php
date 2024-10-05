@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\LoginGoogleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
 use \App\Http\Controllers\BoardController;
@@ -114,3 +115,8 @@ Route::get('inboxs', function () {
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
 Auth::routes();
+
+Route::controller(LoginGoogleController::class)->group(function(){
+    Route::get('auth/google', 'redirectToGoogle')->name('login-google');
+    Route::get('auth/google/callback', 'handleGoogleCallback');
+});
