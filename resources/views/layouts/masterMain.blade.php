@@ -306,7 +306,8 @@
 <!--jquery cdn-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
+<!--select2 cdn-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @if (request()->is('b/*'))
     <!-- dragula init js -->
     <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
@@ -322,8 +323,8 @@
 
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
 
-    <!--select2 cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     <script>
@@ -369,28 +370,28 @@
             window.location.reload();
         });
 
-        //     xử lý theo dõi + ngày hết hạn của card
-        const notification = document.querySelector('#notification');
-        const notification_follow = document.querySelector('#notification_follow');
-        const notification_icon = document.querySelector('#notification_icon');
-        const notification_content = document.querySelector('#notification_content');
-        notification.addEventListener('click', () => {
-            notification_follow.classList.toggle('d-none');
-            notification_icon.classList.contains("ri-eye-line") ?
-                notification_icon.className = "ri-eye-off-line fs-22" :
-                notification_icon.className = "ri-eye-line fs-22";
-            notification_content.textContent === "Theo dõi" ?
-                notification_content.innerHTML = "Đang theo dõi" :
-                notification_content.innerHTML = "Theo dõi";
-        });
-
-        const due_date_checkbox = document.querySelector('#due_date_checkbox');
-        const due_date_success = document.querySelector('#due_date_success');
-        const due_date_due = document.querySelector('#due_date_due');
-        due_date_checkbox.addEventListener('click', () => {
-            due_date_due.classList.toggle('d-none');
-            due_date_success.classList.toggle('d-none');
-        });
+        // //     xử lý theo dõi + ngày hết hạn của card
+        // const notification = document.querySelector('#notification');
+        // const notification_follow = document.querySelector('#notification_follow');
+        // const notification_icon = document.querySelector('#notification_icon');
+        // const notification_content = document.querySelector('#notification_content');
+        // notification.addEventListener('click', () => {
+        //     notification_follow.classList.toggle('d-none');
+        //     notification_icon.classList.contains("ri-eye-line") ?
+        //         notification_icon.className = "ri-eye-off-line fs-22" :
+        //         notification_icon.className = "ri-eye-line fs-22";
+        //     notification_content.textContent === "Theo dõi" ?
+        //         notification_content.innerHTML = "Đang theo dõi" :
+        //         notification_content.innerHTML = "Theo dõi";
+        // });
+        //
+        // const due_date_checkbox = document.querySelector('#due_date_checkbox');
+        // const due_date_success = document.querySelector('#due_date_success');
+        // const due_date_due = document.querySelector('#due_date_due');
+        // due_date_checkbox.addEventListener('click', () => {
+        //     due_date_due.classList.toggle('d-none');
+        //     due_date_success.classList.toggle('d-none');
+        // });
 
 
     </script>

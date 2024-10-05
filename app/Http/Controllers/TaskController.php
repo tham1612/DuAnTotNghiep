@@ -7,7 +7,9 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
+use App\Models\BoardMember;
 use App\Models\Task;
+use App\Models\TaskMember;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -198,7 +200,25 @@ class TaskController extends Controller
         $model->update($data);
         return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
+    public function updateFolow(Request $request, string $id)
+    {
+        $data = $request->only(['user_id']);
 
+
+        $taskMember = TaskMember::where('task_id', $id)
+            ->where('user_id',$data)
+            ->first();
+
+        if ($taskMember) {
+            $newFollow = $taskMember->follow == 1 ? 0 : 1;
+            $taskMember->update(['follow' =>$newFollow ]);
+
+            return response()->json([
+                'follow' => $taskMember->follow, // Trả về trạng thái follow mới
+            ]);
+        }
+
+    }
     public function createEvent(Request $request)
     {
         $startDate = $request->start == 'Invalid date' ? $request->end : $request->start;
