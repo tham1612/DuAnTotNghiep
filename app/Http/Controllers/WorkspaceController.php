@@ -78,7 +78,7 @@ class WorkspaceController extends Controller
                     'invite' => now(),
                     'is_active' => $is_active,
                 ]);
-            
+
             activity('Workspace Created')
                 ->causedBy(Auth::user())  // Ghi nhận người thực hiện
                 ->performedOn($workspace) // Liên kết với workspace được tạo
@@ -448,7 +448,7 @@ class WorkspaceController extends Controller
             ->log('Người dùng đã gửi lời mời thành viên vào workspace.');
 
 
-        return redirect()->route('showFormEditWorkspace')->with('msg', 'Đã gửi email thêm thành viên !!!');
+        return redirect()->route('showFormEditWorkspace')->with('success', 'Đã gửi email thêm thành viên !!!');
     }
 
     public function acceptInvite($uuid, $token, Request $request)
@@ -539,8 +539,6 @@ class WorkspaceController extends Controller
                 return redirect()->route('register');
             }
         }
-
-
 
         //xử lý khi người dùng kick vào link invite
         else {
