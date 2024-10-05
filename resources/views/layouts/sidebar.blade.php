@@ -6,6 +6,7 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_accept_invite', null)
         ->whereNot('workspace_members.is_active', 1)
+        ->where('workspace_members.deleted_at', NULL)
         ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
