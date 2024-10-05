@@ -114,6 +114,7 @@ Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
+
 Auth::routes();
 
 Route::controller(LoginGoogleController::class)->group(function(){
