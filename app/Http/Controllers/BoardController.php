@@ -105,6 +105,7 @@ class BoardController extends Controller
             ]);
             // ghi lại hoạt động của bảng
 
+
             activity('Người dùng đã tạo bảng ')
                 ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
                 ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
@@ -167,6 +168,7 @@ class BoardController extends Controller
         $boardName = $board->name; // Lấy tên của board
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
+
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
         //
@@ -218,12 +220,14 @@ class BoardController extends Controller
 
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
+
             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
             'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'id')),
-            default => view('boards.index', compact('board', 'catalogs', 'activities', 'id')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
+
 
         };
     }
