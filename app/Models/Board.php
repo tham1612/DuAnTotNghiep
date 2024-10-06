@@ -42,7 +42,7 @@ class Board extends Model
     // Định nghĩa quan hệ với BoardMembers nếu cần
     public function boardMembers()
     {
-        return $this->hasMany(BoardMember::class);
+        return $this->hasMany(BoardMember::class)->where('is_accept_invite', null);
     }
 
     public function catalogs()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToWorkspace;
 use App\Http\Requests\UpdateWorkspaceRequest;
+use App\Models\BoardMember;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
@@ -102,8 +103,7 @@ class WorkspaceController extends Controller
                 ->log('người dùng đã tạo bảng mới trong ws');
 
 
-            //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời
-            //xử lý thêm người dùng khi người dùng đăng ký qua link của email
+            //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời email vào workspace
             if (Session::get('invited') == "case2") {
                 $user = Auth::user();
                 //xử lý trường hợp người dùng đăng nhập  đúng email được gửi link mời
@@ -158,6 +158,66 @@ class WorkspaceController extends Controller
                     Session::forget('authorize');
                 }
             }
+            //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời email vào bảng
+            if (Session::get('invited_board') == "case2") {
+                $user = Auth::user();
+                //xử lý trường hợp người dùng đăng ký đúng email được gửi link mời
+                if (Session::get('email_invited') == $user->email) {
+                    try {
+                        WorkspaceMember::create([
+                            'user_id' => $user->id,
+                            'workspace_id' => Session::get('workspace_id'),
+                            'authorize' => AuthorizeEnum::Viewer(),
+                            'invite' => now(),
+                            'is_active' => 1,
+                        ]);
+                        //thêm người dùng vào workspace member
+                        BoardMember::create([
+                            'user_id' => $user->id,
+                            'board_id' => Session::get('board_id'),
+                            'authorize' => Session::get('authorize'),
+                            'invite' => now(),
+                        ]);
+
+                        $wm = WorkspaceMember::query()
+                            ->where('workspace_members.user_id', $user->id)
+                            ->where('workspace_id', Session::get('workspace_id'))
+                            ->first();
+                        //xử lý update is_active
+                        WorkspaceMember::query()
+                            ->where('user_id', $user->id)
+                            ->whereNot('id', $wm->id)
+                            ->update(['is_active' => 0]);
+                        WorkspaceMember::query()
+                            ->where('id', $wm->id)
+                            ->update(['is_active' => 1]);
+
+                        // ghi lại hoạt động khi thêm người dùng vào ws
+
+                        // activity('Thêm người dùng vào Bảng')
+                        //     ->causedBy(Auth::user())
+                        //     ->withProperties(['added_user_id' => $user->id])
+                        //     ->tap(function (Activity $activity) use ($workspace) {
+                        //         $activity->Workspace_id = $workspace->id;
+                        //     })
+                        //     ->log('add người thành công vào Bảng');
+
+                        //xóa các session sau khi xong
+                        Session::forget('invited_board');
+                        Session::forget('workspace_id');
+                        Session::forget('board_id');
+                        Session::forget('email_invited');
+                        Session::forget('authorize');
+                    } catch (\Throwable $th) {
+                        throw $th;
+                    }
+                } else {
+                    Session::forget('invited_board');
+                    Session::forget('board_id');
+                    Session::forget('email_invited');
+                    Session::forget('authorize');
+                }
+            }
             DB::commit();
 
 
@@ -173,7 +233,7 @@ class WorkspaceController extends Controller
      * sử lý xóa không gian làm việc
      */
     public
-    function delete(
+        function delete(
         $id
     ) {
         $userId = Auth::id();
@@ -186,9 +246,6 @@ class WorkspaceController extends Controller
             return redirect()->route('showFormEditWorkspace')->with('error', 'Bạn không có quyền xóa không gian làm việc');
         }
         try {
-            $ws_replace = WorkspaceMember::query()
-                ->where('workspace_members.user_id', $userId)
-                ->whereNot('id', $id)->first();
             $ws = WorkspaceMember::query()->find($id);
             $ws->update([
                 'is_active' => 0
@@ -199,16 +256,6 @@ class WorkspaceController extends Controller
                 ->causedBy(Auth::user())
                 ->withProperties(['workspace_name' => $ws->name]) // Sử dụng biến $ws thay vì $workspace
                 ->log('Người dùng đã xóa không gian làm việc.');
-
-
-            //xử lý logic sau khi xóa
-            WorkspaceMember::query()
-                ->where('user_id', $userId)
-                ->whereNot('id', $ws_replace->id)
-                ->update(['is_active' => 0]);
-            WorkspaceMember::query()
-                ->where('id', $ws_replace->id)
-                ->update(['is_active' => 1]);
 
             return redirect()->route('user', $userId)->with('success', "Bạn đã xóa Thành công không gian làm việc");
         } catch (\Throwable $th) {
@@ -381,10 +428,10 @@ class WorkspaceController extends Controller
                 ->performedOn($workspace) // Workspace được chỉnh sửa
                 ->withProperties(['updated_fields' => $validatedData]) // Các trường đã được chỉnh sửa
                 ->log('Người dùng đã chỉnh sửa workspace.');
-            return redirect()->route('showFormEditWorkspace')->with('msg', 'Thay đổi thành công');
+            return redirect()->route('showFormEditWorkspace')->with('success', 'Thay đổi thành công');
         } catch (\Exception $e) {
             // Xử lý ngoại lệ, có thể log lỗi hoặc thông báo cho người dùng
-            return redirect()->route('showFormEditWorkspace')->withErrors(['msg' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
+            return redirect()->route('showFormEditWorkspace')->withErrors(['error' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
         }
     }
     //chỉnh sửa công khai hoặc riêng tư
@@ -408,7 +455,7 @@ class WorkspaceController extends Controller
 
             return redirect()->route('showFormEditWorkspace')->with('success', 'Thay đổi thành công');
         } catch (\Throwable $th) {
-            return redirect()->route('showFormEditWorkspace')->withErrors(['msg' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
+            return redirect()->route('showFormEditWorkspace')->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
 
@@ -499,7 +546,7 @@ class WorkspaceController extends Controller
                                 WorkspaceMember::query()
                                     ->where('id', $wm->id)
                                     ->update(['is_active' => 1]);
-                                return redirect()->route('home')->with('msg', "Bạn đã được thêm vào trong không gian làm việc. \"{$workspace->id}\" !!!");
+                                return redirect()->route('home')->with('success', "Bạn đã được thêm vào trong không gian làm việc. \"{$workspace->id}\" !!!");
                             } catch (\Throwable $th) {
                                 throw $th;
                             }
@@ -529,6 +576,7 @@ class WorkspaceController extends Controller
                 else {
                     return redirect()->route('home');
                 }
+
             } else {
                 //xử lý khi người dùng không có tài khoản
                 Auth::logout();
@@ -545,7 +593,7 @@ class WorkspaceController extends Controller
             $workspace = Workspace::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             Auth::logout();
             Session::put('workspace_id', $workspace->id);
-            Session::put('authorize', $workspace->authorize);
+            Session::put('authorize', AuthorizeEnum::Member());
             Session::put('invited', 'case3');
             return redirect()->route('login');
         }
