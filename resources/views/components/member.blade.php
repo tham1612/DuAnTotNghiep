@@ -62,21 +62,21 @@
                                 Thành viên trong không gian làm việc
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $data['board_m']->count() }}</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">@if( $data['board_m']) {{ $data['board_m']->count() }}@endif</span>
                         </li>
                         <li class="nav-item d-flex align-items-center justify-content-between">
                             <a class="nav-link" data-bs-toggle="tab" href="#profile1" role="tab">
                                 Yêu cầu tham gia
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $data['board_m_invite']->count() }}</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(  $data['board_m_invite']){{ $data['board_m_invite']->count() }}@endif</span>
                         </li>
                         <li class="nav-item d-flex align-items-center justify-content-between">
                             <a class="nav-link" data-bs-toggle="tab" href="#profile2" role="tab">
                                 Người xem
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $data['board_m_viewer']->count() }}</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(  $data['board_m_viewer']){{ $data['board_m_viewer']->count() }}@endif</span>
                         </li>
 
                     </ul>
@@ -90,6 +90,7 @@
                                         <a href="javascript: void(0);" class="avatar-group-item"
                                             data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                             title="Nancy">
+                                            @if(!empty($data['board_owner']))
                                             @if ($data['board_owner']->image)
                                                 <img src="{{ Storage::url($data['board_owner']->image) ? Storage::url($data['board_owner']->image) : '' }}"
                                                     alt="" class="rounded-circle avatar-xs" />
@@ -103,12 +104,14 @@
                                                     <i class=" ri-arrow-drop-down-line fs-20"></i>
                                                 </span>
                                             @endif
+                                            @endif
 
 
                                         </a>
                                     </div>
                                     <div class="col-8 d-flex flex-column">
                                         <section class="fs-12">
+                                            @if(!empty($data['board_owner']))
                                             <p style="margin-bottom: 0px;" class="text-danger fw-bloder">
                                                 {{ $data['board_owner']->name }}
                                                 @if ($data['board_owner']->user_id == $data['user_id'])
@@ -122,6 +125,7 @@
                                             <span><i class="ri-checkbox-blank-circle-fill"></i></span>
                                             <span>Quản trị viên không gian làm
                                                 việc</span>
+                                            @endif
                                         </section>
                                     </div>
                                     <div class="col-3">
@@ -129,6 +133,7 @@
                                             trị viên</button>
                                     </div>
                                 </li>
+                                @if(!empty($data['board_m']))
                                 @foreach ($data['board_m'] as $item)
                                     <li class="d-flex mt-1 mb-1">
                                         <div class="col-1">
@@ -182,10 +187,12 @@
                                         </div>
                                     </li>
                                 @endforeach
+                                @endif
                             </ul>
                         </div>
                         <div class="tab-pane" id="profile1" role="tabpanel">
                             <ul style="margin-left: -32px;">
+                                @if(!empty($data['board_m']))
                                 @foreach ($data['board_m_invite'] as $item)
                                     <li class="d-flex justify-content-between">
                                         <div class="col-1">
@@ -241,10 +248,12 @@
                                     </li>
                                     <br>
                                 @endforeach
+                                @endif
                             </ul>
                         </div>
                         <div class="tab-pane" id="profile2" role="tabpanel">
                             <ul style="margin-left: -32px;">
+                                @if(!empty($data['board_m_viewer']))
                                 @foreach ($data['board_m_viewer'] as $item)
                                     <li class="d-flex justify-content-between">
                                         <div class="col-1">
@@ -298,6 +307,7 @@
                                         </div>
                                     </li>
                                 @endforeach
+                                @endif
                             </ul>
                         </div>
 
