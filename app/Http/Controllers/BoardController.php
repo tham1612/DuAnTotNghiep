@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToBoard;
 use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -42,9 +44,9 @@ class BoardController extends Controller
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
                 $query->where('created_at', $userId) // Ensure 'created_by' is the correct field
-                ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
+                    ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    });
             })
 
             ->with(['workspace', 'boardMembers'])
@@ -339,7 +341,7 @@ class BoardController extends Controller
     public function inviteUserBoard(Request $request)
     {
         $boardId = $request->id;
-//        dd($request->all(), $boardId);
+        //        dd($request->all(), $boardId);
         $board = Board::query()
             ->where('id', $boardId)
             ->firstOrFail();
@@ -355,4 +357,187 @@ class BoardController extends Controller
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
         return back()->with('success', 'Đã gửi email thêm thành viên !!!');
     }
-  
+
+
+    public function acceptInviteBoard($uuid, $token, Request $request)
+    {
+        //xử lý khi admin gửi link invite cho người dùng
+        if ($request->email) {
+            $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            $user = User::query()->where('email', $request->email)->first();
+            $check_user_board = BoardMember::where('user_id', $user)->where('board_id', $board->id)
+                ->first();
+
+
+
+            //xử lý khi người dùng có tài khoản
+            if ($user) {
+                $check_user_wsp = BoardMember::join('boards', 'boards.id', '=', 'board_members.board_id')
+                    ->where('board_members.user_id', $user->id)
+                    ->where('boards.workspace_id', $board->workspace_id)
+                    ->first();
+                //Check xử lý người dùng có trong workspace
+                if ($check_user_wsp) {
+                    //xử lý khi người dùng chưa có trong bảng đó
+                    if (!$check_user_board) {
+                        //xử lý khi người dùng đã có tài khoản và đang đăng nhập
+                        if (Auth::check()) {
+
+                            $user_check = Auth::user(); // Lấy thông tin người dùng hiện tại
+
+                            //xử lý người dùng khi đã đăng nhập đúng người dùng
+                            if ($user_check->email === $request->email) {
+                                try {
+                                    //thêm người dùng vào workspace member
+                                    BoardMember::create([
+                                        'user_id' => $user_check->id,
+                                        'board_id' => $board->id,
+                                        'authorize' => $request->authorize,
+                                        'invite' => now(),
+                                        'is_active' => 1,
+                                    ]);
+                                    // ghi lại hoạt động thêm người vào ws
+                                    activity('Member Added to Bảng')
+                                        ->causedBy(Auth::user()) // Người thực hiện hành động
+                                        ->performedOn($board) // Liên kết với workspace
+                                        ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
+                                        ->log('Người dùng đã được thêm vào Bảng.');
+
+                                    return redirect()->route('b.edit', $board->id)->with('success', "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!");
+                                } catch (\Throwable $th) {
+                                    throw $th;
+                                }
+                            }
+
+                            // Người dùng đã đăng nhập nhưng email khác
+                            else {
+                                Auth::logout();
+                                Session::put('invited_board', "case1");
+                                Session::put('board_id', $board->id);
+                                Session::put('user_id', $user->id);
+                                Session::put('email_invited', $request->email);
+                                Session::put('authorize', $request->authorize);
+                                return redirect()->route('login');
+                            }
+                        }
+                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
+                        else {
+                            Session::put('invited_board', "case1");
+                            Session::put('board_id', $board->id);
+                            Session::put('user_id', $user->id);
+                            Session::put('email_invited', $request->email);
+                            Session::put('authorize', $request->authorize);
+                            return redirect()->route('login');
+                        }
+                    }
+                    //xử lý khi người dùng đã có trong bảng đó rồi
+                    else {
+                        return redirect()->route('b.edit', $board->id)->with('success', 'Bạn đã ở trong bảng rồi!!');
+                    }
+                }
+                //check xử lý nếu người dùng chưa ở trong wsp
+                else {
+                    //xử lý khi người dùng chưa có trong bảng đó
+                    if (!$check_user_board) {
+                        //xử lý khi người dùng đã có tài khoản và đang đăng nhập
+                        if (Auth::check()) {
+
+                            $user_check = Auth::user(); // Lấy thông tin người dùng hiện tại
+
+                            //xử lý người dùng khi đã đăng nhập đúng người dùng
+                            if ($user_check->email === $request->email) {
+                                try {
+                                    //thêm người dùng vào workspace member
+                                    WorkspaceMember::create([
+                                        'user_id' => $user_check->id,
+                                        'workspace_id' => $board->workspace_id,
+                                        'authorize' => $request->authorize,
+                                        'invite' => now(),
+                                        'is_active' => 1,
+                                    ]);
+                                    //thêm người dùng vào workspace member
+                                    BoardMember::create([
+                                        'user_id' => $user_check->id,
+                                        'board_id' => $board->id,
+                                        'authorize' => $request->authorize,
+                                        'invite' => now(),
+                                    ]);
+
+                                    //query workspace_member vừa tạo
+                                    $wm = WorkspaceMember::query()
+                                        ->where('user_id', $user_check->id)
+                                        ->where('workspace_id', $board->workspace_id)
+                                        ->first();
+
+                                    //xử lý update is_active
+                                    WorkspaceMember::query()
+                                        ->where('user_id', $user_check->id)
+                                        ->whereNot('id', $wm->id)
+                                        ->update(['is_active' => 0]);
+                                    WorkspaceMember::query()
+                                        ->where('id', $wm->id)
+                                        ->update(['is_active' => 1]);
+
+                                    // ghi lại hoạt động thêm người vào ws
+                                    activity('Member Added to Bảng')
+                                        ->causedBy(Auth::user()) // Người thực hiện hành động
+                                        ->performedOn($board) // Liên kết với workspace
+                                        ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
+                                        ->log('Người dùng đã được thêm vào Bảng.');
+
+                                    return redirect()->route('b.edit', $board->id)->with('success', "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!");
+                                } catch (\Throwable $th) {
+                                    throw $th;
+                                }
+                            }
+
+                            // Người dùng đã đăng nhập nhưng email khác
+                            else {
+                                Auth::logout();
+                                Session::put('invited_board', "case4");
+                                Session::put('board_id', $board->id);
+                                Session::put('workspace_id', $board->workspace_id);
+                                Session::put('user_id', $user->id);
+                                Session::put('email_invited', $request->email);
+                                Session::put('authorize', $request->authorize);
+                                return redirect()->route('login');
+                            }
+                        }
+                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
+                        else {
+                            Session::put('invited_board', "case4");
+                            Session::put('board_id', $board->id);
+                            Session::put('workspace_id', $board->workspace_id);
+                            Session::put('user_id', $user->id);
+                            Session::put('email_invited', $request->email);
+                            Session::put('authorize', $request->authorizei);
+                            return redirect()->route('login');
+                        }
+                    }
+                }
+
+
+            }
+            //xử lý khi người dùng không có tài khoản
+            else {
+                //xử lý khi người dùng không có tài khoản
+                Auth::logout();
+                Session::put('board_id', $board->id);
+                Session::put('invited_board', 'case2');
+                Session::put('workspace_id', $board->workspace_id);
+                Session::put('email_invited', $request->email);
+                Session::put('authorize', $request->authorize);
+                return redirect()->route('register');
+            }
+        }
+        //xử lý khi người dùng có link invite và kick vô
+        else {
+            $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            Auth::logout();
+            Session::put('board_id', $board->id);
+            Session::put('authorize', AuthorizeEnum::Member());
+            Session::put('invited_board', 'case3');
+            return redirect()->route('login');
+        }
+    }
+}
