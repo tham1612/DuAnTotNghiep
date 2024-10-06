@@ -62,7 +62,9 @@
                                 Thành viên trong không gian làm việc
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
+
                                 style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($data['board_m'])) {{ $data['board_m']->count() }}@endif</span>
+
                         </li>
                         <li class="nav-item d-flex align-items-center justify-content-between">
                             <a class="nav-link" data-bs-toggle="tab" href="#profile1" role="tab">
