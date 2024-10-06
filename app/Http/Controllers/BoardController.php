@@ -39,6 +39,7 @@ class BoardController extends Controller
     public function index()
     {
         $userId = Auth::id();
+
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
             $query->where('created_at', $userId) // Người tạo
@@ -162,6 +163,7 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
+
          $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
          $activities = Activity::where('properties->board_id', $boardId)->get();
         //  dd($activities);
@@ -257,17 +259,12 @@ class BoardController extends Controller
         // dd($data);
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-
-
             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'data')),
             default => view('boards.index', compact('board', 'catalogs', 'activities', 'data')),
-
-
-
         };
     }
 
