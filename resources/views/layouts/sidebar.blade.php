@@ -6,7 +6,7 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_accept_invite', null)
         ->whereNot('workspace_members.is_active', 1)
-        ->where('workspace_members.deleted_at', NULL)
+        ->where('workspace_members.deleted_at', null)
         ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
@@ -24,8 +24,23 @@
     // dd($workspaceMemberChecked);
 
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
+        // $workspaceBoards = \App\Models\Workspace::query()
+        //     ->with(['boards'])
+        //     ->where('id', $workspaceChecked->workspace_id)
+        // ->first();
         $workspaceBoards = \App\Models\Workspace::query()
-            ->with(['boards'])
+            ->with([
+                'boards' => function ($query) use ($userId) {
+                    $query
+                        ->where('access', 'public') // Bảng công khai
+                        ->orWhere(function ($q) use ($userId) {
+                            $q->where('access', 'private') // Bảng riêng tư
+                                ->whereHas('boardMembers', function ($q) use ($userId) {
+                                    $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
+                                });
+                        });
+                },
+            ])
             ->where('id', $workspaceChecked->workspace_id)
             ->first();
     }
