@@ -69,7 +69,7 @@ class User extends Authenticatable
 
     public function BoardMember()
     {
-        return $this->hasMany(BoardMember::class);
+        return $this->hasMany(BoardMember::class)->where('is_accept_invite', null);
     }
     public function tasks()
     {
