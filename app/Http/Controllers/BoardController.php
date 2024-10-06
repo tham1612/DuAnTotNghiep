@@ -355,4 +355,5 @@ class BoardController extends Controller
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
         return back()->with('success', 'Đã gửi email thêm thành viên !!!');
     }
-  
+
+}
