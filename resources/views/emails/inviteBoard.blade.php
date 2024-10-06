@@ -110,7 +110,7 @@
                                                 <div
                                                     class="justify-content-between d-flex align-items-center mt-3 mb-4">
                                                     <h5 class="mb-0 pb-1 text-decoration-underline">Xin chào! Hãy gia
-                                                        nhập không gian làm việc của chúng tôi!</h5>
+                                                        nhập không gian làm việc của Bảng chúng tôi!</h5>
                                                 </div>
                                             </tr>
                                             <hr>
