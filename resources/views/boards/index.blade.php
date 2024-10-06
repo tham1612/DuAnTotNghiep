@@ -48,7 +48,7 @@
                                     <div class="d-flex mb-2">
                                         <h6 class="fs-15 mb-0 flex-grow-1 text-truncate task-title"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal">
+                                            data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{$task->text}}
                                         </h6>
                                         <div class="dropdown">
