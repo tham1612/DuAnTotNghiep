@@ -108,8 +108,11 @@
                                                     <i data-feather="more-horizontal" class="icon-sm"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href=""><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a>
+                                                    <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                                       role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                       aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                       class=" dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        View</a>
                                                     <a class="dropdown-item" href=""><i
                                                             class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit</a>
@@ -131,7 +134,9 @@
 
                                     <div class="py-3">
                                         <h5 class="fs-14 mb-3">
-                                            <a href=""
+                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                               role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                               aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
                                         <div class="row gy-3">
@@ -268,9 +273,12 @@
                                                 </button>
 
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href=""><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                    <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                                       role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                       aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                       class=" dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View</a>
+
                                                     <a class="dropdown-item" href=""><i
                                                             class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit</a>
@@ -293,8 +301,10 @@
 
                                     <div class="py-3">
                                         <h5 class="fs-14 mb-3">
-                                            <a href=""
-                                                class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
+                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                               role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                               aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                               class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
 
                                         <div class="row gy-3">
