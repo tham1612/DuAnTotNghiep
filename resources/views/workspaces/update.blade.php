@@ -63,8 +63,8 @@
                                             <h5 class="m-0">
                                                 {{ $workspaceChecked->wsp_name }}</h5>
 
-                                                <span class="text-muted small"><i
-                                                        class="bi bi-globe"></i>{{ $access }}</span>
+                                            <span class="text-muted small"><i
+                                                    class="bi bi-globe"></i>{{ $access }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +120,8 @@
                                             <div class="modal-body">
 
                                                 <div class="row g-3">
-                                                    <form action="{{ route('invite_workspace', $workspaceChecked->id) }}"
+                                                    <form onsubmit="disableButtonOnSubmit()"
+                                                        action="{{ route('invite_workspace', $workspaceChecked->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         <div class=" d-flex justify-content-between">
@@ -547,7 +548,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{--  --}}
                     </div>
                 </div>
                 <a style="margin-left: 15px; padding-bottom:20px"

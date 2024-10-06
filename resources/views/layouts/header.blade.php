@@ -379,6 +379,12 @@
             </div>
 
             <div class="d-flex align-items-center">
+                <div class="ms-1 header-item d-none d-sm-flex">
+                    <button class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" type="button"
+                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">
+                        <i class=" ri-question-answer-line fs-22"></i></button>
+                </div>
                 {{--                <div class="dropdown d-md-none topbar-head-dropdown header-item"> --}}
                 {{--                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" --}}
                 {{--                            id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" --}}
