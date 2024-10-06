@@ -36,6 +36,7 @@ class BoardController extends Controller
         $userId = Auth::id();
 
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
+        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
                 $query->where('created_at', $userId) // Ensure 'created_by' is the correct field
@@ -296,7 +297,7 @@ class BoardController extends Controller
     public function inviteUserBoard(Request $request)
     {
         $boardId = $request->id;
-        dd($request->all(), $boardId);
+//        dd($request->all(), $boardId);
         $board = Board::query()
             ->where('id', $boardId)
             ->firstOrFail();
