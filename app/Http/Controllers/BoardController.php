@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToBoard;
 use App\Http\Requests\StoreBoardRequest;
@@ -34,25 +35,29 @@ class BoardController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'board.';
-    public function index($workspaceId)
+
+    public function index()
     {
         $userId = Auth::id();
-
-        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
-        $boards = Board::where('workspace_id', $workspaceId)
-            ->where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) // Ensure 'created_by' is the correct field
-                ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
-            })
+        // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
+        $boards = Board::where(function ($query) use ($userId) {
+            $query->where('created_at', $userId) // Người tạo
+            ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                $query->where('user_id', $userId); // Thành viên
+            });
+        })
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
+                // Tính tổng số thành viên trong bảng
                 $board->total_members = $board->boardMembers->count();
+
+                // Kiểm tra xem user có đánh dấu sao cho bảng này không
                 $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->is_star == 1;
                 });
+
+                // Kiểm tra xem user có theo dõi bảng này không (follow = 1)
                 $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->follow == 1;
                 });
@@ -66,12 +71,11 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
-        // dd($workspaceId);
 
-
-        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
+        // Trả về view với danh sách bảng và các bảng đã đánh dấu sao
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -86,7 +90,6 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -104,12 +107,11 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
+             activity('Người dùng đã tạo bảng ')
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
-
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -160,23 +162,20 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
 
-
-        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-        $activities = Activity::where('properties->board_id', $boardId)->get();
+         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+         $activities = Activity::where('properties->board_id', $boardId)->get();
         //  dd($activities);
-        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
-        $boardName = $board->name; // Lấy tên của board
+         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+         $boardName = $board->name; // Lấy tên của board
+         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
-
-        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
-
-        //
+//
         // dd($this->googleApiClient->getClient());
         $client = $this->googleApiClient->getClient();
 
         $accessToken = session('google_access_token');
-        //        dd($accessToken);
+//        dd($accessToken);
         if ($accessToken) {
             $client->setAccessToken($accessToken);
             if ($client->isAccessTokenExpired()) {
@@ -259,12 +258,14 @@ class BoardController extends Controller
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
 
+
             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'data')),
             default => view('boards.index', compact('board', 'catalogs', 'activities', 'data')),
+
 
 
         };
@@ -300,27 +301,8 @@ class BoardController extends Controller
             $boardMember->update(['is_star' => $newIsStar]);
 
             return response()->json([
-                'message' => 'Người dùng cập nhật dấu sao bảng thành công',
+                'message' => 'Người dùng đã theo dõi bảng',
                 'success' => true
-            ]);
-        }
-
-    }
-    public function updateBoardMember2(Request $request, string $id)
-    {
-        $data = $request->only(['user_id', 'board_id']);
-
-
-        $boardMember = BoardMember::where('board_id', $data['board_id'])
-            ->where('user_id', $data['user_id'])
-            ->first();
-
-        if ($boardMember) {
-            $newFollow = $boardMember->follow == 1 ? 0 : 1;
-            $boardMember->update(['follow' => $newFollow]);
-
-            return response()->json([
-                'follow' => $boardMember->follow, // Trả về trạng thái follow mới
             ]);
         }
 
@@ -333,6 +315,7 @@ class BoardController extends Controller
     {
         //
     }
+
 
     public function inviteUserBoard(Request $request)
     {
