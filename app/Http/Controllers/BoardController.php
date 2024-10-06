@@ -36,6 +36,7 @@ class BoardController extends Controller
     {
         $userId = Auth::id();
 
+
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
@@ -45,6 +46,7 @@ class BoardController extends Controller
                     $query->where('user_id', $userId);
                 });
             })
+
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -160,8 +162,10 @@ class BoardController extends Controller
          * */
 
 
+
         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
         $activities = Activity::where('properties->board_id', $boardId)->get();
+
         //  dd($activities);
         $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
         $boardName = $board->name; // Lấy tên của board
@@ -216,17 +220,54 @@ class BoardController extends Controller
 
         }
 
+        //lấy thành viên trong bảng
+        $board_m = BoardMember::query()
+            ->join('users', 'users.id', 'board_members.user_id')
+            ->select('users.name as name', 'users.image as image')
+            ->where('board_members.is_accept_invite', NULL)
+            ->whereNot('board_members.authorize', 'Owner')
+            ->where('board_members.board_id', $boardId)
+            ->get();
+        //lấy người gửi lời mời vào nhóm
+        $board_m_invite = BoardMember::query()
+            ->join('users', 'users.id', 'board_members.user_id')
+            ->select('users.name as name', 'users.image as image')
+            ->where('board_members.is_accept_invite', 1)
+            ->where('board_members.board_id', $boardId)
+            ->latest('board_members.id')
+            ->get();
+        $board_m_viewer = BoardMember::query()
+            ->join('users', 'users.id', 'board_members.user_id')
+            ->select('users.name as name', 'users.image as image')
+            ->where('board_members.is_accept_invite', NULL)
+            ->where('board_members.authorize', "Viewer")
+            ->where('board_members.board_id', $boardId)
+            ->latest('board_members.id')
+            ->get();
+        $board_owner = BoardMember::query()
+            ->join('users', 'users.id', 'board_members.user_id')
+            ->select('users.name as name', 'users.image as image', 'users.id as user_id')
+            ->where('board_members.is_accept_invite', NULL)
+            ->where('board_members.authorize', "Owner")
+            ->where('board_members.board_id', $boardId)
+            ->first();
+        $data = [
+            'board_m' => $board_m,
+            'board_m_invite' => $board_m_invite,
+            'board_m_viewer' => $board_m_viewer,
+            'board_owner' => $board_owner,
+            'user_id' => Auth::id()
+        ];
 
+        // dd($data);
         //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'id')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
-
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'data')),
+            default => view('boards.index', compact('board', 'catalogs', 'activities', 'data')),
 
         };
     }
