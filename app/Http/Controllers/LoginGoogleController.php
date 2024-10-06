@@ -76,17 +76,24 @@ class LoginGoogleController extends Controller
 
         try {
             $user = Socialite::driver('google')->user();
-            $finduser = User::where('social_id', $user->id)->first();
+            $finduser = User::where('email', $user->email)->first();
             if ($finduser) {
                 Auth::login($finduser);
+                
+                // if (empty($finduser->password)) {
+                //     return redirect()->route('password.request')->with('message', 'Vui lòng đặt mật khẩu mới cho tài khoản của bạn.');
+                // }
+    
                 return redirect()->intended('home');
             } else {
-                $newUser = User::updateOrCreate(['email' => $user->email], [
+                $newUser = User::create([
                     'name' => $user->name,
+                    'email' => $user->email,
                     'social_id' => $user->id,
-                    'password' => '12345678'
-                ]);
+                    'password' => ''
+                ]);    
                 Auth::login($newUser);
+                // return redirect()->route('password.request')->with('message', 'Vui lòng đặt mật khẩu mới cho tài khoản của bạn.');
                 return redirect()->intended('home');
             }
         } catch (Exception $e) {
