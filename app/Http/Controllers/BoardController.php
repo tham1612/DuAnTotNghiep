@@ -45,12 +45,12 @@ class BoardController extends Controller
 
         // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) // Kiểm tra nếu người dùng là người tạo
-                ->orWhereHas('boardMembers', function ($query) use ($userId) { // Hoặc là thành viên
-                    $query->where('user_id', $userId);
-                });
+            $query->where('created_at', $userId) // Kiểm tra nếu người dùng là người tạo
+            ->orWhereHas('boardMembers', function ($query) use ($userId) { // Hoặc là thành viên
+                $query->where('user_id', $userId);
+            });
 
-            })
+        })
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -165,7 +165,6 @@ class BoardController extends Controller
          * */
 
 
-
         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
         $activities = Activity::where('properties->board_id', $boardId)->get();
 
@@ -175,45 +174,7 @@ class BoardController extends Controller
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
 
-        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
-
-        //
-        // dd($this->googleApiClient->getClient());
-        $client = $this->googleApiClient->getClient();
-
-        $accessToken = User::query()
-            ->where('id', auth()->id())
-            ->value('access_token');
-
-//        dd($accessToken);
-//        if ($accessToken) {
-//            $client->setAccessToken($accessToken);
-//            if ($client->isAccessTokenExpired()) {
-//                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-//
-////                session(['google_access_token' => $client->getAccessToken()]);
-//                // Cập nhật token mới vào database
-//                User::query()
-//                    ->where('id', auth()->id())
-//                    ->update([
-//                        'access_token' => $client->getAccessToken()
-//                    ]);
-//            }
-//
-//            $service = new \Google_Service_Calendar($client);
-//
-//            $calendarId = 'primary'; // Lịch chính
-//            $optParams = [
-//                // 'maxResults' => 10, // Giới hạn số lượng sự kiện trả về
-//                'orderBy' => 'startTime',
-//                'singleEvents' => true, // Chỉ lấy các sự kiện đơn lẻ, không lấy các chuỗi sự kiện lặp lại
-//                // 'timeMin' => date('c'), // Chỉ lấy các sự kiện từ thời điểm hiện tại trở đi
-//            ];
-//
-//            $events = $service->events->listEvents($calendarId, $optParams);
-//            $events = $events->getItems(); // Lấy các sự kiện trả về
-
-            $listEvent = array();
+        $listEvent = array();
 //            lay dư lieu voi gg calendar
 //            foreach ($events as $event) {
 //                $listEvent[] = [
@@ -225,21 +186,21 @@ class BoardController extends Controller
 //                    'description' => $event->getDescription(),
 //                ];
 //            }
-
-            foreach ($tasks as $event) {
-                $listEvent[] = [
-                    'id' => $event->id,
-                    'id_google_calendar' => $event->id_google_calendar,
-                    'title' => $event->text,
-                    'email' => $event->creator_email,
-                    'start' => Carbon::parse($event->start_date)->toIso8601String(),
-                    'end' => Carbon::parse($event->end_date)->toIso8601String(),
-                ];
-            }
-//        }
-
-
+        $taskCalendar = $tasks
+            ->whereNotNull('start_date')
+            ->whereNotNull('end_date');
+//        dd($taskCalendar);
+        foreach ($taskCalendar as $event) {
+            $listEvent[] = [
+                'id' => $event->id,
+                'id_google_calendar' => $event->id_google_calendar,
+                'title' => $event->text,
+                'email' => $event->creator_email,
+                'start' => Carbon::parse($event->start_date)->toIso8601String(),
+                'end' => Carbon::parse($event->end_date)->toIso8601String(),
+            ];
         }
+
 
         //lấy thành viên trong bảng
         $board_m = BoardMember::query()
@@ -380,8 +341,6 @@ class BoardController extends Controller
     }
 
 
-
-
     public function acceptInviteBoard($uuid, $token, Request $request)
     {
         //xử lý khi admin gửi link invite cho người dùng
@@ -390,8 +349,6 @@ class BoardController extends Controller
             $user = User::query()->where('email', $request->email)->first();
             $check_user_board = BoardMember::where('user_id', $user)->where('board_id', $board->id)
                 ->first();
-
-
 
 
             //xử lý khi người dùng có tài khoản
@@ -431,9 +388,7 @@ class BoardController extends Controller
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
-                            }
-
-                            // Người dùng đã đăng nhập nhưng email khác
+                            } // Người dùng đã đăng nhập nhưng email khác
                             else {
                                 Auth::logout();
                                 Session::put('invited_board', "case1");
@@ -443,8 +398,7 @@ class BoardController extends Controller
                                 Session::put('authorize', $request->authorize);
                                 return redirect()->route('login');
                             }
-                        }
-                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
+                        } //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
 
                         else {
                             Session::put('invited_board', "case1");
@@ -455,15 +409,13 @@ class BoardController extends Controller
                             return redirect()->route('login');
                         }
 
-                    }
-                    //xử lý khi người dùng đã có trong bảng đó rồi
+                    } //xử lý khi người dùng đã có trong bảng đó rồi
 
                     else {
                         return redirect()->route('b.edit', $board->id)->with('success', 'Bạn đã ở trong bảng rồi!!');
                     }
 
-                }
-                //check xử lý nếu người dùng chưa ở trong wsp
+                } //check xử lý nếu người dùng chưa ở trong wsp
                 else {
                     //xử lý khi người dùng chưa có trong bảng đó
                     if (!$check_user_board) {
@@ -517,10 +469,7 @@ class BoardController extends Controller
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
-                            }
-
-
-                            // Người dùng đã đăng nhập nhưng email khác
+                            } // Người dùng đã đăng nhập nhưng email khác
                             else {
                                 Auth::logout();
                                 Session::put('invited_board', "case4");
@@ -531,8 +480,7 @@ class BoardController extends Controller
                                 Session::put('authorize', $request->authorize);
                                 return redirect()->route('login');
                             }
-                        }
-                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
+                        } //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
                         else {
                             Session::put('invited_board', "case4");
                             Session::put('board_id', $board->id);
@@ -546,9 +494,7 @@ class BoardController extends Controller
                 }
 
 
-
-            }
-            //xử lý khi người dùng không có tài khoản
+            } //xử lý khi người dùng không có tài khoản
 
             else {
                 //xử lý khi người dùng không có tài khoản
