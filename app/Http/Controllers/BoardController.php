@@ -8,6 +8,7 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Task;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ class BoardController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'board.';
+
     public function index($workspaceId)
     {
         $userId = Auth::id();
@@ -39,11 +41,10 @@ class BoardController extends Controller
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
                 $query->where('created_at', $userId)
-                ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
+                    ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    });
             })
-
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -68,9 +69,6 @@ class BoardController extends Controller
         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
-
-
-
 
 
     /**
@@ -175,52 +173,65 @@ class BoardController extends Controller
         // dd($this->googleApiClient->getClient());
         $client = $this->googleApiClient->getClient();
 
-        $accessToken = session('google_access_token');
-        //        dd($accessToken);
-        if ($accessToken) {
-            $client->setAccessToken($accessToken);
-            if ($client->isAccessTokenExpired()) {
-                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+        $accessToken = User::query()
+            ->where('id', auth()->id())
+            ->value('access_token');
 
-                session(['google_access_token' => $client->getAccessToken()]);
-                // Cập nhật token mới vào database
-                //            User::query()
-                //                ->where('id', auth()->id())
-                //                ->update([
-                //                    'remember_token' => json_encode($client->getAccessToken())
-                //                ]);
-            }
+//        dd($accessToken);
+//        if ($accessToken) {
+//            $client->setAccessToken($accessToken);
+//            if ($client->isAccessTokenExpired()) {
+//                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+//
+////                session(['google_access_token' => $client->getAccessToken()]);
+//                // Cập nhật token mới vào database
+//                User::query()
+//                    ->where('id', auth()->id())
+//                    ->update([
+//                        'access_token' => $client->getAccessToken()
+//                    ]);
+//            }
+//
+//            $service = new \Google_Service_Calendar($client);
+//
+//            $calendarId = 'primary'; // Lịch chính
+//            $optParams = [
+//                // 'maxResults' => 10, // Giới hạn số lượng sự kiện trả về
+//                'orderBy' => 'startTime',
+//                'singleEvents' => true, // Chỉ lấy các sự kiện đơn lẻ, không lấy các chuỗi sự kiện lặp lại
+//                // 'timeMin' => date('c'), // Chỉ lấy các sự kiện từ thời điểm hiện tại trở đi
+//            ];
+//
+//            $events = $service->events->listEvents($calendarId, $optParams);
+//            $events = $events->getItems(); // Lấy các sự kiện trả về
 
-            $service = new \Google_Service_Calendar($client);
-
-            $calendarId = 'primary'; // Lịch chính
-            $optParams = [
-                // 'maxResults' => 10, // Giới hạn số lượng sự kiện trả về
-                'orderBy' => 'startTime',
-                'singleEvents' => true, // Chỉ lấy các sự kiện đơn lẻ, không lấy các chuỗi sự kiện lặp lại
-                // 'timeMin' => date('c'), // Chỉ lấy các sự kiện từ thời điểm hiện tại trở đi
-            ];
-
-            $events = $service->events->listEvents($calendarId, $optParams);
-            $events = $events->getItems(); // Lấy các sự kiện trả về
             $listEvent = array();
-            foreach ($events as $event) {
+//            lay dư lieu voi gg calendar
+//            foreach ($events as $event) {
+//                $listEvent[] = [
+//                    'email' => $event->getCreator()->getEmail(),
+//                    'id_google_calendar' => $event->getId(),
+//                    'title' => $event->getSummary(),
+//                    'start' => $event->getStart()->getDateTime() ?: $event->getStart()->getDate(),
+//                    'end' => $event->getEnd()->getDateTime() ?: $event->getEnd()->getDate(),
+//                    'description' => $event->getDescription(),
+//                ];
+//            }
+
+            foreach ($tasks as $event) {
                 $listEvent[] = [
-                    'email' => $event->getCreator()->getEmail(),
-                    'id_google_calendar' => $event->getId(),
-                    'title' => $event->getSummary(),
-                    'start' => $event->getStart()->getDateTime() ?: $event->getStart()->getDate(),
-                    'end' => $event->getEnd()->getDateTime() ?: $event->getEnd()->getDate(),
-                    'description' => $event->getDescription(),
+                    'id' => $event->id,
+                    'id_google_calendar' => $event->id_google_calendar,
+                    'title' => $event->text,
+                    'email' => $event->creator_email,
+                    'start' => Carbon::parse($event->start_date)->toIso8601String(),
+                    'end' => Carbon::parse($event->end_date)->toIso8601String(),
                 ];
             }
+//        }
 
-        }
-
-
-        //        $taskMembers=$tasks->pluck('members')->flatten();
+//        dd($listEvent);
         return match ($viewType) {
-
             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'id')),
@@ -268,6 +279,7 @@ class BoardController extends Controller
         }
 
     }
+
     public function updateBoardMember2(Request $request, string $id)
     {
         $data = $request->only(['user_id', 'board_id']);
@@ -315,6 +327,7 @@ class BoardController extends Controller
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
         return back()->with('success', 'Đã gửi email thêm thành viên !!!');
     }
+
     public function acceptInviteBoard($uuid, $token, Request $request)
     {
         //xử lý khi admin gửi link invite cho người dùng
@@ -323,12 +336,12 @@ class BoardController extends Controller
             $user = User::query()->where('email', $request->email)->first();
             $check_user_board = BoardMember::where('user_id', $user)->where('board_id', $board->id)
                 ->first();
-                //xử lý khi người dùng có tài khoản
-            if($user){
+            //xử lý khi người dùng có tài khoản
+            if ($user) {
                 //xử lý khi người dùng chưa có trong bảng đó
-                if(!$check_user_board){
+                if (!$check_user_board) {
                     //xử lý khi người dùng đã có tài khoản và đang đăng nhập
-                    if(Auth::check()){
+                    if (Auth::check()) {
                         $user_check = Auth::user(); // Lấy thông tin người dùng hiện tại
 
                         //xử lý người dùng khi đã đăng nhập đúng người dùng
@@ -366,9 +379,7 @@ class BoardController extends Controller
                             } catch (\Throwable $th) {
                                 throw $th;
                             }
-                        }
-
-                        // Người dùng đã đăng nhập nhưng email khác
+                        } // Người dùng đã đăng nhập nhưng email khác
                         else {
                             Auth::logout();
                             Session::put('invited', "case1");
@@ -378,23 +389,19 @@ class BoardController extends Controller
                             Session::put('authorize', $request->authorize);
                             return redirect()->route('login');
                         }
-                    }
-                    //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
+                    } //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
                     else {
 
                     }
-                }
-                //xử lý khi người dùng đã có trong bảng đó rồi
-                else{
+                } //xử lý khi người dùng đã có trong bảng đó rồi
+                else {
 
                 }
-            }
-            //xử lý khi người dùng không có tài khoản
+            } //xử lý khi người dùng không có tài khoản
             else {
 
             }
-        }
-        //xử lý khi người dùng có link invite và kick vô
+        } //xử lý khi người dùng có link invite và kick vô
         else {
 
         }
