@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'catalog_id',
@@ -26,7 +26,8 @@ class Task extends Model
         'end_date',
         'parent',
         'sortorder',
-
+        'id_google_calendar',
+        'creator_email'
     ];
     protected $casts = [
         'priority' => IndexEnum::class,
@@ -35,8 +36,9 @@ class Task extends Model
     protected $appends = ["open"];
 
     protected $dates = ['start_date', 'end_date'];
-    
-    public function getOpenAttribute(){
+
+    public function getOpenAttribute()
+    {
         return true;
     }
 
