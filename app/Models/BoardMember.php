@@ -18,6 +18,7 @@ class BoardMember extends Model
         'is_star',
         'follow',
         'invite',
+        'is_accept_invite'
     ];
     protected $casts = [
        'is_star' => 'boolean',
