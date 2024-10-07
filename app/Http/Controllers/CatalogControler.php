@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCatalogRequest;
+use App\Models\Board;
 use App\Models\Catalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,20 +35,26 @@ class CatalogControler extends Controller
     public function store(StoreCatalogRequest $request)
     {
         $data = $request->except(['image','position']);
+
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
         }
+
         $maxPosition = Catalog::where('board_id', $request->board_id)
             ->max('position');
         $data['position']=$maxPosition +1;
+
         $catalog =  Catalog::query()->create($data);
+        // lấy thông tin board
+        $board = Board::findOrFail($request->board_id);
         activity('thêm mới danh sách')
         ->performedOn($catalog)
         ->causedBy(Auth::user())
-        ->withProperties(['catalog_name' => $catalog->name,'board_id' => $request->board_id])
-        ->tap(function (Activity $activity) use ($request,$catalog){
+        ->withProperties(['catalog_name' => $catalog->name,'board_id' => $request->board_id,'workspace_id' => $board->workspace_id])
+        ->tap(function (Activity $activity) use ($board,$request,$catalog){
             $activity->board_id = $request->board_id;
             $activity->catalog_id = $catalog->id;
+            $activity->workspace_id = $board->workspace_id;
         })
         ->log('danh sách đã được thêm:'.$catalog->name);
         return back()
