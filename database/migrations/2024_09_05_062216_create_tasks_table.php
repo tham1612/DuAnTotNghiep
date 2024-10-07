@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->string('id_google_calendar',)->nullable(); // google calendar
             $table->foreignIdFor(\App\Models\Catalog::class)->constrained();
             $table->string('text');
             $table->text('description')->nullable();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->dateTime('end_date')->nullable();
             $table->integer('parent')->nullable();
             $table->integer('sortorder')->default(0);
+            $table->string('creator_email')->nullable(); // google calendar
             $table->softDeletes();
             $table->timestamps();
         });
