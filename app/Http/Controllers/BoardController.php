@@ -239,7 +239,7 @@ class BoardController extends Controller
 //        }
 
 
-        }
+
 
         //lấy thành viên trong bảng
         $board_m = BoardMember::query()
