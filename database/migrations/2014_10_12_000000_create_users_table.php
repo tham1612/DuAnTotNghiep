@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -24,6 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('social_id')->nullable();
             $table->string('social_name')->nullable();
+            $table->text('access_token')->nullable(); // google calendar
             $table->rememberToken();
             $table->timestamps();
 
