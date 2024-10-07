@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -15,17 +16,20 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
     protected $eventData;
     protected $attendees;
     protected $eventId;
+    protected $userOrTaskId;
     protected $accessToken;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($eventData, $attendees, $eventId, $accessToken)
+    public function __construct($eventData, $attendees, $eventId, $accessToken, $userOrTaskId)
     {
         $this->eventData = $eventData;
         $this->attendees = $attendees;
         $this->eventId = $eventId;
         $this->accessToken = $accessToken;
+        $this->userOrTaskId = $userOrTaskId;
+
     }
 
     /**
@@ -44,11 +48,11 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
                 $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
                 // Cập nhật token mới vào database
 //                session(['google_access_token' => $client->getAccessToken()]);
-//                User::query()
-//                    ->where('id', auth()->id())
-//                    ->update([
-//                        'remember_token' => json_encode($client->getAccessToken())
-//                    ]);
+                User::query()
+                    ->where('id', $this->userOrTaskId['user_id'])
+                    ->update([
+                        'access_token' => $client->getAccessToken()
+                    ]);
             }
 
             $service = new \Google_Service_Calendar($client);
