@@ -92,9 +92,9 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
 
                 Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
-                Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
-                    ->withoutMiddleware('auth');
             });
+        Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
+            ->withoutMiddleware('auth');
         Route::resource('catalogs', CatalogControler::class);
 
         Route::resource('tasks', TaskController::class);
@@ -114,6 +114,7 @@ Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
+
 Auth::routes();
 
 Route::controller(LoginGoogleController::class)->group(function(){
