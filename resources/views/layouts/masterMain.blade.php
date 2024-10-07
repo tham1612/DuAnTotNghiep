@@ -158,6 +158,18 @@
                     return;
                 }
 
+                // Disable the Send button and input field
+                $('#sendBtn').prop('disabled', true);
+                $('#prompt').prop('disabled', true);
+
+                // Hiển thị tin nhắn của người dùng
+                $('#responseBox').append(
+                    '<div class="user-message" style="text-align: right; margin-bottom: 10px;"><span style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
+                    prompt + '</span></div>'
+                );
+                // Xóa nội dung trong ô nhập liệu
+                $('#prompt').val('');
+
                 // Gửi yêu cầu AJAX đến server
                 $.ajax({
                     url: '/ai-chat', // Route để xử lý yêu cầu
@@ -166,34 +178,30 @@
                         prompt: prompt
                     },
                     success: function(response) {
-                        // Thay thế các dấu ** bằng thẻ <strong> để làm in đậm
+                        // Format response text
                         let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g,
                             '<strong>$1</strong>');
-
-                        // Thay thế các ký tự xuống dòng (\n) bằng <br> để hiển thị đúng xuống dòng
                         formattedResponse = formattedResponse.replace(/\n/g, '<br>');
-
-                        // Hiển thị tin nhắn của người dùng
-                        $('#responseBox').append(
-                            '<div class="user-message" style="text-align: right; margin-bottom: 10px;"><span style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
-                            prompt + '</span></div>');
 
                         // Hiển thị phản hồi từ hệ thống
                         $('#responseBox').append(
                             '<div class="system-response" style="text-align: left; margin-bottom: 10px;"><span style="background-color: #ffffff; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
-                            formattedResponse + '</span></div>');
+                            formattedResponse + '</span></div>'
+                        );
 
-                        // Xóa nội dung trong ô nhập liệu
-                        $('#prompt').val('');
 
                         // Cuộn xuống cuối khung chat
                         $('#chat-conversation').scrollTop($('#chat-conversation')[0]
                             .scrollHeight);
                     },
                     error: function(xhr, status, error) {
-                        // In ra chi tiết lỗi trong console để dễ dàng debug
                         console.log(xhr.responseText);
                         alert('Đã có lỗi xảy ra!');
+                    },
+                    complete: function() {
+                        // Re-enable the Send button and input field after request completes
+                        $('#sendBtn').prop('disabled', false);
+                        $('#prompt').prop('disabled', false);
                     }
                 });
             });

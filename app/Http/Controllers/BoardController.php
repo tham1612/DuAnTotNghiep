@@ -34,21 +34,17 @@ class BoardController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'board.';
-    public function index($workspaceId)
+    public function index()
     {
         $userId = Auth::id();
 
-
-        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
-        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
-        $boards = Board::where('workspace_id', $workspaceId)
-            ->where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) // Ensure 'created_by' is the correct field
-                    ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                        $query->where('user_id', $userId);
-                    });
+        // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
+        $boards = Board::where(function ($query) use ($userId) {
+                $query->where('created_at', $userId) // Kiểm tra nếu người dùng là người tạo
+                ->orWhereHas('boardMembers', function ($query) use ($userId) { // Hoặc là thành viên
+                    $query->where('user_id', $userId);
+                });
             })
-
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -69,12 +65,11 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
-        // dd($workspaceId);
 
-
-        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
+        // Trả về view với danh sách bảng và bảng đã đánh dấu sao
         return view('homes.dashboard', compact('boards', 'board_star'));
     }
+
 
     /**
      * Show the form for creating a new resource.
