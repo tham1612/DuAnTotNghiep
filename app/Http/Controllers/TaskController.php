@@ -50,7 +50,7 @@ class TaskController extends Controller
         activity('thêm mới task')
             ->performedOn($task)
             ->causedBy(Auth::user())
-            ->withProperties(['task_name' => $task->text,'board_id' => $task->catalog->board_id,'wordspace_id' => $task->catalog->board->wordspace_id])
+            ->withProperties(['task_name' => $task->text,'board_id' => $task->catalog->board_id,])
             ->tap(function (Activity $activity) use ($task) {
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
