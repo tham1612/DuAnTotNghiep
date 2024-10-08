@@ -123,7 +123,7 @@
                                                 @endif
 
                                             </p>
-                                            <span>@ {{ $board_owner->name }}</span>
+                                            <span> {{ $board_owner->name }}</span>
                                             <span><i class="ri-checkbox-blank-circle-fill"></i></span>
                                             <span>Quản trị viên không gian làm
                                                 việc</span>
