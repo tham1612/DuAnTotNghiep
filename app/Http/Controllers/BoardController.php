@@ -243,15 +243,15 @@ class BoardController extends Controller
 //            'user_id' => Auth::id()
 //        ];
 
-        // dd($data);
-        //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
+
             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
             'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-            default => view('boards.index', compact('board', 'catalogs', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+            default => view('boards.index', compact('board', 'catalogs','tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+
 
 
         };
