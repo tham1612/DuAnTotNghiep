@@ -116,7 +116,7 @@
                                             @if(!empty($board_owner))
                                             <p style="margin-bottom: 0px;" class="text-danger fw-bloder">
                                                 {{ $board_owner->name }}
-                                                @if ($board_owner->user_id == $data['user_id'])
+                                                @if ($board_owner->user_id == Auth::id())
                                                     <span class="text-danger fw-bloder">(bạn)</span>
                                                 @else
                                                     <span class="text-danger fw-bold">(chủ)</span>
