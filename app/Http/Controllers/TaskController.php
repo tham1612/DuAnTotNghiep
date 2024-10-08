@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\BoardMember;
+use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskMember;
 use Carbon\Carbon;
@@ -29,7 +30,9 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id, Request $request) {}
+    public function index($id, Request $request)
+    {
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -37,29 +40,42 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $data = $request->except(['position', 'priority', 'risk', 'sortorder',]);
+        if (isset($data['start']) || isset($data['end'])) {
+            $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $data['end_date'] = $data['end'];
+        }
+
         $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
             ->max('position');
         $data['position'] = $maxPosition + 1;
         $maxSortorder = \App\Models\Task::where('catalog_id', $request->catalog_id)
             ->max('sortorder');
         $data['sortorder'] = $maxSortorder + 1;
+        $data['creator_email'] = Auth::user()->email;
         $data['risk'] = $data['risk'] ?? 'Medium';
         $data['priority'] = $data['priority'] ?? 'Medium';
+//        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
+        $data['id'] = $task->id;
+        if (isset($data['start_date']) || isset($data['end_date'])) {
+            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+        }
+
+
         // ghi lại hoạt động khi thêm
         activity('thêm mới task')
             ->performedOn($task)
             ->causedBy(Auth::user())
-            ->withProperties(['task_name' => $task->text,'board_id' => $task->catalog->board_id,])
+            ->withProperties(['task_name' => $task->text, 'board_id' => $task->catalog->board_id,])
             ->tap(function (Activity $activity) use ($task) {
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
-            // event(new TaskUpdated($task));
+        // event(new TaskUpdated($task));
         return back()
-            ->with('success');
+            ->with('success', 'Thêm task thành công!!');
     }
 
     public function show()
@@ -68,20 +84,29 @@ class TaskController extends Controller
         // return
     }
 
-    public function update($id, UpdateTaskRequest $request)
+    public function update(string $id, UpdateTaskRequest $request)
     {
-        $data = $request->except(['_token', '_method']);
+        $task = Task::query()->findOrFail($id);
 
-         Task::query()
-            ->where('id', $id)
-            ->update($data);
-            $task = Task::find($id);
-            activity('Cập nhật task')
+        $data = $request->all();
+        $data['start_date'] = isset($data['start']) ? $data['start'] : $data['start_date'];
+        $data['end_date'] = isset($data['end']) ? $data['end'] : $data['end_date'];
+
+        if (isset($data['changeDate']) && isset($data['id_gg_calendar'])) {
+            $this->googleApiClient->updateEvent($data);
+        } else {
+            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+        }
+
+        $task->update($data);
+
+
+        activity('Cập nhật task')
             ->performedOn($task)
             ->causedBy(Auth::user())
             ->withProperties([
                 'task_id' => $task->id,
-                'task_name'=>$task->text,
+                'task_name' => $task->text,
                 'board_id' => $task->catalog->board_id,
             ])
             ->tap(function (Activity $activity) use ($task) {
@@ -90,10 +115,10 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
-            return response()->json([
-                'message' => 'Task đã được cập nhật thành công',
-                'success' => true
-            ]);
+        return response()->json([
+            'message' => 'Task đã được cập nhật thành công',
+            'success' => true
+        ]);
 
     }
 
@@ -132,19 +157,19 @@ class TaskController extends Controller
                     ]);
             }
             activity('thay đổi vị trí trong task')
-            ->causedBy(Auth::user())
-            ->withProperties([
-                'task_id'=>$id,
-                'catalog_id_new'=>$data['catalog_id'],
-                'board_id' => $task->catalog->board_id,
-                'tasks_affected_new'=>$positionChangeNew->pluck('id')->toArray(),
-            ])
-            ->tap(function (Activity $activity) use ($task) {
-                $activity->catalog_id = $task->catalog_id;
-                $activity->task_id = $task->id;
-                $activity->board_id = $task->catalog->board_id;
-            })
-            ->log('vị trí các task trong catalog mới đã thay đổi.');
+                ->causedBy(Auth::user())
+                ->withProperties([
+                    'task_id' => $id,
+                    'catalog_id_new' => $data['catalog_id'],
+                    'board_id' => $task->catalog->board_id,
+                    'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                ])
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
+                })
+                ->log('vị trí các task trong catalog mới đã thay đổi.');
             // cap nhat lai vi tri o catalog cu
             foreach ($positionChangeOld as $item) {
                 Task::query()
@@ -154,19 +179,19 @@ class TaskController extends Controller
                     ]);
             }
             activity('thay đổi vị trí trong task')
-             ->causedBy(Auth::user())
-             ->withProperties([
-                'task_id'=>$id,
-                'catalog_id_old'=>$data['catalog_id_old'],
-                'board_id' => $task->catalog->board_id,
-                'tasks_affected_new'=>$positionChangeNew->pluck('id')->toArray(),
-             ])
-             ->tap(function (Activity $activity) use ($task) {
-                $activity->catalog_id = $task->catalog_id;
-                $activity->task_id = $task->id;
-                $activity->board_id = $task->catalog->board_id;
-            })
-             ->log('Vị trí các task trong catalog cũ đã thay đổi.');
+                ->causedBy(Auth::user())
+                ->withProperties([
+                    'task_id' => $id,
+                    'catalog_id_old' => $data['catalog_id_old'],
+                    'board_id' => $task->catalog->board_id,
+                    'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                ])
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
+                })
+                ->log('Vị trí các task trong catalog cũ đã thay đổi.');
         } else {
 
             $positionChange = Task::query()
@@ -183,142 +208,55 @@ class TaskController extends Controller
                     ]);
             }
             activity('Thay đổi vị trí task')
-            ->causedBy(Auth::user())
-            ->withProperties([
-                'task_id' => $id,
-                'catalog_id' => $data['catalog_id'],
-                'board_id' => $task->catalog->board_id,
-                'tasks_affected' => $positionChange->pluck('id')->toArray(),
-            ])
-            ->tap(function (Activity $activity) use ($task) {
-                $activity->catalog_id = $task->catalog_id;
-                $activity->task_id = $task->id;
-                $activity->board_id = $task->catalog->board_id;
-            })
-            ->log('Vị trí các task trong cùng catalog đã thay đổi.');
+                ->causedBy(Auth::user())
+                ->withProperties([
+                    'task_id' => $id,
+                    'catalog_id' => $data['catalog_id'],
+                    'board_id' => $task->catalog->board_id,
+                    'tasks_affected' => $positionChange->pluck('id')->toArray(),
+                ])
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
+                })
+                ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
         $model->update($data);
         return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
+
     public function updateFolow(Request $request, string $id)
     {
         $data = $request->only(['user_id']);
+        $userId = $data['user_id']; // Lấy giá trị user_id từ mảng $data
 
-
-        $taskMember = TaskMember::where('task_id', $id)
-            ->where('user_id',$data)
+        $taskMemberFollow = Follow_member::where('task_id', $id)
+            ->where('user_id', $userId)
             ->first();
 
-        if ($taskMember) {
-            $newFollow = $taskMember->follow == 1 ? 0 : 1;
-            $taskMember->update(['follow' =>$newFollow ]);
+        if ($taskMemberFollow) {
+            // Đảo ngược trạng thái follow
+            $newFollow = $taskMemberFollow->follow == 1 ? 0 : 1;
+            $taskMemberFollow->update(['follow' => $newFollow]);
 
             return response()->json([
-                'follow' => $taskMember->follow, // Trả về trạng thái follow mới
+                'follow' => $taskMemberFollow->follow, // Trả về trạng thái follow mới
+            ]);
+        } else {
+            // Nếu chưa tồn tại, tạo mới
+            $newTaskMemberFollow = Follow_member::create([
+                'user_id' => $userId,
+                'task_id' => $id,
+                'follow' => 1
+            ]);
+
+            return response()->json([
+                'follow' => $newTaskMemberFollow->follow, // Trả về trạng thái follow mới
             ]);
         }
 
     }
-    public function createEvent(Request $request)
-    {
-        $startDate = $request->start == 'Invalid date' ? $request->end : $request->start;
-        $endDate = $request->end;
-        $accessToken = session('google_access_token');
-        $eventData = [
-            'summary' => $request->summary,
-            'start' => [
-                'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
-            ],
-            'end' => [
-                'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
-            ],
-            'description' => $request->description,
-            'reminders' => [
-                'useDefault' => false,
-                'overrides' => [
-                    ['method' => 'email', 'minutes' => 24 * 60], // Gửi email nhắc nhở trước 24 giờ
-                    ['method' => 'popup', 'minutes' => 10],      // Hiện popup nhắc nhở trước 10 phút
-                ],
-            ],
-        ];
-        //        dd($eventData, $startDate, $endDate);
-        // Thêm người tham gia (attendees)
-        $attendees = [];
-        if (!empty($request->attendees)) {
-            // Tách email nếu có nhiều
-            $emails = explode(',', $request->attendees);
-            foreach ($emails as $email) {
-                $attendees[] = ['email' => trim($email)];
-            }
-        }
-        // dd($eventData, $attendees, $accessToken);
-        CreateGoogleApiClientEvent::dispatch($eventData, $attendees, $accessToken);
-
-        return response()->json(['msg' => 'them thanh cong']);
-    }
-
-    public function updateEvent(Request $request, string $id)
-    {
-
-        $attendees = [];
-        $accessToken = session('google_access_token');
-        $eventId = $request->id_gg_canlendar;
-        if ($request->changeDate) {
-            $eventData = [
-                'start' => [
-                    'dateTime' => Carbon::parse($request->start, 'Asia/Ho_Chi_Minh')->toIso8601String(),
-                    'timeZone' => 'Asia/Ho_Chi_Minh',
-                ],
-                'end' => [
-                    'dateTime' => Carbon::parse($request->end, 'Asia/Ho_Chi_Minh')->toIso8601String(),
-                    'timeZone' => 'Asia/Ho_Chi_Minh',
-                ],
-            ];
-        } else {
-            $eventData = [
-                'summary' => $request->summary,
-                'start' => ['dateTime' => Carbon::parse($request->start, 'Asia/Ho_Chi_Minh')->toIso8601String()],
-                'end' => ['dateTime' => Carbon::parse($request->end, 'Asia/Ho_Chi_Minh')->toIso8601String()],
-                'description' => $request->description,
-            ];
-            // Thêm người tham gia (attendees)
-
-            if (!empty($request->attendees)) {
-                foreach ($request->attendees as $email) {
-                    // Tách email nếu có nhiều
-                    $emails = explode(',', $email);
-                    foreach ($emails as $email) {
-                        $attendees[] = ['email' => trim($email)];
-                    }
-                }
-            }
-        }
-
-        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken);
 
 
-        return response()->json(['msg' => 'cap thanh cong']);
-    }
-
-
-    public function deleteEvent(string $id)
-    {
-        $client = $this->googleApiClient->getClient();
-        //        $accessToken =  User::query()->where('user_id', auth()->id())->value('access_token');
-        $accessToken = session('google_access_token');
-        if ($accessToken) {
-            $client->setAccessToken($accessToken);
-
-            if ($client->isAccessTokenExpired()) {
-                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-                //                 User::query()->where('user_id', auth()->id())->update([
-                //                    'remember_token' => json_encode($client->getAccessToken())
-                //                ]);
-            }
-            $service = new \Google_Service_Calendar($client);
-
-            $service->events->delete('primary', $id);
-        }
-        return response()->json(['msg' => 'xoa thanh cong']);
-    }
 }
