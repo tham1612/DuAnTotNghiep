@@ -3,6 +3,9 @@
     Calendar - TaskFlow
 @endsection
 @section('main')
+    @if(!\Illuminate\Support\Facades\Auth::user()->access_token)
+        <a href="{{route('google.redirect')}}" class="btn btn-ghost-danger">Liên kết Google Calendar</a>
+    @endif
     <div class="p-2" data-simplebar style="max-height: 80vh;">
         <div id="calendar"></div>
     </div>
@@ -68,8 +71,6 @@
         const startDateInput = document.querySelector('input[name="start"]');
         const endDateInput = document.querySelector('input[name="end"]');
         var text = document.querySelector('#text');
-        // var attendees = document.querySelector('#attendees');
-        // var description = document.querySelector('#description');
         var active_checkbox = document.querySelector('#active_checkbox');
         var deteleEvent = document.getElementById('deteleEvent');
         var createEvent = document.getElementById('createEvent');
@@ -141,9 +142,8 @@
                 if (!isAllowedToDrag(event)) {
                     revertFunc();
                 }
-                console.log(event.start, event.end)
                 var changeDate = 'true';
-                var id_gg_canlendar = event.id_google_calendar;
+                var id_gg_calendar = event.id_google_calendar;
                 var id = event.id;
                 var start = moment(event.start).format('YYYY-MM-DD HH:mm:00');
                 var end = moment(event.end == null ? event.start : event.end).format('YYYY-MM-DD HH:mm:00');
@@ -154,7 +154,7 @@
                     data: {
                         changeDate,
                         id,
-                        id_gg_canlendar,
+                        id_gg_calendar,
                         start,
                         end,
                     },
@@ -171,7 +171,7 @@
                 $(`#detailCardModal${event.id}`).modal('toggle'); // bật modal lên
 
                 var id_gg_canlendar = event.id_google_calendar;
-                console.log(id_gg_canlendar, event)
+
                 // deteleEvent.addEventListener('click', function (e) {
                 //     e.preventDefault();
                 //     if (isAllowedToDrag(event)) {
@@ -208,7 +208,6 @@
     <script>
         function isAllowedToDrag(event) {
             const check = event.email === emailName.value
-            console.log(event.email, emailName.value)
             // ... các điều kiện khác
             return check;
         }
