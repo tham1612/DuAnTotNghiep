@@ -174,6 +174,7 @@
                                         {{ strtoupper(substr($board->name, 0, 1)) }}
                                     </div>
                                 <span>{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
+                                 @endif
                             </a>
                         </li>
                     @endforeach
