@@ -100,27 +100,25 @@ class GoogleApiClientController extends Controller
 
     public function updateEvent($data)
     {
-//        dd($data);
         $attendees = [];
-//        $accessToken = session('google_access_token');
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
-        $eventId = $data['id_gg_canlendar'];
+        $eventId = $data['id_gg_calendar'];
         if ($data['changeDate']) {
             $eventData = [
                 'start' => [
-                    'dateTime' => Carbon::parse($data['start'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                    'dateTime' => Carbon::parse($data['start_date'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
                     'timeZone' => 'Asia/Ho_Chi_Minh',
                 ],
                 'end' => [
-                    'dateTime' => Carbon::parse($data['end'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                    'dateTime' => Carbon::parse($data['end_date'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
                     'timeZone' => 'Asia/Ho_Chi_Minh',
                 ],
             ];
         } else {
             $eventData = [
-                'summary' => $data->summary,
+                'summary' => $data->text,
                 'start' => ['dateTime' => Carbon::parse($data->start, 'Asia/Ho_Chi_Minh')->toIso8601String()],
                 'end' => ['dateTime' => Carbon::parse($data->end, 'Asia/Ho_Chi_Minh')->toIso8601String()],
                 'description' => $data->description,

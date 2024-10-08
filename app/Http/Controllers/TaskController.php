@@ -39,8 +39,11 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $data = $request->except(['position', 'priority', 'risk', 'sortorder',]);
-        $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
-        $data['end_date'] = $data['end'];
+        if (isset($data['start']) || isset($data['end'])) {
+            $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $data['end_date'] = $data['end'];
+        }
+
         $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
             ->max('position');
         $data['position'] = $maxPosition + 1;
@@ -53,7 +56,7 @@ class TaskController extends Controller
 //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
-        if ($data['start_date'] != "Invalid date" || $data['end_date'] != "Invalid date") {
+        if (isset($data['start_date']) || isset($data['end_date'])) {
             $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
         }
 
@@ -87,14 +90,14 @@ class TaskController extends Controller
         $data = $request->all();
         $data['start_date'] = isset($data['start']) ? $data['start'] : $data['start_date'];
         $data['end_date'] = isset($data['end']) ? $data['end'] : $data['end_date'];
-        if (isset($data['changeDate'])) $this->googleApiClient->updateEvent($data);
 
-//        dd($data);
-        try {
-            $task->update($data);
-        } catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (isset($data['changeDate']) && isset($data['id_gg_calendar'])) {
+            $this->googleApiClient->updateEvent($data);
+        } else {
+            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
         }
+
+        $task->update($data);
 
 
         activity('Cập nhật task')
