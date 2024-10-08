@@ -151,7 +151,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('homes.dashboard')}}">
+                    <a class="nav-link menu-link" href="{{ route('homes.dashboard', $workspaceChecked->id) }}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>
@@ -173,7 +173,6 @@
                                         style="width: 30px;height: 30px">
                                         {{ strtoupper(substr($board->name, 0, 1)) }}
                                     </div>
-                                @endif
                                 <span>{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
                             </a>
                         </li>

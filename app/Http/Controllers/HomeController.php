@@ -52,7 +52,15 @@ class HomeController extends Controller
 
         // Tách danh sách bảng sao
         $board_star = $boards->filter(fn($board) => $board->is_star);
-        $activities = Activity::orderBy('created_at', 'desc')->get();
+        $workspaceIds = $boards->pluck('workspace.id')->unique();
+
+        // Lấy các hoạt động chỉ thuộc về các workspace này từ properties->workspace_id
+        $activities = Activity::whereIn('properties->workspace_id', $workspaceIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Kiểm tra kết quả bằng cách in ra các hoạt động
+        // dd($activities); 
         return view('homes.home', compact('boards', 'board_star','activities'));
     }
 
