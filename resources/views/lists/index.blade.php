@@ -156,6 +156,8 @@
                                     <tbody>
                                         @foreach ($catalog->tasks as $task)
                                             <tr draggable="true">
+                                                <input type="hidden" name="" id="id_gg_calendar_{{$task->id}}"
+                                                value="{{$task->id_google_calendar}}">
                                                 <td class="col-2">
                                                     <div class="d-flex">
                                                         <div class="flex-grow-1" data-bs-toggle="modal"
@@ -499,6 +501,10 @@
                     start_date: $('#start_date_' + taskId).val(),
                     end_date: $('#end_date_' + taskId).val(),
                     priority: $('#priority_' + taskId).val(),
+                    id_gg_calendar: $('#id_gg_calendar_' + taskId).val(),
+                    text: $('#text_' + taskId).val(),
+                    id: taskId,
+                    changeDate: true,
                 };
                 console.log(taskId);
                 $.ajax({
