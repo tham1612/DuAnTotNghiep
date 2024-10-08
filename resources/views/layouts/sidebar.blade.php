@@ -88,8 +88,13 @@
                         <p class="fs-15 fw-bolder"> {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 25) }}
                         </p>
                         <p class="fs-10" style="margin-top: -10px">
-                            {{ $workspaceChecked->access === 'private' ? 'Riêng tư' : 'Công khai' }}
-
+                            <span>
+                                @if ($workspaceChecked->access == 'private')
+                                    Riêng tư
+                                @elseif ($workspaceChecked->access == 'public')
+                                    Công khai
+                                @endif
+                            </span>
                         </p>
                     </section>
                 </li>
@@ -120,7 +125,14 @@
                                 {{ \Illuminate\Support\Str::limit($workspace->name, 25) }}
                             </p>
                             <p class="fs-10" style="margin-top: -10px">
-                                <span>{{ $workspace->access === 'private' ? 'Riêng tư' : 'Công khai' }}</span>
+                                <span>
+                                    @if ($workspace->access == 'private')
+                                        Riêng tư
+                                    @elseif ($workspace->access == 'public')
+                                        Công khai
+                                    @endif
+                                </span>
+
                                 <i class=" ri-subtract-line"></i>
                                 <span>{{ $workspace->member_count }} thành viên</span>
                             </p>
