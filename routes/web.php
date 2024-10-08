@@ -67,8 +67,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
 
-        Route::get('/homes/dashboard', [BoardController::class, 'index'])->name('homes.dashboard');
-
+        Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
 
         Route::get('/chat', function () {
