@@ -508,21 +508,29 @@
 </script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
+        // Tắt nút "Gửi" khi trang tải
+        $('#sendBtn').prop('disabled', true);
+
+        // Kiểm tra khi người dùng nhập vào ô nhập liệu
+        $('#prompt').on('input', function() {
+            // Nếu ô nhập không trống, bật nút "Gửi", ngược lại tắt nút
+            $('#sendBtn').prop('disabled', $(this).val().trim() === '');
+        });
+
         // Bắt sự kiện khi form được submit
-        $('#chatinput-form').on('submit', function (e) {
+        $('#chatinput-form').on('submit', function(e) {
             e.preventDefault(); // Ngăn chặn form submit mặc định
 
             // Lấy giá trị từ ô nhập liệu
             let prompt = $('#prompt').val();
 
-            // Kiểm tra xem người dùng có nhập gì không
+            // Nếu ô nhập trống, không làm gì cả
             if (prompt.trim() === '') {
-                alert('Vui lòng nhập câu hỏi!');
-                return;
+                return; // Không hiển thị alert
             }
 
-            // Disable the Send button and input field
+            // Disable nút "Gửi" và ô nhập
             $('#sendBtn').prop('disabled', true);
             $('#prompt').prop('disabled', true);
 
@@ -541,7 +549,7 @@
                 data: {
                     prompt: prompt
                 },
-                success: function (response) {
+                success: function(response) {
                     // Format response text
                     let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g,
                         '<strong>$1</strong>');
@@ -553,17 +561,16 @@
                         formattedResponse + '</span></div>'
                     );
 
-
                     // Cuộn xuống cuối khung chat
                     $('#chat-conversation').scrollTop($('#chat-conversation')[0]
                         .scrollHeight);
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.log(xhr.responseText);
                     alert('Đã có lỗi xảy ra!');
                 },
-                complete: function () {
-                    // Re-enable the Send button and input field after request completes
+                complete: function() {
+                    // Re-enable nút "Gửi" và ô nhập sau khi yêu cầu hoàn tất
                     $('#sendBtn').prop('disabled', false);
                     $('#prompt').prop('disabled', false);
                 }
@@ -571,6 +578,7 @@
         });
     });
 </script>
+
 @yield('script')
 
 </body>
