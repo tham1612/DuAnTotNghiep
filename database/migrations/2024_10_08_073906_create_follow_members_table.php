@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_members', function (Blueprint $table) {
+        Schema::create('follow_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Task::class)->unique()->constrained();
-            $table->foreignIdFor(\App\Models\User::class)->unique()->constrained();
-            $table->softDeletes();
+            $table->foreignIdFor(\App\Models\Task::class)->constrained();
+            $table->foreignIdFor(\App\Models\User::class)->constrained();
+            $table->boolean('follow')->default(false);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task_members');
+        Schema::dropIfExists('follow_members');
     }
 };

@@ -290,7 +290,7 @@
                     <!-- menu bảng -->
                     <div class="d-flex justify-content-center align-items-center p-2 cursor-pointer">
                         <i class="ri-list-settings-line fs-15" data-bs-toggle="offcanvas"
-                           data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
+                           data-bs-target="#settingBoard" aria-controls="offcanvasRight"></i>
                     </div>
                 </section>
             </div>

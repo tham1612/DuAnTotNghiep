@@ -31,7 +31,7 @@
                                 <tr>
                                     <input type="hidden" name="" id="id_gg_calendar_{{$task->id}}"
                                            value="{{$task->id_google_calendar}}">
-                                    <td>{{ $task->position }}</td>
+                                    <td>{{ $loop->iteration  }}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}"
                                         id="text_{{ $task->id }}">
                                         {{ \Illuminate\Support\Str::limit($task->text, 30) }}

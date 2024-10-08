@@ -63,7 +63,7 @@
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
 
-                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($data['board_m'])) {{ $data['board_m']->count() }}@endif</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($board_m)) {{ $board_m->count() }}@endif</span>
 
                         </li>
                         <li class="nav-item d-flex align-items-center justify-content-between">
@@ -71,14 +71,14 @@
                                 Yêu cầu tham gia
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $data['board_m_invite'])){{ $data['board_m_invite']->count() }}@endif</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite)){{ $board_m_invite->count() }}@endif</span>
                         </li>
                         <li class="nav-item d-flex align-items-center justify-content-between">
                             <a class="nav-link" data-bs-toggle="tab" href="#profile2" role="tab">
                                 Người xem
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($data['board_m_viewer'])  ){{ $data['board_m_viewer']->count() }}@endif</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($board_m_viewer)  ){{ $board_m_viewer->count() }}@endif</span>
                         </li>
 
                     </ul>
@@ -92,17 +92,17 @@
                                         <a href="javascript: void(0);" class="avatar-group-item"
                                             data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                             title="Nancy">
-                                            @if(!empty($data['board_owner']))
-                                            @if ($data['board_owner']->image)
-                                                <img src="{{ Storage::url($data['board_owner']->image) ? Storage::url($data['board_owner']->image) : '' }}"
+                                            @if(!empty($board_owner))
+                                            @if ($board_owner->image)
+                                                <img src="{{ Storage::url($board_owner->image) ? Storage::url($board_owner->image) : '' }}"
                                                     alt="" class="rounded-circle avatar-xs" />
                                             @else
                                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                     style="width: 25px;height: 25px">
-                                                    {{ strtoupper(substr($data['board_owner']->name, 0, 1)) }}
+                                                    {{ strtoupper(substr($board_owner->name, 0, 1)) }}
                                                 </div>
                                                 <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                    {{ \Illuminate\Support\Str::limit($data['board_owner']->name, 16) }}
+                                                    {{ \Illuminate\Support\Str::limit($board_owner->name, 16) }}
                                                     <i class=" ri-arrow-drop-down-line fs-20"></i>
                                                 </span>
                                             @endif
@@ -113,17 +113,17 @@
                                     </div>
                                     <div class="col-8 d-flex flex-column">
                                         <section class="fs-12">
-                                            @if(!empty($data['board_owner']))
+                                            @if(!empty($board_owner))
                                             <p style="margin-bottom: 0px;" class="text-danger fw-bloder">
-                                                {{ $data['board_owner']->name }}
-                                                @if ($data['board_owner']->user_id == $data['user_id'])
+                                                {{ $board_owner->name }}
+                                                @if ($board_owner->user_id == Auth::id())
                                                     <span class="text-danger fw-bloder">(bạn)</span>
                                                 @else
                                                     <span class="text-danger fw-bold">(chủ)</span>
                                                 @endif
 
                                             </p>
-                                            <span>@ {{ $data['board_owner']->name }}</span>
+                                            <span> {{ $board_owner->name }}</span>
                                             <span><i class="ri-checkbox-blank-circle-fill"></i></span>
                                             <span>Quản trị viên không gian làm
                                                 việc</span>
@@ -135,8 +135,8 @@
                                             trị viên</button>
                                     </div>
                                 </li>
-                                @if(!empty($data['board_m']))
-                                @foreach ($data['board_m'] as $item)
+                                @if(!empty($board_m))
+                                @foreach ($board_m as $item)
                                     <li class="d-flex mt-1 mb-1">
                                         <div class="col-1">
                                             <a href="javascript: void(0);" class="avatar-group-item"
@@ -194,8 +194,8 @@
                         </div>
                         <div class="tab-pane" id="profile1" role="tabpanel">
                             <ul style="margin-left: -32px;">
-                                @if(!empty($data['board_m']))
-                                @foreach ($data['board_m_invite'] as $item)
+                                @if(!empty($board_m))
+                                @foreach ($board_m_invite as $item)
                                     <li class="d-flex justify-content-between">
                                         <div class="col-1">
                                             <a href="javascript: void(0);" class="avatar-group-item"
@@ -255,8 +255,8 @@
                         </div>
                         <div class="tab-pane" id="profile2" role="tabpanel">
                             <ul style="margin-left: -32px;">
-                                @if(!empty($data['board_m_viewer']))
-                                @foreach ($data['board_m_viewer'] as $item)
+                                @if(!empty($board_m_viewer))
+                                @foreach ($board_m_viewer as $item)
                                     <li class="d-flex justify-content-between">
                                         <div class="col-1">
                                             <a href="javascript: void(0);" class="avatar-group-item"
