@@ -64,7 +64,7 @@ class LoginGoogleController extends Controller
     public function destroy(string $id)
     {
         //
-    } 
+    }
     public function redirectToGoogle()
     {
        return Socialite::driver('google')->redirect();
@@ -79,11 +79,11 @@ class LoginGoogleController extends Controller
             $finduser = User::where('email', $user->email)->first();
             if ($finduser) {
                 Auth::login($finduser);
-                
+
                 // if (empty($finduser->password)) {
                 //     return redirect()->route('password.request')->with('message', 'Vui lòng đặt mật khẩu mới cho tài khoản của bạn.');
                 // }
-    
+
                 return redirect()->intended('home');
             } else {
                 $newUser = User::create([
@@ -91,7 +91,7 @@ class LoginGoogleController extends Controller
                     'email' => $user->email,
                     'social_id' => $user->id,
                     'password' => ''
-                ]);    
+                ]);
                 Auth::login($newUser);
                 // return redirect()->route('password.request')->with('message', 'Vui lòng đặt mật khẩu mới cho tài khoản của bạn.');
                 return redirect()->intended('home');
