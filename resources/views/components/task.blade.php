@@ -107,7 +107,7 @@
                                             </div>
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
-                                                @php $memberFollow = \App\Models\TaskMember::where('task_id', $task->id)
+                                                @php $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
                                                         ->where('user_id', auth()->id())
                                                         ->value('follow');
                                                 @endphp
