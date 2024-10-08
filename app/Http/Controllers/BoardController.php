@@ -39,25 +39,31 @@ class BoardController extends Controller
      */
     const PATH_UPLOAD = 'board.';
 
-    public function index()
+    public function index($workspaceId)
     {
         $userId = Auth::id();
 
-        // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
-        $boards = Board::where(function ($query) use ($userId) {
-            $query->where('created_at', $userId) // Kiểm tra nếu người dùng là người tạo
-            ->orWhereHas('boardMembers', function ($query) use ($userId) { // Hoặc là thành viên
-                $query->where('user_id', $userId);
-            });
+        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
+        $boards = Board::where('workspace_id', $workspaceId)
+            ->where(function ($query) use ($userId) {
+                $query->where('created_at', $userId) 
+                    ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    });
+            })
 
-        })
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
+                // Tính tổng số thành viên trong bảng
                 $board->total_members = $board->boardMembers->count();
+
+                // Kiểm tra xem user có đánh dấu sao cho bảng này không
                 $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->is_star == 1;
                 });
+
+                // Kiểm tra xem user có theo dõi bảng này không (follow = 1)
                 $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->follow == 1;
                 });
@@ -71,11 +77,12 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
+        // dd($workspaceId);
 
-        // Trả về view với danh sách bảng và bảng đã đánh dấu sao
+        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
         return view('homes.dashboard', compact('boards', 'board_star'));
-    }
 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -90,7 +97,6 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -108,12 +114,12 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
+             activity('Người dùng đã tạo bảng ')
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
-
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
@@ -186,6 +192,7 @@ class BoardController extends Controller
 //                    'description' => $event->getDescription(),
 //                ];
 //            }
+
         $taskCalendar = $tasks
             ->whereNotNull('start_date')
             ->whereNotNull('end_date');
@@ -200,6 +207,7 @@ class BoardController extends Controller
                 'end' => Carbon::parse($event->end_date)->toIso8601String(),
             ];
         }
+
 
 
         //lấy thành viên trong bảng
@@ -233,23 +241,23 @@ class BoardController extends Controller
             ->where('board_members.authorize', "Owner")
             ->where('board_members.board_id', $boardId)
             ->first();
-        $data = [
-            'board_m' => $board_m,
-            'board_m_invite' => $board_m_invite,
-            'board_m_viewer' => $board_m_viewer,
-            'board_owner' => $board_owner,
-            'user_id' => Auth::id()
-        ];
+//        $data = [
+//            'board_m' => $board_m,
+//            'board_m_invite' => $board_m_invite,
+//            'board_m_viewer' => $board_m_viewer,
+//            'board_owner' => $board_owner,
+//            'user_id' => Auth::id()
+//        ];
 
-        // dd($data);
-        //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'data')),
-            default => view('boards.index', compact('board', 'catalogs', 'activities', 'data')),
+
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+            default => view('boards.index', compact('board', 'catalogs','tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
+
 
 
         };

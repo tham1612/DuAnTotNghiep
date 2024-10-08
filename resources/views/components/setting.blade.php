@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
+<div class="offcanvas offcanvas-end" tabindex="-1" id="settingBoard" aria-labelledby="offcanvasRightLabel"
     style="width: 350px;">
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title text-center" id="offcanvasRightLabel">
@@ -69,7 +69,7 @@
     style="width: 350px;">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-toggle="offcanvas" data-bs-target="#settingBoard"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)">

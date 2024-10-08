@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\BoardMember;
+use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskMember;
 use Carbon\Carbon;
@@ -228,18 +229,30 @@ class TaskController extends Controller
     public function updateFolow(Request $request, string $id)
     {
         $data = $request->only(['user_id']);
+        $userId = $data['user_id']; // Lấy giá trị user_id từ mảng $data
 
-
-        $taskMember = TaskMember::where('task_id', $id)
-            ->where('user_id', $data)
+        $taskMemberFollow = Follow_member::where('task_id', $id)
+            ->where('user_id', $userId)
             ->first();
 
-        if ($taskMember) {
-            $newFollow = $taskMember->follow == 1 ? 0 : 1;
-            $taskMember->update(['follow' => $newFollow]);
+        if ($taskMemberFollow) {
+            // Đảo ngược trạng thái follow
+            $newFollow = $taskMemberFollow->follow == 1 ? 0 : 1;
+            $taskMemberFollow->update(['follow' => $newFollow]);
 
             return response()->json([
-                'follow' => $taskMember->follow, // Trả về trạng thái follow mới
+                'follow' => $taskMemberFollow->follow, // Trả về trạng thái follow mới
+            ]);
+        } else {
+            // Nếu chưa tồn tại, tạo mới
+            $newTaskMemberFollow = Follow_member::create([
+                'user_id' => $userId,
+                'task_id' => $id,
+                'follow' => 1
+            ]);
+
+            return response()->json([
+                'follow' => $newTaskMemberFollow->follow, // Trả về trạng thái follow mới
             ]);
         }
 

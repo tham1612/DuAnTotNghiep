@@ -49,7 +49,11 @@ class Task extends Model
 
     public function members()
     {
-        return $this->belongsToMany(User::class, 'task_members')->withPivot('follow');
+        return $this->belongsToMany(User::class, 'task_members');
+    }
+    public function membersFl()
+    {
+        return $this->belongsToMany(User::class, 'follow_members')->withPivot('follow');
     }
 
 }
