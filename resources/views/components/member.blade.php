@@ -161,7 +161,7 @@
                                             <section class="fs-12">
                                                 <p style="margin-bottom: 0px;" class="text-black">
                                                     {{ $item->name }}
-                                                    @if ($item->user_id == $data['user_id'])
+                                                    @if ($item->user_id == Auth::id())
                                                         <span class="text-success">(Bạn)</span>
                                                     @elseif($item->authorize === 'Sub_Owner')
                                                         <span class="text-primary">(Phó
