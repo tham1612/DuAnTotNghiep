@@ -55,10 +55,15 @@ class BoardController extends Controller
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
+                // Tính tổng số thành viên trong bảng
                 $board->total_members = $board->boardMembers->count();
+
+                // Kiểm tra xem user có đánh dấu sao cho bảng này không
                 $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->is_star == 1;
                 });
+
+                // Kiểm tra xem user có theo dõi bảng này không (follow = 1)
                 $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
                     return $member->user_id == $userId && $member->follow == 1;
                 });
@@ -92,7 +97,6 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -110,12 +114,12 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
+             activity('Người dùng đã tạo bảng ')
+            ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+            ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+            ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
+            ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
-
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
             DB::commit();
             return redirect()->route('home');
         } catch (\Exception $exception) {
