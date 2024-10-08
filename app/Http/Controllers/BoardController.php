@@ -241,15 +241,13 @@ class BoardController extends Controller
             'user_id' => Auth::id()
         ];
 
-        // dd($data);
-        //        $taskMembers=$tasks->pluck('members')->flatten();
         return match ($viewType) {
             'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'data')),
             'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'data')),
-            default => view('boards.index', compact('board', 'catalogs', 'activities', 'data')),
+            default => view('boards.index', compact('board', 'catalogs','tasks', 'activities', 'data')),
 
 
         };
