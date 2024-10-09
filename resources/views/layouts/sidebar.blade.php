@@ -21,6 +21,10 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
         ->first();
+    if ($workspaceChecked) {
+        // Đếm số thành viên trong workspace
+        $memberCount = \App\Models\WorkspaceMember::where('workspace_id', $workspaceChecked->workspace_id)->count();
+    }
     $workspaceMemberChecked = \App\Models\WorkspaceMember::query()
         ->where('workspace_id', $workspaceChecked->workspace_id)
         ->where('user_id', $userId)
@@ -95,6 +99,8 @@
                                     Công khai
                                 @endif
                             </span>
+                            <i class=" ri-subtract-line"></i>
+                            <span>{{ $memberCount }} thành viên</span>
                         </p>
                     </section>
                 </li>
