@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
-      data-sidebar-image="none" data-preloader="disable">
+      data-sidebar-image="none" data-preloader="enable" data-bs-theme="light">
 
 <head>
     <meta charset="utf-8"/>
@@ -14,9 +14,9 @@
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
     <!--Swiper slider css-->
     <link
-        href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
-        rel="stylesheet"
-        type="text/css"
+            href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
+            rel="stylesheet"
+            type="text/css"
     />
     <!-- Layout config Js -->
     <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
@@ -28,6 +28,7 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
+
 
     @if (request()->is('b/*'))
         <style>
@@ -144,221 +145,16 @@
     </div>
 </div>
 
-<div class="customizer-setting d-none d-md-block">
-    <div
-        class="btn-info rounded-pill shadow-lg btn btn-icon btn-lg p-2"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#theme-settings-offcanvas"
-        aria-controls="theme-settings-offcanvas"
-    >
-        <i class="mdi mdi-spin mdi-cog-outline fs-22"></i>
-    </div>
-</div>
-
-<!-- Theme Settings -->
-<div
-    class="offcanvas offcanvas-end border-0"
-    tabindex="-1"
-    id="theme-settings-offcanvas"
->
-    <div
-        class="d-flex align-items-center bg-primary bg-gradient p-3 offcanvas-header"
-    >
-        <h5 class="m-0 me-2 text-white">Theme Customizer</h5>
-
-        <button
-            type="button"
-            class="btn-close btn-close-white ms-auto"
-            id="customizerclose-btn"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-        ></button>
-    </div>
-    <div class="offcanvas-body p-0">
-        <div data-simplebar class="h-100">
-            <div class="p-4">
-                <h6 class="mb-0 fw-semibold text-uppercase">Layout</h6>
-                <p class="text-muted">Choose your layout</p>
-
-
-                <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Color Scheme</h6>
-                <p class="text-muted">Choose Light or Dark Scheme.</p>
-
-
-                <div id="sidebar-visibility">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">
-                        Sidebar Visibility
-                    </h6>
-                    <p class="text-muted">Choose show or Hidden sidebar.</p>
-
-
-                </div>
-
-                <div id="layout-width">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Layout Width</h6>
-                    <p class="text-muted">Choose Fluid or Boxed layout.</p>
-
-
-                </div>
-
-                <div id="layout-position">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">
-                        Layout Position
-                    </h6>
-                    <p class="text-muted">
-                        Choose Fixed or Scrollable Layout Position.
-                    </p>
-
-
-                </div>
-                <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Topbar Color</h6>
-                <p class="text-muted">Choose Light or Dark Topbar Color.</p>
-
-
-                <div id="sidebar-size">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Sidebar Size</h6>
-                    <p class="text-muted">Choose a size of Sidebar.</p>
-
-
-                </div>
-
-                <div id="sidebar-view">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Sidebar View</h6>
-                    <p class="text-muted">Choose Default or Detached Sidebar view.</p>
-
-
-                </div>
-                <div id="sidebar-color">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">
-                        Sidebar Color
-                    </h6>
-                    <p class="text-muted">Choose a color of Sidebar.</p>
-
-
-                </div>
-
-                <div id="sidebar-img">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">
-                        Sidebar Images
-                    </h6>
-
-                </div>
-
-                <div id="preloader-menu">
-                    <h6 class="mt-4 mb-0 fw-semibold text-uppercase">Preloader</h6>
-                    <p class="text-muted">Choose a preloader.</p>
-
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-check sidebar-setting card-radio">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="data-preloader"
-                                    id="preloader-view-custom"
-                                    value="enable"
-                                />
-                                <label
-                                    class="form-check-label p-0 avatar-md w-100"
-                                    for="preloader-view-custom"
-                                >
-                      <span class="d-flex gap-1 h-100">
-                        <span class="flex-shrink-0">
-                          <span
-                              class="bg-light d-flex h-100 flex-column gap-1 p-1"
-                          >
-                            <span
-                                class="d-block p-1 px-2 bg-primary-subtle rounded mb-2"
-                            ></span>
-                            <span
-                                class="d-block p-1 px-2 pb-0 bg-primary-subtle"
-                            ></span>
-                            <span
-                                class="d-block p-1 px-2 pb-0 bg-primary-subtle"
-                            ></span>
-                            <span
-                                class="d-block p-1 px-2 pb-0 bg-primary-subtle"
-                            ></span>
-                          </span>
-                        </span>
-                        <span class="flex-grow-1">
-                          <span class="d-flex h-100 flex-column">
-                            <span class="bg-light d-block p-1"></span>
-                            <span class="bg-light d-block p-1 mt-auto"></span>
-                          </span>
-                        </span>
-                      </span>
-                                    <!-- <div id="preloader"> -->
-                                    <div
-                                        id="status"
-                                        class="d-flex align-items-center justify-content-center"
-                                    >
-                                        <div
-                                            class="spinner-border text-primary avatar-xxs m-auto"
-                                            role="status"
-                                        >
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </div>
-                                    <!-- </div> -->
-                                </label>
-                            </div>
-                            <h5 class="fs-13 text-center mt-2">Enable</h5>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-check sidebar-setting card-radio">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    name="data-preloader"
-                                    id="preloader-view-none"
-                                    value="disable"
-                                />
-                                <label
-                                    class="form-check-label p-0 avatar-md w-100"
-                                    for="preloader-view-none"
-                                >
-                      <span class="d-flex gap-1 h-100">
-                        <span class="flex-shrink-0">
-                          <span
-                              class="bg-light d-flex h-100 flex-column gap-1 p-1"
-                          >
-                            <span
-                                class="d-block p-1 px-2 bg-primary-subtle rounded mb-2"
-                            ></span>
-                            <span
-                                class="d-block p-1 px-2 pb-0 bg-primary-subtle"
-                            ></span>
-                            <span
-                                class="d-block p-1 px-2 pb-0 bg-primary-subtle"
-                            ></span>
-                            <span
-                                class="d-block p-1 px-2 pb-0 bg-primary-subtle"
-                            ></span>
-                          </span>
-                        </span>
-                        <span class="flex-grow-1">
-                          <span class="d-flex h-100 flex-column">
-                            <span class="bg-light d-block p-1"></span>
-                            <span class="bg-light d-block p-1 mt-auto"></span>
-                          </span>
-                        </span>
-                      </span>
-                                </label>
-                            </div>
-                            <h5 class="fs-13 text-center mt-2">Disable</h5>
-                        </div>
-                    </div>
-                </div>
-                <!-- end preloader-menu -->
-            </div>
-        </div>
-    </div>
-
-</div>
 <script>
     const PATH_ROOT = "/theme/";
-
+    document.querySelectorAll('input[type="datetime-local"]').forEach(function (input) {
+        input.addEventListener('input', function (event) {
+            // Ngăn chặn nút xóa (clear button) hoạt động
+            if (this.value === "") {
+                this.value = this.defaultValue;
+            }
+        });
+    });
 </script>
 <!-- JAVASCRIPT -->
 <script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -376,6 +172,8 @@
 <!-- fgEmojiPicker js -->
 <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
 <!--jquery cdn-->
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <!--select2 cdn-->
@@ -576,6 +374,55 @@
                 }
             });
         });
+    });
+
+    // validate Catalog
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameCatalogInput = document.getElementById('nameCatalog');
+        const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
+
+        // Kiểm tra trạng thái của input
+        function validateCatalogForm() {
+            const isNameFilled = nameCatalogInput.value.trim() !== ''; 
+            btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
+        }
+
+        // Lắng nghe sự kiện khi người dùng nhập dữ liệu vào input
+        nameCatalogInput.addEventListener('input', validateCatalogForm);
+
+        // Kiểm tra form khi người dùng submit
+        function disableButtonOnSubmit() {
+            if (nameCatalogInput.value.trim() === '') {
+                return false;  // Ngăn submit nếu input trống
+            }
+            btnSubmitCatalog.disabled = true;  // Vô hiệu hóa nút sau khi submit
+            return true;  // Cho phép submit form
+        }
+    });
+
+    // validate task
+    document.addEventListener('DOMContentLoaded', function() {
+        const taskNameInputs = document.querySelectorAll('.taskNameInput');
+        const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
+
+        taskNameInputs.forEach((input, index) => {
+            const btnSubmit = btnSubmitTasks[index]; 
+            
+            input.addEventListener('input', function() {
+                const isTaskNameFilled = input.value.trim() !== ''; 
+                btnSubmit.disabled = !isTaskNameFilled; 
+            });
+        });
+
+        window.disableButtonOnSubmitTask = function(form) {
+            const input = form.querySelector('.taskNameInput');
+            const btnSubmit = form.querySelector('.btnSubmitTask');
+            if (input.value.trim() === '') {
+                return false;  
+            }
+            btnSubmit.disabled = true;  
+            return true;  
+        }
     });
 </script>
 
