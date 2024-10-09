@@ -191,9 +191,7 @@
                                         style="width: 30px;height: 30px">
                                         {{ strtoupper(substr($board->name, 0, 1)) }}
                                     </div>
-
                                     <span>{{ \Illuminate\Support\Str::limit($board->name, 30) }}</span>
-
                                 @endif
                             </a>
                         </li>
