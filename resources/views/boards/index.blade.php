@@ -187,15 +187,15 @@
                         Thêm thẻ
                     </button>
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        <form action="{{ route('tasks.store') }}" method="post">
+                        <form action="{{ route('tasks.store') }}" method="post" onsubmit="return disableButtonOnSubmitTask(this)">
                             @csrf
                             <div class="mb-2">
-                                <input type="text" class="form-control" id="exampleDropdownFormEmail" name="text"
-                                       placeholder="Nhập tên thẻ..."/>
+                                <input type="text" class="form-control taskNameInput" name="text"
+                                       placeholder="Nhập tên thẻ..." />
                                 <input type="hidden" name="catalog_id" value="{{ $data->id }}">
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
                                     Thêm thẻ
                                 </button>
                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
