@@ -27,31 +27,32 @@
                         aria-expanded="false" data-bs-offset="0,-50">
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
-                <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="dropdownMenuOffset3">
-                    <form action="{{ route('catalogs.store') }}" method="post" onsubmit="disableButtonOnSubmit()">
-                        @csrf
-                        <div class="mb-2">
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                                   value="{{ old('name') }}" placeholder="Nhập tên danh sách..."/>
-                            @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <input type="hidden" name="board_id" value="{{ $board->id }}">
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <button type="submit" class="btn btn-primary">
-                                Thêm danh sách
-                            </button>
-                            <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
-                               aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
-                        </div>
-                    </form>
+                    <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
+                        <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                            @csrf
+                            <div class="mb-2">
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
+                                    value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <input type="hidden" name="board_id" value="{{ $board->id }}">
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
+                                    Thêm danh sách
+                                </button>
+                                <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
+                                    aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;" class=" me-3 ms-3">
             @if (!empty($catalogs))
                 @foreach ($catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
@@ -109,26 +110,18 @@
                                     </button>
                                     <div class="dropdown-menu p-3" style="width: 285px"
                                          aria-labelledby="dropdownMenuOffset3">
-                                        <form action="{{ route('tasks.store') }}" method="POST"
-                                              onsubmit="disableButtonOnSubmit()">
+                                        <form action="{{ route('tasks.store') }}" method="post" onsubmit="return disableButtonOnSubmitTask(this)">
                                             @csrf
                                             <div class="mb-2">
-                                                <input type="text"
-                                                       class="form-control @error('text') is-invalid @enderror"
-                                                       name="text" value="{{ old('text') }}"
-                                                       placeholder="Nhập tên thẻ..."/>
-                                                @error('text')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                                <input type="text" class="form-control taskNameInput" name="text"
+                                                       placeholder="Nhập tên thẻ..." />
                                                 <input type="hidden" name="catalog_id" value="{{ $catalog->id }}">
                                             </div>
                                             <div class="mb-2 d-flex align-items-center">
-                                                <button type="submit" class="btn btn-primary">
+                                                <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
                                                     Thêm thẻ
                                                 </button>
-                                                <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown"
-                                                   role="button" tabindex="0" aria-label="Close"
-                                                   data-dropdown-id="dropdownMenuOffset{{ $catalog->id }}"></i>
+                                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                             </div>
                                         </form>
                                     </div>
