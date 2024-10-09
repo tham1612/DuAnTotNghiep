@@ -46,7 +46,7 @@ class BoardController extends Controller
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) 
+                $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     });
