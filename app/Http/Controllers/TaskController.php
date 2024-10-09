@@ -89,15 +89,10 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->all();
-        $data['start_date'] = isset($data['start']) ? $data['start'] : $data['start_date'];
-        $data['end_date'] = isset($data['end']) ? $data['end'] : $data['end_date'];
-
-        if (isset($data['changeDate']) && isset($data['id_gg_calendar'])) {
-            $this->googleApiClient->updateEvent($data);
-        } else {
-            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+//        dd($data);
+        if (isset($data['start_date']) || isset($data['end_date'])) {
+            $this->updateCalendar($request, $id);
         }
-
         $task->update($data);
 
 
@@ -229,22 +224,22 @@ class TaskController extends Controller
     public function updateFolow(Request $request, string $id)
     {
         $data = $request->only(['user_id']);
-        $userId = $data['user_id']; // Lấy giá trị user_id từ mảng $data
+        $userId = $data['user_id'];
 
         $taskMemberFollow = Follow_member::where('task_id', $id)
             ->where('user_id', $userId)
             ->first();
 
         if ($taskMemberFollow) {
-            // Đảo ngược trạng thái follow
+
             $newFollow = $taskMemberFollow->follow == 1 ? 0 : 1;
             $taskMemberFollow->update(['follow' => $newFollow]);
 
             return response()->json([
-                'follow' => $taskMemberFollow->follow, // Trả về trạng thái follow mới
+                'follow' => $taskMemberFollow->follow,
             ]);
         } else {
-            // Nếu chưa tồn tại, tạo mới
+
             $newTaskMemberFollow = Follow_member::create([
                 'user_id' => $userId,
                 'task_id' => $id,
@@ -252,11 +247,27 @@ class TaskController extends Controller
             ]);
 
             return response()->json([
-                'follow' => $newTaskMemberFollow->follow, // Trả về trạng thái follow mới
+                'follow' => $newTaskMemberFollow->follow,
             ]);
         }
 
     }
 
+    public function updateCalendar(Request $request, string $id)
+    {
+        $task = Task::query()->findOrFail($id);
+        $data = $request->all();
+        $data['id_gg_calendar'] = $task->id_google_calendar;
+//        dd($data);
+        if ($task->id_google_calendar) {
+//            dd('ton tai');
+            $this->googleApiClient->updateEvent($data);
+        } else {
+//            dd('khong ton tai');
+            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+        }
+
+        $task->update($data);
+    }
 
 }

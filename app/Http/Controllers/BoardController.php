@@ -39,18 +39,19 @@ class BoardController extends Controller
      */
     const PATH_UPLOAD = 'board.';
 
-    public function index()
+    public function index($workspaceId)
     {
         $userId = Auth::id();
 
-        // Lấy tất cả các bảng mà người dùng là người tạo hoặc là thành viên
-        $boards = Board::where(function ($query) use ($userId) {
-            $query->where('created_at', $userId) // Kiểm tra nếu người dùng là người tạo
-            ->orWhereHas('boardMembers', function ($query) use ($userId) { // Hoặc là thành viên
-                $query->where('user_id', $userId);
-            });
+        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
+        $boards = Board::where('workspace_id', $workspaceId)
+            ->where(function ($query) use ($userId) {
+                $query->where('created_at', $userId)
+                    ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    });
+            })
 
-        })
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -76,11 +77,12 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
+        // dd($workspaceId);
 
-        // Trả về view với danh sách bảng và bảng đã đánh dấu sao
+        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
         return view('homes.dashboard', compact('boards', 'board_star'));
-    }
 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -179,21 +181,27 @@ class BoardController extends Controller
 
 
         $listEvent = array();
-//            lay dư lieu voi gg calendar
-//            foreach ($events as $event) {
-//                $listEvent[] = [
-//                    'email' => $event->getCreator()->getEmail(),
-//                    'id_google_calendar' => $event->getId(),
-//                    'title' => $event->getSummary(),
-//                    'start' => $event->getStart()->getDateTime() ?: $event->getStart()->getDate(),
-//                    'end' => $event->getEnd()->getDateTime() ?: $event->getEnd()->getDate(),
-//                    'description' => $event->getDescription(),
-//                ];
-//            }
 
-        $taskCalendar = $tasks
-            ->whereNotNull('start_date')
-            ->whereNotNull('end_date');
+        $taskCalendar = Task::query()
+            ->whereHas('catalog', function ($query) use ($id) {
+                $query->where('board_id', $id);
+            })
+            ->get()
+            ->filter(function ($task) {
+                // Nếu cả hai đều không tồn tại, ẩn
+                if (is_null($task->start_date) && is_null($task->end_date)) {
+                    return false;
+                }
+
+                // Nếu chỉ tồn tại một trong hai, gán giá trị của cái còn lại
+                if (is_null($task->start_date)) {
+                    $task->start_date = $task->end_date;
+                } elseif (is_null($task->end_date)) {
+                    $task->end_date = $task->start_date;
+                }
+                // Hiển thị task nếu đã xử lý xong
+                return true;
+            });
 //        dd($taskCalendar);
         foreach ($taskCalendar as $event) {
             $listEvent[] = [
@@ -205,7 +213,6 @@ class BoardController extends Controller
                 'end' => Carbon::parse($event->end_date)->toIso8601String(),
             ];
         }
-
 
 
         //lấy thành viên trong bảng
@@ -249,13 +256,12 @@ class BoardController extends Controller
 
         return match ($viewType) {
 
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-            default => view('boards.index', compact('board', 'catalogs','tasks', 'activities', 'board_m','board_m_invite','board_m_viewer','board_owner')),
-
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
 
 
         };
@@ -279,6 +285,7 @@ class BoardController extends Controller
 
     public function updateBoardMember(Request $request, string $id)
     {
+//        dd($request->all());
         $data = $request->only(['user_id', 'board_id']);
 
 
