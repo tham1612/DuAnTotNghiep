@@ -204,11 +204,11 @@
         <div class="mt-2 cursor-pointer">
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
+                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmitTask(this)">
                     @csrf
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('text') is-invalid @enderror" name="text"
+                        <input type="text" class="form-control taskNameInput" name="text"
                                value="{{ old('text') }}" placeholder="Nhập tên thẻ..."/>
                         @error('text')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -223,7 +223,7 @@
                         </select>
                     </div>
                     <div class="mb-2 d-grid">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit"  class="btn btn-primary btnSubmitTask" disabled>
                             Thêm thẻ
                         </button>
                     </div>

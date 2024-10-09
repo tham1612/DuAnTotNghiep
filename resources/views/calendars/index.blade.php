@@ -148,7 +148,7 @@
                 var start = moment(event.start).format('YYYY-MM-DD HH:mm:00');
                 var end = moment(event.end == null ? event.start : event.end).format('YYYY-MM-DD HH:mm:00');
                 $.ajax({
-                    url: `/tasks/${id}`,
+                    url: `/tasks/updateCalendar/${id}`,
                     type: "PUT",
                     dataType: "json",
                     data: {
@@ -159,8 +159,8 @@
                         end,
                     },
                     success: function (response) {
-                        isAllowedToDrag(event) ? alert(response.message) :
-                            alert('Bạn không có quyền thay đổi');
+                        // isAllowedToDrag(event) ? alert(response.message) :
+                        //     alert('Bạn không có quyền thay đổi');
 
                     }
                 })

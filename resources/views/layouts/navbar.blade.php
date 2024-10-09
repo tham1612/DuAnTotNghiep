@@ -139,8 +139,8 @@
                 <!--  bộ lọc -->
                 <div class="d-flex justify-content-center align-items-center p-1 cursor-pointer"
                      data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                    <i class="ri-filter-3-line fs-20"></i>
-                    <span class="readonly">Bộ lọc</span>
+                    <i class="ri-filter-3-line fs-24"></i>
+                    <span class="readonly fs-16">Bộ lọc</span>
                 </div>
                 <div class="fs-20 fw-lighter text-secondary">|</div>
                 <!-- setting bộ lọc -->
@@ -254,7 +254,7 @@
                                            title="{{ $boardMember['name'] }}">
                                             @if ($boardMember['image'])
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                     alt="" class="rounded-circle avatar-sm">
+                                                     alt="" class="rounded-circle avatar-sm object-fit-cover" style="width: 40px;height: 40px">
                                             @else
                                                 <div class="avatar-sm">
                                                     <div class="avatar-title rounded-circle bg-light text-primary">
@@ -289,7 +289,7 @@
                     </div>
                     <!-- menu bảng -->
                     <div class="d-flex justify-content-center align-items-center p-2 cursor-pointer">
-                        <i class="ri-list-settings-line fs-15" data-bs-toggle="offcanvas"
+                        <i class="ri-list-settings-line fs-20" data-bs-toggle="offcanvas"
                            data-bs-target="#settingBoard" aria-controls="offcanvasRight"></i>
                     </div>
                 </section>
