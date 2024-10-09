@@ -29,6 +29,7 @@
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
 
+
     @if (request()->is('b/*'))
         <style>
             .dropdown-item p {
@@ -171,6 +172,8 @@
 <!-- fgEmojiPicker js -->
 <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
 <!--jquery cdn-->
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <!--select2 cdn-->
