@@ -89,15 +89,10 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->all();
-        $data['start_date'] = isset($data['start']) ? $data['start'] : $data['start_date'];
-        $data['end_date'] = isset($data['end']) ? $data['end'] : $data['end_date'];
-
-        if (isset($data['changeDate']) && isset($data['id_gg_calendar'])) {
-            $this->googleApiClient->updateEvent($data);
-        } else {
-            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+//        dd($data);
+        if (isset($data['start_date']) || isset($data['end_date'])) {
+            $this->updateCalendar($request, $id);
         }
-
         $task->update($data);
 
 
@@ -258,5 +253,21 @@ class TaskController extends Controller
 
     }
 
+    public function updateCalendar(Request $request, string $id)
+    {
+        $task = Task::query()->findOrFail($id);
+        $data = $request->all();
+        $data['id_gg_calendar'] = $task->id_google_calendar;
+//        dd($data);
+        if ($task->id_google_calendar) {
+//            dd('ton tai');
+            $this->googleApiClient->updateEvent($data);
+        } else {
+//            dd('khong ton tai');
+            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+        }
+
+        $task->update($data);
+    }
 
 }
