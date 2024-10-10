@@ -14,9 +14,9 @@
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
     <!--Swiper slider css-->
     <link
-            href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
-            rel="stylesheet"
-            type="text/css"
+        href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
+        rel="stylesheet"
+        type="text/css"
     />
     <!-- Layout config Js -->
     <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
@@ -28,17 +28,24 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
+    <style>
+        /* Giới hạn chiều cao CKEditor */
+        .ck-editor__editable_inline {
+            min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
 
+        }
+    </style>
     @if (request()->is('b/*'))
-        <style>
-            .dropdown-item p {
-                overflow-wrap: break-word;
-                /* Cho phép xuống dòng */
-                white-space: normal;
-                /* Cho phép nội dung xuống dòng */
-                width: 200%;
-                /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
-            }
+
+        <style >
+        .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+        }
         </style>
     @endif
     @yield('style')
@@ -303,18 +310,18 @@
 </script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Tắt nút "Gửi" khi trang tải
         $('#sendBtn').prop('disabled', true);
 
         // Kiểm tra khi người dùng nhập vào ô nhập liệu
-        $('#prompt').on('input', function() {
+        $('#prompt').on('input', function () {
             // Nếu ô nhập không trống, bật nút "Gửi", ngược lại tắt nút
             $('#sendBtn').prop('disabled', $(this).val().trim() === '');
         });
 
         // Bắt sự kiện khi form được submit
-        $('#chatinput-form').on('submit', function(e) {
+        $('#chatinput-form').on('submit', function (e) {
             e.preventDefault(); // Ngăn chặn form submit mặc định
 
             // Lấy giá trị từ ô nhập liệu
@@ -344,7 +351,7 @@
                 data: {
                     prompt: prompt
                 },
-                success: function(response) {
+                success: function (response) {
                     // Format response text
                     let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g,
                         '<strong>$1</strong>');
@@ -360,11 +367,11 @@
                     $('#chat-conversation').scrollTop($('#chat-conversation')[0]
                         .scrollHeight);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.log(xhr.responseText);
                     alert('Đã có lỗi xảy ra!');
                 },
-                complete: function() {
+                complete: function () {
                     // Re-enable nút "Gửi" và ô nhập sau khi yêu cầu hoàn tất
                     $('#sendBtn').prop('disabled', false);
                     $('#prompt').prop('disabled', false);

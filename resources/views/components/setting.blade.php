@@ -31,7 +31,9 @@
                     <p class="ms-3 fs-15 mt-3">Mục đã lưu trữ</p>
                 </li>
                 <hr>
-                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
+                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#generalSettingBoard">
                     <i class="ri-settings-3-line fs-22"></i>
                     <p class="ms-3 fs-15 mt-3">Cài đặt</p>
                 </li>
@@ -199,7 +201,8 @@
                         <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
 
                         <div class="row p-3 ">
-                            <div class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle">
+                            <div
+                                class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle">
                                 <p class="fs-16 text-danger mt-3">Teen danh sach</p>
                                 <button class="btn btn-outline-dark">
                                     Khôi phục
@@ -253,6 +256,35 @@
                             </p>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{--cai dat--}}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="generalSettingBoard" aria-labelledby="storageBoardLabel"
+     style="width: 350px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-center" id="detailBoardLabel">
+            Thiết lập
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0 overflow-hidden">
+        <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
+            <div class="">
+                <p class="fw-bold fs-16">Không gian làm việc</p>
+                <div>
+                    <span data-bs-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">Thay đổi quyền
+                    </span>
+                    <div
+                        class="dropdown-menu dropdown-menu-md p-3 w-100">
+                        @include('dropdowns.switchWorkspace')
+                    </div>
                 </div>
             </div>
         </div>

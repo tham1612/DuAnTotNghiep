@@ -46,7 +46,7 @@ class BoardController extends Controller
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
-                $query->where('created_at', $userId) 
+                $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     });
@@ -175,7 +175,7 @@ class BoardController extends Controller
         $activities = Activity::where('properties->board_id', $boardId)->get();
 
         //  dd($activities);
-        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+//        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
         $boardName = $board->name; // Lấy tên của board
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
