@@ -14,9 +14,9 @@
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
     <!--Swiper slider css-->
     <link
-            href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
-            rel="stylesheet"
-            type="text/css"
+        href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
+        rel="stylesheet"
+        type="text/css"
     />
     <!-- Layout config Js -->
     <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
@@ -28,18 +28,26 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
+    <style>
+        /* Giới hạn chiều cao CKEditor */
+        .ck-editor__editable_inline {
+            min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
 
+
+        }
+    </style>
 
     @if (request()->is('b/*'))
-        <style>
-            .dropdown-item p {
-                overflow-wrap: break-word;
-                /* Cho phép xuống dòng */
-                white-space: normal;
-                /* Cho phép nội dung xuống dòng */
-                width: 200%;
-                /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
-            }
+
+        <style >
+        .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+        }
         </style>
     @endif
     @yield('style')
@@ -306,18 +314,18 @@
 </script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Tắt nút "Gửi" khi trang tải
         $('#sendBtn').prop('disabled', true);
 
         // Kiểm tra khi người dùng nhập vào ô nhập liệu
-        $('#prompt').on('input', function() {
+        $('#prompt').on('input', function () {
             // Nếu ô nhập không trống, bật nút "Gửi", ngược lại tắt nút
             $('#sendBtn').prop('disabled', $(this).val().trim() === '');
         });
 
         // Bắt sự kiện khi form được submit
-        $('#chatinput-form').on('submit', function(e) {
+        $('#chatinput-form').on('submit', function (e) {
             e.preventDefault(); // Ngăn chặn form submit mặc định
 
             // Lấy giá trị từ ô nhập liệu
@@ -347,7 +355,7 @@
                 data: {
                     prompt: prompt
                 },
-                success: function(response) {
+                success: function (response) {
                     // Format response text
                     let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g,
                         '<strong>$1</strong>');
@@ -363,17 +371,66 @@
                     $('#chat-conversation').scrollTop($('#chat-conversation')[0]
                         .scrollHeight);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.log(xhr.responseText);
                     alert('Đã có lỗi xảy ra!');
                 },
-                complete: function() {
+                complete: function () {
                     // Re-enable nút "Gửi" và ô nhập sau khi yêu cầu hoàn tất
                     $('#sendBtn').prop('disabled', false);
                     $('#prompt').prop('disabled', false);
                 }
             });
         });
+    });
+
+    // validate Catalog
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameCatalogInput = document.getElementById('nameCatalog');
+        const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
+
+        // Kiểm tra trạng thái của input
+        function validateCatalogForm() {
+            const isNameFilled = nameCatalogInput.value.trim() !== ''; 
+            btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
+        }
+
+        // Lắng nghe sự kiện khi người dùng nhập dữ liệu vào input
+        nameCatalogInput.addEventListener('input', validateCatalogForm);
+
+        // Kiểm tra form khi người dùng submit
+        function disableButtonOnSubmit() {
+            if (nameCatalogInput.value.trim() === '') {
+                return false;  // Ngăn submit nếu input trống
+            }
+            btnSubmitCatalog.disabled = true;  // Vô hiệu hóa nút sau khi submit
+            return true;  // Cho phép submit form
+        }
+    });
+
+    // validate task
+    document.addEventListener('DOMContentLoaded', function() {
+        const taskNameInputs = document.querySelectorAll('.taskNameInput');
+        const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
+
+        taskNameInputs.forEach((input, index) => {
+            const btnSubmit = btnSubmitTasks[index]; 
+            
+            input.addEventListener('input', function() {
+                const isTaskNameFilled = input.value.trim() !== ''; 
+                btnSubmit.disabled = !isTaskNameFilled; 
+            });
+        });
+
+        window.disableButtonOnSubmitTask = function(form) {
+            const input = form.querySelector('.taskNameInput');
+            const btnSubmit = form.querySelector('.btnSubmitTask');
+            if (input.value.trim() === '') {
+                return false;  
+            }
+            btnSubmit.disabled = true;  
+            return true;  
+        }
     });
 </script>
 
