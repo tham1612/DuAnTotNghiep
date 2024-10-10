@@ -45,7 +45,7 @@
                                 <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia với tư
                                     cách thành viên</p>
                                 <span><a href="">Sao chép liên kết</a></span>
-                                <span><i class="ri-checkbox-blank-circle-fill"></i></span>
+                                <span>-</span>
                                 <span><a href="">Xóa liên kết</a></span>
                             </section>
                         </div>
@@ -59,7 +59,7 @@
                     <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3" role="tablist">
                         <li class="nav-item d-flex align-items-center justify-content-between">
                             <a class="nav-link active" data-bs-toggle="tab" href="#home1" role="tab">
-                                Thành viên trong không gian làm việc
+                                Thành viên
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
 
@@ -124,9 +124,8 @@
 
                                             </p>
                                             <span> {{ $board_owner->name }}</span>
-                                            <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                            <span>Quản trị viên không gian làm
-                                                việc</span>
+                                            <span>-</span>
+                                            <span>Quản trị viên của bảng</span>
                                             @endif
                                         </section>
                                     </div>
