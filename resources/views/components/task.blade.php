@@ -359,18 +359,25 @@
                                                         50%
                                                     </div>
                                                 </div>
+                                                @php
+
+                                                 $checklistItems=\App\Models\CheckListItem::where('check_list_id',$checklist->id)
+                                                ->get();
+                                                @endphp
                                                 <div class="table-responsive table-hover table-card">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
+                                                        @if($checklistItems)
+                                                            @foreach($checklistItems as $checklistItem)
                                                         <tr class="cursor-pointer">
                                                             <td class="col-1">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                           value="" id="cardtableCheck01"/>
+                                                                    <input class="form-check-input" type="checkbox" name="check_list_id"
+                                                                           value="{{$checklistItem->id}}" id="check_list_{{$checklistItem->id}}"/>
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <p>checklist1</p>
+                                                                <p>{{$checklistItem->name}}</p>
                                                             </td>
                                                             <td class=" d-flex justify-content-end">
                                                                 <div>
@@ -404,52 +411,27 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
+                                                            @endforeach
+                                                        @endif
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                            <td class="col-1">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                           value=""/>
-                                                                </div>
-                                                            </td>
+{{--                                                            <td class="col-1">--}}
+{{--                                                                <div class="form-check">--}}
+{{--                                                                    <input class="form-check-input" type="checkbox"--}}
+{{--                                                                           value=""/>--}}
+{{--                                                                </div>--}}
+{{--                                                            </td>--}}
                                                             <td colspan="2">
-                                                                <form action="" class="w-100 " aria-labelledby="">
-                                                                    <input type="text" name=""
+                                                                <form id="FormCheckListItem" >
+                                                                    <input type="hidden" name="check_list_id" id="check_list_id" value="{{$checklist->id}}">
+                                                                    <input type="text" name="name" id="name"
                                                                            class="form-control checklistItem"
                                                                            placeholder="Thêm mục"/>
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button class="btn btn-primary">Thêm
-                                                                            </button>
-                                                                            <button
-                                                                                class="btn btn-outline-dark disable-checklist">
-                                                                                Hủy
-                                                                            </button>
+                                                                            <button type="submit" class="btn btn-primary">Thêm</button>
+                                                                            <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
-                                                                        <div class="d-flex">
-                                                                            <div>
-                                                                                <i class="ri-time-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false">Ngày hết hạn
-                                                                        </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    @include('dropdowns.date')
-                                                                                </div>
-                                                                            </div>
 
-                                                                            <div>
-                                                                                <i class="ri-user-add-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false">Chỉ định
-                                                                        </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    @include('dropdowns.member')
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
                                                                 </form>
                                                             </td>
@@ -846,5 +828,32 @@
             }
         });
     }
+    $(document).ready(function() {
+        $('#FormCheckListItem').on('submit', function(e) {
+            e.preventDefault();
+            $(this).find('button[type="submit"]').prop('disabled', true);
+
+            var formData = {
+                check_list_id: $('#check_list_id').val(),
+                name: $('#name').val(),
+            };
+            console.log(formData);
+            $.ajax({
+                url: `/tasks/checklist/checklistItem/create`,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    console.log('CheckListItem đã được thêm thành công!', response);
+                    $(this).find('button[type="submit"]').prop('disabled', false);
+                },
+                error: function(xhr) {
+                    alert('Đã xảy ra lỗi!');
+                    console.log(xhr.responseText);
+                    $(this).find('button[type="submit"]').prop('disabled', false);
+                }
+            });
+        });
+    });
+
 
 </script>
