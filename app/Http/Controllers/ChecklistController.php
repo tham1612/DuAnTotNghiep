@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CheckList;
+use App\Models\CheckListItem;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,14 @@ class ChecklistController extends Controller
         CheckList::create($data);
         return response()->json([
             'success' => "them thao tác thành công",
+        ]);
+    }
+    public function createChecklistItem(Request $request)
+    {
+        $data = $request->except(['_token', '_method']);
+        CheckListItem::create($data);
+        return response()->json([
+            'success' => "them ChecklistItem thành công",
         ]);
     }
 
