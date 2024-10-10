@@ -28,12 +28,10 @@
 
                         @if (!empty($tasks))
                             @foreach ($tasks as $task)
+                                <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                 <tr>
-                                    <input type="hidden" name="" id="id_gg_calendar_{{$task->id}}"
-                                           value="{{$task->id_google_calendar}}">
                                     <td>{{ $loop->iteration  }}</td>
-                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}"
-                                        id="text_{{ $task->id }}">
+                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
                                         {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                     </td>
                                     <td>
@@ -350,10 +348,9 @@
                 catalog_id: $('#catalog_id_' + taskId).val(),
                 start_date: $('#start_date_' + taskId).val(),
                 end_date: $('#end_date_' + taskId).val(),
-                id_gg_calendar: $('#id_gg_calendar_' + taskId).val(),
                 text: $('#text_' + taskId).val(),
                 id: taskId,
-                changeDate: true,
+                changeDate: true
             };
             console.log(taskId);
             $.ajax({

@@ -105,9 +105,15 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
+        Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
+        Route::post('/tasks/checklist/create', [\App\Http\Controllers\ChecklistController::class, 'create'])
+        ->name('checklist.create');
+        Route::put('/tasks/{checklist}/checklist', [\App\Http\Controllers\ChecklistController::class, 'update'])
+            ->name('checklist.update');
     });
+
 
 Route::get('inboxs', function () {
     return view('Inboxs.index');
