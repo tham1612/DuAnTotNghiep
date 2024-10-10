@@ -59,7 +59,7 @@
                     <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3" role="tablist">
                         <li class="nav-item d-flex align-items-center justify-content-between">
                             <a class="nav-link active" data-bs-toggle="tab" href="#home1" role="tab">
-                                Thành viên trong không gian làm việc
+                                Thành viên trong bảng
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
 
@@ -73,13 +73,7 @@
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
                                 style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite)){{ $board_m_invite->count() }}@endif</span>
                         </li>
-                        <li class="nav-item d-flex align-items-center justify-content-between">
-                            <a class="nav-link" data-bs-toggle="tab" href="#profile2" role="tab">
-                                Người xem
-                            </a>
-                            <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($board_m_viewer)  ){{ $board_m_viewer->count() }}@endif</span>
-                        </li>
+
 
                     </ul>
 
@@ -249,65 +243,6 @@
                                         </div>
                                     </li>
                                     <br>
-                                @endforeach
-                                @endif
-                            </ul>
-                        </div>
-                        <div class="tab-pane" id="profile2" role="tabpanel">
-                            <ul style="margin-left: -32px;">
-                                @if(!empty($board_m_viewer))
-                                @foreach ($board_m_viewer as $item)
-                                    <li class="d-flex justify-content-between">
-                                        <div class="col-1">
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                data-bs-placement="top" title="Nancy">
-                                                @if ($item->image)
-                                                    <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                        alt="" class="rounded-circle avatar-xs" />
-                                                @else
-                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                        style="width: 25px;height: 25px">
-                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
-                                                    </div>
-                                                    <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
-                                                        <i class=" ri-arrow-drop-down-line fs-20"></i>
-                                                    </span>
-                                                @endif
-                                            </a>
-                                        </div>
-                                        <div class="col-7 d-flex flex-column">
-                                            <section class="fs-12">
-                                                <p style="margin-bottom: 0px;" class="text-black">
-                                                    {{ $item->name }}
-                                                    <span class="text-black">(Người
-                                                        xem)</span>
-                                                </p>
-                                                <span>@ {{ $item->name }}</span>
-                                                <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                                <span>Tham quan không gian làm việc</span>
-                                            </section>
-                                        </div>
-                                        <div class="col-4 d-flex justify-content-end">
-                                            {{-- <form onsubmit="disableButtonOnSubmit()"
-                                                                                action="{{ route('accept_member') }}"
-                                                                                method="post">
-                                                                                @method('PUT')
-                                                                                @csrf
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->user_id }}"
-                                                                                    name="user_id">
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->workspace_id }}"
-                                                                                    name="workspace_id">
-                                                                                <input type="hidden" value="NULL"
-                                                                                    name="type_update">
-                                                                                <button class="btn btn-primary me-2"
-                                                                                    type="submit">Thêm thành viên</button>
-                                                                            </form> --}}
-                                        </div>
-                                    </li>
                                 @endforeach
                                 @endif
                             </ul>
