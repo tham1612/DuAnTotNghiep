@@ -166,18 +166,18 @@
                                             <p class="fs-18 ms-2 mt-1">Mô tả</p>
                                         </section>
                                         <div class="ps-4">
-                                            {{--                                    <textarea name="description" id="description_{{ $task->id}}" cols="25" rows="5"--}}
-                                            {{--                                              class="form-control bg-light"--}}
-                                            {{--                                              placeholder="Thêm mô tả chi tiết"--}}
-                                            {{--                                              onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>--}}
-                                            <form class=" flex-column">
-                                            <textarea name="content" class="form-control "
-                                                      id="description_{{ $task->id}}" placeholder="Viết bình luận"
-                                            >{{$task->description}}</textarea>
-                                                <button class="btn btn-primary mt-2 writeComment" data-value="{{$task->id}}">
-                                                    Lưu
-                                                </button>
-                                            </form>
+                                                                                <textarea name="description" id="description_{{ $task->id}}" cols="25" rows="5"
+                                                                                          class="form-control bg-light"
+                                                                                          placeholder="Thêm mô tả chi tiết"
+                                                                                          onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
+{{--                                            <form class=" flex-column">--}}
+{{--                                            <textarea name="content" class="form-control "--}}
+{{--                                                      id="description_{{ $task->id}}" placeholder="Viết bình luận"--}}
+{{--                                            >{{$task->description}}</textarea>--}}
+{{--                                                <button class="btn btn-primary mt-2 writeComment" data-value="{{$task->id}}">--}}
+{{--                                                    Lưu--}}
+{{--                                                </button>--}}
+{{--                                            </form>--}}
                                         </div>
                                     </div>
                                     @if(false)
@@ -294,104 +294,6 @@
                                                 </div>
 
                                             </div>
-<<<<<<< HEAD
-
-                                        </div>
-                                        <div class="ps-4">
-                                            <strong>Tệp & liên kết</strong>
-                                            <div class="table-responsive table-hover table-card">
-                                                <table class="table table-nowrap mt-4">
-                                                    <tbody>
-                                                    <tr class="cursor-pointer">
-                                                        <td class="col-1">
-                                                            <i class="ri-table-line fs-20 text-primary"></i>
-                                                        </td>
-                                                        <td class="text-start">FPT Polytecnic</td>
-                                                        <td class="text-end">
-                                                            <i class="ri-more-fill fs-20 cursor-pointer"
-                                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                                               aria-expanded="false"></i>
-                                                            <div class="dropdown-menu dropdown-menu-md"
-                                                                 style="padding: 15px 15px 0 15px">
-                                                                <h5 class="text-center">Thao tác mục</h5>
-                                                                <p class="mt-2">Chỉnh sửa</p>
-                                                                <p class="mt-2">Nhận xét</p>
-                                                                <p>Xóa</p>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- việc cần làm -->
-                                    @php    $checklist = \App\Models\CheckList::where('task_id', $task->id)
-                                           ->first();
-                                    @endphp
-                                    @if(!empty($checklist))
-                                    <div class="row mt-3">
-                                        <section class="d-flex justify-content-between">
-                                            <section class="d-flex">
-                                                <i class="ri-checkbox-line fs-22"></i>
-                                                <p class="fs-18 ms-2 mt-1">{{$checklist->name}}</p>
-                                            </section>
-                                            <button class="btn btn-outline-dark" style="height: 35px"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                Xóa
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                <h5 class="text-center">Bạn có muốn xóa Việc cần làm</h5>
-
-                                                <p>Danh sách sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
-
-                                                <button class="btn btn-danger w-100">Xóa danh sách công việc</button>
-                                            </div>
-                                        </section>
-
-                                        <div class="ps-4">
-                                            <div class="progress animated-progress bg-light-subtle"
-                                                 style="height: 20px">
-                                                <div class="progress-bar bg-success" role="progressbar"
-                                                     style="width: 50%"
-                                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    50%
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive table-hover table-card">
-                                                <table class="table table-nowrap mt-4">
-                                                    <tbody>
-                                                    <tr class="cursor-pointer">
-                                                        <td class="col-1">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                       value="" id="cardtableCheck01"/>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>checklist1</p>
-                                                        </td>
-                                                        <td class=" d-flex justify-content-end">
-                                                            <div>
-                                                                <i class="ri-time-line fs-20 ms-2"
-                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                   aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                    @include('dropdowns.date')
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <i class="ri-user-add-line fs-20 ms-2"
-                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                   aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                    @include('dropdowns.member')
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <i class="ri-more-fill fs-20 ms-2"
-=======
                                             <div class="ps-4">
                                                 <strong>Tệp & liên kết</strong>
                                                 <div class="table-responsive table-hover table-card">
@@ -404,7 +306,6 @@
                                                             <td class="text-start">FPT Polytecnic</td>
                                                             <td class="text-end">
                                                                 <i class="ri-more-fill fs-20 cursor-pointer"
->>>>>>> a43b615c873915fc20b8f7a431c1e7b56a2d802f
                                                                    data-bs-toggle="dropdown" aria-haspopup="true"
                                                                    aria-expanded="false"></i>
                                                                 <div class="dropdown-menu dropdown-menu-md"
@@ -422,13 +323,16 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @if(false)
+                                    @php    $checklist = \App\Models\CheckList::where('task_id', $task->id)
+                                           ->first();
+                                    @endphp
+                                    @if(!empty($checklist))
                                         <!-- việc cần làm -->
                                         <div class="row mt-3">
                                             <section class="d-flex justify-content-between">
                                                 <section class="d-flex">
                                                     <i class="ri-checkbox-line fs-22"></i>
-                                                    <p class="fs-18 ms-2 mt-1">Việc cần làm</p>
+                                                    <p class="fs-18 ms-2 mt-1">{{$checklist->name}}</p>
                                                 </section>
                                                 <button class="btn btn-outline-dark" style="height: 35px"
                                                         data-bs-toggle="dropdown" aria-haspopup="true"
@@ -558,10 +462,6 @@
                                                 </button>
                                             </div>
                                         </div>
-<<<<<<< HEAD
-                                    </div>
-=======
->>>>>>> a43b615c873915fc20b8f7a431c1e7b56a2d802f
                                     @endif
                                     <div class="row mt-4">
                                         <section class="d-flex">
