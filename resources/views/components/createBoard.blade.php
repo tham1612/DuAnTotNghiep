@@ -1,11 +1,7 @@
 <!-- chia sẻ bảng & thêm thành viên -->
-<div
-    class="modal fade"
-    id="{{"create-board-home-modal" ? "create-board-home-modal" : "create-board-template-home-modal" }}"
-    tabindex="-1"
-    aria-labelledby="create-board-home-modal-label"
-    aria-hidden="true"
->
+<div class="modal fade"
+    id="{{ 'create-board-home-modal' ? 'create-board-home-modal' : 'create-board-template-home-modal' }}" tabindex="-1"
+    aria-labelledby="create-board-home-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content border-0" style="width: 125%;">
             <div class="modal-header p-3 d-grid" style="grid-template-columns: 1fr auto 1fr;">
@@ -13,41 +9,30 @@
                 <h5 class="modal-title " id="create-board-home-modal-label">
                     Tạo bảng
                 </h5>
-                <button
-                    type="button"
-                    class="btn-close"
-                    id="btn-close-member"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
+                <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body" style="margin-top: -50px">
                 @php
                     $userId = \Illuminate\Support\Facades\Auth::id();
 
-                      $workspace = \App\Models\Workspace::query()
-                          ->whereHas('users', function ($query) use ($userId) {
-                              $query->where('user_id', $userId)
-                                    ->where('is_active', 1);
-                          })
-                          ->get();
+                    $workspace = \App\Models\Workspace::query()
+                        ->whereHas('users', function ($query) use ($userId) {
+                            $query->where('user_id', $userId)->where('is_active', 1);
+                        })
+                        ->get();
 
                 @endphp
-                <form class="p-3" action="{{route('b.store')}}" method="POST" onsubmit="disableButtonOnSubmit()">
+                <form class="p-3" action="{{ route('b.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
 
                     <div class="mt-3">
                         <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
-                        <input
-                            type="text"
-                            class="form-control @error('board.name') is-invalid @enderror"
-                            id="name"
-                            placeholder="Nhập tiêu đề bảng"
-                            value="{{ old('board.name') }}"
-                            name="name"
-                        />
+                        <input type="text" class="form-control @error('board.name') is-invalid @enderror"
+                        id="boardName" placeholder="Nhập tiêu đề bảng" value="{{ old('board.name') }}"
+                            name="name" />
                         @error('board.name')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mt-3">
@@ -61,7 +46,7 @@
                     <div class="mt-3">
                         <label for="" class="form-label">Quyền xem</label>
                         <select name="access" id="" class="form-select">
-                            @foreach(\App\Enums\AccessEnum::getLimitedChoices() as $access)
+                            @foreach (\App\Enums\AccessEnum::getLimitedChoices() as $access)
                                 <option value="{{ $access }}">
                                     {{ \App\Enums\AccessEnum::coerce($access)->label() }}
                                 </option>
@@ -70,7 +55,7 @@
                     </div>
 
                     <div class="mt-3 card">
-                        <button class="btn btn-primary" type="submit">Tạo mới</button>
+                        <button class="btn btn-primary" type="submit" id="btnSubmit" disabled>Tạo mới</button>
                     </div>
                     <!--end col-->
                 </form>
@@ -79,3 +64,19 @@
     </div>
 </div>
 
+<script>
+    const boardName = document.getElementById('boardName');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    function validateBoard(){
+        const isNameFilled = boardName.value.trim() !== '';
+        btnSubmit.disabled = !isNameFilled;
+    }
+
+    boardName.addEventListener('input', validateBoard);
+
+    function disableButtonOnSubmit(){
+        btnSubmit.disabled = true;
+        return true;
+    }
+</script>

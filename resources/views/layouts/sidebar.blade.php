@@ -21,17 +21,16 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
         ->first();
+
+    dd($workspaceChecked);
     $workspaceMemberChecked = \App\Models\WorkspaceMember::query()
         ->where('workspace_id', $workspaceChecked->workspace_id)
         ->where('user_id', $userId)
-        ->where('authorize', 'Owner', 'Sub_Owner')
-        ->pluck('user_id') // Sử dụng pluck thay vì fluck
+        ->select('user_id', 'authorize', 'is_accept_invite') // Sử dụng pluck thay vì fluck
         ->first(); // Lấy giá trị đầu tiên
 
-    // dd($workspaceMemberChecked);
-
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
-        // $workspaceBoards = \App\Models\Workspace::query()
+         // $workspaceBoards = \App\Models\Workspace::query()
         //     ->with(['boards'])
         //     ->where('id', $workspaceChecked->workspace_id)
         // ->first();
@@ -51,6 +50,7 @@
             ->where('id', $workspaceChecked->workspace_id)
             ->first();
     }
+
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
@@ -198,15 +198,95 @@
                     @endforeach
                 @endif
             </ul>
-            <!-- Sidebar -->
         </div>
 
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
             id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
+
     </div>
-    <!-- Left Sidebar End -->
-    <!-- Vertical Overlay-->
+    @if (!empty($workspaceMemberChecked))
+        @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == null)
+            <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
+                <div class="alert alert-info d-flex align-items-center" role="alert"
+                    style="background-color: #f0f4ff; border-radius: 8px;">
+                    <i class="ri-information-line me-2" style="font-size: 24px;"></i>
+                    <div>
+                        <strong>Bạn đang là khách</strong> trong không gian làm việc này.
+                        Để xem các bảng và thành viên khác, quản trị viên phải thêm bạn làm thành viên.
+                    </div>
+                </div>
+
+                <a href="{{ route('b.requestToJoinWorkspace') }}" class="btn btn-primary mt-2 "
+                    style="width: 100%; text-align: center;">
+                    Yêu cầu tham gia
+                </a>
+            </div>
+        @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
+            <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
+                <div class="alert alert-info d-flex align-items-center" role="alert"
+                    style="background-color: #f0f4ff; border-radius: 8px;">
+                    <i class="ri-information-line me-2" style="font-size: 24px;"></i>
+                    <div>
+                        <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
+                            {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 25) }} </strong><br> chờ quản
+                        trị viên duyệt
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endif
     <div class="sidebar-background"></div>
 </div>
+
+<style>
+    #scrollbar {
+        height: calc(100vh - 150px);
+        /* Điều chỉnh chiều cao để không chạm vào phần thông báo */
+        overflow-y: auto;
+    }
+
+    .guest-notice {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: #8294c6;
+        padding: 15px;
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .guest-notice .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .guest-notice .btn {
+        background: linear-gradient(135deg, #4A90E2, #007AFF);
+        color: white;
+        padding: 10px 20px;
+        font-size: 12px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        width: 100%;
+        text-align: center;
+        transition: all 0.3s ease;
+        /* Hiệu ứng chuyển đổi mượt */
+    }
+
+    .guest-notice .btn:hover {
+        background: linear-gradient(135deg, #007AFF, #4A90E2);
+        /* Đảo ngược gradient khi hover */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        /* Thêm hiệu ứng đổ bóng khi hover */
+        transform: translateY(-2px);
+        /* Hiệu ứng nhấn nút */
+    }
+
+    .guest-notice .btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.4);
+        /* Hiệu ứng focus */
+    }
+</style>

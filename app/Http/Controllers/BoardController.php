@@ -181,21 +181,27 @@ class BoardController extends Controller
 
 
         $listEvent = array();
-        //            lay dư lieu voi gg calendar
-//            foreach ($events as $event) {
-//                $listEvent[] = [
-//                    'email' => $event->getCreator()->getEmail(),
-//                    'id_google_calendar' => $event->getId(),
-//                    'title' => $event->getSummary(),
-//                    'start' => $event->getStart()->getDateTime() ?: $event->getStart()->getDate(),
-//                    'end' => $event->getEnd()->getDateTime() ?: $event->getEnd()->getDate(),
-//                    'description' => $event->getDescription(),
-//                ];
-//            }
 
-        $taskCalendar = $tasks
-            ->whereNotNull('start_date')
-            ->whereNotNull('end_date');
+        $taskCalendar = Task::query()
+            ->whereHas('catalog', function ($query) use ($id) {
+                $query->where('board_id', $id);
+            })
+            ->get()
+            ->filter(function ($task) {
+                // Nếu cả hai đều không tồn tại, ẩn
+                if (is_null($task->start_date) && is_null($task->end_date)) {
+                    return false;
+                }
+
+                // Nếu chỉ tồn tại một trong hai, gán giá trị của cái còn lại
+                if (is_null($task->start_date)) {
+                    $task->start_date = $task->end_date;
+                } elseif (is_null($task->end_date)) {
+                    $task->end_date = $task->start_date;
+                }
+                // Hiển thị task nếu đã xử lý xong
+                return true;
+            });
         //        dd($taskCalendar);
         foreach ($taskCalendar as $event) {
             $listEvent[] = [
@@ -207,7 +213,6 @@ class BoardController extends Controller
                 'end' => Carbon::parse($event->end_date)->toIso8601String(),
             ];
         }
-
 
 
         //lấy thành viên trong bảng
@@ -226,14 +231,6 @@ class BoardController extends Controller
             ->where('board_members.board_id', $boardId)
             ->latest('board_members.id')
             ->get();
-        $board_m_viewer = BoardMember::query()
-            ->join('users', 'users.id', 'board_members.user_id')
-            ->select('users.name as name', 'users.image as image')
-            ->where('board_members.is_accept_invite', NULL)
-            ->where('board_members.authorize', "Viewer")
-            ->where('board_members.board_id', $boardId)
-            ->latest('board_members.id')
-            ->get();
         $board_owner = BoardMember::query()
             ->join('users', 'users.id', 'board_members.user_id')
             ->select('users.name as name', 'users.image as image', 'users.id as user_id')
@@ -241,23 +238,15 @@ class BoardController extends Controller
             ->where('board_members.authorize', "Owner")
             ->where('board_members.board_id', $boardId)
             ->first();
-        //        $data = [
-//            'board_m' => $board_m,
-//            'board_m_invite' => $board_m_invite,
-//            'board_m_viewer' => $board_m_viewer,
-//            'board_owner' => $board_owner,
-//            'user_id' => Auth::id()
-//        ];
 
         return match ($viewType) {
 
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_m_viewer', 'board_owner')),
-
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
 
 
         };
@@ -274,7 +263,7 @@ class BoardController extends Controller
             ->update($data);
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
-            'success' => true
+            'msg' => true
         ]);
 
     }
@@ -294,7 +283,7 @@ class BoardController extends Controller
 
             return response()->json([
                 'message' => 'Người dùng cập nhật dấu sao bảng thành công',
-                'success' => true
+                'msg' => true
             ]);
         }
 
@@ -320,6 +309,7 @@ class BoardController extends Controller
 
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
@@ -331,7 +321,6 @@ class BoardController extends Controller
     public function inviteUserBoard(Request $request)
     {
         $boardId = $request->id;
-        //        dd($request->all(), $boardId);
         $board = Board::query()
             ->where('id', $boardId)
             ->firstOrFail();
@@ -345,7 +334,7 @@ class BoardController extends Controller
         $boardName = $board->name;
         $authorize = $request->input('authorize');
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
-        return back()->with('success', 'Đã gửi email thêm thành viên !!!');
+        return back()->with('msg', 'Đã gửi email thêm thành viên !!!');
     }
 
 
@@ -355,18 +344,18 @@ class BoardController extends Controller
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             $user = User::query()->where('email', $request->email)->first();
-            $check_user_board = BoardMember::where('user_id', $user->id)->where('board_id', $board->id)
-                ->first();
+
 
             //xử lý khi người dùng có tài khoản
             if ($user) {
                 $check_user_wsp = BoardMember::join('boards', 'boards.id', '=', 'board_members.board_id')
+                    ->join('workspace_members', 'workspace_members.workspace_id', 'boards.workspace_id')
                     ->where('board_members.user_id', $user->id)
                     ->where('boards.workspace_id', $board->workspace_id)
+                    ->where('workspace_members.workspace_id', $board->workspace_id)
                     ->first();
-
-                dd($check_user_wsp);
-
+                $check_user_board = BoardMember::where('user_id', $user->id)->where('board_id', $board->id)
+                    ->first();
                 //Check xử lý người dùng có trong workspace
                 if ($check_user_wsp) {
 
@@ -379,8 +368,8 @@ class BoardController extends Controller
 
                             //xử lý người dùng khi đã đăng nhập đúng người dùng
                             if ($user_check->email === $request->email) {
-                                try {
 
+                                try {
                                     //thêm người dùng vào board member
                                     BoardMember::create([
                                         'user_id' => $user_check->id,
@@ -425,11 +414,11 @@ class BoardController extends Controller
                             return redirect()->route('login');
                         }
 
-                    }
+                    } //DONE
 
                     //xử lý khi người dùng đã có trong bảng đó rồi
                     else {
-                        return redirect()->route('b.edit', $board->id)->with('success', 'Bạn đã ở trong bảng rồi!!');
+                        return redirect()->route('b.edit', $board->id)->with('msg', 'Bạn đã ở trong bảng rồi!!');
                     }
 
                 }
@@ -453,7 +442,7 @@ class BoardController extends Controller
                                     WorkspaceMember::create([
                                         'user_id' => $user_check->id,
                                         'workspace_id' => $board->workspace_id,
-                                        'authorize' => $request->authorize,
+                                        'authorize' => AuthorizeEnum::Viewer(),
                                         'invite' => now(),
                                         'is_active' => 1,
                                     ]);
@@ -488,11 +477,13 @@ class BoardController extends Controller
                                         ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
                                         ->log('Người dùng đã được thêm vào Bảng.');
 
-                                    return redirect()->route('b.edit', $board->id)->with('success', "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!");
+                                    return redirect()->route('b.edit', $board->id)->with('msg', "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!");
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
-                            } // Người dùng đã đăng nhập nhưng email khác
+                            }
+
+                            // Người dùng đã đăng nhập nhưng email khác
                             else {
                                 Auth::logout();
                                 Session::put('invited_board', "case4");
@@ -503,7 +494,9 @@ class BoardController extends Controller
                                 Session::put('authorize', $request->authorize);
                                 return redirect()->route('login');
                             }
-                        } //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
+                        }
+
+                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
                         else {
                             Session::put('invited_board', "case4");
                             Session::put('board_id', $board->id);
@@ -514,10 +507,11 @@ class BoardController extends Controller
                             return redirect()->route('login');
                         }
                     }
+                    
                 }
+            }
 
-
-            } //xử lý khi người dùng không có tài khoản
+            //xử lý khi người dùng không có tài khoản
             else {
                 //xử lý khi người dùng không có tài khoản
                 Auth::logout();
@@ -528,14 +522,30 @@ class BoardController extends Controller
                 Session::put('authorize', $request->authorize);
                 return redirect()->route('register');
             }
-        } //xử lý khi người dùng có link invite và kick vô
+        }
+
+        //xử lý khi người dùng có link invite và kick vô
         else {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             Auth::logout();
             Session::put('board_id', $board->id);
+            Session::put('workspace_id', $board->workspace_id);
+            Session::put('board_access', $board->access);
             Session::put('authorize', AuthorizeEnum::Member());
             Session::put('invited_board', 'case3');
             return redirect()->route('login');
         }
+    }
+
+    public function requestToJoinWorkspace()
+    {
+        $workspace_member = WorkspaceMember::where('user_id', Auth::id())
+            ->where('is_active', 1)
+            ->first();
+        $workspace_member->update([
+            'is_accept_invite' => 1,
+        ]);
+
+        return redirect()->route('home')->with('msg', 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc');
     }
 }

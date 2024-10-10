@@ -377,8 +377,6 @@
                                                                                 <input type="hidden"
                                                                                     value="{{ $item->workspace_id }}"
                                                                                     name="workspace_id">
-                                                                                <input type="hidden" value="NULL"
-                                                                                    name="type_update">
                                                                                 <button class="btn btn-primary me-2"
                                                                                     type="submit">Duyệt</button>
                                                                             </form>
@@ -440,22 +438,6 @@
                                                                             </section>
                                                                         </div>
                                                                         <div class="col-4 d-flex justify-content-end">
-                                                                            {{-- <form onsubmit="disableButtonOnSubmit()"
-                                                                                action="{{ route('accept_member') }}"
-                                                                                method="post">
-                                                                                @method('PUT')
-                                                                                @csrf
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->user_id }}"
-                                                                                    name="user_id">
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->workspace_id }}"
-                                                                                    name="workspace_id">
-                                                                                <input type="hidden" value="NULL"
-                                                                                    name="type_update">
-                                                                                <button class="btn btn-primary me-2"
-                                                                                    type="submit">Thêm thành viên</button>
-                                                                            </form> --}}
                                                                         </div>
                                                                     </li>
                                                                 @endforeach
