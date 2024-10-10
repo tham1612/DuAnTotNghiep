@@ -4,15 +4,15 @@
             <div class="d-flex justify-content-between align-items-center">
 
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
-                    @php $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+                @php $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
                                 ->where('user_id', auth()->id())
                                 ->value('is_star');
-                     @endphp
+                @endphp
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
                     @if( $member_Is_star == 1) active @endif"
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
-                    <span class="avatar-title bg-transparent fs-15" >
+                    <span class="avatar-title bg-transparent fs-15">
                         <i class="ri-star-fill fs-20 mx-2"></i>
                     </span>
                 </button>
@@ -140,11 +140,11 @@
                 <div class="d-flex justify-content-center align-items-center p-1 cursor-pointer"
                      data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                     <i class="ri-filter-3-line fs-24"></i>
-                    <span class="readonly fs-16">Bộ lọc</span>
+                    <span class="readonly fs-14">Bộ lọc</span>
                 </div>
                 <div class="fs-20 fw-lighter text-secondary">|</div>
                 <!-- setting bộ lọc -->
-                <ul class="dropdown-menu dropdown-menu-md p-3" style="width: 35%">
+                <ul class="dropdown-menu dropdown-menu-md p-3" style="width: 35%;max-height: 450px" data-simplebar >
                     <p class="text-center fs-15"><strong>Lọc</strong></p>
                     <!-- lọc tìm kiếm -->
                     <div class="mt-2">
@@ -227,11 +227,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-ghost-secondary mt-2">
-                            Lọc
-                        </button>
-                    </div>
+{{--                    <div class="text-center">--}}
+{{--                        <button type="submit" class="btn btn-ghost-secondary mt-2">--}}
+{{--                            Lọc--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
                 </ul>
 
                 <section class="d-flex">
@@ -254,7 +254,8 @@
                                            title="{{ $boardMember['name'] }}">
                                             @if ($boardMember['image'])
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                     alt="" class="rounded-circle avatar-sm object-fit-cover" style="width: 40px;height: 40px">
+                                                     alt="" class="rounded-circle avatar-sm object-fit-cover"
+                                                     style="width: 40px;height: 40px">
                                             @else
                                                 <div class="avatar-sm">
                                                     <div class="avatar-title rounded-circle bg-light text-primary">

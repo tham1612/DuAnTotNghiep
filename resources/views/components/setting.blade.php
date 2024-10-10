@@ -10,10 +10,10 @@
         <div data-simplebar style="height: calc(100vh - 112px)">
             <ul style="list-style: none;" class="p-3">
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
-                    style="margin-top: -30px;"
+                    style="margin-top: -20px;"
                     data-bs-toggle="offcanvas" data-bs-target="#detailBoard">
                     <i class=" ri-error-warning-line fs-22"></i>
-                    <div class="ms-3 fs-15 mt-3">
+                    <div class="ms-3 fs-14 mt-3">
                         <p style="margin-bottom: 0px; margin-top: 15px;">Chi tiết bảng</p>
                         <p class="fs-10 " style="margin-top: 0">Thêm mô tả vào bảng</p>
                     </div>
@@ -22,38 +22,54 @@
                     data-bs-toggle="offcanvas"
                     data-bs-target="#activityBoard">
                     <i class="ri-line-chart-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Hoạt động</p>
+                    <p class="ms-3 fs-14 mt-3">Hoạt động</p>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#storageBoard">
                     <i class="ri-archive-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Mục đã lưu trữ</p>
+                    <p class="ms-3 fs-14 mt-3">Mục đã lưu trữ</p>
                 </li>
                 <hr>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#generalSettingBoard">
                     <i class="ri-settings-3-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Cài đặt</p>
+                    <p class="ms-3 fs-14 mt-3">Cài đặt</p>
+                </li>
+                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#tagBoard">
+                    <i class=" ri-price-tag-3-line fs-22"></i>
+                    <p class="ms-3 fs-14 mt-3">Nhãn</p>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
                     <i class="ri-eye-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Theo dõi</p>
-                </li>
-                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
-                    <i class=" ri-file-copy-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Sao chép bảng</p>
+                    <p class="ms-3 fs-14 mt-3">Theo dõi</p>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                >
+                    <i class=" ri-file-copy-line fs-22"></i>
+                    <p class="ms-3 fs-14 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       data-bs-offset="-40,10">
+                        Sao chép bảng</p>
+                    <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
+                        @include('dropdowns.copyBoard')
+                    </div>
+                </li>
+                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
+                    <i class=" ri-share-line fs-22"></i>
+                    <p class="ms-3 fs-14 mt-3">In, xuất và chia sẻ</p>
+                </li>
+                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
+                >
                     <i class="ri-subtract-line fs-22"></i>
-                    <p class="ms-3 fs-15 mt-3">Đóng bảng thông tin</p>
-                    <div class="dropdown-menu dropdown-menu-md p-3 w-100">
+                    <p class="ms-3 fs-14 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       data-bs-offset="-40,10">
+                        Đóng bảng thông tin</p>
+                    <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
                         <h5 class="text-center">Đóng bảng?</h5>
-
                         <p>Bạn có thể tìm và mở lại các bảng đã đóng ở cài đặt tài khoản</p>
-
                         <button class="btn btn-danger w-100">Đóng</button>
                     </div>
                 </li>
@@ -274,19 +290,111 @@
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
-            <div class="">
-                <p class="fw-bold fs-16">Không gian làm việc</p>
-                <div>
-                    <span data-bs-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false">Thay đổi quyền
-                    </span>
-                    <div
-                        class="dropdown-menu dropdown-menu-md p-3 w-100">
-                        @include('dropdowns.switchWorkspace')
-                    </div>
+            <div class="p-2">
+                <p class="fw-bold fs-15">Quyền</p>
+
+                <div class="row mt-2">
+                    <label for="">Nhận xét</label>
+                    <select class="form-select border-0" id="">
+                        <option value="">Thành viên</option>
+                        <option value="">Chỉ có quản trị viên</option>
+                        <option value="">Tất cả mọi người trong không gian làm việc</option>
+                    </select>
+                </div>
+                <div class="row mt-2">
+                    <label for="">Thêm và xóa thành viên</label>
+                    <select class="form-select border-0" id="">
+                        <option value="">Thành viên</option>
+                        <option value="">Chỉ có quản trị viên</option>
+                    </select>
+                </div>
+                <div class="row mt-2">
+                    <label for="">Chỉnh sửa Không gian làm việc</label>
+                    <select class="form-select border-0" id="">
+                        <option value="">Mọi người trong không gian</option>
+                        <option value="">Chỉ có thành viên trong bảng</option>
+                    </select>
                 </div>
             </div>
+        </div>
+    </div>
+
+</div>
+
+{{--nhãn--}}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="tagBoard" aria-labelledby="storageBoardLabel"
+     style="width: 350px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title text-center" id="detailBoardLabel">
+            Nhãn
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0 overflow-hidden">
+        <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
+            <form action="">
+                <input type="text" name="" id=""
+                       class="form-control border-1" placeholder="Tìm nhãn..."/>
+                <div class="mt-3">
+                    <strong class="fs-14">Nhãn</strong>
+                    <ul class="" style="list-style: none; margin-left: -32px">
+                        <li class="mt-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center w-100">
+                                <input type="checkbox" name="" id="danger_tags"
+                                       class="form-check-input"/>
+                                <span class="bg bg-danger mx-2 rounded p-3 col-10"> </span>
+                            </div>
+                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false"></i>
+                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
+                                @include('dropdowns.createTag')
+                            </div>
+                        </li>
+                        <li class="mt-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center w-100">
+                                <input type="checkbox" name="" id="danger_tags"
+                                       class="form-check-input"/>
+                                <span class="bg bg-info mx-2 rounded p-3 col-10"> </span>
+                            </div>
+                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false"></i>
+                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
+                                @include('dropdowns.createTag')
+                            </div>
+                        </li>
+                        <li class="mt-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center w-100">
+                                <input type="checkbox" name="" id="danger_tags"
+                                       class="form-check-input"/>
+                                <span class="bg bg-success mx-2 rounded p-3 col-10">
+                                                            </span>
+                            </div>
+                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false"></i>
+                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
+                                @include('dropdowns.createTag')
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div
+                        class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100 cursor-pointer"
+                        style=" height: 30px; background-color: #c7c7c7">
+                        <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false" data-bs-offset="110,10">
+                            Tạo nhãn mới
+                        </p>
+                        <!--dropdown nhãn-->
+                        <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
+                            @include('dropdowns.createTag')
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
