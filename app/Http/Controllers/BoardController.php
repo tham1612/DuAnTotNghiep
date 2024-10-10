@@ -175,7 +175,7 @@ class BoardController extends Controller
         $activities = Activity::where('properties->board_id', $boardId)->get();
 
         //  dd($activities);
-        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+//        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
         $boardName = $board->name; // Lấy tên của board
         $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
 
