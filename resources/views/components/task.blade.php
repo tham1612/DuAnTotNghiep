@@ -294,11 +294,15 @@
                                         </div>
                                     </div>
                                     <!-- việc cần làm -->
+                                    @php    $checklist = \App\Models\CheckList::where('task_id', $task->id)
+                                           ->first();
+                                    @endphp
+                                    @if(!empty($checklist))
                                     <div class="row mt-3">
                                         <section class="d-flex justify-content-between">
                                             <section class="d-flex">
                                                 <i class="ri-checkbox-line fs-22"></i>
-                                                <p class="fs-18 ms-2 mt-1">Việc cần làm</p>
+                                                <p class="fs-18 ms-2 mt-1">{{$checklist->name}}</p>
                                             </section>
                                             <button class="btn btn-outline-dark" style="height: 35px"
                                                     data-bs-toggle="dropdown" aria-haspopup="true"
@@ -425,6 +429,7 @@
                                             </button>
                                         </div>
                                     </div>
+                                    @endif
                                     <div class="row mt-4">
                                         <section class="d-flex">
                                             <i class="ri-line-chart-line fs-22"></i>

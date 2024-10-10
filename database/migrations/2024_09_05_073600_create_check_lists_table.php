@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('check_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Task::class)->only()->constrained();
+            $table->foreignIdFor(\App\Models\Task::class)->constrained()->unique();
             $table->string('name');
             $table->timestamps();
         });
