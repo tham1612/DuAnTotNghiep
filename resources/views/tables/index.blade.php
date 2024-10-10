@@ -183,23 +183,19 @@
         <div class="my-2 cursor-pointer">
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('catalogs.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
+                <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
                     @csrf
-                    <h5 class="text-center">Thêm danh sách</h5>
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                               value="{{ old('name') }}" placeholder="Nhập tên danh sách..."/>
-                        @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <input type="text" class="form-control" name="name" id="nameCatalog"
+                            value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
+                        <input type="hidden" name="board_id" value="{{ $board->id }}">
                     </div>
-                    <input type="hidden" name="board_id" value="{{ $board->id }}">
-
-                    <div class="mb-2 d-grid ">
-                        <button type="submit" class="btn btn-primary">
+                    <div class="mb-2 d-flex align-items-center">
+                        <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
                             Thêm danh sách
                         </button>
-                        {{-- <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i> --}}
+                        <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
+                            aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
                     </div>
                 </form>
             </div>
@@ -208,11 +204,11 @@
         <div class="mt-2 cursor-pointer">
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
+                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmitTask(this)">
                     @csrf
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('text') is-invalid @enderror" name="text"
+                        <input type="text" class="form-control taskNameInput" name="text"
                                value="{{ old('text') }}" placeholder="Nhập tên thẻ..."/>
                         @error('text')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -227,7 +223,7 @@
                         </select>
                     </div>
                     <div class="mb-2 d-grid">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit"  class="btn btn-primary btnSubmitTask" disabled>
                             Thêm thẻ
                         </button>
                     </div>

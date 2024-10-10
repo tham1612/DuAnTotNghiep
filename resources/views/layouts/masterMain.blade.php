@@ -33,8 +33,10 @@
         .ck-editor__editable_inline {
             min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
 
+
         }
     </style>
+
     @if (request()->is('b/*'))
 
         <style >
@@ -178,6 +180,8 @@
 <!-- fgEmojiPicker js -->
 <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
 <!--jquery cdn-->
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <!--select2 cdn-->
@@ -378,6 +382,55 @@
                 }
             });
         });
+    });
+
+    // validate Catalog
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameCatalogInput = document.getElementById('nameCatalog');
+        const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
+
+        // Kiểm tra trạng thái của input
+        function validateCatalogForm() {
+            const isNameFilled = nameCatalogInput.value.trim() !== ''; 
+            btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
+        }
+
+        // Lắng nghe sự kiện khi người dùng nhập dữ liệu vào input
+        nameCatalogInput.addEventListener('input', validateCatalogForm);
+
+        // Kiểm tra form khi người dùng submit
+        function disableButtonOnSubmit() {
+            if (nameCatalogInput.value.trim() === '') {
+                return false;  // Ngăn submit nếu input trống
+            }
+            btnSubmitCatalog.disabled = true;  // Vô hiệu hóa nút sau khi submit
+            return true;  // Cho phép submit form
+        }
+    });
+
+    // validate task
+    document.addEventListener('DOMContentLoaded', function() {
+        const taskNameInputs = document.querySelectorAll('.taskNameInput');
+        const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
+
+        taskNameInputs.forEach((input, index) => {
+            const btnSubmit = btnSubmitTasks[index]; 
+            
+            input.addEventListener('input', function() {
+                const isTaskNameFilled = input.value.trim() !== ''; 
+                btnSubmit.disabled = !isTaskNameFilled; 
+            });
+        });
+
+        window.disableButtonOnSubmitTask = function(form) {
+            const input = form.querySelector('.taskNameInput');
+            const btnSubmit = form.querySelector('.btnSubmitTask');
+            if (input.value.trim() === '') {
+                return false;  
+            }
+            btnSubmit.disabled = true;  
+            return true;  
+        }
     });
 </script>
 
