@@ -358,14 +358,8 @@
                                                         <tr class="cursor-pointer">
                                                             <td class="col-1">
                                                                 <div class="form-check">
-<<<<<<< HEAD
                                                                     <input class="form-check-input" type="checkbox" name="check_list_id"
                                                                            value="{{$checklistItem->id}}" id="check_list_{{$checklistItem->id}}"/>
-=======
-                                                                    <input class="form-check-input" type="checkbox"
-
-                                                                           value="" id="cardtableCheck01"/>
->>>>>>> cd40f076d69a1bd28a4470867a93ace9fb643921
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -409,22 +403,12 @@
                                                             @endforeach
                                                         @endif
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
-<<<<<<< HEAD
 {{--                                                            <td class="col-1">--}}
 {{--                                                                <div class="form-check">--}}
 {{--                                                                    <input class="form-check-input" type="checkbox"--}}
 {{--                                                                           value=""/>--}}
 {{--                                                                </div>--}}
 {{--                                                            </td>--}}
-=======
-                                                            <td class="col-1">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-
-                                                                           value=""/>
-                                                                </div>
-                                                            </td>
->>>>>>> cd40f076d69a1bd28a4470867a93ace9fb643921
                                                             <td colspan="2">
                                                                 <form id="FormCheckListItem" >
                                                                     <input type="hidden" name="check_list_id" id="check_list_id" value="{{$checklist->id}}">
@@ -436,37 +420,6 @@
                                                                             <button type="submit" class="btn btn-primary">Thêm</button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
-<<<<<<< HEAD
-
-=======
-                                                                        <div class="d-flex">
-                                                                            <div>
-                                                                                <i class="ri-time-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false">Ngày hết hạn
-                                                                        </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    @include('dropdowns.date')
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div>
-
-                                                                                <i class="ri-user-add-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false">Chỉ định
-                                                                        </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    @include('dropdowns.member')
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
->>>>>>> cd40f076d69a1bd28a4470867a93ace9fb643921
                                                                     </div>
                                                                 </form>
                                                             </td>
