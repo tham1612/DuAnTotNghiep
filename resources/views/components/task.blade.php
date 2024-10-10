@@ -174,7 +174,8 @@
                                             <textarea name="content" class="form-control "
                                                       id="description_{{ $task->id}}" placeholder="Viết bình luận"
                                             >{{$task->description}}</textarea>
-                                                <button class="btn btn-primary mt-2 writeComment" data-value="{{$task->id}}">
+                                                <button class="btn btn-primary mt-2 writeComment"
+                                                        data-value="{{$task->id}}">
                                                     Lưu
                                                 </button>
                                             </form>
@@ -656,7 +657,7 @@
                                             </p>
                                             <!--  dropdown sao chép-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                @include('dropdowns.copy')
+                                                @include('dropdowns.copyTask')
                                             </div>
                                         </div>
                                     </div>
@@ -736,7 +737,7 @@
         </script>
     @endforeach
 @endif
-<script >
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const notificationElements = document.querySelectorAll('[id^="notification_"]');
 
@@ -795,6 +796,7 @@
             });
         });
     });
+
     function updateTask2(taskId) {
         var checkbox = document.getElementById('due_date_checkbox_' + taskId);
         var formData = {
@@ -811,14 +813,15 @@
             method: "PUT",
             dataType: 'json',
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 console.log('Task updated successfully:', response);
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('An error occurred:', xhr.responseText);
             }
         });
     }
+
     function updateTaskMember(taskId, userId) {
 
         $.ajax({

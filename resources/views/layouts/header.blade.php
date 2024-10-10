@@ -261,7 +261,8 @@
                                                         class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                     <i class="ri-star-fill fs-16"></i>
                                                 </button>
-                                                <input type="hidden" id="user_id" value="{{\Illuminate\Support\Facades\Auth::id()}}">
+                                                <input type="hidden" id="user_id"
+                                                       value="{{\Illuminate\Support\Facades\Auth::id()}}">
                                             </div>
                                         </div>
                                     </div>
@@ -446,21 +447,21 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
+                        <h6 class="dropdown-header">Xin chào {{ auth()->user()->name }}!</h6>
                         <a class="dropdown-item" href="{{ route('user', auth()->user()->id) }}">
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Profile</span>
+                            <span class="align-middle">Thông tin</span>
                         </a>
-                        <a class="dropdown-item" href=" {{ route('chat') }}"><i
-                                class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
                                 class="ri-group-line text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Tạo không gian làm việc</span></a>
+                        <a class="dropdown-item" href="{{ route('chat') }}"><i
+                                class="ri-archive-line text-muted fs-16 align-middle me-1"></i>
+                            <span class="align-middle">Lưu trữ</span></a>
                         <form action="{{ route('logout') }}" method="post" class="dropdown-item">
                             @csrf
                             <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
-                            <button type="submit" class="bg-transparent border-0">Logout</button>
+                            <button type="submit" class="bg-transparent border-0">Đăng xuất</button>
                         </form>
                     </div>
                 </div>
