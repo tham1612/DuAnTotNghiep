@@ -724,22 +724,25 @@
                 </div>
             </div>
         </div>
-        <!-- ckeditor -->
-        <script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
-        <!-- prismjs plugin -->
-        <script>
-            ClassicEditor
-                .create(
-                    document.querySelector('#editor_{{$task->id}}')
-                );
 
-            ClassicEditor
-                .create(
-                    document.querySelector('#description_{{$task->id}}'),
-                );
-        </script>
     @endforeach
 @endif
+<!-- ckeditor -->
+<script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
+<!-- prismjs plugin -->
+@foreach($tasks as $task)
+    <script>
+        ClassicEditor
+            .create(
+                document.querySelector('#editor_{{$task->id}}')
+            );
+
+        ClassicEditor
+            .create(
+                document.querySelector('#description_{{$task->id}}'),
+            );
+    </script>
+@endforeach
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const notificationElements = document.querySelectorAll('[id^="notification_"]');
