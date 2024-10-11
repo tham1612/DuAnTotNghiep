@@ -10,10 +10,8 @@ use Illuminate\Support\Facades\Log;
 class ChatAIController extends Controller
 {
     public function index(){
-        // Fetch all chat records
         $chats = ChatAI::all();
 
-        // Return the view with chat data
         return view('chatAI', compact('chats'));
     }
 
@@ -29,7 +27,7 @@ class ChatAIController extends Controller
 
         try {
             Log::info('Sending request to AI API with prompt: ' . $prompt);
-            $response = Http::timeout(60)->get($apiUrl, ['prompt' => $prompt]);
+            $response = Http::timeout(120)->get($apiUrl, ['prompt' => $prompt]);
 
             if ($response->successful()) {
                 $aiResponse = $response->json();
@@ -60,7 +58,7 @@ class ChatAIController extends Controller
 
         try {
             Log::info('Sending request to AI API with prompt: ' . $prompt);
-            $response = Http::timeout(60)->get($apiUrl, ['prompt' => $prompt]);
+            $response = Http::timeout(120)->get($apiUrl, ['prompt' => $prompt]);
 
             if ($response->successful()) {
                 $aiResponse = $response->json();
