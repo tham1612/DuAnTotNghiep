@@ -4,17 +4,18 @@
     <!-- ngày bắt đầu -->
     <div>
         <strong class="fs-14">Ngày bắt đầu</strong>
-        <input type="datetime-local" name="" id=""
+        <input type="datetime-local" name="start_date" id=""
                class="form-control border-0 my-2"/>
     </div>
     <div>
         <strong class="fs-14">Ngày kết thúc</strong>
-        <input type="datetime-local" name="" id=""
+        <input type="datetime-local" id="" name="end_date"
                class="form-control border-0 my-2"/>
     </div>
     <div class="mt-2">
         <strong class="fs-16">Thiết lập nhắc nhỏ</strong>
-        <select name="" id="" class="form-select">
+        <select name="reminder_date" id="" class="form-select">
+            <option value="">1 ngày trước</option>
             <option value="">1 ngày trước</option>
         </select>
     </div>

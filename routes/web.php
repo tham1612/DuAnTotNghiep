@@ -112,8 +112,11 @@ Route::middleware(['auth', 'isWorkspace'])
         ->name('checklist.create');
         Route::put('/tasks/{checklist}/checklist', [\App\Http\Controllers\ChecklistController::class, 'update'])
             ->name('checklist.update');
+        Route::post('/tasks/checklist/checklistItem/create', [\App\Http\Controllers\ChecklistController::class, 'createChecklistItem'])
+            ->name('checklist.createChecklistItem');
     });
-
+    Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
+    Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
 
 Route::get('inboxs', function () {
     return view('Inboxs.index');
