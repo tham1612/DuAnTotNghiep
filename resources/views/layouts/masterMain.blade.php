@@ -391,7 +391,7 @@
 
         // Kiểm tra trạng thái của input
         function validateCatalogForm() {
-            const isNameFilled = nameCatalogInput.value.trim() !== ''; 
+            const isNameFilled = nameCatalogInput.value.trim() !== '';
             btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
         }
 
@@ -414,11 +414,11 @@
         const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
 
         taskNameInputs.forEach((input, index) => {
-            const btnSubmit = btnSubmitTasks[index]; 
-            
+            const btnSubmit = btnSubmitTasks[index];
+
             input.addEventListener('input', function() {
-                const isTaskNameFilled = input.value.trim() !== ''; 
-                btnSubmit.disabled = !isTaskNameFilled; 
+                const isTaskNameFilled = input.value.trim() !== '';
+                btnSubmit.disabled = !isTaskNameFilled;
             });
         });
 
@@ -426,10 +426,10 @@
             const input = form.querySelector('.taskNameInput');
             const btnSubmit = form.querySelector('.btnSubmitTask');
             if (input.value.trim() === '') {
-                return false;  
+                return false;
             }
-            btnSubmit.disabled = true;  
-            return true;  
+            btnSubmit.disabled = true;
+            return true;
         }
     });
 </script>
