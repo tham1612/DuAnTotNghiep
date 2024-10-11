@@ -165,20 +165,12 @@
                                             <i class="ri-menu-2-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Mô tả</p>
                                         </section>
-                                        <div class="ps-4">
-                                                                                <textarea name="description" id="description_{{ $task->id}}" cols="25" rows="5"
-                                                                                          class="form-control bg-light"
-                                                                                          placeholder="Thêm mô tả chi tiết"
-                                                                                          onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
-                                            {{--                                            <form class=" flex-column">--}}
-                                            {{--                                            <textarea name="content" class="form-control "--}}
-                                            {{--                                                      id="description_{{ $task->id}}" placeholder="Viết bình luận"--}}
-                                            {{--                                            >{{$task->description}}</textarea>--}}
-                                            {{--                                                <button class="btn btn-primary mt-2 writeComment" data-value="{{$task->id}}">--}}
-                                            {{--                                                    Lưu--}}
-                                            {{--                                                </button>--}}
-                                            {{--                                            </form>--}}
-
+                                        <div class="ps-4"><textarea name="description"
+                                                                    id="description_{{ $task->id}}"
+                                                                    cols="25" rows="5"
+                                                                    class="form-control bg-light editor"
+                                                                    placeholder="Thêm mô tả chi tiết"
+                                                                    onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
                                         </div>
                                     </div>
                                     @if(false)
@@ -372,8 +364,10 @@
                                                                 <tr class="cursor-pointer">
                                                                     <td class="col-1">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="check_list_id"
-                                                                                   value="{{$checklistItem->id}}" id="check_list_{{$checklistItem->id}}"/>
+                                                                            <input class="form-check-input"
+                                                                                   type="checkbox" name="check_list_id"
+                                                                                   value="{{$checklistItem->id}}"
+                                                                                   id="check_list_{{$checklistItem->id}}"/>
                                                                         </div>
                                                                     </td>
                                                                     <td>
@@ -382,7 +376,8 @@
                                                                     <td class=" d-flex justify-content-end">
                                                                         <div>
                                                                             <i class="ri-time-line fs-20 ms-2"
-                                                                               data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
                                                                                aria-expanded="false"></i>
                                                                             <div
                                                                                 class="dropdown-menu dropdown-menu-md p-3 w-50">
@@ -391,7 +386,8 @@
                                                                         </div>
                                                                         <div>
                                                                             <i class="ri-user-add-line fs-20 ms-2"
-                                                                               data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
                                                                                aria-expanded="false"></i>
                                                                             <div
                                                                                 class="dropdown-menu dropdown-menu-md p-3 w-50">
@@ -400,11 +396,13 @@
                                                                         </div>
                                                                         <div>
                                                                             <i class="ri-more-fill fs-20 ms-2"
-                                                                               data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
                                                                                aria-expanded="false"></i>
                                                                             <div class="dropdown-menu dropdown-menu-md"
                                                                                  style="padding: 15px 15px 0 15px">
-                                                                                <h5 class="text-center">Thao tác mục</h5>
+                                                                                <h5 class="text-center">Thao tác
+                                                                                    mục</h5>
                                                                                 <p class="mt-2">Chuyển sang thẻ</p>
                                                                                 <p>Xóa</p>
                                                                             </div>
@@ -414,21 +412,25 @@
                                                             @endforeach
                                                         @endif
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                            {{--                                                            <td class="col-1">--}}
-                                                            {{--                                                                <div class="form-check">--}}
-                                                            {{--                                                                    <input class="form-check-input" type="checkbox"--}}
-                                                            {{--                                                                           value=""/>--}}
-                                                            {{--                                                                </div>--}}
-                                                            {{--                                                            </td>--}}
+                                                            {{--                                                                                                                        <td class="col-1">--}}
+                                                            {{--                                                                                                                            <div class="form-check">--}}
+                                                            {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
+                                                            {{--                                                                                                                                       value=""/>--}}
+                                                            {{--                                                                                                                            </div>--}}
+                                                            {{--                                                                                                                        </td>--}}
                                                             <td colspan="2">
-                                                                <form id="FormCheckListItem" >
-                                                                    <input type="hidden" name="check_list_id" id="check_list_id" value="{{$checklist->id}}">
+                                                                <form id="FormCheckListItem">
+                                                                    <input type="hidden" name="check_list_id"
+                                                                           id="check_list_id"
+                                                                           value="{{$checklist->id}}">
                                                                     <input type="text" name="name" id="name"
                                                                            class="form-control checklistItem"
                                                                            placeholder="Thêm mục"/>
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button type="submit" class="btn btn-primary">Thêm</button>
+                                                                            <button type="submit"
+                                                                                    class="btn btn-primary">Thêm
+                                                                            </button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
 
@@ -440,7 +442,7 @@
                                                     </table>
                                                 </div>
                                                 <button class="btn btn-outline-dark ms-3 mt-2 display-checklist"
-                                                        type="button">
+                                                        type="button" id="">
                                                     Thêm mục
                                                 </button>
                                             </div>
@@ -466,8 +468,8 @@
                                                 @endif
                                                 <div class="ms-2">
                                                     <form action="#" method="post" class=" flex-column">
-                                                    <textarea name="content" class="form-control "
-                                                              id="editor_{{$task->id}}"
+                                                    <textarea name="content" class="form-control editor"
+                                                              id="comment_{{$task->id}}"
                                                               placeholder="Viết bình luận"></textarea>
                                                         <button type="submit" class="btn btn-primary mt-2">Lưu
                                                         </button>
@@ -712,19 +714,116 @@
 <!-- ckeditor -->
 <script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
 <!-- prismjs plugin -->
-@foreach($tasks as $task)
-    <script>
-        ClassicEditor
-            .create(
-                document.querySelector('#editor_{{$task->id}}')
-            );
 
+<script>
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+    // Tạo một đối tượng để lưu trữ các editor đã khởi tạo
+    const editors = {};
+
+    // Khởi tạo ClassicEditor cho mỗi phần tử có class 'editor'
+    document.querySelectorAll('.editor').forEach((editorElement, index) => {
         ClassicEditor
-            .create(
-                document.querySelector('#description_{{$task->id}}'),
-            );
-    </script>
-@endforeach
+            .create(editorElement)
+            .then(editor => {
+                // Lưu trữ instance của từng editor với id của phần tử hoặc chỉ mục
+                editors[editorElement.id] = editor;
+
+                // Lắng nghe sự kiện change của editor
+                editor.model.document.on('change:data', debounce(() => {
+                    const taskId = editorElement.id.split('_')[1];
+                    updateTask2(taskId);
+                }, 1000));
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+<script>
+    // xử lý checklist card
+    const displayChecklistBtns = document.querySelectorAll('.display-checklist');
+    const disableChecklistBtns = document.querySelectorAll('.disable-checklist');
+    const checklistForms = document.querySelectorAll('.addOrUpdate-checklist');
+    const checklistItems = document.querySelectorAll('.checklistItem');
+
+    displayChecklistBtns.forEach((displayChecklistBtn, index) => {
+        displayChecklistBtn.addEventListener('click', () => {
+            checklistForms[index].classList.toggle('d-none'); // Hiện hoặc ẩn form
+            displayChecklistBtn.classList.add('d-none'); // Ẩn nút hiện form
+        });
+    });
+
+    disableChecklistBtns.forEach((disableChecklistBtn, index) => {
+        disableChecklistBtn.addEventListener('click', () => {
+            checklistItems[index].value = ""; // Xóa nội dung ô nhập liệu
+            checklistForms[index].classList.add('d-none'); // Ẩn form
+            displayChecklistBtns[index].classList.toggle('d-none'); // Hiện lại nút hiện form
+        });
+    });
+
+
+    //     xử lý lưu trữ cảu card
+    // Lấy tất cả các phần tử có cùng class
+    var archivers = document.querySelectorAll('.archiver');
+    var restoreArchivers = document.querySelectorAll('.restore-archiver');
+    var deleteArchivers = document.querySelectorAll('.delete-archiver');
+
+    // Lặp qua tất cả các phần tử archiver và thêm sự kiện
+    archivers.forEach((archiver, index) => {
+        archiver.addEventListener('click', () => {
+            restoreArchivers[index].classList.toggle('d-none');
+            deleteArchivers[index].classList.toggle('d-none');
+            archiver.classList.add('d-none');
+        });
+    });
+
+    // Lặp qua tất cả các phần tử restore-archiver và thêm sự kiện
+    restoreArchivers.forEach((restoreArchiver, index) => {
+        restoreArchiver.addEventListener('click', () => {
+            deleteArchivers[index].classList.add('d-none');
+            restoreArchivers[index].classList.add('d-none');
+            archivers[index].classList.toggle('d-none');
+        });
+    });
+
+    // Lặp qua tất cả các phần tử delete-archiver và thêm sự kiện
+    deleteArchivers.forEach((deleteArchiver) => {
+        deleteArchiver.addEventListener('click', () => {
+            window.location.reload();
+        });
+    });
+
+    // //     xử lý theo dõi + ngày hết hạn của card
+    // const notification = document.querySelector('#notification');
+    // const notification_follow = document.querySelector('#notification_follow');
+    // const notification_icon = document.querySelector('#notification_icon');
+    // const notification_content = document.querySelector('#notification_content');
+    // notification.addEventListener('click', () => {
+    //     notification_follow.classList.toggle('d-none');
+    //     notification_icon.classList.contains("ri-eye-line") ?
+    //         notification_icon.className = "ri-eye-off-line fs-22" :
+    //         notification_icon.className = "ri-eye-line fs-22";
+    //     notification_content.textContent === "Theo dõi" ?
+    //         notification_content.innerHTML = "Đang theo dõi" :
+    //         notification_content.innerHTML = "Theo dõi";
+    // });
+    //
+    // const due_date_checkbox = document.querySelector('#due_date_checkbox');
+    // const due_date_success = document.querySelector('#due_date_success');
+    // const due_date_due = document.querySelector('#due_date_due');
+    // due_date_checkbox.addEventListener('click', () => {
+    //     due_date_due.classList.toggle('d-none');
+    //     due_date_success.classList.toggle('d-none');
+    // });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const notificationElements = document.querySelectorAll('[id^="notification_"]');
@@ -786,13 +885,12 @@
     });
 
     function updateTask2(taskId) {
+        var description = editors['description_' + taskId].getData();
         var checkbox = document.getElementById('due_date_checkbox_' + taskId);
         var formData = {
-            // catalog_id: $('#catalog_id_' + taskId).val(),
-            // start_date: $('#start_date_' + taskId).val(),
-            description: $('#description_' + taskId).val(),
+            description: description,
             text: $('#text_' + taskId).val(),
-            progress: checkbox.checked ? 100 : 0,
+            // progress: checkbox.checked ? 100 : 0,
 
         };
         console.log(formData);
@@ -828,8 +926,9 @@
             }
         });
     }
-    $(document).ready(function() {
-        $('#FormCheckListItem').on('submit', function(e) {
+
+    $(document).ready(function () {
+        $('#FormCheckListItem').on('submit', function (e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').prop('disabled', true);
 
@@ -842,11 +941,11 @@
                 url: `/tasks/checklist/checklistItem/create`,
                 type: 'POST',
                 data: formData,
-                success: function(response) {
+                success: function (response) {
                     console.log('CheckListItem đã được thêm thành công!', response);
                     $(this).find('button[type="submit"]').prop('disabled', false);
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     alert('Đã xảy ra lỗi!');
                     console.log(xhr.responseText);
                     $(this).find('button[type="submit"]').prop('disabled', false);
