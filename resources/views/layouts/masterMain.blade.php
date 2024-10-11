@@ -180,40 +180,38 @@
 
     <!-- fgEmojiPicker js -->
     <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
+
     <!--jquery cdn-->
-
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- notifications init -->
     <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
+
     <!-- prismjs plugin -->
     <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
+
     <!-- App js -->
     <script src="{{ asset('theme/assets/js/app.js') }}"></script>
+
+    <!-- Lord Icon -->
+    <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
+
+    <!-- Modal Js -->
+    <script src="assets/js/pages/modal.init.js"></script>
 
     @if (request()->is('b/*'))
         <!-- dragula init js -->
         <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
-
         <!-- dom autoscroll -->
         <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
-
-
-
-
         {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script> --}}
-
         <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
-
-
-
-
         <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     @endif
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -232,7 +230,6 @@
             });
         })
 
-
         function disableButtonOnSubmit() {
             continueButton.disabled = true;
             return true; // Vẫn cho phép submit form
@@ -245,22 +242,14 @@
                 alertElement.style.display = 'none';
             }
         }, 5000);
-    </script>
 
-    <script>
         $(document).ready(function() {
             // Disable the send button initially
             $('#sendBtn').prop('disabled', true);
 
             // Lắng nghe sự thay đổi trong ô nhập liệu
             $('#prompt').on('input', function() {
-                // Nếu ô nhập trống, disable nút "Gửi"
-                if ($(this).val().trim() === '') {
-                    $('#sendBtn').prop('disabled', true);
-                } else {
-                    // Nếu có dữ liệu, enable nút "Gửi"
-                    $('#sendBtn').prop('disabled', false);
-                }
+                $('#sendBtn').prop('disabled', $(this).val().trim() === '');
             });
 
             $('#chatinput-form').on('submit', function(event) {
@@ -269,10 +258,6 @@
                 // Lấy giá trị từ ô nhập liệu
                 let prompt = $('#prompt').val();
 
-                // Nếu ô nhập trống, không làm gì cả
-                if (prompt.trim() === '') {
-                    return; // Không hiển thị alert
-                }
 
                 // Disable nút "Gửi" và ô nhập
                 $('#sendBtn').prop('disabled', true);
@@ -296,7 +281,6 @@
                         _token: $('input[name="_token"]').val() // Gửi token CSRF
                     },
                     success: function(response) {
-                        // Hiển thị phản hồi từ máy chủ
                         const responseText = response.chat.response; // Lấy phản hồi từ JSON
 
                         // Thay thế các dấu ** bằng chữ in đậm và các ký tự xuống dòng bằng <br>
@@ -308,6 +292,12 @@
                         $('#responseBox').append(
                             `<div class="ai-response" style="margin: 10px 0; padding: 10px; background: #f1f1f1; border-radius: 8px;">${formattedResponse}</div>`
                         );
+
+                        // Kiểm tra nếu có tin nhắn người dùng thì ẩn thông điệp mặc định
+                        if ($('#responseBox').children('.user-message').length > 0 || $(
+                                '#responseBox').children('.ai-response').length > 0) {
+                            $('.default-message').hide(); // Ẩn thông điệp
+                        }
 
                         // Cuộn xuống dưới khi có tin nhắn mới
                         $('#chat-conversation').scrollTop($('#chat-conversation')[0]
@@ -327,7 +317,28 @@
                     }
                 });
             });
+            // Thêm sự kiện cho nút xác nhận xóa
+            $('#confirmDelete').on('click', function() {
+                $.ajax({
+                    url: '{{ route('chat.history.destroy') }}', // Đường dẫn tới route xóa
+                    type: 'DELETE',
+                    success: function(response) {
+                        $('#successModal').modal('show'); // Hiển thị modal thành công
+                        $('#responseBox').empty(); // Xóa nội dung hiển thị chat
+                        $('.default-message').show(); // Hiển thị lại thông điệp mặc định
+                        $('#confirmDeleteModal').modal('hide'); // Ẩn modal xác nhận
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON && xhr.responseJSON.error ?
+                            xhr.responseJSON.error :
+                            'Có lỗi xảy ra, vui lòng thử lại.';
+                        $('#errorMessage').text(errorMessage); // Cập nhật thông báo lỗi
+                        $('#errorModal').modal('show'); // Hiển thị modal lỗi
+                    }
+                });
+            });
         });
+
         // validate Catalog
         document.addEventListener('DOMContentLoaded', function() {
             const nameCatalogInput = document.getElementById('nameCatalog');

@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ChatAI extends Model
 {
     use HasFactory;
-    protected $fillable = ['prompt', 'response'];
+    protected $fillable = ['user_id','prompt', 'response'];
 
 }
