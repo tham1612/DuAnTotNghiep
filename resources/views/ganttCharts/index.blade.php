@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="mb-2">
-                            <select class="form-select">
+                            <select name="parent"  class="form-select">
                                 <option value="">---Lựa chọn---</option>
                                 @foreach ($tasks as $task)
                                     <option value="{{ $task->id }}">{{ $task->text }}</option>
