@@ -79,17 +79,14 @@
                                 required />
                         </div>
 
-{{--                        <div class="mb-2">--}}
-{{--                            <select class="form-select">--}}
-{{--                                <option value="">---Lựa chọn---</option>--}}
-{{--                                @foreach ($catalogs as $catalog)--}}
-{{--                                    @foreach ($catalog->tasks as $task)--}}
-{{--                                        <option value="{{ $task->id }}">{{ $task->text }}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                @endforeach--}}
-{{--                               --}}
-{{--                            </select>--}}
-{{--                        </div>--}}
+                        <div class="mb-2">
+                            <select name="parent"  class="form-select">
+                                <option value="">---Lựa chọn---</option>
+                                @foreach ($tasks as $task)
+                                    <option value="{{ $task->id }}">{{ $task->text }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>

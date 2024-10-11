@@ -151,8 +151,7 @@ class BoardController extends Controller
 
         $viewType = \request('viewType', 'board');
 
-        // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
-        // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
+       
         $board->load([
             'users',
             // 'members',
