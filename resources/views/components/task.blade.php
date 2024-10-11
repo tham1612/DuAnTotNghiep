@@ -17,7 +17,7 @@
                        @endif
                     "
                          id="detailCardModalLabel">
-                        <div></div>
+                        <div><input type="file">thêm ảnh</div>
                         <button type="button" class="btn-close bg-white" style="margin: -100px -5px 0px 0px"
                                 data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
