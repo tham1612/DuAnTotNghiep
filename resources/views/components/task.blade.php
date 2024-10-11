@@ -729,7 +729,7 @@
 
     // Khởi tạo ClassicEditor cho mỗi phần tử có class 'editor'
     document.querySelectorAll('.editor').forEach((editorElement, index) => {
-        ClassicEditor
+        ClassicEditoreditor
             .create(editorElement)
             .then(editor => {
                 // Lưu trữ instance của từng editor với id của phần tử hoặc chỉ mục
