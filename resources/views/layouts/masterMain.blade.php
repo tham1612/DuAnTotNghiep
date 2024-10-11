@@ -14,9 +14,9 @@
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
     <!--Swiper slider css-->
     <link
-            href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
-            rel="stylesheet"
-            type="text/css"
+        href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
+        rel="stylesheet"
+        type="text/css"
     />
     <!-- Layout config Js -->
     <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
@@ -28,18 +28,26 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
+    <style>
+        /* Giới hạn chiều cao CKEditor */
+        .ck-editor__editable_inline {
+            min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
 
+
+        }
+    </style>
 
     @if (request()->is('b/*'))
-        <style>
-            .dropdown-item p {
-                overflow-wrap: break-word;
-                /* Cho phép xuống dòng */
-                white-space: normal;
-                /* Cho phép nội dung xuống dòng */
-                width: 200%;
-                /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
-            }
+
+        <style >
+        .dropdown-item p {
+        overflow-wrap: break-word;
+        /* Cho phép xuống dòng */
+        white-space: normal;
+        /* Cho phép nội dung xuống dòng */
+        width: 200%;
+        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+        }
         </style>
     @endif
     @yield('style')
@@ -203,72 +211,6 @@
 
 
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
-    <script>
-        // xử lý checklist card
-        const displayChecklistBtn = document.querySelector('.display-checklist');
-        const disableChecklistBtn = document.querySelector('.disable-checklist');
-        const checklistForm = document.querySelector('.addOrUpdate-checklist');
-        const checklistItem = document.querySelector('.checklistItem');
-
-
-        displayChecklistBtn.addEventListener('click', () => {
-
-            checklistForm.classList.toggle('d-none'); // Hiện hoặc ẩn form
-            displayChecklistBtn.classList.add('d-none'); // Hiện hoặc ẩn form
-        });
-
-        disableChecklistBtn.addEventListener('click', () => {
-            checklistItem.value = "";
-            checklistForm.classList.add('d-none'); // Hiện hoặc ẩn form
-            displayChecklistBtn.classList.toggle('d-none'); // Hiện hoặc ẩn form
-        });
-
-
-        //     xử lý lưu trữ cảu card
-        const archiver = document.querySelector('.archiver');
-        const restoreArchiver = document.querySelector('.restore-archiver');
-        const deleteArchiver = document.querySelector('.delete-archiver');
-        archiver.addEventListener('click', () => {
-
-            restoreArchiver.classList.toggle('d-none');
-            deleteArchiver.classList.toggle('d-none');
-            archiver.classList.add('d-none');
-        });
-
-        restoreArchiver.addEventListener('click', () => {
-
-            deleteArchiver.classList.add('d-none');
-            restoreArchiver.classList.add('d-none');
-            archiver.classList.toggle('d-none');
-        });
-
-        deleteArchiver.addEventListener('click', () => {
-            window.location.reload();
-        });
-
-        // //     xử lý theo dõi + ngày hết hạn của card
-        // const notification = document.querySelector('#notification');
-        // const notification_follow = document.querySelector('#notification_follow');
-        // const notification_icon = document.querySelector('#notification_icon');
-        // const notification_content = document.querySelector('#notification_content');
-        // notification.addEventListener('click', () => {
-        //     notification_follow.classList.toggle('d-none');
-        //     notification_icon.classList.contains("ri-eye-line") ?
-        //         notification_icon.className = "ri-eye-off-line fs-22" :
-        //         notification_icon.className = "ri-eye-line fs-22";
-        //     notification_content.textContent === "Theo dõi" ?
-        //         notification_content.innerHTML = "Đang theo dõi" :
-        //         notification_content.innerHTML = "Theo dõi";
-        // });
-        //
-        // const due_date_checkbox = document.querySelector('#due_date_checkbox');
-        // const due_date_success = document.querySelector('#due_date_success');
-        // const due_date_due = document.querySelector('#due_date_due');
-        // due_date_checkbox.addEventListener('click', () => {
-        //     due_date_due.classList.toggle('d-none');
-        //     due_date_success.classList.toggle('d-none');
-        // });
-    </script>
 @endif
 
 
@@ -306,18 +248,18 @@
 </script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Tắt nút "Gửi" khi trang tải
         $('#sendBtn').prop('disabled', true);
 
         // Kiểm tra khi người dùng nhập vào ô nhập liệu
-        $('#prompt').on('input', function() {
+        $('#prompt').on('input', function () {
             // Nếu ô nhập không trống, bật nút "Gửi", ngược lại tắt nút
             $('#sendBtn').prop('disabled', $(this).val().trim() === '');
         });
 
         // Bắt sự kiện khi form được submit
-        $('#chatinput-form').on('submit', function(e) {
+        $('#chatinput-form').on('submit', function (e) {
             e.preventDefault(); // Ngăn chặn form submit mặc định
 
             // Lấy giá trị từ ô nhập liệu
@@ -347,7 +289,7 @@
                 data: {
                     prompt: prompt
                 },
-                success: function(response) {
+                success: function (response) {
                     // Format response text
                     let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g,
                         '<strong>$1</strong>');
@@ -363,11 +305,11 @@
                     $('#chat-conversation').scrollTop($('#chat-conversation')[0]
                         .scrollHeight);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.log(xhr.responseText);
                     alert('Đã có lỗi xảy ra!');
                 },
-                complete: function() {
+                complete: function () {
                     // Re-enable nút "Gửi" và ô nhập sau khi yêu cầu hoàn tất
                     $('#sendBtn').prop('disabled', false);
                     $('#prompt').prop('disabled', false);
@@ -383,7 +325,7 @@
 
         // Kiểm tra trạng thái của input
         function validateCatalogForm() {
-            const isNameFilled = nameCatalogInput.value.trim() !== ''; 
+            const isNameFilled = nameCatalogInput.value.trim() !== '';
             btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
         }
 
@@ -406,11 +348,11 @@
         const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
 
         taskNameInputs.forEach((input, index) => {
-            const btnSubmit = btnSubmitTasks[index]; 
-            
+            const btnSubmit = btnSubmitTasks[index];
+
             input.addEventListener('input', function() {
-                const isTaskNameFilled = input.value.trim() !== ''; 
-                btnSubmit.disabled = !isTaskNameFilled; 
+                const isTaskNameFilled = input.value.trim() !== '';
+                btnSubmit.disabled = !isTaskNameFilled;
             });
         });
 
@@ -418,10 +360,10 @@
             const input = form.querySelector('.taskNameInput');
             const btnSubmit = form.querySelector('.btnSubmitTask');
             if (input.value.trim() === '') {
-                return false;  
+                return false;
             }
-            btnSubmit.disabled = true;  
-            return true;  
+            btnSubmit.disabled = true;
+            return true;
         }
     });
 </script>

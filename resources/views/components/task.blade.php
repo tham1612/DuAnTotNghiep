@@ -30,118 +30,133 @@
                                             <!-- Input Border Style -->
                                             <div>
                                                 <section class="d-flex mb-2">
-                                                    <i class="ri-artboard-line fs-22"></i>
+                                                    <i class="ri-artboard-line fs-24 mt-1"></i>
                                                     <input type="text" name="text"
-                                                           class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent"
+                                                           class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
                                                            id="text_{{ $task->id }}" value="{{ $task->text }}"
-                                                           onchange="updateTask2({{ $task->id }})" />
+                                                           onchange="updateTask2({{ $task->id }})"/>
 
                                                 </section>
 
-                                                <span class="ms-5">trong danh sách : <strong>{{$task->catalog->name}}</strong> </span>
+                                                <span
+                                                    class="ms-4">trong danh sách : <strong>{{$task->catalog->name}}</strong> </span>
 
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex mt-3">
-                                            <div class="p-3 col-3">
-                                                <strong>Thành viên</strong>
-                                                <section class="d-flex">
-                                                    <!-- thêm thành viên & chia sẻ link bảng -->
-                                                    <div
-                                                        class="d-flex justify-content-center align-items-center cursor-pointer ">
-                                                        <div class="col-auto ms-sm-auto">
-                                                            <div class="avatar-group">
-                                                                @if ($task->members->isNotEmpty())
+                                            @if($task->members->count() > 1)
+                                                <div class="p-3 col-3">
+                                                    <strong>Thành viên</strong>
+                                                    <section class="d-flex">
+                                                        <!-- thêm thành viên & chia sẻ link bảng -->
+                                                        <div
+                                                            class="d-flex justify-content-center align-items-center cursor-pointer ">
+                                                            <div class="col-auto ms-sm-auto">
+                                                                <div class="avatar-group">
+                                                                    @if ($task->members->isNotEmpty())
 
-                                                                    @php
-                                                                        // Đếm số lượng board members
-                                                                        $maxDisplay = 3;
-                                                                        $count = 0;
-                                                                    @endphp
+                                                                        @php
+                                                                            // Đếm số lượng board members
+                                                                            $maxDisplay = 3;
+                                                                            $count = 0;
+                                                                        @endphp
 
-                                                                    @foreach ($task->members as $taskMember)
-                                                                        @if ($count < $maxDisplay)
+                                                                        @foreach ($task->members as $taskMember)
+                                                                            @if ($count < $maxDisplay)
+                                                                                <a href="javascript: void(0);"
+                                                                                   class="avatar-group-item"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-placement="top"
+                                                                                   title="{{ $taskMember['name'] }}">
+                                                                                    @if ($taskMember['image'])
+                                                                                        <img
+                                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                                            alt=""
+                                                                                            class="rounded-circle avatar-sm">
+                                                                                    @else
+                                                                                        <div class="avatar-sm">
+                                                                                            <div
+                                                                                                class="avatar-title rounded-circle bg-light text-primary">
+                                                                                                {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                </a>
+                                                                                @php $count++; @endphp
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                        @if ($task->members->count() > $maxDisplay)
                                                                             <a href="javascript: void(0);"
                                                                                class="avatar-group-item"
                                                                                data-bs-toggle="tooltip"
                                                                                data-bs-placement="top"
-                                                                               title="{{ $taskMember['name'] }}">
-                                                                                @if ($taskMember['image'])
-                                                                                    <img
-                                                                                        src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                                        alt=""
-                                                                                        class="rounded-circle avatar-sm">
-                                                                                @else
-                                                                                    <div class="avatar-sm">
-                                                                                        <div
-                                                                                            class="avatar-title rounded-circle bg-light text-primary">
-                                                                                            {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
-                                                                                        </div>
+                                                                               title="{{ $task->members->count() - $maxDisplay }} more">
+                                                                                <div class="avatar-sm">
+                                                                                    <div
+                                                                                        class="avatar-title rounded-circle">
+                                                                                        +{{ $task->members->count() - $maxDisplay }}
                                                                                     </div>
-                                                                                @endif
-                                                                            </a>
-                                                                            @php $count++; @endphp
-                                                                        @endif
-                                                                    @endforeach
-
-                                                                    @if ($task->members->count() > $maxDisplay)
-                                                                        <a href="javascript: void(0);"
-                                                                           class="avatar-group-item"
-                                                                           data-bs-toggle="tooltip"
-                                                                           data-bs-placement="top"
-                                                                           title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                            <div class="avatar-sm">
-                                                                                <div
-                                                                                    class="avatar-title rounded-circle">
-                                                                                    +{{ $task->members->count() - $maxDisplay }}
                                                                                 </div>
-                                                                            </div>
-                                                                        </a>
+                                                                            </a>
+                                                                        @endif
                                                                     @endif
-                                                                @endif
 
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </section>
-                                            </div>
+                                                    </section>
+                                                </div>
+                                            @endif
+
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
                                                 @php $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
                                                         ->where('user_id', auth()->id())
                                                         ->value('follow');
                                                 @endphp
-                                                <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                     style="height: 35px; background-color: #c7c7c7" id="notification_{{$task->id}}"
-                                                     onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
+                                                <div
+                                                    class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
+                                                    style="height: 35px; background-color: #c7c7c7"
+                                                    id="notification_{{$task->id}}"
+                                                    onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
                                                     <i class="@if($memberFollow == 0)
                                                     ri-eye-off-line @elseif($memberFollow == 1) ri-eye-line @endif
                                                     fs-22" id="notification_icon_{{$task->id}}"></i>
-                                                    <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">Theo dõi</p>
-                                                    <div @if( $memberFollow == 0) class="d-none" @endif id="notification_follow_{{$task->id}}">
-                                                        <i class="ri-check-line fs-22 bg-light ms-2 rounded" style="color: black"></i>
+                                                    <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">Theo
+                                                        dõi</p>
+                                                    <div @if( $memberFollow == 0) class="d-none"
+                                                         @endif id="notification_follow_{{$task->id}}">
+                                                        <i class="ri-check-line fs-22 bg-light ms-2 rounded"
+                                                           style="color: black"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="p-3 ">
-                                                <strong>Ngày hết hạn</strong>
-                                                @php
-                                                    $now = \Carbon\Carbon::now();
-                                                    $endDate = \Carbon\Carbon::parse($task->end_date);
-                                                @endphp
-                                                <div class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                     style="height: 35px; background-color: #c7c7c7">
-                                                    <input type="checkbox" id="due_date_checkbox_{{ $task->id }}" class="form-check-input"
-                                                           onchange="updateTask2({{ $task->id }})" name="progress"
-                                                           @if($task->progress == 100 ) checked @endif />
-                                                    <p class="ms-2 mt-3">{{ $task->end_date }}</p>
-                                                    <span class="badge bg-success ms-2 {{ $now->gt($endDate) ? 'd-none' : '' }}"
-                                                          id="due_date_success_{{ $task->id }}">Hoàn tất</span>
-                                                    <span class="badge bg-danger ms-2 {{ $now->gt($endDate) ? '' : 'd-none' }}"
-                                                          id="due_date_due_{{ $task->id }}">Quá hạn</span>
-                                                </div>
-                                            </div>
 
+                                            @if(!empty($task->end_date) || !empty($task->start_date))
+                                                <div class="p-3 ">
+                                                    <strong>Ngày hết hạn</strong>
+                                                    @php
+                                                        $now = \Carbon\Carbon::now();
+                                                        $endDate = \Carbon\Carbon::parse($task->end_date);
+                                                    @endphp
+                                                    <div
+                                                        class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
+                                                        style="height: 35px; background-color: #c7c7c7">
+                                                        <input type="checkbox" id="due_date_checkbox_{{ $task->id }}"
+                                                               class="form-check-input"
+                                                               onchange="updateTask2({{ $task->id }})" name="progress"
+                                                               @if($task->progress == 100 ) checked @endif />
+                                                        <p class="ms-2 mt-3">{{ $task->end_date }}</p>
+                                                        <span
+                                                            class="badge bg-success ms-2 {{ $now->gt($endDate) ? 'd-none' : '' }}"
+                                                            id="due_date_success_{{ $task->id }}">Hoàn tất</span>
+                                                        <span
+                                                            class="badge bg-danger ms-2 {{ $now->gt($endDate) ? '' : 'd-none' }}"
+                                                            id="due_date_due_{{ $task->id }}">Quá hạn</span>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <!-- mô tả -->
@@ -150,33 +165,237 @@
                                             <i class="ri-menu-2-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Mô tả</p>
                                         </section>
-                                        <div class="ps-4">
-                                    <textarea name="description" id="description_{{ $task->id}}" cols="25" rows="5" class="form-control bg-light"
-                                              placeholder="Thêm mô tả chi tiết" onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
+                                        <div class="ps-4"><textarea name="description"
+                                                                    id="description_{{ $task->id}}"
+                                                                    cols="25" rows="5"
+                                                                    class="form-control bg-light editor"
+                                                                    placeholder="Thêm mô tả chi tiết"
+                                                                    onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
                                         </div>
                                     </div>
-                                    <!-- tệp -->
-                                    <div class="row mt-3">
-                                        <section class="d-flex">
-                                            <i class="ri-link-m fs-22"></i>
-                                            <p class="fs-18 ms-2 mt-1">Tệp đính kèm</p>
-                                        </section>
-                                        <div class="ps-4">
-                                            <strong>Thẻ tên dự án</strong>
-                                            <div class="d-flex flex-wrap row mt-2" style="align-items: start">
-                                                <!-- start card -->
-                                                <div class="col-6">
-                                                    <div class="card card-height-100">
-                                                        <div class="card-body">
-                                                            <div class="d-flex flex-column h-100">
-                                                                <div class="d-flex">
-                                                                    <div class="flex-grow-1">
-                                                                        <p class="text-muted"></p>
+                                    @if(false)
+                                        <!-- tệp -->
+                                        <div class="row mt-3">
+                                            <section class="d-flex">
+                                                <i class="ri-link-m fs-22"></i>
+                                                <p class="fs-18 ms-2 mt-1">Tệp đính kèm</p>
+                                            </section>
+                                            <div class="ps-4">
+                                                <strong>Thẻ tên dự án</strong>
+                                                <div class="d-flex flex-wrap row mt-2" style="align-items: start">
+                                                    <!-- start card -->
+                                                    <div class="col-6">
+                                                        <div class="card card-height-100">
+                                                            <div class="card-body">
+                                                                <div class="d-flex flex-column h-100">
+                                                                    <div class="d-flex">
+                                                                        <div class="flex-grow-1">
+                                                                            <p class="text-muted"></p>
+                                                                        </div>
+                                                                        <!--   cài đặt thẻ link-->
+                                                                        <div class="flex-shrink-0">
+                                                                            <div
+                                                                                class="d-flex gap-1 align-items-center">
+                                                                                <i class="ri-more-fill fs-20 cursor-pointer"
+                                                                                   data-bs-toggle="dropdown"
+                                                                                   aria-haspopup="true"
+                                                                                   aria-expanded="false"></i>
+                                                                                <div
+                                                                                    class="dropdown-menu dropdown-menu-md"
+                                                                                    style="padding: 15px 15px 0 15px">
+                                                                                    <h5 class="text-center">Thao tác
+                                                                                        mục</h5>
+                                                                                    <p class="mt-2">liên kết thẻ</p>
+                                                                                    <p>Xóa</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <!--   cài đặt thẻ link-->
-                                                                    <div class="flex-shrink-0">
-                                                                        <div class="d-flex gap-1 align-items-center">
-                                                                            <i class="ri-more-fill fs-20 cursor-pointer"
+
+                                                                    <div class="d-flex mb-2 rounded bg-info-subtle p-2">
+                                                                        <div class="flex-grow-1">
+                                                                            <h5>Tên thẻ</h5>
+                                                                            <div class="d-flex">
+                                                                    <span class="badge bg-success me-1">giao
+                                                                        diện</span>
+                                                                                <span
+                                                                                    class="badge bg-danger">code khó</span>
+                                                                            </div>
+                                                                            <div
+                                                                                class="mt-3 d-flex justify-content-between">
+                                                                                <div class="avatar-group">
+                                                                                    <a href="javascript: void(0);"
+                                                                                       class="avatar-group-item border-0"
+                                                                                       data-bs-toggle="tooltip"
+                                                                                       data-bs-trigger="hover"
+                                                                                       data-bs-placement="top"
+                                                                                       title="Darline Williams">
+                                                                                        <div class="avatar-xxs">
+                                                                                            <img
+                                                                                                src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                                                                alt=""
+                                                                                                class="rounded-circle img-fluid"/>
+                                                                                        </div>
+                                                                                    </a>
+
+                                                                                </div>
+                                                                                <ul class="link-inline mb-0">
+                                                                                    <!-- theo dõi -->
+                                                                                    <li class="list-inline-item">
+                                                                                        <a href="javascript:void(0)"
+                                                                                           class="text-muted"><i
+                                                                                                class="ri-eye-line align-bottom"></i>
+                                                                                            04</a>
+                                                                                    </li>
+                                                                                    <!-- bình luận -->
+                                                                                    <li class="list-inline-item">
+                                                                                        <a href="javascript:void(0)"
+                                                                                           class="text-muted"><i
+                                                                                                class="ri-question-answer-line align-bottom"></i>
+                                                                                            19</a>
+                                                                                    </li>
+                                                                                    <!-- tệp đính kèm -->
+                                                                                    <li class="list-inline-item">
+                                                                                        <a href="javascript:void(0)"
+                                                                                           class="text-muted"><i
+                                                                                                class="ri-attachment-2 align-bottom"></i>
+                                                                                            02</a>
+                                                                                    </li>
+                                                                                    <!-- checklist -->
+                                                                                    <li class="list-inline-item">
+                                                                                        <a href="javascript:void(0)"
+                                                                                           class="text-muted"><i
+                                                                                                class="ri-checkbox-line align-bottom"></i>
+                                                                                            2/4</a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end card body -->
+                                                            <div
+                                                                class="card-footer bg-transparent border-top-dashed py-2">
+                                                                <div class="flex-grow-1">Tên bảng : Tên list</div>
+                                                            </div>
+                                                            <!-- end card footer -->
+                                                        </div>
+                                                        <!-- end card -->
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="ps-4">
+                                                <strong>Tệp & liên kết</strong>
+                                                <div class="table-responsive table-hover table-card">
+                                                    <table class="table table-nowrap mt-4">
+                                                        <tbody>
+                                                        <tr class="cursor-pointer">
+                                                            <td class="col-1">
+                                                                <i class="ri-table-line fs-20 text-primary"></i>
+                                                            </td>
+                                                            <td class="text-start">FPT Polytecnic</td>
+                                                            <td class="text-end">
+                                                                <i class="ri-more-fill fs-20 cursor-pointer"
+                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                   aria-expanded="false"></i>
+                                                                <div class="dropdown-menu dropdown-menu-md"
+                                                                     style="padding: 15px 15px 0 15px">
+                                                                    <h5 class="text-center">Thao tác mục</h5>
+                                                                    <p class="mt-2">Chỉnh sửa</p>
+                                                                    <p class="mt-2">Nhận xét</p>
+                                                                    <p>Xóa</p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @php    $checklist = \App\Models\CheckList::where('task_id', $task->id)
+                                           ->first();
+                                    @endphp
+                                    @if(!empty($checklist))
+                                        <!-- việc cần làm -->
+                                        <div class="row mt-3">
+                                            <section class="d-flex justify-content-between">
+                                                <section class="d-flex">
+                                                    <i class="ri-checkbox-line fs-22"></i>
+                                                    <p class="fs-18 ms-2 mt-1">{{$checklist->name}}</p>
+                                                </section>
+                                                <button class="btn btn-outline-dark" style="height: 35px"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                    Xóa
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                    <h5 class="text-center">Bạn có muốn xóa Việc cần làm</h5>
+
+                                                    <p>Danh sách sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+
+                                                    <button class="btn btn-danger w-100">Xóa danh sách công việc
+                                                    </button>
+                                                </div>
+                                            </section>
+
+                                            <div class="ps-4">
+                                                <div class="progress animated-progress bg-light-subtle"
+                                                     style="height: 20px">
+                                                    <div class="progress-bar bg-success" role="progressbar"
+                                                         style="width: 50%"
+                                                         aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                        50%
+                                                    </div>
+                                                </div>
+                                                @php
+
+                                                    $checklistItems=\App\Models\CheckListItem::where('check_list_id',$checklist->id)
+                                                   ->get();
+                                                @endphp
+                                                <div class="table-responsive table-hover table-card">
+                                                    <table class="table table-nowrap mt-4">
+                                                        <tbody>
+                                                        @if($checklistItems)
+                                                            @foreach($checklistItems as $checklistItem)
+                                                                <tr class="cursor-pointer">
+                                                                    <td class="col-1">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                   type="checkbox" name="check_list_id"
+                                                                                   value="{{$checklistItem->id}}"
+                                                                                   id="check_list_{{$checklistItem->id}}"/>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{$checklistItem->name}}</p>
+                                                                    </td>
+                                                                    <td class=" d-flex justify-content-end">
+                                                                        <div>
+                                                                            <i class="ri-time-line fs-20 ms-2"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"></i>
+                                                                            <div
+                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                                @include('dropdowns.date')
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="ri-user-add-line fs-20 ms-2"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"></i>
+                                                                            <div
+                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                                @include('dropdowns.member')
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="ri-more-fill fs-20 ms-2"
                                                                                data-bs-toggle="dropdown"
                                                                                aria-haspopup="true"
                                                                                aria-expanded="false"></i>
@@ -184,256 +403,84 @@
                                                                                  style="padding: 15px 15px 0 15px">
                                                                                 <h5 class="text-center">Thao tác
                                                                                     mục</h5>
-                                                                                <p class="mt-2">liên kết thẻ</p>
+                                                                                <p class="mt-2">Chuyển sang thẻ</p>
                                                                                 <p>Xóa</p>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="d-flex mb-2 rounded bg-info-subtle p-2">
-                                                                    <div class="flex-grow-1">
-                                                                        <h5>Tên thẻ</h5>
-                                                                        <div class="d-flex">
-                                                                    <span class="badge bg-success me-1">giao
-                                                                        diện</span>
-                                                                            <span
-                                                                                class="badge bg-danger">code khó</span>
-                                                                        </div>
-                                                                        <div
-                                                                            class="mt-3 d-flex justify-content-between">
-                                                                            <div class="avatar-group">
-                                                                                <a href="javascript: void(0);"
-                                                                                   class="avatar-group-item border-0"
-                                                                                   data-bs-toggle="tooltip"
-                                                                                   data-bs-trigger="hover"
-                                                                                   data-bs-placement="top"
-                                                                                   title="Darline Williams">
-                                                                                    <div class="avatar-xxs">
-                                                                                        <img
-                                                                                            src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                                            alt=""
-                                                                                            class="rounded-circle img-fluid"/>
-                                                                                    </div>
-                                                                                </a>
-
-                                                                            </div>
-                                                                            <ul class="link-inline mb-0">
-                                                                                <!-- theo dõi -->
-                                                                                <li class="list-inline-item">
-                                                                                    <a href="javascript:void(0)"
-                                                                                       class="text-muted"><i
-                                                                                            class="ri-eye-line align-bottom"></i>
-                                                                                        04</a>
-                                                                                </li>
-                                                                                <!-- bình luận -->
-                                                                                <li class="list-inline-item">
-                                                                                    <a href="javascript:void(0)"
-                                                                                       class="text-muted"><i
-                                                                                            class="ri-question-answer-line align-bottom"></i>
-                                                                                        19</a>
-                                                                                </li>
-                                                                                <!-- tệp đính kèm -->
-                                                                                <li class="list-inline-item">
-                                                                                    <a href="javascript:void(0)"
-                                                                                       class="text-muted"><i
-                                                                                            class="ri-attachment-2 align-bottom"></i>
-                                                                                        02</a>
-                                                                                </li>
-                                                                                <!-- checklist -->
-                                                                                <li class="list-inline-item">
-                                                                                    <a href="javascript:void(0)"
-                                                                                       class="text-muted"><i
-                                                                                            class="ri-checkbox-line align-bottom"></i>
-                                                                                        2/4</a>
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- end card body -->
-                                                        <div class="card-footer bg-transparent border-top-dashed py-2">
-                                                            <div class="flex-grow-1">Tên bảng : Tên list</div>
-                                                        </div>
-                                                        <!-- end card footer -->
-                                                    </div>
-                                                    <!-- end card -->
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div class="ps-4">
-                                            <strong>Tệp & liên kết</strong>
-                                            <div class="table-responsive table-hover table-card">
-                                                <table class="table table-nowrap mt-4">
-                                                    <tbody>
-                                                    <tr class="cursor-pointer">
-                                                        <td class="col-1">
-                                                            <i class="ri-table-line fs-20 text-primary"></i>
-                                                        </td>
-                                                        <td class="text-start">FPT Polytecnic</td>
-                                                        <td class="text-end">
-                                                            <i class="ri-more-fill fs-20 cursor-pointer"
-                                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                                               aria-expanded="false"></i>
-                                                            <div class="dropdown-menu dropdown-menu-md"
-                                                                 style="padding: 15px 15px 0 15px">
-                                                                <h5 class="text-center">Thao tác mục</h5>
-                                                                <p class="mt-2">Chỉnh sửa</p>
-                                                                <p class="mt-2">Nhận xét</p>
-                                                                <p>Xóa</p>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- việc cần làm -->
-                                    <div class="row mt-3">
-                                        <section class="d-flex justify-content-between">
-                                            <section class="d-flex">
-                                                <i class="ri-checkbox-line fs-22"></i>
-                                                <p class="fs-18 ms-2 mt-1">Việc cần làm</p>
-                                            </section>
-                                            <button class="btn btn-outline-dark" style="height: 35px"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                Xóa
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                <h5 class="text-center">Bạn có muốn xóa Việc cần làm</h5>
-
-                                                <p>Danh sách sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
-
-                                                <button class="btn btn-danger w-100">Xóa danh sách công việc</button>
-                                            </div>
-                                        </section>
-
-                                        <div class="ps-4">
-                                            <div class="progress animated-progress bg-light-subtle"
-                                                 style="height: 20px">
-                                                <div class="progress-bar bg-success" role="progressbar"
-                                                     style="width: 50%"
-                                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    50%
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive table-hover table-card">
-                                                <table class="table table-nowrap mt-4">
-                                                    <tbody>
-                                                    <tr class="cursor-pointer">
-                                                        <td class="col-1">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                       value="" id="cardtableCheck01"/>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>checklist1</p>
-                                                        </td>
-                                                        <td class=" d-flex justify-content-end">
-                                                            <div>
-                                                                <i class="ri-time-line fs-20 ms-2"
-                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                   aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                    @include('dropdowns.date')
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <i class="ri-user-add-line fs-20 ms-2"
-                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                   aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                    @include('dropdowns.member')
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <i class="ri-more-fill fs-20 ms-2"
-                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                   aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-md"
-                                                                     style="padding: 15px 15px 0 15px">
-                                                                    <h5 class="text-center">Thao tác mục</h5>
-                                                                    <p class="mt-2">Chuyển sang thẻ</p>
-                                                                    <p>Xóa</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                        <td class="col-1">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                       value=""/>
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="2">
-                                                            <form action="" class="w-100 " aria-labelledby="">
-                                                                <input type="text" name=""
-                                                                       class="form-control checklistItem"
-                                                                       placeholder="Thêm mục"/>
-                                                                <div class="d-flex mt-3 justify-content-between">
-                                                                    <div>
-                                                                        <button class="btn btn-primary">Thêm
-                                                                        </button>
-                                                                        <button
-                                                                            class="btn btn-outline-dark disable-checklist">
-                                                                            Hủy
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="d-flex">
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
+                                                        <tr class="cursor-pointer addOrUpdate-checklist d-none">
+                                                            {{--                                                                                                                        <td class="col-1">--}}
+                                                            {{--                                                                                                                            <div class="form-check">--}}
+                                                            {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
+                                                            {{--                                                                                                                                       value=""/>--}}
+                                                            {{--                                                                                                                            </div>--}}
+                                                            {{--                                                                                                                        </td>--}}
+                                                            <td colspan="2">
+                                                                <form id="FormCheckListItem">
+                                                                    <input type="hidden" name="check_list_id"
+                                                                           id="check_list_id"
+                                                                           value="{{$checklist->id}}">
+                                                                    <input type="text" name="name" id="name"
+                                                                           class="form-control checklistItem"
+                                                                           placeholder="Thêm mục"/>
+                                                                    <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <i class="ri-time-line fs-20 ms-2"></i>
-                                                                            <span data-bs-toggle="dropdown"
-                                                                                  aria-haspopup="true"
-                                                                                  aria-expanded="false">Ngày hết hạn
-                                                                        </span>
-                                                                            <div
-                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                @include('dropdowns.date')
-                                                                            </div>
+                                                                            <button type="submit"
+                                                                                    class="btn btn-primary">Thêm
+                                                                            </button>
+                                                                            <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
 
-                                                                        <div>
-                                                                            <i class="ri-user-add-line fs-20 ms-2"></i>
-                                                                            <span data-bs-toggle="dropdown"
-                                                                                  aria-haspopup="true"
-                                                                                  aria-expanded="false">Chỉ định
-                                                                        </span>
-                                                                            <div
-                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                @include('dropdowns.member')
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <button class="btn btn-outline-dark ms-3 mt-2 display-checklist"
+                                                        type="button" id="">
+                                                    Thêm mục
+                                                </button>
                                             </div>
-                                            <button class="btn btn-outline-dark ms-3 mt-2 display-checklist"
-                                                    type="button">
-                                                Thêm mục
-                                            </button>
                                         </div>
-                                    </div>
+                                    @endif
                                     <div class="row mt-4">
                                         <section class="d-flex">
                                             <i class="ri-line-chart-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                                         </section>
-                                        <div class="ps-4">
-                                    {{-- <textarea name="" cols="25" rows="5" class="form-control bg-light"
-                                              placeholder="Viết bình luận...">
-                                            </textarea> --}}
+                                        <div class="">
+                                            <div class="d-flex">
+                                                @if (auth()->user()->image)
+                                                    <img class="rounded header-profile-user object-fit-cover"
+                                                         src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                                         alt="Avatar"/>
+                                                @else
+                                                    <div
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        style="width: 40px;height: 40px">
+                                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                                <div class="ms-2">
+                                                    <form action="#" method="post" class=" flex-column">
+                                                    <textarea name="content" class="form-control editor"
+                                                              id="comment_{{$task->id}}"
+                                                              placeholder="Viết bình luận"></textarea>
+                                                        <button type="submit" class="btn btn-primary mt-2">Lưu
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+
+                                            {{-- <textarea name="" cols="25" rows="5" class="form-control bg-light"
+                                                      placeholder="Viết bình luận...">
+                                                    </textarea> --}}
                                             {{-- @foreach ($activities as $activity)
                                             <li class="d-flex align-items-start mb-3">
                                                 <div class="me-3">
@@ -453,6 +500,7 @@
                                                 </div>
                                             </li>
                                         @endforeach --}}
+
                                         </div>
                                     </div>
                                 </div>
@@ -533,26 +581,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                                                <div class="d-flex mt-3 mb-3 cursor-pointer">
-                                                                    <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                                                        style=" height: 30px; background-color: #c7c7c7">
-                                                                        <i class="las la-map-marker"></i>
-                                                                        <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                            aria-expanded="false">
-                                                                            Vị trí
-                                                                        </p>
-                                                                        <!--                                    dropdown vị trí-->
-                                                                        <div class="dropdown-menu dropdown-menu-md p-4">
-                                                                            <form>
-                                                                                <h5 class="mb-3" style="text-align: center">Thêm vị trí</h5>
-                                                                                <div class="mb-2">
-                                                                                    <input type="search" class="form-control"
-                                                                                        placeholder="Tìm kiếm vị trí" />
-                                                                                </div>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                    <div class="d-flex mt-3 mb-3 cursor-pointer">
+                                        <div
+                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
+                                            style=" height: 30px; background-color: #c7c7c7">
+                                            <i class="las la-map-marker"></i>
+                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">
+                                                Vị trí
+                                            </p>
+                                            <!--                                    dropdown vị trí-->
+                                            <div class="dropdown-menu dropdown-menu-md p-4">
+                                                <form>
+                                                    <h5 class="mb-3" style="text-align: center">Thêm vị trí</h5>
+                                                    <div class="mb-2">
+                                                        <input type="search" class="form-control"
+                                                               placeholder="Tìm kiếm vị trí"/>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
@@ -595,7 +644,7 @@
                                             </p>
                                             <!--  dropdown sao chép-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                @include('dropdowns.copy')
+                                                @include('dropdowns.copyTask')
                                             </div>
                                         </div>
                                     </div>
@@ -659,9 +708,123 @@
                 </div>
             </div>
         </div>
+
     @endforeach
 @endif
-<script >
+<!-- ckeditor -->
+<script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
+<!-- prismjs plugin -->
+
+<script>
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+    // Tạo một đối tượng để lưu trữ các editor đã khởi tạo
+    const editors = {};
+
+    // Khởi tạo ClassicEditor cho mỗi phần tử có class 'editor'
+    document.querySelectorAll('.editor').forEach((editorElement, index) => {
+        ClassicEditor
+            .create(editorElement)
+            .then(editor => {
+                // Lưu trữ instance của từng editor với id của phần tử hoặc chỉ mục
+                editors[editorElement.id] = editor;
+
+                // Lắng nghe sự kiện change của editor
+                editor.model.document.on('change:data', debounce(() => {
+                    const taskId = editorElement.id.split('_')[1];
+                    updateTask2(taskId);
+                }, 1000));
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+<script>
+    // xử lý checklist card
+    const displayChecklistBtns = document.querySelectorAll('.display-checklist');
+    const disableChecklistBtns = document.querySelectorAll('.disable-checklist');
+    const checklistForms = document.querySelectorAll('.addOrUpdate-checklist');
+    const checklistItems = document.querySelectorAll('.checklistItem');
+
+    displayChecklistBtns.forEach((displayChecklistBtn, index) => {
+        displayChecklistBtn.addEventListener('click', () => {
+            checklistForms[index].classList.toggle('d-none'); // Hiện hoặc ẩn form
+            displayChecklistBtn.classList.add('d-none'); // Ẩn nút hiện form
+        });
+    });
+
+    disableChecklistBtns.forEach((disableChecklistBtn, index) => {
+        disableChecklistBtn.addEventListener('click', () => {
+            checklistItems[index].value = ""; // Xóa nội dung ô nhập liệu
+            checklistForms[index].classList.add('d-none'); // Ẩn form
+            displayChecklistBtns[index].classList.toggle('d-none'); // Hiện lại nút hiện form
+        });
+    });
+
+
+    //     xử lý lưu trữ cảu card
+    // Lấy tất cả các phần tử có cùng class
+    var archivers = document.querySelectorAll('.archiver');
+    var restoreArchivers = document.querySelectorAll('.restore-archiver');
+    var deleteArchivers = document.querySelectorAll('.delete-archiver');
+
+    // Lặp qua tất cả các phần tử archiver và thêm sự kiện
+    archivers.forEach((archiver, index) => {
+        archiver.addEventListener('click', () => {
+            restoreArchivers[index].classList.toggle('d-none');
+            deleteArchivers[index].classList.toggle('d-none');
+            archiver.classList.add('d-none');
+        });
+    });
+
+    // Lặp qua tất cả các phần tử restore-archiver và thêm sự kiện
+    restoreArchivers.forEach((restoreArchiver, index) => {
+        restoreArchiver.addEventListener('click', () => {
+            deleteArchivers[index].classList.add('d-none');
+            restoreArchivers[index].classList.add('d-none');
+            archivers[index].classList.toggle('d-none');
+        });
+    });
+
+    // Lặp qua tất cả các phần tử delete-archiver và thêm sự kiện
+    deleteArchivers.forEach((deleteArchiver) => {
+        deleteArchiver.addEventListener('click', () => {
+            window.location.reload();
+        });
+    });
+
+    // //     xử lý theo dõi + ngày hết hạn của card
+    // const notification = document.querySelector('#notification');
+    // const notification_follow = document.querySelector('#notification_follow');
+    // const notification_icon = document.querySelector('#notification_icon');
+    // const notification_content = document.querySelector('#notification_content');
+    // notification.addEventListener('click', () => {
+    //     notification_follow.classList.toggle('d-none');
+    //     notification_icon.classList.contains("ri-eye-line") ?
+    //         notification_icon.className = "ri-eye-off-line fs-22" :
+    //         notification_icon.className = "ri-eye-line fs-22";
+    //     notification_content.textContent === "Theo dõi" ?
+    //         notification_content.innerHTML = "Đang theo dõi" :
+    //         notification_content.innerHTML = "Theo dõi";
+    // });
+    //
+    // const due_date_checkbox = document.querySelector('#due_date_checkbox');
+    // const due_date_success = document.querySelector('#due_date_success');
+    // const due_date_due = document.querySelector('#due_date_due');
+    // due_date_checkbox.addEventListener('click', () => {
+    //     due_date_due.classList.toggle('d-none');
+    //     due_date_success.classList.toggle('d-none');
+    // });
+</script>
+
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const notificationElements = document.querySelectorAll('[id^="notification_"]');
 
@@ -720,14 +883,14 @@
             });
         });
     });
+
     function updateTask2(taskId) {
+        var description = editors['description_' + taskId].getData();
         var checkbox = document.getElementById('due_date_checkbox_' + taskId);
         var formData = {
-            // catalog_id: $('#catalog_id_' + taskId).val(),
-            // start_date: $('#start_date_' + taskId).val(),
-            description: $('#description_' + taskId).val(),
+            description: description,
             text: $('#text_' + taskId).val(),
-            progress: checkbox.checked ? 100 : 0,
+            // progress: checkbox.checked ? 100 : 0,
 
         };
         console.log(formData);
@@ -736,14 +899,15 @@
             method: "PUT",
             dataType: 'json',
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 console.log('Task updated successfully:', response);
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('An error occurred:', xhr.responseText);
             }
         });
     }
+
     function updateTaskMember(taskId, userId) {
 
         $.ajax({
@@ -762,5 +926,33 @@
             }
         });
     }
+
+    $(document).ready(function () {
+        $('#FormCheckListItem').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('button[type="submit"]').prop('disabled', true);
+
+            var formData = {
+                check_list_id: $('#check_list_id').val(),
+                name: $('#name').val(),
+            };
+            console.log(formData);
+            $.ajax({
+                url: `/tasks/checklist/checklistItem/create`,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    console.log('CheckListItem đã được thêm thành công!', response);
+                    $(this).find('button[type="submit"]').prop('disabled', false);
+                },
+                error: function (xhr) {
+                    alert('Đã xảy ra lỗi!');
+                    console.log(xhr.responseText);
+                    $(this).find('button[type="submit"]').prop('disabled', false);
+                }
+            });
+        });
+    });
+
 
 </script>
