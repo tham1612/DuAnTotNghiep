@@ -39,6 +39,7 @@
                                                 <span
                                                     class="ms-4">trong danh sách : <strong>{{$task->catalog->name}}</strong> </span>
 
+
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex mt-3">
@@ -98,24 +99,7 @@
                                                                                 </div>
                                                                             </a>
                                                                         @endif
-                                                                    @endif
 
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                            @endif
-
-                                            <div class="p-3">
-                                                <strong>Thông báo</strong>
-                                                @php$memberFollow = \App\Models\Follow_member::where(
-                                                        'task_id',
-                                                        $task->id,
-                                                    )
-                                                        ->where('user_id', auth()->id())
-                                                        ->value('follow');
-                                                @endphp
                                                 <div
                                                     class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
                                                     style="height: 35px; background-color: #c7c7c7"
@@ -279,6 +263,7 @@
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -307,7 +292,7 @@
                                                             </td>
                                                             <td class="text-start">FPT Polytecnic</td>
                                                             <td class="text-end">
-                                                                <i class="ri-more-fill fs-20 cursor-pointer"
+
                                                                    data-bs-toggle="dropdown" aria-haspopup="true"
                                                                    aria-expanded="false"></i>
                                                                 <div class="dropdown-menu dropdown-menu-md"
@@ -364,6 +349,7 @@
                                                             <td class="col-1">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="checkbox"
+
                                                                            value="" id="cardtableCheck01"/>
                                                                 </div>
                                                             </td>
@@ -373,6 +359,7 @@
                                                             <td class=" d-flex justify-content-end">
                                                                 <div>
                                                                     <i class="ri-time-line fs-20 ms-2"
+
                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
                                                                        aria-expanded="false"></i>
                                                                     <div
@@ -382,6 +369,7 @@
                                                                 </div>
                                                                 <div>
                                                                     <i class="ri-user-add-line fs-20 ms-2"
+
                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
                                                                        aria-expanded="false"></i>
                                                                     <div
@@ -391,6 +379,7 @@
                                                                 </div>
                                                                 <div>
                                                                     <i class="ri-more-fill fs-20 ms-2"
+
                                                                        data-bs-toggle="dropdown" aria-haspopup="true"
                                                                        aria-expanded="false"></i>
                                                                     <div class="dropdown-menu dropdown-menu-md"
@@ -406,6 +395,7 @@
                                                             <td class="col-1">
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="checkbox"
+
                                                                            value=""/>
                                                                 </div>
                                                             </td>
@@ -427,6 +417,7 @@
                                                                             <div>
                                                                                 <i class="ri-time-line fs-20 ms-2"></i>
                                                                                 <span data-bs-toggle="dropdown"
+
                                                                                       aria-haspopup="true"
                                                                                       aria-expanded="false">Ngày hết hạn
                                                                         </span>
@@ -437,6 +428,7 @@
                                                                             </div>
 
                                                                             <div>
+
                                                                                 <i class="ri-user-add-line fs-20 ms-2"></i>
                                                                                 <span data-bs-toggle="dropdown"
                                                                                       aria-haspopup="true"
@@ -452,6 +444,7 @@
                                                                 </form>
                                                             </td>
                                                         </tr>
+
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -590,6 +583,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
@@ -606,6 +600,26 @@
                                                     <div class="mb-2">
                                                         <input type="search" class="form-control"
                                                                placeholder="Tìm kiếm vị trí"/>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mt-3 mb-3 cursor-pointer">
+                                        <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
+                                            style=" height: 30px; background-color: #c7c7c7">
+                                            <i class="las la-map-marker"></i>
+                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Vị trí
+                                            </p>
+                                            <!--                                    dropdown vị trí-->
+                                            <div class="dropdown-menu dropdown-menu-md p-4">
+                                                <form>
+                                                    <h5 class="mb-3" style="text-align: center">Thêm vị trí</h5>
+                                                    <div class="mb-2">
+                                                        <input type="search" class="form-control"
+                                                            placeholder="Tìm kiếm vị trí" />
                                                     </div>
                                                 </form>
                                             </div>
@@ -713,6 +727,7 @@
 
     @endforeach
 @endif
+
 <!-- ckeditor -->
 <script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
 <!-- prismjs plugin -->
