@@ -32,6 +32,8 @@ class TaskController extends Controller
      */
     public function index($id, Request $request)
     {
+
+
     }
 
     /**
@@ -39,7 +41,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $data = $request->except(['position', 'priority', 'risk', 'sortorder',]);
+        $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
         if (isset($data['start']) || isset($data['end'])) {
             $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
             $data['end_date'] = $data['end'];
