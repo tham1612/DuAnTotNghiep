@@ -29,6 +29,9 @@
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
     <style>
+        body{
+            overflow-x: hidden;
+        }
         /* Giới hạn chiều cao CKEditor */
         .ck-editor__editable_inline {
             min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
