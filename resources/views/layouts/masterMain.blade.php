@@ -29,9 +29,6 @@
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
     <style>
-        body{
-            overflow-x: hidden;
-        }
         /* Giới hạn chiều cao CKEditor */
         .ck-editor__editable_inline {
             min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
@@ -336,15 +333,18 @@
         nameCatalogInput.addEventListener('input', validateCatalogForm);
 
         // Kiểm tra form khi người dùng submit
-        function disableButtonOnSubmit() {
-            if (nameCatalogInput.value.trim() === '') {
-                return false;  // Ngăn submit nếu input trống
-            }
-            btnSubmitCatalog.disabled = true;  // Vô hiệu hóa nút sau khi submit
-            return true;  // Cho phép submit form
+        function disableButtonOnSubmit(event) {
+           // Ngăn gửi biểu mẫu ngay lập tức
+            event.preventDefault();
+            // Kiểm tra xem nút đã bị vô hiệu hóa chưa
+            if (btnSubmitCatalog.disabled) return;
+            // Vô hiệu hóa nút
+            btnSubmitCatalog.disabled = true;
+            // Gửi biểu mẫu ngay lập tức
+            event.target.closest('form').submit();
         }
+        btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
     });
-
     // validate task
     document.addEventListener('DOMContentLoaded', function() {
         const taskNameInputs = document.querySelectorAll('.taskNameInput');
@@ -352,22 +352,28 @@
 
         taskNameInputs.forEach((input, index) => {
             const btnSubmit = btnSubmitTasks[index];
-
+            
             input.addEventListener('input', function() {
                 const isTaskNameFilled = input.value.trim() !== '';
                 btnSubmit.disabled = !isTaskNameFilled;
             });
+
+            btnSubmit.addEventListener('click', function(event) {
+                disableButtonOnSubmitTask(input.closest('form'), event);
+            });
         });
 
-        window.disableButtonOnSubmitTask = function(form) {
+        window.disableButtonOnSubmitTask = function(form, event) {
             const input = form.querySelector('.taskNameInput');
             const btnSubmit = form.querySelector('.btnSubmitTask');
-            if (input.value.trim() === '') {
-                return false;
-            }
-            btnSubmit.disabled = true;
-            return true;
-        }
+            event.preventDefault();
+
+            if (btnSubmit.disabled) return;
+
+            btnSubmit.disabled = true; 
+            form.submit();
+        };
+
     });
 </script>
 
