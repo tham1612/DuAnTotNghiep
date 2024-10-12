@@ -4,9 +4,8 @@
             <div class="d-flex justify-content-between align-items-center">
 
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
-                @php $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-                                ->where('user_id', auth()->id())
-                                ->value('is_star');
+                @php
+                    $member_Is_star = session('member_Is_star');
                 @endphp
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
                     @if( $member_Is_star == 1) active @endif"

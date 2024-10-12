@@ -535,5 +535,4 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-@endforeach
 

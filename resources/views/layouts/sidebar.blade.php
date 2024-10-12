@@ -195,22 +195,24 @@
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                                 <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                src="{{ asset('storage/' . $board->image) }}" 
-                                                alt="image"/>                                
+                                                     src="{{\Illuminate\Support\Facades\Storage::url($board->image)}}"
+                                                alt="image"/>
                                         @else
                                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                     style="width: 30px;height: 30px">
                                                     {{ strtoupper(substr($board->name, 0, 1)) }}
                                                 </div>
-                                                
+
                                         @endif
-                                        <span class="text-white fs-16">{{ \Illuminate\Support\Str::limit($board->name, 10) }}</span>  
-                                    </div>   
-                                </a>   
-                                @php 
+                                        <span class="text-white fs-16">{{ \Illuminate\Support\Str::limit($board->name, 10) }}</span>
+                                    </div>
+                                </a>
+                                @php
                                     $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
                                     ->where('user_id', auth()->id())
                                     ->value('is_star');
+                                    session(['member_Is_star' => $member_Is_star]);
+
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">
                                     <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
@@ -227,22 +229,22 @@
                                         </span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-start">
-                                        <a class="dropdown-item"> 
+                                        <a class="dropdown-item">
                                             <input type="text" name="text" class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
                                                 id="name_{{ $board->id }}" value="{{ $board->name }}" onchange="updateBoard({{ $board->id }})" />
                                         </a>
                                         <div class="dropdown-item ms-2 me-2">
                                             <div class="mb-2">
                                                 <label for="">Ảnh của bảng</label>
-                                                <input type="file" class="form-control"  
+                                                <input type="file" class="form-control" name="image"
                                                 id="image_{{ $board->id }}" value="{{ $board->image }}" onchange="updateBoard({{ $board->id }})" />
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Đóng bảng -->
                                         <div class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
                                             <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
-                                                style="height: 30px; background-color: #c7c7c7;" 
+                                                style="height: 30px; background-color: #c7c7c7;"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="ri-archive-line"></i>
                                                 <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
@@ -252,17 +254,17 @@
                                                 <h5 class="text-center">Đóng bảng?</h5>
                                                 <li>
                                                     <p class="dropdown-item-text">
-                                                        Bạn có thể tìm và mở lại các bảng đã đóng ở cuối 
+                                                        Bạn có thể tìm và mở lại các bảng đã đóng ở cuối
                                                         <a href="{{ route('homes.dashboard',  $workspaceChecked->id) }}">trang các bảng của bạn</a>.
                                                     </p>
-                                                    
+
                                                 </li>
                                                 <li class="d-flex justify-content-center">
                                                     <button class="btn btn-danger" type="button">Đóng</button>
                                                 </li>
                                             </ul>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -286,8 +288,10 @@
     function updateBoard(boardId) {
         var formData = {
             name: $('#name_' + boardId).val(),
+            image: $('#image_' + boardId).val(),
             id: boardId,
         };
+        console.log(image);
         $.ajax({
             url: `/b/${boardId}/update`,
             method: "PUT",

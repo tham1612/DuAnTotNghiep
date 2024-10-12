@@ -24,9 +24,10 @@ use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
 
 // use function Laravel\Prompts\select;
-
+const PATH_UPLOAD = 'board';
 class BoardController extends Controller
 {
+    const PATH_UPLOAD = 'boards';
     protected $googleApiClient;
 
     public function __construct(GoogleApiClientController $googleApiClient)
@@ -37,7 +38,7 @@ class BoardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    const PATH_UPLOAD = 'board.';
+
 
     public function index($workspaceId)
     {
@@ -272,7 +273,10 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method','image']);
+        if ($request->hasFile('image')) {
+            $data['image'] = Storage::put(self::PATH_UPLOAD , $request->file('image'));
+        }
         Board::query()
             ->where('id', $id)
             ->update($data);
