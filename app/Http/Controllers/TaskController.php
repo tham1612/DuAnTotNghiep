@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\BoardMember;
+use App\Models\CheckListItem;
 use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskMember;
@@ -15,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -30,6 +32,7 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
+    const PATH_UPLOAD = 'tasks';
     public function index($id, Request $request)
     {
 
@@ -90,7 +93,14 @@ class TaskController extends Controller
     {
         $task = Task::query()->findOrFail($id);
 
-        $data = $request->all();
+        $data = $request->except(['image']);
+        if ($request->hasFile('image')) {
+            $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
+            $data['image'] = $imagePath;
+            if ($task->image && Storage::exists($task->image)) {
+                Storage::delete($task->image);
+            }
+        }
 //        dd($data);
         if (isset($data['start_date']) || isset($data['end_date'])) {
             $this->updateCalendar($request, $id);
@@ -118,7 +128,15 @@ class TaskController extends Controller
         ]);
 
     }
-
+//    public function updateDateTask(Request $request, string $id)
+//    {
+//        $dateTask = Task::query()->findOrFail($id);
+//        $data=$request->only(['reminder_date','end_date','start_date']);
+//        $dateTask->update($data);
+//        return response()->json([
+//            'success' => "update dateTask thành công",
+//        ]);
+//    }
     public function updatePosition(Request $request, string $id)
     {
         $data = $request->all();

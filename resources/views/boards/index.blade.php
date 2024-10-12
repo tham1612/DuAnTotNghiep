@@ -93,8 +93,16 @@
                                         <!-- Ảnh bìa -->
                                         @if ($task->image)
                                             <div class="tasks-img rounded"
-                                                 style=" background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}'); ">
+                                                 style="
+                                                     background-image: url('{{ asset('storage/' . $task->image) }}');
+                                                     background-size: cover;
+                                                     background-position: center;
+                                                     background-repeat: no-repeat;
+                                                     width: 100%;
+                                                     height: 150px;
+                                                 ">
                                             </div>
+
                                         @endif
                                         <!-- giao việc cho thành viên-->
                                         @if (false)

@@ -238,7 +238,11 @@
                     <div class="d-flex justify-content-center align-items-center cursor-pointer me-2">
                         <div class="col-auto ms-sm-auto">
                             <div class="avatar-group">
-                                @php  $boardMembers=$board->users->unique('id'); @endphp
+                                @php
+                                    $boardMembers=$board->users->unique('id');
+                                     session(['boardMembers' => $boardMembers]);
+                                    @endphp
+
 
                                 @php
                                     // Đếm số lượng board members

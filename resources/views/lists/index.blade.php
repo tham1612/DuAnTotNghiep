@@ -12,8 +12,8 @@
                 </div>
                 <!-- Menu sẽ ẩn ban đầu -->
                 <div id="verticalMenu" class="list-group d-none" data-simplebar style="max-height: 400px; width:300px">
-                    @if (!empty($catalogs))
-                        @foreach ($catalogs as $catalog)
+                    @if (!empty($board))
+                        @foreach ($board->catalogs as $catalog)
                             <a class="list-group-item list-group-item-action"
                                href="#{{ $catalog->id }}">{{ $catalog->name }} </a>
                         @endforeach
@@ -53,8 +53,8 @@
     </div>
     <div class="col-lg-12" id="example" class="display">
         <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh; margin-top: -70px;" class=" me-3 ms-3">
-            @if (!empty($catalogs))
-                @foreach ($catalogs as $catalog)
+            @if (!empty($board))
+                @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
                         <div class="card-header border-0">
                             <div class="d-flex align-items-center">
@@ -278,7 +278,7 @@
                                                     <select name="catalog_id" id="catalog_id_{{ $task->id }}"
                                                             class="form-select no-arrow"
                                                             onchange="updateTaskList({{ $task->id }});">
-                                                        @foreach ($catalogs as $catalog)
+                                                        @foreach ($board->catalogs as $catalog)
                                                             <option @selected($catalog->id == $task->catalog_id)
                                                                     value="{{ $catalog->id }}">
                                                                 {{ $catalog->name }}

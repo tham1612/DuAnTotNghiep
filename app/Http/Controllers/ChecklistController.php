@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CheckList;
 use App\Models\CheckListItem;
+use App\Models\CheckListItemMember;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -50,9 +51,37 @@ class ChecklistController extends Controller
         $data=$request->only(['name','task_id']);
         $checkList->update($data);
         return response()->json([
-            'success' => "update thao tác thành công",
+            'success' => "update checkList thành công",
         ]);
     }
+    public function updateChecklistItem(Request $request, string $id)
+    {
+        $checkListItem = CheckListItem::query()->findOrFail($id);
+        $data=$request->only(['reminder_date','end_date','start_date']);
+        $checkListItem->update($data);
+        return response()->json([
+            'success' => "update checkListItem thành công",
+        ]);
+    }
+    public function addMemberChecklist(Request $request)
+    {
+        $data = $request->except(['_token', '_method']);
+        CheckListItemMember::create($data);
+        return response()->json([
+            'success' => "them CheckListItemMember thành công",
+        ]);
+    }
+    public function deleteMemberChecklist( Request $request )
+    {
+        $checklistItem = CheckListItemMember::where('check_list_item_id',$request->check_list_item_id)
+            ->where('user_id',$request->user_id)
+            ->first();
+        $checklistItem->delete();
+        return response()->json([
+            'success' => "xoas CheckListItemMember thành công",
+        ]);
+    }
+
 
     /**
      * Remove the specified resource from storage.

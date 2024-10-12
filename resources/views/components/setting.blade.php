@@ -78,7 +78,7 @@
     </div>
 
 </div>
-{{--chi tiet bang--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="detailBoard" aria-labelledby="detailBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -134,7 +134,7 @@
     </div>
 
 </div>
-{{--hoat dong--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="activityBoard" aria-labelledby="activityCanvasLabel"
      style="width: 350px;">
     <div class="offcanvas-header">
@@ -179,7 +179,7 @@
     </div>
 </div>
 
-{{--muc da luu tru--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="storageBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -195,19 +195,19 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#storageCatalog" role="tab">
                         Danh sách lưu trữ
                     </a>
-                    {{--                    <span class="badge bg-dark align-items-center justify-content-center d-flex"--}}
-                    {{--                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))--}}
-                    {{--                            {{ $board_m_invite->count() }}--}}
-                    {{--                        @endif</span>--}}
+                                        <span class="badge bg-dark align-items-center justify-content-center d-flex"
+                                              style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
+                                                {{ $board_m_invite->count() }}
+                                            @endif</span>
                 </li>
                 <li class="nav-item d-flex align-items-center justify-content-between">
                     <a class="nav-link" data-bs-toggle="tab" href="#storageTask" role="tab">
                         Thẻ đã lưu trữ
                     </a>
-                    {{--                    <span class="badge bg-dark align-items-center justify-content-center d-flex"--}}
-                    {{--                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))--}}
-                    {{--                            {{ $board_m_invite->count() }}--}}
-                    {{--                        @endif</span>--}}
+                                        <span class="badge bg-dark align-items-center justify-content-center d-flex"
+                                              style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
+                                                {{ $board_m_invite->count() }}
+                                            @endif</span>
                 </li>
             </ul>
 
@@ -279,7 +279,7 @@
 
 </div>
 
-{{--cai dat--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="generalSettingBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -321,7 +321,7 @@
 
 </div>
 
-{{--nhãn--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="tagBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
