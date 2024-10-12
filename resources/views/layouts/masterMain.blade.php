@@ -244,7 +244,7 @@
         }, 5000);
 
         $(document).ready(function() {
-            // Disable the send button initially
+            // Vô hiệu hóa nút gửi
             $('#sendBtn').prop('disabled', true);
 
             // Lắng nghe sự thay đổi trong ô nhập liệu
@@ -257,11 +257,10 @@
 
                 // Lấy giá trị từ ô nhập liệu
                 let prompt = $('#prompt').val();
-
-
                 // Disable nút "Gửi" và ô nhập
                 $('#sendBtn').prop('disabled', true);
                 $('#prompt').prop('disabled', true);
+                $('#loadingSpinner').show(); // Hiển thị thanh tải
 
                 // Hiển thị tin nhắn của người dùng
                 $('#responseBox').append(
@@ -287,6 +286,7 @@
                         let formattedResponse = responseText.replace(/\*\*(.*?)\*\*/g,
                             '<strong>$1</strong>');
                         formattedResponse = formattedResponse.replace(/\n/g, '<br>');
+                        $('#loadingSpinner').hide();
 
                         // Hiển thị phản hồi từ hệ thống
                         $('#responseBox').append(
