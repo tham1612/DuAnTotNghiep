@@ -1,5 +1,5 @@
 <?php
-
+use \App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\LoginGoogleController;
 use App\Http\Controllers\UserController;
@@ -104,6 +104,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);
         Route::put('/update-event/{id}', [TaskController::class, 'updateEvent'])->name('update');
+//        Route::put('/update-dateTask/{id}', [TaskController::class, 'updateEvent'])->name('updateDateTask');
         Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
@@ -112,12 +113,18 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
-        Route::post('/tasks/checklist/create', [\App\Http\Controllers\ChecklistController::class, 'create'])
+        Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
             ->name('checklist.create');
-        Route::put('/tasks/{checklist}/checklist', [\App\Http\Controllers\ChecklistController::class, 'update'])
+        Route::put('/tasks/{checklist}/checklist', [ChecklistController::class, 'update'])
             ->name('checklist.update');
-        Route::post('/tasks/checklist/checklistItem/create', [\App\Http\Controllers\ChecklistController::class, 'createChecklistItem'])
+        Route::post('/tasks/checklist/checklistItem/create', [ChecklistController::class, 'createChecklistItem'])
             ->name('checklist.createChecklistItem');
+        Route::put('/tasks/checklist/checklistItem/{checklistItem}/update', [ChecklistController::class, 'updateChecklistItem'])
+            ->name('checklist.updateChecklistItem');
+        Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
+            ->name('checklist.addMemberChecklist');
+        Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
+            ->name('checklist.deleteMemberChecklist');
     });
 
 

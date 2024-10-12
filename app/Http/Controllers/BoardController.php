@@ -27,7 +27,7 @@ use Spatie\Activitylog\Models\Activity;
 const PATH_UPLOAD = 'board';
 class BoardController extends Controller
 {
-    const PATH_UPLOAD = 'boards';
+    const PATH_UPLOAD = 'boards.';
     protected $googleApiClient;
 
     public function __construct(GoogleApiClientController $googleApiClient)
@@ -156,37 +156,27 @@ class BoardController extends Controller
             'users',
             // 'members',
             'catalogs',
-            'catalogs.tasks',
-            'catalogs.tasks.catalog:id,name',
             'catalogs.tasks' => function ($query) {
                 $query->orderBy('position', 'asc');
             },
-
+            'catalogs.tasks.catalog:id,name',
             'catalogs.tasks.members'
         ]);
-
-
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
             ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id')
             ->where('board_members.board_id', $board->id)
             ->get();
-
         // Lấy danh sách catalogs
         $catalogs = $board->catalogs;
         /*
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
-
-
         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
         $activities = Activity::where('properties->board_id', $boardId)->orderBy('created_at', 'desc')->get();
-
         //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
-        $boardName = $board->name; // Lấy tên của board
-        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
-
+//        $boardName = $board->name; // Lấy tên của board
 
         $listEvent = array();
 
@@ -221,8 +211,6 @@ class BoardController extends Controller
                 'end' => Carbon::parse($event->end_date)->toIso8601String(),
             ];
         }
-
-
         // Tách danh sách các thành viên chờ lời mời và các thành viên đã được mời vào
         $boardMembers = $boardMemberMain->filter(function ($member) {
             return $member->authorize !== AuthorizeEnum::Owner()->value &&
@@ -260,17 +248,27 @@ class BoardController extends Controller
             ->where('workspace_members.workspace_id', $board->workspace_id)
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
-        return match ($viewType) {
+        switch ($viewType) {
+            case 'dashboard':
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
 
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            case 'list':
+                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
 
+            case 'gantt':
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
 
-        };
+            case 'table':
+                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+
+            case 'calendar':
+
+                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+
+            default:
+                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+        }
+
     }
 
     /**
@@ -278,19 +276,22 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->except(['_token', '_method','image']);
+        $board = Board::query()->findOrFail($id);
+        $data = $request->except(['_token', '_method', 'image']);
         if ($request->hasFile('image')) {
-            $data['image'] = Storage::put(self::PATH_UPLOAD , $request->file('image'));
+            $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
+            $data['image'] = $imagePath;
+            if ($board->image && Storage::exists($board->image)) {
+                Storage::delete($board->image);
+            }
         }
-        Board::query()
-            ->where('id', $id)
-            ->update($data);
+        $board->update($data);
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
             'msg' => true
         ]);
-
     }
+
 
     public function updateBoardMember(Request $request, string $id)
     {

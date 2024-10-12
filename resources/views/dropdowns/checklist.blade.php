@@ -1,9 +1,9 @@
 <h5 class="mb-3" style="text-align: center">
     Thêm danh sách công việc
 </h5>
-@php
-    $checklist = \App\Models\CheckList::where('task_id', $task->id)->first();
-@endphp
+{{--@php--}}
+{{--    $checklist = \App\Models\CheckList::where('task_id', $task->id)->first();--}}
+{{--@endphp--}}
 
 @if($checklist)
     <form id="taskFormUpdate_{{$checklist->id}}" onsubmit="return submitFormCheckList({{$checklist->id}})">

@@ -26,8 +26,9 @@
 
                         <tbody>
 
-                        @if (!empty($tasks))
-                            @foreach ($tasks as $task)
+                        @if (!empty($board))
+                            @foreach($board->catalogs as $catalog)
+                                   @foreach ($catalog->tasks as $task)
                                 <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                 <tr>
                                     <td>{{ $loop->iteration  }}</td>
@@ -104,7 +105,7 @@
                                             <select name="catalog_id" id="catalog_id_{{ $task->id }}"
                                                     class="form-select no-arrow"
                                                     onchange="updateTask({{ $task->id }})">
-                                                @foreach ($catalogs as $catalog)
+                                                @foreach ($board->catalogs as $catalog)
                                                     <option
                                                         @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
                                                         {{ $catalog->name }}
@@ -165,6 +166,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @endforeach
                         @endif
                         </tbody>
                     </table>
@@ -217,7 +219,7 @@
                     <div class="mb-2">
                         <select name="catalog_id" id="" class="form-select">
                             <option value="">---Lựa chọn---</option>
-                            @foreach ($catalogs as $catalog)
+                            @foreach ($board->catalogs as $catalog)
                                 <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                             @endforeach
                         </select>

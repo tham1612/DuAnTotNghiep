@@ -26,7 +26,7 @@
         // Đếm số thành viên trong workspace
         $memberCount = \App\Models\WorkspaceMember::where('workspace_id', $workspaceChecked->workspace_id)->count();
     }
- 
+
     $workspaceMemberChecked = \App\Models\WorkspaceMember::query()
         ->where('workspace_id', $workspaceChecked->workspace_id)
         ->where('user_id', $userId)
@@ -206,11 +206,7 @@
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                                 <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-<<<<<<< HEAD
-                                                     src="{{\Illuminate\Support\Facades\Storage::url($board->image)}}"
-=======
-                                                src="{{ asset('storage/' . $board->image) }}"
->>>>>>> f4369efefc7df2072cf6681e8fa51e2e3a6d44cd
+                                                     src="{{ asset('storage/' . $board->image) }}" style="width: 40px;height: 40px"
                                                 alt="image"/>
                                         @else
                                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
@@ -251,11 +247,9 @@
                                         <div class="dropdown-item ms-2 me-2">
                                             <div class="mb-2">
                                                 <label for="">Ảnh của bảng</label>
-<<<<<<< HEAD
+
                                                 <input type="file" class="form-control" name="image"
-=======
-                                                <input type="file" class="form-control"
->>>>>>> f4369efefc7df2072cf6681e8fa51e2e3a6d44cd
+
                                                 id="image_{{ $board->id }}" value="{{ $board->image }}" onchange="updateBoard({{ $board->id }})" />
                                             </div>
                                         </div>
@@ -332,7 +326,7 @@
     <div class="sidebar-background"></div>
 </div>
 
-<<<<<<< HEAD
+
 <style>
     #scrollbar {
         height: calc(100vh - 150px);
@@ -383,23 +377,26 @@
         /* Hiệu ứng focus */
     }
 </style>
-=======
+
 <script>
     function updateBoard(boardId) {
-        var formData = {
-            name: $('#name_' + boardId).val(),
-            image: $('#image_' + boardId).val(),
-            id: boardId,
-        };
-        console.log(image);
+        var formData = new FormData();
+        formData.append('name', $('#name_' + boardId).val());
+        var image = document.getElementById('image_' + boardId);
+        if (image.files.length > 0) {
+            formData.append('image', image.files[0]);
+        }
+        formData.append('id', boardId);
+        formData.append('_method', 'PUT');
+        console.log(image.files[0]);
         $.ajax({
             url: `/b/${boardId}/update`,
-            method: "PUT",
-            dataType: 'json',
+            method: "POST",  // Đổi sang POST để gửi file
             data: formData,
+            processData: false,  // Bắt buộc phải false để không xử lý FormData
+            contentType: false,  // Bắt buộc phải false để đặt đúng 'multipart/form-data'
             success: function (response) {
-                console.log('Đã cập nhật tên bảng:', response);
-
+                console.log('Đã cập nhật bảng:', response);
             },
             error: function (xhr) {
                 console.error('An error occurred:', xhr.responseText);
@@ -407,8 +404,6 @@
         });
     }
 
+
 </script>
-<<<<<<< HEAD
-=======
->>>>>>> 57ae4d76f83b9b982de0f39bbd1abf2adead979d
->>>>>>> f4369efefc7df2072cf6681e8fa51e2e3a6d44cd
+

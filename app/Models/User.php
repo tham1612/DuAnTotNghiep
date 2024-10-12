@@ -77,6 +77,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Task::class, 'task_members')->withPivot('follow');
     }
+    public function checklistItems()
+    {
+        return $this->belongsToMany(ChecklistItem::class, 'check_list_item_members', 'user_id', 'check_list_item_id');
+    }
 
     //    kieemr tra xem nguoiwf dung dax cso workspace chuaw
     public function hasWorkspace()
