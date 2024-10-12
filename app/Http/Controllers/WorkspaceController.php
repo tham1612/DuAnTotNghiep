@@ -293,7 +293,6 @@ class WorkspaceController extends Controller
                 return redirect()->route('home')->with([
                     'msg' => 'Bạn đã tham gia vào không gian làm việc',
                     'action' => 'success'
-
                 ]);
             } else if (Session::get('msg') == "two") {
                 Session::forget('msg');
@@ -368,7 +367,7 @@ class WorkspaceController extends Controller
             ->first();
 
         $workspaceMembers = WorkspaceMember::query()
-            ->select('workspace_members.*', 'users.id as user_id', 'users.name as user_name', 'workspaces.name as wsp_name')
+            ->select('workspace_members.*', 'users.id as user_id', 'users.name as name', 'workspaces.name as wsp_name')
             ->join('users', 'users.id', 'workspace_members.user_id')
             ->join('workspaces', 'workspaces.id', 'workspace_members.workspace_id')
             ->where('workspace_members.workspace_id', $workspaceChecked->workspace_id)
@@ -670,7 +669,6 @@ class WorkspaceController extends Controller
                     else {
                         Session::put('invited', "case1");
                         Session::put('workspace_id', $workspace->id);
-                        Session::put('user_id', $user->id);
                         Session::put('email_invited', $request->email);
                         Session::put('authorize', $request->authorize);
                         return redirect()->route('login');

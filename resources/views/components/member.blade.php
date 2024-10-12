@@ -38,24 +38,25 @@
                     <!--end col-->
                     <div class="d-flex justify-content-between">
                         <div class="col-1">
-                            <a href="#"><i class="ri-attachment-2 fs-22" onclick="copyLink()"></i></a>
+                            <a href="#">
+                                <i id="copy-icon" class="ri-attachment-2 fs-22" onclick="copyLink()"></i>
+                            </a>
                         </div>
-                        <div class="col-7 d-flex flex-column">
+                        <div class="col-6 d-flex flex-column">
                             <section class="fs-12">
-                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia với tư
-                                    cách thành viên</p>
+                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia với tư cách thành viên</p>
                                 <span><a href="#" onclick="copyLink()">Sao chép liên kết</a></span>
                             </section>
                         </div>
-                        <div class="col-4">
+                        <div class="col-5">
                             <select name="members" class="form-select invite-member-select">
-                                <option value="">Thành viên</option>
+                                <option value="">Thành viên trong không gian làm việc</option>
                                 @foreach ($wspMember as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}
-                                    </option>
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+
                     </div>
                     <!--end col-->
                     <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3" role="tablist">
@@ -176,8 +177,7 @@
                                                     </p>
                                                     <span>@ {{ $item->name }}</span>
                                                     <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                                    <span>Thành viên của không gian làm
-                                                        việc</span>
+                                                    <span>Thành viên của bảng</span>
                                                 </section>
                                             </div>
                                             <div class="col-3">
@@ -260,18 +260,45 @@
 </div>
 <script>
     function copyLink() {
-        const link = '{{ $board->link_invite }}'; // Lấy id từ biến Laravel
-        navigator.clipboard.writeText(link)
+        const link = '{{ $board->link_invite }}'; // Lấy link từ biến Laravel
+        navigator.clipboard.writeText(link).then(function() {
+            // Thay đổi icon sau khi sao chép thành công
+            const copyIcon = document.getElementById('copy-icon');
+            copyIcon.classList.remove('ri-attachment-2'); // Xóa icon hiện tại
+            copyIcon.classList.add('ri-check-line'); // Thêm icon dấu kiểm
+
+            // Thay đổi văn bản "Sao chép liên kết"
+            const copyText = document.querySelector('span a');
+            copyText.textContent = 'Đã sao chép';
+
+            // Đặt thời gian chờ 20 giây trước khi chuyển icon và văn bản về trạng thái ban đầu
+            setTimeout(function() {
+                // Khôi phục lại icon và văn bản sau 20 giây
+                copyIcon.classList.remove('ri-check-line');
+                copyIcon.classList.add('ri-attachment-2');
+                copyIcon.textContent = ''; // Xóa nội dung text nếu có
+
+                copyText.textContent = 'Sao chép liên kết';
+            }, 5000); // 20000 milliseconds = 20 giây
+
+        }).catch(function(error) {
+            console.error('Error copying text: ', error);
+            alert('Có lỗi xảy ra, vui lòng thử lại.');
+        });
     }
+
+
 
     document.querySelector('.invite-member-select').addEventListener('change', function() {
         const memberId = this.value;
+        const boardId = {{ $board->id }}; // Sửa lại thành đúng tên biến
         if (memberId) {
             const memberName = this.options[this.selectedIndex].text;
 
             if (confirm(`Bạn có chắc muốn mời thành viên ${memberName}?`)) {
                 // Gọi đến URL xử lý mời thành viên
-                const inviteUrl = `/invite-member/${memberId}`;
+                const inviteUrl =
+                    `/b/invite-member-workspace/${memberId}/${boardId}`; // Sửa lại URL đúng với route
 
                 fetch(inviteUrl, {
                         method: 'POST',
@@ -281,12 +308,18 @@
                                 'content')
                         }
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json(); // parse response as JSON
+                    })
                     .then(data => {
                         if (data.success) {
-                            alert(`Đã mời thành viên ${memberName} thành công`);
+                            alert(`Đã thêm thành viên ${memberName} thành công`);
+                            window.location.reload();
                         } else {
-                            alert('Mời thành viên thất bại');
+                            alert('Thêm thành viên thất bại');
                         }
                     })
                     .catch(error => {

@@ -149,22 +149,20 @@
                                                     <!--end col-->
                                                     <div class="d-flex justify-content-between">
                                                         <div class="col-1">
-                                                            <a href="#" onclick="copyLink()"><i
-                                                                    class="ri-attachment-2 fs-22"></i></a>
+                                                            <a href="#">
+                                                                <i id="copy-icon" class="ri-attachment-2 fs-22"
+                                                                    onclick="copyLink()"></i>
+                                                            </a>
                                                         </div>
-                                                        <div class="col-7 d-flex flex-column">
+                                                        <div class="col-6 d-flex flex-column">
                                                             <section class="fs-12">
-                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo
-                                                                    gia với tư
-                                                                    cách thành viên</p>
+                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia
+                                                                    với tư cách thành viên</p>
                                                                 <span><a href="#" onclick="copyLink()">Sao chép liên
                                                                         kết</a></span>
                                                             </section>
                                                         </div>
-                                                        <div class="col-4">
-                                                            {{-- <select name="" id="" class="form-select">
-                                                                <option value="">Thay đổi quyền</option>
-                                                            </select> --}}
+                                                        <div class="col-5">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
@@ -593,8 +591,31 @@
     <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script>
         function copyLink() {
-            const link = '{{ $workspaceChecked->link_invite }}'; // Lấy id từ biến Laravel
-            navigator.clipboard.writeText(link)
+            const link = '{{ $workspaceChecked->link_invite }}'; // Lấy link từ biến Laravel
+            navigator.clipboard.writeText(link).then(function() {
+                // Thay đổi icon sau khi sao chép thành công
+                const copyIcon = document.getElementById('copy-icon');
+                copyIcon.classList.remove('ri-attachment-2'); // Xóa icon hiện tại
+                copyIcon.classList.add('ri-check-line'); // Thêm icon dấu kiểm
+
+                // Thay đổi văn bản "Sao chép liên kết"
+                const copyText = document.querySelector('span a');
+                copyText.textContent = 'Đã sao chép';
+
+                // Đặt thời gian chờ 20 giây trước khi chuyển icon và văn bản về trạng thái ban đầu
+                setTimeout(function() {
+                    // Khôi phục lại icon và văn bản sau 20 giây
+                    copyIcon.classList.remove('ri-check-line');
+                    copyIcon.classList.add('ri-attachment-2');
+                    copyIcon.textContent = ''; // Xóa nội dung text nếu có
+
+                    copyText.textContent = 'Sao chép liên kết';
+                }, 5000); // 20000 milliseconds = 20 giây
+
+            }).catch(function(error) {
+                console.error('Error copying text: ', error);
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            });
         }
     </script>
 @endsection
