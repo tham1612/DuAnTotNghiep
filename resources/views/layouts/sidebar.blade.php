@@ -189,31 +189,31 @@
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                 @if (isset($workspaceBoards))
                     @foreach ($workspaceBoards->boards as $board)
-                        <li class="nav-item d-flex text-center align-items-center" style="justify-content: space-between;">
-                            <a class="nav-link menu-link" href="{{ route('b.edit', ['id' => $board->id]) }}">
-                                @if ($board->image)
-                                @else
+                        <li class="nav-item" >
+                            <div class="nav-link menu-link d-flex text-center align-items-center" style="justify-content: space-between;">
+                                <a class="" href="{{ route('b.edit', ['id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
-                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                            style="width: 30px;height: 30px">
-                                            {{ strtoupper(substr($board->name, 0, 1)) }}
-                                        </div>
-                                        <span>{{ \Illuminate\Support\Str::limit($board->name, 20) }}</span>   
-                                    </div>                                    
-                                @endif
-                            </a>
+                                        @if ($board->image)
+                                                <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                src="{{ asset('storage/' . $board->image) }}" 
+                                                alt="image"/>                                
+                                        @else
+                                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                    style="width: 30px;height: 30px">
+                                                    {{ strtoupper(substr($board->name, 0, 1)) }}
+                                                </div>
+                                                
+                                        @endif
+                                        <span class="text-white fs-16">{{ \Illuminate\Support\Str::limit($board->name, 10) }}</span>  
+                                    </div>   
+                                </a>   
                                 @php 
                                     $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
                                     ->where('user_id', auth()->id())
                                     ->value('is_star');
                                 @endphp
-                                <div class="d-flex justify-content-flex-end align-items-center me-3">
-                                    @php 
-                                        $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-                                        ->where('user_id', auth()->id())
-                                        ->value('is_star');
-                                    @endphp
-                                    <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn ms-3
+                                <div class="d-flex justify-content-flex-end align-items-center ms-1">
+                                    <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if( $member_Is_star == 1) active @endif"
                                             onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                                             id="is_star_{{ $board->id }}">
@@ -221,53 +221,50 @@
                                             <i class="ri-star-fill fs-20 mx-2"></i>
                                         </span>
                                     </button>
-                                    <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
+                                    <a class="text-reset dropdown-btn" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="fw-medium text-muted fs-12">
                                             <i class="ri-more-fill fs-20" title=""></i>
                                         </span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-start">
-                                        <a class="dropdown-item" href="#"> 
-                                            <input type="text" name="text"
-                                            class="form-control border-0 text-center fw-medium bg-transparent"
-                                            id="text_{{ $board->id }}" value="{{ $board->name }}"
-                                            onchange="updateBoard({{ $board->id }})" />
+                                        <a class="dropdown-item"> 
+                                            <input type="text" name="text" class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                id="name_{{ $board->id }}" value="{{ $board->name }}" onchange="updateBoard({{ $board->id }})" />
                                         </a>
-                                        <div class="dropdown-menu">
-                                            <form action="">
-                                                <div class="mb-2">
-                                                    <label for="">Tải ảnh lên</label>
-                                                    <input type="file" class="form-control"/>
-                                                </div>
-                                            </form>
+                                        <div class="dropdown-item ms-2 me-2">
+                                            <div class="mb-2">
+                                                <label for="">Ảnh của bảng</label>
+                                                <input type="file" class="form-control"  
+                                                id="image_{{ $board->id }}" value="{{ $board->image }}" onchange="updateBoard({{ $board->id }})" />
+                                            </div>
                                         </div>
-                                        {{-- đóng bảng --}}
-                                        <div class="d-flex mt-3 mb-3 cursor-pointer close-board dropdown">
-                                            <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100" 
+                                        
+                                        <!-- Đóng bảng -->
+                                        <div class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
+                                            <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
                                                 style="height: 30px; background-color: #c7c7c7;" 
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="ri-archive-line"></i>
-                                                <p class="ms-2 mt-3 fs-15">Đóng bảng</p>
+                                                <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
                                             </div>
-                                            <!-- Dropdown Menu -->
-                                            <ul class="dropdown-menu dropdown-menu-end">
+                                            <!-- Dropdown Menu con -->
+                                            <ul class="dropdown-menu dropdown-menu-end w-100" style="left: 100%; top: 0;">
                                                 <h5 class="text-center">Đóng bảng?</h5>
                                                 <li>
                                                     <p class="dropdown-item-text">
                                                         Bạn có thể tìm và mở lại các bảng đã đóng ở cuối 
+                                                        <a href="{{ route('homes.dashboard',  $workspaceChecked->id) }}">trang các bảng của bạn</a>.
                                                     </p>
-                                                    <a href="{{ route('homes.dashboard',  $workspaceChecked->id) }}">trang các bảng của bạn</a>.
+                                                    
                                                 </li>
                                                 <li class="d-flex justify-content-center">
                                                     <button class="btn btn-danger" type="button">Đóng</button>
                                                 </li>
                                             </ul>
                                         </div>
-
-                                                                    
-                                    </div>
+                                    </div>                                    
                                 </div>
+                            </div>
                         </li>
                     @endforeach
                 @endif
@@ -285,3 +282,25 @@
     <div class="sidebar-background"></div>
 </div>
 
+<script>
+    function updateBoard(boardId) {
+        var formData = {
+            name: $('#name_' + boardId).val(),
+            id: boardId,
+        };
+        $.ajax({
+            url: `/b/${boardId}/update`,
+            method: "PUT",
+            dataType: 'json',
+            data: formData,
+            success: function (response) {
+                console.log('Đã cập nhật tên bảng:', response);
+
+            },
+            error: function (xhr) {
+                console.error('An error occurred:', xhr.responseText);
+            }
+        });
+    }
+
+</script>

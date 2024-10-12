@@ -319,6 +319,7 @@
     });
 
     // validate Catalog
+    document.addEventListener('DOMContentLoaded', function() {
         const nameCatalogInput = document.getElementById('nameCatalog');
         const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
 
@@ -343,9 +344,9 @@
             event.target.closest('form').submit();
         }
         btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
-
+    });
     // validate task
-    // document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const taskNameInputs = document.querySelectorAll('.taskNameInput');
         const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
 
@@ -373,7 +374,7 @@
             form.submit();
         };
 
-    // });
+    });
 </script>
 
 @yield('script')

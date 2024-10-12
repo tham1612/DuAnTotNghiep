@@ -472,9 +472,10 @@
 </header>
 <div class="bg-light" aria-live="polite" aria-atomic="true"
      style="position: fixed; top: 70px;right: 10px; z-index: 100">
-    @if (!empty(session('msg')) && session('action'))
+    @if (!empty(session('msg')) && !empty(session('action')))
+{{--        @dd(session('msg'),session('action'))--}}
         {{--        @foreach (session('success') as $notification) --}}
-        <div class="toast fade show bg-success-subtle" role="alert" aria-live="assertive" aria-atomic="true"
+        <div class="toast fade show bg-{{session('action')}}-subtle" role="alert" aria-live="assertive" aria-atomic="true"
              data-bs-toggle="toast" id="notification-messenger">
             <div class="toast-header">
                 <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
