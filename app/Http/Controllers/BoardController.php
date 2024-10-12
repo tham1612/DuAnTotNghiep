@@ -180,7 +180,7 @@ class BoardController extends Controller
 
 
         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-        $activities = Activity::where('properties->board_id', $boardId)->get();
+        $activities = Activity::where('properties->board_id', $boardId)->orderBy('created_at', 'desc')->get();
 
         //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
         $boardName = $board->name; // Lấy tên của board

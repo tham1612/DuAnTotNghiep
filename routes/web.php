@@ -74,6 +74,9 @@ Route::middleware(['auth', 'isWorkspace'])
             return view('chat.index');
         })->name('chat');
 
+        Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
+        Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
+        Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
@@ -110,9 +113,11 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
         Route::post('/tasks/checklist/create', [\App\Http\Controllers\ChecklistController::class, 'create'])
-        ->name('checklist.create');
+            ->name('checklist.create');
         Route::put('/tasks/{checklist}/checklist', [\App\Http\Controllers\ChecklistController::class, 'update'])
             ->name('checklist.update');
+        Route::post('/tasks/checklist/checklistItem/create', [\App\Http\Controllers\ChecklistController::class, 'createChecklistItem'])
+            ->name('checklist.createChecklistItem');
     });
 
 
@@ -120,10 +125,9 @@ Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
-
 Auth::routes();
 
-Route::controller(LoginGoogleController::class)->group(function(){
+Route::controller(LoginGoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('login-google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });

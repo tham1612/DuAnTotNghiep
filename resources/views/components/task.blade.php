@@ -17,7 +17,7 @@
                        @endif
                     "
                          id="detailCardModalLabel">
-                        <div></div>
+                        <div><input type="file">thêm ảnh</div>
                         <button type="button" class="btn-close bg-white" style="margin: -100px -5px 0px 0px"
                                 data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -165,20 +165,12 @@
                                             <i class="ri-menu-2-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Mô tả</p>
                                         </section>
-                                        <div class="ps-4">
-                                            {{--                                    <textarea name="description" id="description_{{ $task->id}}" cols="25" rows="5"--}}
-                                            {{--                                              class="form-control bg-light"--}}
-                                            {{--                                              placeholder="Thêm mô tả chi tiết"--}}
-                                            {{--                                              onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>--}}
-                                            <form class=" flex-column">
-                                            <textarea name="content" class="form-control "
-                                                      id="description_{{ $task->id}}" placeholder="Viết bình luận"
-                                            >{{$task->description}}</textarea>
-                                                <button class="btn btn-primary mt-2 writeComment"
-                                                        data-value="{{$task->id}}">
-                                                    Lưu
-                                                </button>
-                                            </form>
+                                        <div class="ps-4"><textarea name="description"
+                                                                    id="description_{{ $task->id}}"
+                                                                    cols="25" rows="5"
+                                                                    class="form-control bg-light editor"
+                                                                    placeholder="Thêm mô tả chi tiết"
+                                                                    onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
                                         </div>
                                     </div>
                                     @if(false)
@@ -324,13 +316,16 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @if(false)
+                                    @php    $checklist = \App\Models\CheckList::where('task_id', $task->id)
+                                           ->first();
+                                    @endphp
+                                    @if(!empty($checklist))
                                         <!-- việc cần làm -->
                                         <div class="row mt-3">
                                             <section class="d-flex justify-content-between">
                                                 <section class="d-flex">
                                                     <i class="ri-checkbox-line fs-22"></i>
-                                                    <p class="fs-18 ms-2 mt-1">Việc cần làm</p>
+                                                    <p class="fs-18 ms-2 mt-1">{{$checklist->name}}</p>
                                                 </section>
                                                 <button class="btn btn-outline-dark" style="height: 35px"
                                                         data-bs-toggle="dropdown" aria-haspopup="true"
@@ -356,97 +351,89 @@
                                                         50%
                                                     </div>
                                                 </div>
+                                                @php
+
+                                                    $checklistItems=\App\Models\CheckListItem::where('check_list_id',$checklist->id)
+                                                   ->get();
+                                                @endphp
                                                 <div class="table-responsive table-hover table-card">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
-                                                        <tr class="cursor-pointer">
-                                                            <td class="col-1">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                           value="" id="cardtableCheck01"/>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <p>checklist1</p>
-                                                            </td>
-                                                            <td class=" d-flex justify-content-end">
-                                                                <div>
-                                                                    <i class="ri-time-line fs-20 ms-2"
-                                                                       data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                       aria-expanded="false"></i>
-                                                                    <div
-                                                                        class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                        @include('dropdowns.date')
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <i class="ri-user-add-line fs-20 ms-2"
-                                                                       data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                       aria-expanded="false"></i>
-                                                                    <div
-                                                                        class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                        @include('dropdowns.member')
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <i class="ri-more-fill fs-20 ms-2"
-                                                                       data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                       aria-expanded="false"></i>
-                                                                    <div class="dropdown-menu dropdown-menu-md"
-                                                                         style="padding: 15px 15px 0 15px">
-                                                                        <h5 class="text-center">Thao tác mục</h5>
-                                                                        <p class="mt-2">Chuyển sang thẻ</p>
-                                                                        <p>Xóa</p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                        @if($checklistItems)
+                                                            @foreach($checklistItems as $checklistItem)
+                                                                <tr class="cursor-pointer">
+                                                                    <td class="col-1">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                   type="checkbox" name="check_list_id"
+                                                                                   value="{{$checklistItem->id}}"
+                                                                                   id="check_list_{{$checklistItem->id}}"/>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{$checklistItem->name}}</p>
+                                                                    </td>
+                                                                    <td class=" d-flex justify-content-end">
+                                                                        <div>
+                                                                            <i class="ri-time-line fs-20 ms-2"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"></i>
+                                                                            <div
+                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                                @include('dropdowns.date')
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="ri-user-add-line fs-20 ms-2"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"></i>
+                                                                            <div
+                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                                @include('dropdowns.member')
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="ri-more-fill fs-20 ms-2"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"></i>
+                                                                            <div class="dropdown-menu dropdown-menu-md"
+                                                                                 style="padding: 15px 15px 0 15px">
+                                                                                <h5 class="text-center">Thao tác
+                                                                                    mục</h5>
+                                                                                <p class="mt-2">Chuyển sang thẻ</p>
+                                                                                <p>Xóa</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                            <td class="col-1">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                           value=""/>
-                                                                </div>
-                                                            </td>
+                                                            {{--                                                                                                                        <td class="col-1">--}}
+                                                            {{--                                                                                                                            <div class="form-check">--}}
+                                                            {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
+                                                            {{--                                                                                                                                       value=""/>--}}
+                                                            {{--                                                                                                                            </div>--}}
+                                                            {{--                                                                                                                        </td>--}}
                                                             <td colspan="2">
-                                                                <form action="" class="w-100 " aria-labelledby="">
-                                                                    <input type="text" name=""
+                                                                <form id="FormCheckListItem">
+                                                                    <input type="hidden" name="check_list_id"
+                                                                           id="check_list_id"
+                                                                           value="{{$checklist->id}}">
+                                                                    <input type="text" name="name" id="name"
                                                                            class="form-control checklistItem"
                                                                            placeholder="Thêm mục"/>
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button class="btn btn-primary">Thêm
+                                                                            <button type="submit"
+                                                                                    class="btn btn-primary">Thêm
                                                                             </button>
-                                                                            <button
-                                                                                class="btn btn-outline-dark disable-checklist">
-                                                                                Hủy
-                                                                            </button>
+                                                                            <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
-                                                                        <div class="d-flex">
-                                                                            <div>
-                                                                                <i class="ri-time-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false">Ngày hết hạn
-                                                                        </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    @include('dropdowns.date')
-                                                                                </div>
-                                                                            </div>
 
-                                                                            <div>
-                                                                                <i class="ri-user-add-line fs-20 ms-2"></i>
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false">Chỉ định
-                                                                        </span>
-                                                                                <div
-                                                                                    class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                                    @include('dropdowns.member')
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
                                                                 </form>
                                                             </td>
@@ -455,7 +442,7 @@
                                                     </table>
                                                 </div>
                                                 <button class="btn btn-outline-dark ms-3 mt-2 display-checklist"
-                                                        type="button">
+                                                        type="button" id="">
                                                     Thêm mục
                                                 </button>
                                             </div>
@@ -481,8 +468,8 @@
                                                 @endif
                                                 <div class="ms-2">
                                                     <form action="#" method="post" class=" flex-column">
-                                                    <textarea name="content" class="form-control "
-                                                              id="editor_{{$task->id}}"
+                                                    <textarea name="content" class="form-control editor"
+                                                              id="comment_{{$task->id}}"
                                                               placeholder="Viết bình luận"></textarea>
                                                         <button type="submit" class="btn btn-primary mt-2">Lưu
                                                         </button>
@@ -727,19 +714,116 @@
 <!-- ckeditor -->
 <script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
 <!-- prismjs plugin -->
-@foreach($tasks as $task)
-    <script>
-        ClassicEditor
-            .create(
-                document.querySelector('#editor_{{$task->id}}')
-            );
 
+<script>
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+    // Tạo một đối tượng để lưu trữ các editor đã khởi tạo
+    const editors = {};
+
+    // Khởi tạo ClassicEditor cho mỗi phần tử có class 'editor'
+    document.querySelectorAll('.editor').forEach((editorElement, index) => {
         ClassicEditor
-            .create(
-                document.querySelector('#description_{{$task->id}}'),
-            );
-    </script>
-@endforeach
+            .create(editorElement)
+            .then(editor => {
+                // Lưu trữ instance của từng editor với id của phần tử hoặc chỉ mục
+                editors[editorElement.id] = editor;
+
+                // Lắng nghe sự kiện change của editor
+                editor.model.document.on('change:data', debounce(() => {
+                    const taskId = editorElement.id.split('_')[1];
+                    updateTask2(taskId);
+                }, 1000));
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+<script>
+    // xử lý checklist card
+    const displayChecklistBtns = document.querySelectorAll('.display-checklist');
+    const disableChecklistBtns = document.querySelectorAll('.disable-checklist');
+    const checklistForms = document.querySelectorAll('.addOrUpdate-checklist');
+    const checklistItems = document.querySelectorAll('.checklistItem');
+
+    displayChecklistBtns.forEach((displayChecklistBtn, index) => {
+        displayChecklistBtn.addEventListener('click', () => {
+            checklistForms[index].classList.toggle('d-none'); // Hiện hoặc ẩn form
+            displayChecklistBtn.classList.add('d-none'); // Ẩn nút hiện form
+        });
+    });
+
+    disableChecklistBtns.forEach((disableChecklistBtn, index) => {
+        disableChecklistBtn.addEventListener('click', () => {
+            checklistItems[index].value = ""; // Xóa nội dung ô nhập liệu
+            checklistForms[index].classList.add('d-none'); // Ẩn form
+            displayChecklistBtns[index].classList.toggle('d-none'); // Hiện lại nút hiện form
+        });
+    });
+
+
+    //     xử lý lưu trữ cảu card
+    // Lấy tất cả các phần tử có cùng class
+    var archivers = document.querySelectorAll('.archiver');
+    var restoreArchivers = document.querySelectorAll('.restore-archiver');
+    var deleteArchivers = document.querySelectorAll('.delete-archiver');
+
+    // Lặp qua tất cả các phần tử archiver và thêm sự kiện
+    archivers.forEach((archiver, index) => {
+        archiver.addEventListener('click', () => {
+            restoreArchivers[index].classList.toggle('d-none');
+            deleteArchivers[index].classList.toggle('d-none');
+            archiver.classList.add('d-none');
+        });
+    });
+
+    // Lặp qua tất cả các phần tử restore-archiver và thêm sự kiện
+    restoreArchivers.forEach((restoreArchiver, index) => {
+        restoreArchiver.addEventListener('click', () => {
+            deleteArchivers[index].classList.add('d-none');
+            restoreArchivers[index].classList.add('d-none');
+            archivers[index].classList.toggle('d-none');
+        });
+    });
+
+    // Lặp qua tất cả các phần tử delete-archiver và thêm sự kiện
+    deleteArchivers.forEach((deleteArchiver) => {
+        deleteArchiver.addEventListener('click', () => {
+            window.location.reload();
+        });
+    });
+
+    // //     xử lý theo dõi + ngày hết hạn của card
+    // const notification = document.querySelector('#notification');
+    // const notification_follow = document.querySelector('#notification_follow');
+    // const notification_icon = document.querySelector('#notification_icon');
+    // const notification_content = document.querySelector('#notification_content');
+    // notification.addEventListener('click', () => {
+    //     notification_follow.classList.toggle('d-none');
+    //     notification_icon.classList.contains("ri-eye-line") ?
+    //         notification_icon.className = "ri-eye-off-line fs-22" :
+    //         notification_icon.className = "ri-eye-line fs-22";
+    //     notification_content.textContent === "Theo dõi" ?
+    //         notification_content.innerHTML = "Đang theo dõi" :
+    //         notification_content.innerHTML = "Theo dõi";
+    // });
+    //
+    // const due_date_checkbox = document.querySelector('#due_date_checkbox');
+    // const due_date_success = document.querySelector('#due_date_success');
+    // const due_date_due = document.querySelector('#due_date_due');
+    // due_date_checkbox.addEventListener('click', () => {
+    //     due_date_due.classList.toggle('d-none');
+    //     due_date_success.classList.toggle('d-none');
+    // });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const notificationElements = document.querySelectorAll('[id^="notification_"]');
@@ -801,13 +885,12 @@
     });
 
     function updateTask2(taskId) {
+        var description = editors['description_' + taskId].getData();
         var checkbox = document.getElementById('due_date_checkbox_' + taskId);
         var formData = {
-            // catalog_id: $('#catalog_id_' + taskId).val(),
-            // start_date: $('#start_date_' + taskId).val(),
-            description: $('#description_' + taskId).val(),
+            description: description,
             text: $('#text_' + taskId).val(),
-            progress: checkbox.checked ? 100 : 0,
+            // progress: checkbox.checked ? 100 : 0,
 
         };
         console.log(formData);
@@ -843,5 +926,33 @@
             }
         });
     }
+
+    $(document).ready(function () {
+        $('#FormCheckListItem').on('submit', function (e) {
+            e.preventDefault();
+            $(this).find('button[type="submit"]').prop('disabled', true);
+
+            var formData = {
+                check_list_id: $('#check_list_id').val(),
+                name: $('#name').val(),
+            };
+            console.log(formData);
+            $.ajax({
+                url: `/tasks/checklist/checklistItem/create`,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    console.log('CheckListItem đã được thêm thành công!', response);
+                    $(this).find('button[type="submit"]').prop('disabled', false);
+                },
+                error: function (xhr) {
+                    alert('Đã xảy ra lỗi!');
+                    console.log(xhr.responseText);
+                    $(this).find('button[type="submit"]').prop('disabled', false);
+                }
+            });
+        });
+    });
+
 
 </script>
