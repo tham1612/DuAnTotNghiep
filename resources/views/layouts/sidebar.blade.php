@@ -2,19 +2,19 @@
     $userId = \Illuminate\Support\Facades\Auth::id();
 
     $workspaces = \App\Models\Workspace::query()
-        ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
-        ->where('workspace_members.user_id', $userId)
-        ->where('workspace_members.is_accept_invite', null)
-        ->whereNot('workspace_members.is_active', 1)
-        ->where('workspace_members.deleted_at', null)
-        ->select('workspaces.*')
-        ->groupBy('workspaces.id')
-        ->withCount([
-            'workspaceMembers as member_count' => function ($query) {
-                $query->whereNull('deleted_at'); // Đếm các thành viên chưa bị xóa
-            },
-        ])
-        ->get();
+    ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
+    ->where('workspace_members.user_id', $userId)
+    ->where('workspace_members.is_accept_invite', 0)
+    ->whereNot('workspace_members.is_active', 1)
+    ->where('workspace_members.deleted_at', null)
+    ->select('workspaces.*', 'workspace_members.id as workspace_id')  // Giữ cột 'workspace_members.id'
+    ->groupBy('workspaces.id', 'workspace_members.id')  // Thêm cả 'workspace_members.id' vào GROUP BY
+    ->withCount([
+        'workspaceMembers as member_count' => function ($query) {
+            $query->whereNull('deleted_at');
+        },
+    ])
+    ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
@@ -22,33 +22,43 @@
         ->where('workspace_members.is_active', 1)
         ->first();
 
-    dd($workspaceChecked);
     $workspaceMemberChecked = \App\Models\WorkspaceMember::query()
         ->where('workspace_id', $workspaceChecked->workspace_id)
         ->where('user_id', $userId)
-        ->select('user_id', 'authorize', 'is_accept_invite') // Sử dụng pluck thay vì fluck
-        ->first(); // Lấy giá trị đầu tiên
+        ->select('user_id', 'authorize', 'is_accept_invite')
+        ->first();
 
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
-         // $workspaceBoards = \App\Models\Workspace::query()
-        //     ->with(['boards'])
-        //     ->where('id', $workspaceChecked->workspace_id)
-        // ->first();
-        $workspaceBoards = \App\Models\Workspace::query()
-            ->with([
-                'boards' => function ($query) use ($userId) {
-                    $query
-                        ->where('access', 'public') // Bảng công khai
-                        ->orWhere(function ($q) use ($userId) {
-                            $q->where('access', 'private') // Bảng riêng tư
-                                ->whereHas('boardMembers', function ($q) use ($userId) {
-                                    $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
-                                });
+        if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
+            $workspaceBoards = \App\Models\Workspace::query()->with('boards')->where('id', $workspaceChecked->id)->first();
+        } elseif ($workspaceChecked->authorize == 'Member') {
+            $workspaceBoards = \App\Models\Workspace::query()
+                ->with([
+                    'boards' => function ($query) use ($userId) {
+                        $query
+                            ->where('access', 'public') // Bảng công khai
+                            ->orWhere(function ($q) use ($userId) {
+                                $q->where('access', 'private') // Bảng riêng tư
+                                    ->whereHas('boardMembers', function ($q) use ($userId) {
+                                        $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
+                                    });
+                            });
+                    },
+                ])
+                ->where('id', $workspaceChecked->workspace_id)
+                ->first();
+        } else {
+            $workspaceBoards = \App\Models\Workspace::query()
+                ->with([
+                    'boards' => function ($query) use ($userId) {
+                        $query->whereHas('boardMembers', function ($q) use ($userId) {
+                            $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
                         });
-                },
-            ])
-            ->where('id', $workspaceChecked->workspace_id)
-            ->first();
+                    },
+                ])
+                ->where('id', $workspaceChecked->workspace_id)
+                ->first();
+        }
     }
 
 @endphp
@@ -121,7 +131,7 @@
                         @endif
                         <section class=" ms-2">
                             <p class="fs-15 fw-bolder"
-                                onclick="window.location.href='{{ route('workspaces.index', $workspace->id) }}'">
+                                onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
                                 {{ \Illuminate\Support\Str::limit($workspace->name, 25) }}
                             </p>
                             <p class="fs-10" style="margin-top: -10px">
@@ -207,7 +217,7 @@
 
     </div>
     @if (!empty($workspaceMemberChecked))
-        @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == null)
+        @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
                     style="background-color: #f0f4ff; border-radius: 8px;">

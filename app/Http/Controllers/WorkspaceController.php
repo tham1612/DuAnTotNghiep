@@ -37,7 +37,10 @@ class WorkspaceController extends Controller
         WorkspaceMember::query()
             ->where('id', $id)
             ->update(['is_active' => 1]);
-        return view('homes.home');
+        return redirect()->route('home')->with([
+            'msg' => "Bạn đã chuyển đổi không gian làm việc",
+            'action' => 'success'
+        ]);
     }
 
     public function create()
@@ -287,17 +290,27 @@ class WorkspaceController extends Controller
 
             if (Session::get('msg') == "one") {
                 Session::forget('msg');
-                return redirect()->route('home')->with('msg', 'Bạn đã tham gia vào không gian làm việc');
+                return redirect()->route('home')->with([
+                    'msg' => 'Bạn đã tham gia vào không gian làm việc',
+                    'action' => 'success'
+
+                ]);
             } else if (Session::get('msg') == "two") {
                 Session::forget('msg');
-                return redirect()->route('home')->with('msg', 'Chờ quản trị viên duyệt');
+                return redirect()->route('home')->with([
+                    'msg' => 'Chờ quản trị viên duyệt',
+                    'action' => 'success'
+                ]);
             }
 
             return redirect()->route('home');
         } catch (\Exception $exception) {
             DB::rollBack();
             dd($exception->getMessage());
-            return back()->with('action', 'Error: ' . $exception->getMessage());
+            return back()->with([
+                'action' => 'error',
+                'msg' => 'Error: ' . $exception->getMessage()
+            ]);
         }
     }
 
@@ -315,7 +328,10 @@ class WorkspaceController extends Controller
             ->where('is_active', 1)
             ->first();
         if ($workspaceAuthorize->authorize->value !== AuthorizeEnum::Owner()->value && $workspaceAuthorize->authorize->value !== AuthorizeEnum::Sub_Owner()->value) {
-            return redirect()->route('showFormEditWorkspace')->with('action', 'Bạn không có quyền xóa không gian làm việc');
+            return redirect()->route('showFormEditWorkspace')->with([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền xóa không gian làm việc'
+            ]);
         }
         try {
             $ws = WorkspaceMember::query()->find($id);
@@ -329,7 +345,10 @@ class WorkspaceController extends Controller
                 ->withProperties(['workspace_name' => $ws->name]) // Sử dụng biến $ws thay vì $workspace
                 ->log('Người dùng đã xóa không gian làm việc.');
 
-            return redirect()->route('user', $userId)->with('msg', "Bạn đã xóa Thành công không gian làm việc");
+            return redirect()->route('user', $userId)->with([
+                'msg' => "Bạn đã xóa Thành công không gian làm việc",
+                'action' => 'error'
+            ]);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -348,58 +367,37 @@ class WorkspaceController extends Controller
             ->where('workspace_members.is_active', 1)
             ->first();
 
-        //get thông tin cho modal thêm thành viên
-        //lấy thằng chủ ws
-        $wsp_owner = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id')
+        $workspaceMembers = WorkspaceMember::query()
+            ->select('workspace_members.*', 'users.id as user_id', 'users.name as user_name', 'workspaces.name as wsp_name')
             ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->where('authorize', AuthorizeEnum::Owner())
-            ->first();
-        //lấy thằng member ws
-        $wsp_member = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id')
-            ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->where('authorize', AuthorizeEnum::Member())
-            ->where('is_accept_invite', NULL)
+            ->join('workspaces', 'workspaces.id', 'workspace_members.workspace_id')
+            ->where('workspace_members.workspace_id', $workspaceChecked->workspace_id)
             ->get();
 
-        //lấy số lượng thành viên
-        $wsp_member_count = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id')
-            ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->where('authorize', AuthorizeEnum::Member())
-            ->where('is_accept_invite', NULL)->count();
-        //lấy yêu cầu tham gia
-        $wsp_invite = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id', 'workspace_members.id as wm_id')
-            ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->whereNot('is_accept_invite', NULL)->get();
-        //lấy số lượng người invite
-        $wsp_invite_count = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id', 'workspace_members.id as wm_id')
-            ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->whereNot('is_accept_invite', NULL)->count();
+        $wspMemberCount = 0;
+        $wspInviteCount = 0;
+        $wspViewerCount = 0;
 
-        //lấy danh sách người xem
-        $wsp_viewer = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id', 'workspace_members.id as wm_id')
-            ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->where('authorize', AuthorizeEnum::Viewer())
-            ->where('is_accept_invite', NULL)->get();
-        //lấy số lượng người xem
-        $wsp_viewer_count = WorkspaceMember::query()
-            ->select('*', 'users.id as user_id', 'workspace_members.id as wm_id')
-            ->join('users', 'users.id', 'workspace_members.user_id')
-            ->where('workspace_id', $workspaceChecked->workspace_id)
-            ->where('authorize', AuthorizeEnum::Viewer())
-            ->where('is_accept_invite', NULL)
-            ->count();
+        $wspOwner = null;
+        $wspMember = [];
+        $wspInvite = [];
+        $wspViewer = [];
+
+        foreach ($workspaceMembers as $member) {
+            if ($member->authorize == AuthorizeEnum::Owner()) {
+                $wspOwner = $member;
+            } elseif ($member->authorize == AuthorizeEnum::Member() || $member->authorize == AuthorizeEnum::Sub_Owner() && $member->is_accept_invite == 0) {
+                $wspMember[] = $member;
+                $wspMemberCount++;
+            } elseif ($member->is_accept_invite != 0) {
+                $wspInvite[] = $member;
+                $wspInviteCount++;
+            } elseif ($member->authorize == AuthorizeEnum::Viewer() && $member->is_accept_invite == 0) {
+                $wspViewer[] = $member;
+                $wspViewerCount++;
+            }
+        }
+
         //lấy số người có trong bảng nhưng không có trong wsp
         if ($workspaceChecked->access == 'private') {
             $icon = 'ri-git-repository-private-fill';
@@ -423,16 +421,16 @@ class WorkspaceController extends Controller
                 'userName',
                 'workspaceChecked',
                 'icon',
-                'wsp_viewer_count',
-                'wsp_viewer',
+                'wspViewer',
                 'access',
                 'ws_desrip',
-                'wsp_owner',
-                'wsp_member',
-                'wsp_invite',
+                'wspOwner',
+                'wspMember',
+                'wspInvite',
                 'userId',
-                'wsp_member_count',
-                'wsp_invite_count'
+                'wspMemberCount',
+                'wspInviteCount',
+                'wspViewerCount',
             )
         );
     }
@@ -446,7 +444,7 @@ class WorkspaceController extends Controller
                 ->where('user_id', $request->user_id)
                 ->where('workspace_id', $request->workspace_id)
                 ->update([
-                    'is_accept_invite' => NULL,
+                    'is_accept_invite' => 0,
                     'authorize'
                 ]);
             return redirect()->route('showFormEditWorkspace');
@@ -475,7 +473,10 @@ class WorkspaceController extends Controller
             ->where('is_active', 1)
             ->first();
         if ($workspaceAuthorize->authorize->value !== AuthorizeEnum::Owner()->value && $workspaceAuthorize->authorize->value !== AuthorizeEnum::Sub_Owner()->value) {
-            return redirect()->route('showFormEditWorkspace')->with('action', 'Bạn không có quyền xóa không gian làm việc');
+            return redirect()->route('showFormEditWorkspace')->with([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền xóa không gian làm việc'
+            ]);
         }
         try {
             $workspace = Workspace::query()
@@ -502,7 +503,10 @@ class WorkspaceController extends Controller
                 ->performedOn($workspace) // Workspace được chỉnh sửa
                 ->withProperties(['updated_fields' => $validatedData]) // Các trường đã được chỉnh sửa
                 ->log('Người dùng đã chỉnh sửa workspace.');
-            return redirect()->route('showFormEditWorkspace')->with('msg', 'Thay đổi thành công');
+            return redirect()->route('showFormEditWorkspace')->with([
+                'msg' => 'Thay đổi thành công',
+                'action' => 'success'
+            ]);
         } catch (\Exception $e) {
             // Xử lý ngoại lệ, có thể log lỗi hoặc thông báo cho người dùng
             return redirect()->route('showFormEditWorkspace')->withErrors(['action' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
@@ -518,7 +522,10 @@ class WorkspaceController extends Controller
             ->where('is_active', 1)
             ->first();
         if ($workspaceAuthorize->authorize->value !== AuthorizeEnum::Owner()->value && $workspaceAuthorize->authorize->value !== AuthorizeEnum::Sub_Owner()->value) {
-            return redirect()->route('showFormEditWorkspace')->with('action', 'Bạn không có quyền xóa không gian làm việc');
+            return redirect()->route('showFormEditWorkspace')->with([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền xóa không gian làm việc'
+            ]);
         }
         try {
             Workspace::query()
@@ -527,7 +534,11 @@ class WorkspaceController extends Controller
                 ->where('workspace_members.is_active', 1)
                 ->update(['access' => $request->access]);
 
-            return redirect()->route('showFormEditWorkspace')->with('msg', 'Thay đổi thành công');
+            return redirect()->route('showFormEditWorkspace')->with([
+                'msg' => 'Thay đổi thành công',
+                'action' => 'success'
+
+            ]);
         } catch (\Throwable $th) {
             return redirect()->route('showFormEditWorkspace')->withErrors(['action' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
@@ -545,7 +556,11 @@ class WorkspaceController extends Controller
             ->firstOrFail();
 
         if (!$workspace) {
-            return redirect()->route('showFormEditWorkspace')->with('action', 'Không gửi email thêm thành viên rồi :(');
+            return redirect()->route('showFormEditWorkspace')->with([
+                'action' => 'error',
+                'msg' => 'Không gửi email thêm thành viên rồi :('
+
+            ]);
         }
 
         // Validate email từ request
@@ -569,7 +584,11 @@ class WorkspaceController extends Controller
             ->log('Người dùng đã gửi lời mời thành viên vào workspace.');
 
 
-        return redirect()->route('showFormEditWorkspace')->with('msg', 'Đã gửi email thêm thành viên !!!');
+        return redirect()->route('showFormEditWorkspace')->with([
+            'msg' => 'Đã gửi email thêm thành viên !!!',
+            'action' => 'success'
+
+        ]);
     }
 
     public function acceptInvite($uuid, $token, Request $request)
@@ -626,7 +645,10 @@ class WorkspaceController extends Controller
                                     ->where('id', $wm->id)
                                     ->update(['is_active' => 1]);
 
-                                return redirect()->route('home')->with('msg', "Bạn đã được thêm vào trong không gian làm việc. \"{$workspace->id}\" !!!");
+                                return redirect()->route('home')->with([
+                                    'msg' => "Bạn đã được thêm vào trong không gian làm việc. \"{$workspace->id}\" !!!",
+                                    'action' => 'success'
+                                ]);
                             } catch (\Throwable $th) {
                                 throw $th;
                             }

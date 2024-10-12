@@ -9,7 +9,7 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Task;
 use App\Models\User;
-
+use App\Models\Workspace;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Session;
@@ -125,7 +125,10 @@ class BoardController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
             dd($exception->getMessage());
-            return back()->with('error', 'Error: ' . $exception->getMessage());
+            return back()->with([
+                'msg' => 'Error: ' . $exception->getMessage(),
+                'action' => 'error'
+            ]);
         }
     }
 
@@ -162,7 +165,11 @@ class BoardController extends Controller
             'catalogs.tasks.members'
         ]);
 
-        $boardMembers = $board->users->unique('id');
+        $boardMemberMain = BoardMember::query()
+            ->join('users', 'users.id', '=', 'board_members.user_id')
+            ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize')
+            ->where('board_members.board_id', $board->id)
+            ->get();
         // Lấy danh sách catalogs
         $catalogs = $board->catalogs;
         /*
@@ -215,38 +222,29 @@ class BoardController extends Controller
         }
 
 
-        //lấy thành viên trong bảng
-        $board_m = BoardMember::query()
-            ->join('users', 'users.id', 'board_members.user_id')
-            ->select('users.name as name', 'users.image as image')
-            ->where('board_members.is_accept_invite', NULL)
-            ->whereNot('board_members.authorize', 'Owner')
-            ->where('board_members.board_id', $boardId)
-            ->get();
-        //lấy người gửi lời mời vào nhóm
-        $board_m_invite = BoardMember::query()
-            ->join('users', 'users.id', 'board_members.user_id')
-            ->select('users.name as name', 'users.image as image')
-            ->where('board_members.is_accept_invite', 1)
-            ->where('board_members.board_id', $boardId)
-            ->latest('board_members.id')
-            ->get();
-        $board_owner = BoardMember::query()
-            ->join('users', 'users.id', 'board_members.user_id')
-            ->select('users.name as name', 'users.image as image', 'users.id as user_id')
-            ->where('board_members.is_accept_invite', NULL)
-            ->where('board_members.authorize', "Owner")
-            ->where('board_members.board_id', $boardId)
-            ->first();
+        $boardMembers = $boardMemberMain->filter(function ($member) {
+            return $member->authorize->value !== AuthorizeEnum::Owner()->value || AuthorizeEnum::Sub_Owner()->value !== "Sub_Owner" && $member->is_accept_invite === 0;
+        });
+
+        $boardMemberInvites = $boardMemberMain->filter(function ($member) {
+            return $member->is_accept_invite === 1;
+        });
+        $boardOwner = $boardMemberMain->firstWhere('authorize', 'Owner');
+
+        $wspMember = WorkspaceMember::query()->join('users', 'users.id', 'workspace_members.user_id')
+            ->select('users.id', 'users.name')
+            ->whereNot('workspace_members.authorize', 'Viewer')
+            ->where("workspace_members.workspace_id", $board->workspace_id)->get();
+
 
         return match ($viewType) {
 
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'board_m', 'board_m_invite', 'board_owner')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
 
 
         };
@@ -334,7 +332,10 @@ class BoardController extends Controller
         $boardName = $board->name;
         $authorize = $request->input('authorize');
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
-        return back()->with('msg', 'Đã gửi email thêm thành viên !!!');
+        return back()->with([
+            'action' => 'success',
+            'msg' => 'Đã gửi email thêm thành viên !!!'
+        ]);
     }
 
 
@@ -386,7 +387,10 @@ class BoardController extends Controller
                                         ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
                                         ->log('Người dùng đã được thêm vào Bảng.');
 
-                                    return redirect()->route('b.edit', $board->id)->with('msg', "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!");
+                                    return redirect()->route('b.edit', $board->id)->with([
+                                        'msg' => "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!",
+                                        'action' => 'success'
+                                    ]);
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
@@ -418,7 +422,10 @@ class BoardController extends Controller
 
                     //xử lý khi người dùng đã có trong bảng đó rồi
                     else {
-                        return redirect()->route('b.edit', $board->id)->with('msg', 'Bạn đã ở trong bảng rồi!!');
+                        return redirect()->route('b.edit', $board->id)->with([
+                            'msg' => 'Bạn đã ở trong bảng rồi!!',
+                            'action' => 'error'
+                        ]);
                     }
 
                 }
@@ -477,7 +484,10 @@ class BoardController extends Controller
                                         ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
                                         ->log('Người dùng đã được thêm vào Bảng.');
 
-                                    return redirect()->route('b.edit', $board->id)->with('msg', "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!");
+                                    return redirect()->route('b.edit', $board->id)->with([
+                                        'msg' => "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!",
+                                        'action' => 'success'
+                                    ]);
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
@@ -507,7 +517,7 @@ class BoardController extends Controller
                             return redirect()->route('login');
                         }
                     }
-                    
+
                 }
             }
 
@@ -546,6 +556,13 @@ class BoardController extends Controller
             'is_accept_invite' => 1,
         ]);
 
-        return redirect()->route('home')->with('msg', 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc');
+        return redirect()->route('home')->with([
+            'msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc',
+            'action' => 'error'
+        ]);
+    }
+
+    public function inviteMemberWorkspace($userId, ){
+
     }
 }

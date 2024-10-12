@@ -38,20 +38,22 @@
                     <!--end col-->
                     <div class="d-flex justify-content-between">
                         <div class="col-1">
-                            <i class="ri-attachment-2 fs-22"></i>
+                            <a href="#"><i class="ri-attachment-2 fs-22" onclick="copyLink()"></i></a>
                         </div>
                         <div class="col-7 d-flex flex-column">
                             <section class="fs-12">
                                 <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia với tư
                                     cách thành viên</p>
-                                <span><a href="">Sao chép liên kết</a></span>
-                                <span>-</span>
-                                <span><a href="">Xóa liên kết</a></span>
+                                <span><a href="#" onclick="copyLink()">Sao chép liên kết</a></span>
                             </section>
                         </div>
                         <div class="col-4">
-                            <select name="" id="" class="form-select">
-                                <option value="">Thay đổi quyền</option>
+                            <select name="members" class="form-select invite-member-select">
+                                <option value="">Thành viên</option>
+                                @foreach ($wspMember as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -62,8 +64,11 @@
                                 Thành viên
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-
-                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty($board_m)) {{ $board_m->count() }}@endif</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">
+                                @if (!empty($boardMembers))
+                                    {{ $boardMembers->count() + 1 }}
+                                @endif
+                            </span>
 
                         </li>
                         <li class="nav-item d-flex align-items-center justify-content-between">
@@ -71,7 +76,11 @@
                                 Yêu cầu tham gia
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite)){{ $board_m_invite->count() }}@endif</span>
+                                style="border-radius: 100%; width: 20px ;height: 20px;">
+                                @if (!empty($boardMemberInvites))
+                                    {{ $boardMemberInvites->count() }}
+                                @endif
+                            </span>
                         </li>
 
 
@@ -86,20 +95,20 @@
                                         <a href="javascript: void(0);" class="avatar-group-item"
                                             data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
                                             title="Nancy">
-                                            @if(!empty($board_owner))
-                                            @if ($board_owner->image)
-                                                <img src="{{ Storage::url($board_owner->image) ? Storage::url($board_owner->image) : '' }}"
-                                                    alt="" class="rounded-circle avatar-xs" />
-                                            @else
-                                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                    style="width: 25px;height: 25px">
-                                                    {{ strtoupper(substr($board_owner->name, 0, 1)) }}
-                                                </div>
-                                                <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                    {{ \Illuminate\Support\Str::limit($board_owner->name, 16) }}
-                                                    <i class=" ri-arrow-drop-down-line fs-20"></i>
-                                                </span>
-                                            @endif
+                                            @if (!empty($boardOwner))
+                                                @if ($boardOwner->image)
+                                                    <img src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
+                                                        alt="" class="rounded-circle avatar-xs" />
+                                                @else
+                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        style="width: 25px;height: 25px">
+                                                        {{ strtoupper(substr($boardOwner->name, 0, 1)) }}
+                                                    </div>
+                                                    <span class="fs-15 ms-2 text-white" id="swicthWs">
+                                                        {{ \Illuminate\Support\Str::limit($boardOwner->name, 16) }}
+                                                        <i class=" ri-arrow-drop-down-line fs-20"></i>
+                                                    </span>
+                                                @endif
                                             @endif
 
 
@@ -107,19 +116,19 @@
                                     </div>
                                     <div class="col-8 d-flex flex-column">
                                         <section class="fs-12">
-                                            @if(!empty($board_owner))
-                                            <p style="margin-bottom: 0px;" class="text-danger fw-bloder">
-                                                {{ $board_owner->name }}
-                                                @if ($board_owner->user_id == Auth::id())
-                                                    <span class="text-danger fw-bloder">(bạn)</span>
-                                                @else
-                                                    <span class="text-danger fw-bold">(chủ)</span>
-                                                @endif
+                                            @if (!empty($boardOwner))
+                                                <p style="margin-bottom: 0px;" class="text-danger fw-bloder">
+                                                    {{ $boardOwner->name }}
+                                                    @if ($boardOwner->user_id == Auth::id())
+                                                        <span class="text-danger fw-bloder">(bạn)</span>
+                                                    @else
+                                                        <span class="text-danger fw-bold">(chủ)</span>
+                                                    @endif
 
-                                            </p>
-                                            <span> {{ $board_owner->name }}</span>
-                                            <span>-</span>
-                                            <span>Quản trị viên của bảng</span>
+                                                </p>
+                                                <span> {{ $boardOwner->name }}</span>
+                                                <span>-</span>
+                                                <span>Quản trị viên của bảng</span>
                                             @endif
                                         </section>
                                     </div>
@@ -128,102 +137,97 @@
                                             trị viên</button>
                                     </div>
                                 </li>
-                                @if(!empty($board_m))
-                                @foreach ($board_m as $item)
-                                    <li class="d-flex mt-1 mb-1">
-                                        <div class="col-1">
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-item="top"
-                                                title="Nancy">
-                                                @if ($item->image)
-                                                    <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                        alt="" class="rounded-circle avatar-xs" />
-                                                @else
-                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                        style="width: 25px;height: 25px">
-                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
-                                                    </div>
-                                                    <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
-                                                        <i class=" ri-arrow-drop-down-line fs-20"></i>
-                                                    </span>
-                                                @endif
-                                            </a>
-                                        </div>
-                                        <div class="col-8 d-flex flex-column">
-                                            <section class="fs-12">
-                                                <p style="margin-bottom: 0px;" class="text-black">
-                                                    {{ $item->name }}
-                                                    @if ($item->user_id == Auth::id())
-                                                        <span class="text-success">(Bạn)</span>
-                                                    @elseif($item->authorize === 'Sub_Owner')
-                                                        <span class="text-primary">(Phó
-                                                            nhóm)</span>
+                                @if (!empty($boardMembers))
+                                    @foreach ($boardMembers as $item)
+                                        <li class="d-flex mt-1 mb-1">
+                                            <div class="col-1">
+                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                    data-bs-item="top" title="Nancy">
+                                                    @if ($item->image)
+                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                            alt="" class="rounded-circle avatar-xs" />
                                                     @else
-                                                        <span class="text-black">(Thành
-                                                            viên)</span>
+                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                            style="width: 25px;height: 25px">
+                                                            {{ strtoupper(substr($item->name, 0, 1)) }}
+                                                        </div>
+                                                        <span class="fs-15 ms-2 text-white" id="swicthWs">
+                                                            {{ \Illuminate\Support\Str::limit($item->name, 16) }}
+                                                            <i class=" ri-arrow-drop-down-line fs-20"></i>
+                                                        </span>
                                                     @endif
+                                                </a>
+                                            </div>
+                                            <div class="col-8 d-flex flex-column">
+                                                <section class="fs-12">
+                                                    <p style="margin-bottom: 0px;" class="text-black">
+                                                        {{ $item->name }}
+                                                        @if ($item->user_id == Auth::id())
+                                                            <span class="text-success">(Bạn)</span>
+                                                        @elseif($item->authorize === 'Sub_Owner')
+                                                            <span class="text-primary">(Phó
+                                                                nhóm)</span>
+                                                        @else
+                                                            <span class="text-black">(Thành
+                                                                viên)</span>
+                                                        @endif
 
-                                                </p>
-                                                <span>@ {{ $item->name }}</span>
-                                                <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                                <span>Thành viên của không gian làm
-                                                    việc</span>
-                                            </section>
-                                        </div>
-                                        <div class="col-3">
-                                            {{-- <select name="" id=""
-                                                                                    class="form-select">
-                                                                                    <option value="">Thành Viên
-                                                                                    </option>
-                                                                                </select> --}}
-                                            <button class="btn btn-outline-primary">Thành
-                                                viên</button>
-                                        </div>
-                                    </li>
-                                @endforeach
+                                                    </p>
+                                                    <span>@ {{ $item->name }}</span>
+                                                    <span><i class="ri-checkbox-blank-circle-fill"></i></span>
+                                                    <span>Thành viên của không gian làm
+                                                        việc</span>
+                                                </section>
+                                            </div>
+                                            <div class="col-3">
+                                                <button class="btn btn-outline-primary">Thành
+                                                    viên</button>
+                                            </div>
+                                        </li>
+                                    @endforeach
                                 @endif
                             </ul>
                         </div>
                         <div class="tab-pane" id="profile1" role="tabpanel">
                             <ul style="margin-left: -32px;">
-                                @if(!empty($board_m))
-                                @foreach ($board_m_invite as $item)
-                                    <li class="d-flex justify-content-between">
-                                        <div class="col-1">
-                                            <a href="javascript: void(0);" class="avatar-group-item"
-                                                data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                data-bs-placement="top" title="Nancy">
-                                                @if ($item->image)
-                                                    <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                        alt="" class="rounded-circle avatar-xs" />
-                                                @else
-                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                        style="width: 25px;height: 25px">
-                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
-                                                    </div>
-                                                    <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
-                                                        <i class=" ri-arrow-drop-down-line fs-20"></i>
-                                                    </span>
-                                                @endif
-                                            </a>
-                                        </div>
-                                        <div class="col-7 d-flex flex-column">
-                                            <section class="fs-12">
-                                                <p style="margin-bottom: 0px;" class="text-black">
-                                                    {{ $item->name }}
-                                                    <span class="text-black">(Người
-                                                        mới)</span>
-                                                </p>
-                                                <span>@ {{ $item->name }}</span>
-                                                <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                                <span>Đã gửi lời mời vao không gian làm
-                                                    việc</span>
-                                            </section>
-                                        </div>
-                                        <div class="col-4 d-flex justify-content-end">
-                                            {{-- <form onsubmit="disableButtonOnSubmit()"
+                                @if (!empty($boardMembers))
+                                    @foreach ($boardMemberInvites as $item)
+                                        <li class="d-flex justify-content-between">
+                                            <div class="col-1">
+                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                    data-bs-placement="top" title="Nancy">
+                                                    @if ($item->image)
+                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                            alt="" class="rounded-circle avatar-xs" />
+                                                    @else
+                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                            style="width: 25px;height: 25px">
+                                                            {{ strtoupper(substr($item->name, 0, 1)) }}
+                                                        </div>
+                                                        <span class="fs-15 ms-2 text-white" id="swicthWs">
+                                                            {{ \Illuminate\Support\Str::limit($item->name, 16) }}
+                                                            <i class=" ri-arrow-drop-down-line fs-20"></i>
+                                                        </span>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                            <div class="col-7 d-flex flex-column">
+                                                <section class="fs-12">
+                                                    <p style="margin-bottom: 0px;" class="text-black">
+                                                        {{ $item->name }}
+                                                        <span class="text-black">(Người
+                                                            mới)</span>
+                                                    </p>
+                                                    <span>@ {{ $item->name }}</span>
+                                                    <span><i class="ri-checkbox-blank-circle-fill"></i></span>
+                                                    <span>Đã gửi lời mời vao không gian làm
+                                                        việc</span>
+                                                </section>
+                                            </div>
+                                            <div class="col-4 d-flex justify-content-end">
+                                                {{-- <form onsubmit="disableButtonOnSubmit()"
                                                 action="{{ route('accept_member') }}" method="post">
                                                 @method('PUT')
                                                 @csrf
@@ -239,10 +243,10 @@
                                                 @csrf
                                                 <button class="btn btn-danger" type="submit">Từ chối</button>
                                             </form> --}}
-                                        </div>
-                                    </li>
-                                    <br>
-                                @endforeach
+                                            </div>
+                                        </li>
+                                        <br>
+                                    @endforeach
                                 @endif
                             </ul>
                         </div>
@@ -254,3 +258,42 @@
         </div>
     </div>
 </div>
+<script>
+    function copyLink() {
+        const link = '{{ $board->link_invite }}'; // Lấy id từ biến Laravel
+        navigator.clipboard.writeText(link)
+    }
+
+    document.querySelector('.invite-member-select').addEventListener('change', function() {
+        const memberId = this.value;
+        if (memberId) {
+            const memberName = this.options[this.selectedIndex].text;
+
+            if (confirm(`Bạn có chắc muốn mời thành viên ${memberName}?`)) {
+                // Gọi đến URL xử lý mời thành viên
+                const inviteUrl = `/invite-member/${memberId}`;
+
+                fetch(inviteUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Đã mời thành viên ${memberName} thành công`);
+                        } else {
+                            alert('Mời thành viên thất bại');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error inviting member:', error);
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    });
+            }
+        }
+    });
+</script>
