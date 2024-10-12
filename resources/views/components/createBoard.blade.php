@@ -68,15 +68,23 @@
     const boardName = document.getElementById('boardName');
     const btnSubmit = document.getElementById('btnSubmit');
 
-    function validateBoard(){
+    function validateBoard() {
         const isNameFilled = boardName.value.trim() !== '';
         btnSubmit.disabled = !isNameFilled;
     }
 
     boardName.addEventListener('input', validateBoard);
 
-    function disableButtonOnSubmit(){
+    function disableButtonOnSubmit(event) {
+        // Ngăn gửi biểu mẫu ngay lập tức
+        event.preventDefault();
+        // Kiểm tra xem nút đã bị vô hiệu hóa chưa
+        if (btnSubmit.disabled) return;
+        // Vô hiệu hóa nút
         btnSubmit.disabled = true;
-        return true;
+        // Gửi biểu mẫu ngay lập tức
+        event.target.closest('form').submit();
     }
+    btnSubmit.addEventListener('click', disableButtonOnSubmit);
+
 </script>
