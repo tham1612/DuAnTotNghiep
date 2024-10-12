@@ -149,22 +149,20 @@
                                                     <!--end col-->
                                                     <div class="d-flex justify-content-between">
                                                         <div class="col-1">
-                                                            <i class="ri-attachment-2 fs-22"></i>
+                                                            <a href="#">
+                                                                <i id="copy-icon" class="ri-attachment-2 fs-22"
+                                                                    onclick="copyLink()"></i>
+                                                            </a>
                                                         </div>
-                                                        <div class="col-7 d-flex flex-column">
+                                                        <div class="col-6 d-flex flex-column">
                                                             <section class="fs-12">
-                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo
-                                                                    gia với tư
-                                                                    cách thành viên</p>
-                                                                <span><a href="">Sao chép liên kết</a></span>
-                                                                <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                <span><a href="">Xóa liên kết</a></span>
+                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia
+                                                                    với tư cách thành viên</p>
+                                                                <span><a href="#" onclick="copyLink()">Sao chép liên
+                                                                        kết</a></span>
                                                             </section>
                                                         </div>
-                                                        <div class="col-4">
-                                                            <select name="" id="" class="form-select">
-                                                                <option value="">Thay đổi quyền</option>
-                                                            </select>
+                                                        <div class="col-5">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
@@ -178,7 +176,7 @@
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wsp_member_count + 1 }}</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 1 }}</span>
                                                         </li>
                                                         <li
                                                             class="nav-item d-flex align-items-center justify-content-between">
@@ -188,7 +186,7 @@
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wsp_invite_count }}</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspInviteCount }}</span>
                                                         </li>
                                                         <li
                                                             class="nav-item d-flex align-items-center justify-content-between">
@@ -198,7 +196,7 @@
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wsp_viewer_count }}</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspViewerCount }}</span>
                                                         </li>
 
                                                     </ul>
@@ -213,53 +211,67 @@
                                                                             data-bs-toggle="tooltip"
                                                                             data-bs-trigger="hover"
                                                                             data-bs-placement="top" title="Nancy">
-                                                                            @if ($wsp_owner->image)
-                                                                                <img src="{{ Storage::url($wsp_owner->image) ? Storage::url($wsp_owner->image) : '' }}"
+                                                                            @if ($wspOwner->image)
+                                                                                <img src="{{ Storage::url($wspOwner->image) ? Storage::url($wspOwner->image) : '' }}"
                                                                                     alt=""
                                                                                     class="rounded-circle avatar-xs" />
                                                                             @else
                                                                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                                                     style="width: 25px;height: 25px">
-                                                                                    {{ strtoupper(substr($wsp_owner->name, 0, 1)) }}
+                                                                                    {{ strtoupper(substr($wspOwner->name, 0, 1)) }}
                                                                                 </div>
                                                                                 <span class="fs-15 ms-2 text-white"
                                                                                     id="swicthWs">
-                                                                                    {{ \Illuminate\Support\Str::limit($wsp_owner->name, 16) }}
+                                                                                    {{ \Illuminate\Support\Str::limit($wspOwner->name, 16) }}
                                                                                     <i
                                                                                         class=" ri-arrow-drop-down-line fs-20"></i>
                                                                                 </span>
                                                                             @endif
-
-
                                                                         </a>
                                                                     </div>
-                                                                    <div class="col-8 d-flex flex-column">
+                                                                    <div class="col-6 d-flex flex-column">
                                                                         <section class="fs-12">
                                                                             <p style="margin-bottom: 0px;"
                                                                                 class="text-danger fw-bloder">
-                                                                                {{ $wsp_owner->name }}
-                                                                                @if ($wsp_owner->user_id == $userId)
+                                                                                {{ $wspOwner->name }}
+                                                                                @if ($wspOwner->user_id == $userId)
                                                                                     <span
                                                                                         class="text-danger fw-bloder">(bạn)</span>
                                                                                 @else
                                                                                     <span
                                                                                         class="text-danger fw-bold">(chủ)</span>
                                                                                 @endif
-
                                                                             </p>
-                                                                            <span>@ {{ $wsp_owner->name }}</span>
+                                                                            <span>@ {{ $wspOwner->name }}</span>
                                                                             <span><i
                                                                                     class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                            <span>Quản trị viên không gian làm
-                                                                                việc</span>
+                                                                            <span>Quản trị viên không gian làm việc</span>
                                                                         </section>
                                                                     </div>
-                                                                    <div class="col-3">
-                                                                        <button class="btn btn-outline-danger ">Quản
-                                                                            trị viên</button>
+                                                                    <div
+                                                                        class="col-5 d-flex align-items-center justify-content-end">
+                                                                        <button class="btn btn-outline-danger">Quản trị
+                                                                            viên</button>
+                                                                        <!-- Nút ba chấm -->
+                                                                        <div class="dropdown ms-2">
+                                                                            <button class="btn btn-link dropdown-toggle"
+                                                                                type="button" id="dropdownMenuButton"
+                                                                                data-bs-toggle="dropdown"
+                                                                                aria-expanded="false">
+                                                                                <i class="ri-more-2-fill"></i>
+                                                                            </button>
+                                                                            <!-- Popup xuất hiện khi nhấn nút ba chấm -->
+                                                                            <ul class="dropdown-menu"
+                                                                                aria-labelledby="dropdownMenuButton">
+                                                                                <li><a class="dropdown-item text-danger"
+                                                                                        href="#">Rời khỏi</a></li>
+                                                                            </ul>
+                                                                        </div>
                                                                     </div>
                                                                 </li>
-                                                                @foreach ($wsp_member as $item)
+
+                                                                <!-- Lặp lại với các thành viên -->
+                                                                @foreach ($wspMember as $item)
                                                                     <li class="d-flex mt-1 mb-1">
                                                                         <div class="col-1">
                                                                             <a href="javascript: void(0);"
@@ -285,7 +297,7 @@
                                                                                 @endif
                                                                             </a>
                                                                         </div>
-                                                                        <div class="col-8 d-flex flex-column">
+                                                                        <div class="col-6 d-flex flex-column">
                                                                             <section class="fs-12">
                                                                                 <p style="margin-bottom: 0px;"
                                                                                     class="text-black">
@@ -300,7 +312,6 @@
                                                                                         <span class="text-black">(Thành
                                                                                             viên)</span>
                                                                                     @endif
-
                                                                                 </p>
                                                                                 <span>@ {{ $item->name }}</span>
                                                                                 <span><i
@@ -309,22 +320,39 @@
                                                                                     việc</span>
                                                                             </section>
                                                                         </div>
-                                                                        <div class="col-3">
-                                                                            {{-- <select name="" id=""
-                                                                                    class="form-select">
-                                                                                    <option value="">Thành Viên
-                                                                                    </option>
-                                                                                </select> --}}
+                                                                        <div
+                                                                            class="col-5 d-flex align-items-center justify-content-end">
                                                                             <button class="btn btn-outline-primary">Thành
                                                                                 viên</button>
+                                                                            <!-- Nút ba chấm -->
+                                                                            <div class="dropdown ms-2">
+                                                                                <button
+                                                                                    class="btn btn-link dropdown-toggle"
+                                                                                    type="button" id="dropdownMenuButton"
+                                                                                    data-bs-toggle="dropdown"
+                                                                                    aria-expanded="false">
+                                                                                    <i class="ri-more-2-fill"></i>
+                                                                                </button>
+                                                                                <!-- Popup xuất hiện khi nhấn nút ba chấm -->
+                                                                                <ul class="dropdown-menu"
+                                                                                    aria-labelledby="dropdownMenuButton">
+                                                                                    <li><a class="dropdown-item"
+                                                                                            href="#">Kích thành
+                                                                                            viên</a></li>
+                                                                                    <li><a class="dropdown-item"
+                                                                                            href="#">Thăng cấp thành
+                                                                                            viên</a></li>
+                                                                                </ul>
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
                                                         </div>
+
                                                         <div class="tab-pane" id="profile1" role="tabpanel">
                                                             <ul style="margin-left: -32px;">
-                                                                @foreach ($wsp_invite as $item)
+                                                                @foreach ($wspInvite as $item)
                                                                     <li class="d-flex justify-content-between">
                                                                         <div class="col-1">
                                                                             <a href="javascript: void(0);"
@@ -377,8 +405,6 @@
                                                                                 <input type="hidden"
                                                                                     value="{{ $item->workspace_id }}"
                                                                                     name="workspace_id">
-                                                                                <input type="hidden" value="NULL"
-                                                                                    name="type_update">
                                                                                 <button class="btn btn-primary me-2"
                                                                                     type="submit">Duyệt</button>
                                                                             </form>
@@ -399,7 +425,7 @@
                                                         </div>
                                                         <div class="tab-pane" id="profile2" role="tabpanel">
                                                             <ul style="margin-left: -32px;">
-                                                                @foreach ($wsp_viewer as $item)
+                                                                @foreach ($wspViewer as $item)
                                                                     <li class="d-flex justify-content-between">
                                                                         <div class="col-1">
                                                                             <a href="javascript: void(0);"
@@ -440,22 +466,6 @@
                                                                             </section>
                                                                         </div>
                                                                         <div class="col-4 d-flex justify-content-end">
-                                                                            {{-- <form onsubmit="disableButtonOnSubmit()"
-                                                                                action="{{ route('accept_member') }}"
-                                                                                method="post">
-                                                                                @method('PUT')
-                                                                                @csrf
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->user_id }}"
-                                                                                    name="user_id">
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->workspace_id }}"
-                                                                                    name="workspace_id">
-                                                                                <input type="hidden" value="NULL"
-                                                                                    name="type_update">
-                                                                                <button class="btn btn-primary me-2"
-                                                                                    type="submit">Thêm thành viên</button>
-                                                                            </form> --}}
                                                                         </div>
                                                                     </li>
                                                                 @endforeach
@@ -579,7 +589,33 @@
 
     <!-- Sweet Alerts js -->
     <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
-@endsection
-@section('style')
-    <style></style>
+    <script>
+        function copyLink() {
+            const link = '{{ $workspaceChecked->link_invite }}'; // Lấy link từ biến Laravel
+            navigator.clipboard.writeText(link).then(function() {
+                // Thay đổi icon sau khi sao chép thành công
+                const copyIcon = document.getElementById('copy-icon');
+                copyIcon.classList.remove('ri-attachment-2'); // Xóa icon hiện tại
+                copyIcon.classList.add('ri-check-line'); // Thêm icon dấu kiểm
+
+                // Thay đổi văn bản "Sao chép liên kết"
+                const copyText = document.querySelector('span a');
+                copyText.textContent = 'Đã sao chép';
+
+                // Đặt thời gian chờ 20 giây trước khi chuyển icon và văn bản về trạng thái ban đầu
+                setTimeout(function() {
+                    // Khôi phục lại icon và văn bản sau 20 giây
+                    copyIcon.classList.remove('ri-check-line');
+                    copyIcon.classList.add('ri-attachment-2');
+                    copyIcon.textContent = ''; // Xóa nội dung text nếu có
+
+                    copyText.textContent = 'Sao chép liên kết';
+                }, 5000); // 20000 milliseconds = 20 giây
+
+            }).catch(function(error) {
+                console.error('Error copying text: ', error);
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            });
+        }
+    </script>
 @endsection
