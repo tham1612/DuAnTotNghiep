@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('workspace_members', function (Blueprint $table) {
-            $table->boolean('is_accept_invite')->default(0); // Thêm trường mới
+            $table->boolean('is_accept_invite')->nullable(); // Thêm trường mới
         });
     }
 

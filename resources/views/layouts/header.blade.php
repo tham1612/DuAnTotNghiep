@@ -1,6 +1,5 @@
 @php
     $boardIsStars = \App\Models\Board::query()
-        ->distinct()
         ->select(
             'boards.name AS board_name',
             'workspaces.name AS workspace_name',
@@ -11,10 +10,10 @@
         ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
         ->join('board_members', 'board_members.board_id', '=', 'boards.id')
         ->where('workspace_members.is_active', 1)
-        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
+        ->where('workspace_members.id', \Illuminate\Support\Facades\Auth::id())
         ->where('board_members.is_star', 1)
         ->get();
-    //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
+
 @endphp
 <header id="page-topbar">
     <div class="layout-width">
@@ -256,12 +255,9 @@
                                             </div>
                                             <div class="ps-2">
                                                 <button type="button" data-value="{{ $boardIsStar->board_id }}"
-                                                    id="board_star_{{ $boardIsStar->board_id }}"
                                                     class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                     <i class="ri-star-fill fs-16"></i>
                                                 </button>
-                                                <input type="hidden" id="user_id"
-                                                    value="{{ \Illuminate\Support\Facades\Auth::id() }}">
                                             </div>
                                         </div>
                                     </div>
@@ -385,8 +381,9 @@
             <div class="d-flex align-items-center">
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#chatAi" aria-controls="offcanvasRight">
-                        {{--                        <i class=" ri-question-answer-line fs-22"></i> --}}
+                        data-bs-toggle="offcanvas" data-bs-target="#chatAi"
+                        aria-controls="offcanvasRight">
+{{--                        <i class=" ri-question-answer-line fs-22"></i>--}}
                         <i class="  ri-character-recognition-line fs-22"></i>
                     </button>
                 </div>
@@ -413,12 +410,13 @@
                 {{--                </div> --}}
 
                 {{-- giao diện sáng tối --}}
-                <div class="ms-1 header-item d-none d-sm-flex">
-                    <button type="button"
-                        class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
-                        <i class="bx bx-moon fs-22"></i>
-                    </button>
-                </div>
+                                <div class="ms-1 header-item d-none d-sm-flex">
+                                    <button type="button"
+                                            class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                                        <i class="bx bx-moon fs-22"></i>
+                                    </button>
+                                </div>
+
 
 
                 <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
@@ -427,7 +425,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             @if (auth()->user()->image)
-                                <img class="rounded header-profile-user object-fit-cover"
+                                <img class="rounded header-profile-user"
                                     src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
                                     alt="Avatar" />
                             @else
@@ -445,94 +443,45 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <h6 class="dropdown-header">Xin chào {{ auth()->user()->name }}!</h6>
+                        <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
                         <a class="dropdown-item" href="{{ route('user', auth()->user()->id) }}">
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Thông tin</span>
+                            <span class="align-middle">Profile</span>
                         </a>
+                        <a class="dropdown-item" href=" {{ route('chat') }}"><i
+                                class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
+                            <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
                                 class="ri-group-line text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Tạo không gian làm việc</span></a>
-                        <a class="dropdown-item" href="{{ route('chat') }}"><i
-                                class="ri-archive-line text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Lưu trữ</span></a>
-                        <form id="logoutForm" action="{{ route('logout') }}" method="post" class="dropdown-item">
+                        <form action="{{ route('logout') }}" method="post" class="dropdown-item">
                             @csrf
                             <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
-                            <button type="button" class="bg-transparent border-0" data-bs-toggle="modal"
-                                data-bs-target="#topmodal">Đăng xuất</button>
+                            <button type="submit" class="bg-transparent border-0">Logout</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </header>
-
 <div class="bg-light" aria-live="polite" aria-atomic="true"
-    style="position: fixed; top: 70px;right: 10px; z-index: 100">
-    @if (!empty(session('msg')) && !empty(session('action')))
-        {{--        @dd(session('msg'),session('action')) --}}
+     style="position: fixed; top: 70px;right: 10px; z-index: 100">
+    @if (!empty(session('msg')) && session('action'))
         {{--        @foreach (session('success') as $notification) --}}
-        <div class="toast fade show bg-{{ session('action') }}-subtle" role="alert" aria-live="assertive"
-            aria-atomic="true" data-bs-toggle="toast" id="notification-messenger">
+        <div class="toast fade show bg-success-subtle" role="alert" aria-live="assertive" aria-atomic="true"
+             data-bs-toggle="toast" id="notification-messenger">
             <div class="toast-header">
                 <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
-                    height="20">
+                     height="20">
                 <span class="fw-semibold me-auto">Task Flow.</span>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body fw-bolder text-{{ session('action') }}">
+            <div class="toast-body fw-bolder text-{{session('action')}}">
                 {{ session('msg') }}
             </div>
         </div>
         {{--        @endforeach --}}
     @endif
 </div>
-
-@foreach ($boardIsStars as $boardIsStar)
-    <script>
-        var user_id = document.getElementById('user_id');
-        var board_star = document.getElementById("board_star_{{ $boardIsStar->board_id }}");
-        board_star.addEventListener('click', function() {
-            var board_id = this.getAttribute('data-value');
-            $.ajax({
-                url: `/b/${board_id}/updateBoardMember`,
-                method: "PUT",
-                data: {
-                    board_id: board_id,
-                    user_id: user_id.value,
-                },
-                success: function(response) {
-
-                },
-                error: function(xhr) {
-
-                }
-            });
-        })
-    </script>
-@endforeach
-
-<div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body text-center p-5">
-                <lord-icon src="https://cdn.lordicon.com/pithnlch.json" trigger="loop"
-                    colors="primary:#121331,secondary:#08a88a" style="width:120px;height:120px">
-                </lord-icon>
-                <div class="mt-4">
-                    <h4 class="mb-3">Bạn có muốn đăng xuất không?</h4>
-                    <div class="hstack gap-2 justify-content-center">
-                        <button type="button" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal">
-                            <i class="ri-close-line me-1 align-middle"></i> Hủy
-                        </button>
-                        <button type="submit" class="btn btn-success" form="logoutForm">Đăng xuất</button>
-                    </div>
-                </div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-

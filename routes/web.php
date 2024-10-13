@@ -1,5 +1,5 @@
 <?php
-use \App\Http\Controllers\ChecklistController;
+
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\LoginGoogleController;
 use App\Http\Controllers\UserController;
@@ -12,6 +12,7 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleApiClientController;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,13 +71,10 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        Route::get('/chat', function () {
-            return view('chat.index');
-        })->name('chat');
+        Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
+            ->name('chat');
+        Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 
-        Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
-        Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
-        Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
@@ -92,9 +90,8 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
                 Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
-                Route::get('request-to-join-workspace', [BoardController::class, 'requestToJoinWorkspace'])->name('requestToJoinWorkspace');
+
                 Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
-                Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
             });
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');
@@ -104,34 +101,20 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);
         Route::put('/update-event/{id}', [TaskController::class, 'updateEvent'])->name('update');
-//        Route::put('/update-dateTask/{id}', [TaskController::class, 'updateEvent'])->name('updateDateTask');
         Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
-        Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
-        Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
-            ->name('checklist.create');
-        Route::put('/tasks/{checklist}/checklist', [ChecklistController::class, 'update'])
-            ->name('checklist.update');
-        Route::post('/tasks/checklist/checklistItem/create', [ChecklistController::class, 'createChecklistItem'])
-            ->name('checklist.createChecklistItem');
-        Route::put('/tasks/checklist/checklistItem/{checklistItem}/update', [ChecklistController::class, 'updateChecklistItem'])
-            ->name('checklist.updateChecklistItem');
-        Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
-            ->name('checklist.addMemberChecklist');
-        Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
-            ->name('checklist.deleteMemberChecklist');
     });
-
 
 Route::get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
+
 Auth::routes();
 
 Route::controller(LoginGoogleController::class)->group(function () {

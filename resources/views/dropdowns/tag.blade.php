@@ -33,17 +33,9 @@
         </ul>
     </div>
     <div class="card">
-        <div
-            class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
-            style=" height: 30px; background-color: #c7c7c7">
-            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-               aria-expanded="false" data-bs-offset="-120,-100">
-                Tạo nhãn mới
-            </p>
-            <!--dropdown nhãn-->
-            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 125%">
-                @include('dropdowns.createTag')
-            </div>
-        </div>
+        <button class="btn text-white" style="background-color: #c7c7c7">Tạo
+            nhãn
+            mới
+        </button>
     </div>
 </form>
