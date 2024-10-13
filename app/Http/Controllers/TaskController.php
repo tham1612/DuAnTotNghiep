@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\BoardMember;
-use App\Models\CheckListItem;
 use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskMember;
@@ -16,7 +15,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -32,11 +30,8 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    const PATH_UPLOAD = 'tasks';
     public function index($id, Request $request)
     {
-
-
     }
 
     /**
@@ -44,7 +39,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
+        $data = $request->except(['position', 'priority', 'risk', 'sortorder',]);
         if (isset($data['start']) || isset($data['end'])) {
             $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
             $data['end_date'] = $data['end'];
@@ -80,7 +75,7 @@ class TaskController extends Controller
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
         // event(new TaskUpdated($task));
         return back()
-            ->with('success');
+            ->with('success', 'Thêm task thành công!!');
     }
 
     public function show()
@@ -93,18 +88,16 @@ class TaskController extends Controller
     {
         $task = Task::query()->findOrFail($id);
 
-        $data = $request->except(['image']);
-        if ($request->hasFile('image')) {
-            $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
-            $data['image'] = $imagePath;
-            if ($task->image && Storage::exists($task->image)) {
-                Storage::delete($task->image);
-            }
+        $data = $request->all();
+        $data['start_date'] = isset($data['start']) ? $data['start'] : $data['start_date'];
+        $data['end_date'] = isset($data['end']) ? $data['end'] : $data['end_date'];
+
+        if (isset($data['changeDate']) && isset($data['id_gg_calendar'])) {
+            $this->googleApiClient->updateEvent($data);
+        } else {
+            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
         }
-//        dd($data);
-        if (isset($data['start_date']) || isset($data['end_date'])) {
-            $this->updateCalendar($request, $id);
-        }
+
         $task->update($data);
 
 
@@ -128,20 +121,12 @@ class TaskController extends Controller
         ]);
 
     }
-//    public function updateDateTask(Request $request, string $id)
-//    {
-//        $dateTask = Task::query()->findOrFail($id);
-//        $data=$request->only(['reminder_date','end_date','start_date']);
-//        $dateTask->update($data);
-//        return response()->json([
-//            'success' => "update dateTask thành công",
-//        ]);
-//    }
+
     public function updatePosition(Request $request, string $id)
     {
         $data = $request->all();
         $model = Task::query()->findOrFail($id);
-        // $task = Task::find($id);
+        $task = Task::find($id);
         //        dd($data,$id);
         $data['position'] = $request->position + 1;
 
@@ -176,13 +161,13 @@ class TaskController extends Controller
                 ->withProperties([
                     'task_id' => $id,
                     'catalog_id_new' => $data['catalog_id'],
-                    'board_id' => $model->catalog->board_id,
+                    'board_id' => $task->catalog->board_id,
                     'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
                 ])
-                ->tap(function (Activity $activity) use ($model) {
-                    $activity->catalog_id = $model->catalog_id;
-                    $activity->task_id = $model->id;
-                    $activity->board_id = $model->catalog->board_id;
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
                 })
                 ->log('vị trí các task trong catalog mới đã thay đổi.');
             // cap nhat lai vi tri o catalog cu
@@ -198,13 +183,13 @@ class TaskController extends Controller
                 ->withProperties([
                     'task_id' => $id,
                     'catalog_id_old' => $data['catalog_id_old'],
-                    'board_id' => $model->catalog->board_id,
+                    'board_id' => $task->catalog->board_id,
                     'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
                 ])
-                ->tap(function (Activity $activity) use ($model) {
-                    $activity->catalog_id = $model->catalog_id;
-                    $activity->task_id = $model->id;
-                    $activity->board_id = $model->catalog->board_id;
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
                 })
                 ->log('Vị trí các task trong catalog cũ đã thay đổi.');
         } else {
@@ -227,13 +212,13 @@ class TaskController extends Controller
                 ->withProperties([
                     'task_id' => $id,
                     'catalog_id' => $data['catalog_id'],
-                    'board_id' => $model->catalog->board_id,
+                    'board_id' => $task->catalog->board_id,
                     'tasks_affected' => $positionChange->pluck('id')->toArray(),
                 ])
-                ->tap(function (Activity $activity) use ($model) {
-                    $activity->catalog_id = $model->catalog_id;
-                    $activity->task_id = $model->id;
-                    $activity->board_id = $model->catalog->board_id;
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
                 })
                 ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
@@ -244,22 +229,22 @@ class TaskController extends Controller
     public function updateFolow(Request $request, string $id)
     {
         $data = $request->only(['user_id']);
-        $userId = $data['user_id'];
+        $userId = $data['user_id']; // Lấy giá trị user_id từ mảng $data
 
         $taskMemberFollow = Follow_member::where('task_id', $id)
             ->where('user_id', $userId)
             ->first();
 
         if ($taskMemberFollow) {
-
+            // Đảo ngược trạng thái follow
             $newFollow = $taskMemberFollow->follow == 1 ? 0 : 1;
             $taskMemberFollow->update(['follow' => $newFollow]);
 
             return response()->json([
-                'follow' => $taskMemberFollow->follow,
+                'follow' => $taskMemberFollow->follow, // Trả về trạng thái follow mới
             ]);
         } else {
-
+            // Nếu chưa tồn tại, tạo mới
             $newTaskMemberFollow = Follow_member::create([
                 'user_id' => $userId,
                 'task_id' => $id,
@@ -267,27 +252,11 @@ class TaskController extends Controller
             ]);
 
             return response()->json([
-                'follow' => $newTaskMemberFollow->follow,
+                'follow' => $newTaskMemberFollow->follow, // Trả về trạng thái follow mới
             ]);
         }
 
     }
 
-    public function updateCalendar(Request $request, string $id)
-    {
-        $task = Task::query()->findOrFail($id);
-        $data = $request->all();
-        $data['id_gg_calendar'] = $task->id_google_calendar;
-//        dd($data);
-        if ($task->id_google_calendar) {
-//            dd('ton tai');
-            $this->googleApiClient->updateEvent($data);
-        } else {
-//            dd('khong ton tai');
-            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
-        }
-
-        $task->update($data);
-    }
 
 }

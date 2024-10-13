@@ -26,13 +26,14 @@
 
                         <tbody>
 
-                        @if (!empty($board))
-                            @foreach($board->catalogs as $catalog)
-                                   @foreach ($catalog->tasks as $task)
-                                <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
+                        @if (!empty($tasks))
+                            @foreach ($tasks as $task)
                                 <tr>
+                                    <input type="hidden" name="" id="id_gg_calendar_{{$task->id}}"
+                                           value="{{$task->id_google_calendar}}">
                                     <td>{{ $loop->iteration  }}</td>
-                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
+                                    <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}"
+                                        id="text_{{ $task->id }}">
                                         {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                     </td>
                                     <td>
@@ -105,7 +106,7 @@
                                             <select name="catalog_id" id="catalog_id_{{ $task->id }}"
                                                     class="form-select no-arrow"
                                                     onchange="updateTask({{ $task->id }})">
-                                                @foreach ($board->catalogs as $catalog)
+                                                @foreach ($catalogs as $catalog)
                                                     <option
                                                         @selected($catalog->id == $task->catalog_id) value="{{ $catalog->id }}">
                                                         {{ $catalog->name }}
@@ -166,7 +167,6 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            @endforeach
                         @endif
                         </tbody>
                     </table>
@@ -186,18 +186,23 @@
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
                 <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
+                <form action="{{ route('catalogs.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
+                    <h5 class="text-center">Thêm danh sách</h5>
                     <div class="mb-2">
-                        <input type="text" class="form-control" name="name" id="nameCatalog"
-                            value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
-                        <input type="hidden" name="board_id" value="{{ $board->id }}">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                               value="{{ old('name') }}" placeholder="Nhập tên danh sách..."/>
+                        @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <div class="mb-2 d-flex align-items-center">
-                        <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
+                    <input type="hidden" name="board_id" value="{{ $board->id }}">
+
+                    <div class="mb-2 d-grid ">
+                        <button type="submit" class="btn btn-primary">
                             Thêm danh sách
                         </button>
-                        <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
-                            aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
+                        {{-- <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i> --}}
                     </div>
                 </form>
             </div>
@@ -207,10 +212,12 @@
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
                 <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmit()" class="formItem">
+=======
+                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
-                        <input type="text" class="form-control taskNameInput" name="text"
+                        <input type="text" class="form-control @error('text') is-invalid @enderror" name="text"
                                value="{{ old('text') }}" placeholder="Nhập tên thẻ..."/>
                         @error('text')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -219,13 +226,13 @@
                     <div class="mb-2">
                         <select name="catalog_id" id="" class="form-select">
                             <option value="">---Lựa chọn---</option>
-                            @foreach ($board->catalogs as $catalog)
+                            @foreach ($catalogs as $catalog)
                                 <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-2 d-grid">
-                        <button type="submit"  class="btn btn-primary btnSubmitTask" disabled>
+                        <button type="submit" class="btn btn-primary">
                             Thêm thẻ
                         </button>
                     </div>
@@ -346,9 +353,10 @@
                 catalog_id: $('#catalog_id_' + taskId).val(),
                 start_date: $('#start_date_' + taskId).val(),
                 end_date: $('#end_date_' + taskId).val(),
+                id_gg_calendar: $('#id_gg_calendar_' + taskId).val(),
                 text: $('#text_' + taskId).val(),
                 id: taskId,
-                changeDate: true
+                changeDate: true,
             };
             console.log(taskId);
             $.ajax({

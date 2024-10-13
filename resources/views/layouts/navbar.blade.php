@@ -4,14 +4,15 @@
             <div class="d-flex justify-content-between align-items-center">
 
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
-                @php
-                    $member_Is_star = session('member_Is_star');
-                @endphp
+                    @php $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+                                ->where('user_id', auth()->id())
+                                ->value('is_star');
+                     @endphp
                 <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
                     @if( $member_Is_star == 1) active @endif"
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
-                    <span class="avatar-title bg-transparent fs-15">
+                    <span class="avatar-title bg-transparent fs-15" >
                         <i class="ri-star-fill fs-20 mx-2"></i>
                     </span>
                 </button>
@@ -138,12 +139,12 @@
                 <!--  bộ lọc -->
                 <div class="d-flex justify-content-center align-items-center p-1 cursor-pointer"
                      data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                    <i class="ri-filter-3-line fs-24"></i>
-                    <span class="readonly fs-14">Bộ lọc</span>
+                    <i class="ri-filter-3-line fs-20"></i>
+                    <span class="readonly">Bộ lọc</span>
                 </div>
                 <div class="fs-20 fw-lighter text-secondary">|</div>
                 <!-- setting bộ lọc -->
-                <ul class="dropdown-menu dropdown-menu-md p-3" style="width: 35%;max-height: 450px" data-simplebar >
+                <ul class="dropdown-menu dropdown-menu-md p-3" style="width: 35%">
                     <p class="text-center fs-15"><strong>Lọc</strong></p>
                     <!-- lọc tìm kiếm -->
                     <div class="mt-2">
@@ -226,11 +227,11 @@
                             </div>
                         </div>
                     </div>
-{{--                    <div class="text-center">--}}
-{{--                        <button type="submit" class="btn btn-ghost-secondary mt-2">--}}
-{{--                            Lọc--}}
-{{--                        </button>--}}
-{{--                    </div>--}}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-ghost-secondary mt-2">
+                            Lọc
+                        </button>
+                    </div>
                 </ul>
 
                 <section class="d-flex">
@@ -238,11 +239,7 @@
                     <div class="d-flex justify-content-center align-items-center cursor-pointer me-2">
                         <div class="col-auto ms-sm-auto">
                             <div class="avatar-group">
-                                @php
-                                    $boardMembers=$board->users->unique('id');
-                                     session(['boardMembers' => $boardMembers]);
-                                    @endphp
-
+                                @php  $boardMembers=$board->users->unique('id'); @endphp
 
                                 @php
                                     // Đếm số lượng board members
@@ -257,8 +254,7 @@
                                            title="{{ $boardMember['name'] }}">
                                             @if ($boardMember['image'])
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                     alt="" class="rounded-circle avatar-sm object-fit-cover"
-                                                     style="width: 40px;height: 40px">
+                                                     alt="" class="rounded-circle avatar-sm">
                                             @else
                                                 <div class="avatar-sm">
                                                     <div class="avatar-title rounded-circle bg-light text-primary">
@@ -293,7 +289,7 @@
                     </div>
                     <!-- menu bảng -->
                     <div class="d-flex justify-content-center align-items-center p-2 cursor-pointer">
-                        <i class="ri-list-settings-line fs-20" data-bs-toggle="offcanvas"
+                        <i class="ri-list-settings-line fs-15" data-bs-toggle="offcanvas"
                            data-bs-target="#settingBoard" aria-controls="offcanvasRight"></i>
                     </div>
                 </section>

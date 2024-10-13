@@ -24,7 +24,6 @@ class Task extends Model
         'progress',
         'start_date',
         'end_date',
-        'reminder_date',
         'parent',
         'sortorder',
         'id_google_calendar',

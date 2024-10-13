@@ -22,13 +22,4 @@ class CheckListItem extends Model
         'is_complete'=> 'boolean',
 
     ];
-    public function members()
-    {
-        return $this->belongsToMany(User::class, 'check_list_item_members', 'check_list_item_id', 'user_id');
-    }
-    public function checkListItemMembers()
-    {
-        return $this->hasMany(CheckListItemMember::class, 'check_list_item_id');
-    }
-
 }

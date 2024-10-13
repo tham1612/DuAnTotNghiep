@@ -140,39 +140,136 @@
                 <div class="card-header border-bottom-dashed align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Hoạt động gần đây</h4>
                     <div class="flex-shrink-0">
+                        <button type="button" class="btn btn-soft-primary btn-sm">
+                            Xem tất cả các hoạt động
+                        </button>
                     </div>
                 </div><!-- end cardheader -->
                 <div class="card-body p-0">
                     <div data-simplebar style="max-height: 400px;" class="p-3">
                         <div class="acitivity-timeline acitivity-main">
-                            @if (!empty($activities))
-                            @foreach ($activities as $activity)
-                                <li class="d-flex align-items-start mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-3">
-                                            @if (!empty($activity->causer) && !empty($activity->causer->avatar))
-                                                <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
-                                                     alt="avatar" class="rounded-circle" width="40" height="40">
-                                            @else
-                                                <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                     style="width: 40px; height: 40px;">
-                                                    {{ strtoupper(substr($activity->causer->name ?? 'Hệ thống', 0, 1)) }}
-                                                </div>
-                                            @endif
+                            <div class="acitivity-item d-flex">
+                                <div class="flex-shrink-0 avatar-xs acitivity-avatar">
+                                    <div class="avatar-title bg-success-subtle text-success rounded-circle">
+                                        <i class="ri-shopping-cart-2-line"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Purchase by James Price</h6>
+                                    <p class="text-muted mb-1">Product noise
+                                        evolve smartwatch
+                                    </p>
+                                    <small class="mb-0 text-muted">02:14 PM
+                                        Today</small>
+                                </div>
+                            </div>
+
+                            <div class="acitivity-item py-3 d-flex">
+                                <div class="flex-shrink-0">
+                                    <img src="assets/images/users/avatar-2.jpg" alt=""
+                                        class="avatar-xs rounded-circle acitivity-avatar">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Natasha Carey have liked the
+                                        products</h6>
+                                    <p class="text-muted mb-1">Allow users to
+                                        like products in
+                                        your WooCommerce store.</p>
+                                    <small class="mb-0 text-muted">25 Dec,
+                                        2021</small>
+                                </div>
+                            </div>
+                            <div class="acitivity-item py-3 d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-xs acitivity-avatar">
+                                        <div class="avatar-title rounded-circle bg-secondary">
+                                            <i class="mdi mdi-sale fs-14"></i>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p class="mb-1">
-                                            <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
-                                            {{ $activity->description ?? 'Không có mô tả' }}
-                                        </p>
-                                        <small class="text-muted">
-                                            {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
-                                        </small>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Today offers by <a href="apps-ecommerce-seller-details.html"
+                                            class="link-secondary">Digitech
+                                            Galaxy</a></h6>
+                                    <p class="text-muted mb-2">Offer is valid on
+                                        orders of
+                                        Rs.500 Or above for selected products
+                                        only.</p>
+                                    <small class="mb-0 text-muted">12 Dec,
+                                        2021</small>
+                                </div>
+                            </div>
+                            <div class="acitivity-item py-3 d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-xs acitivity-avatar">
+                                        <div class="avatar-title rounded-circle bg-danger-subtle text-danger">
+                                            <i class="ri-bookmark-fill"></i>
+                                        </div>
                                     </div>
-                                </li>
-                            @endforeach
-                        @endif
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Favoried Product</h6>
+                                    <p class="text-muted mb-2">Esther James have
+                                        favorited
+                                        product.</p>
+                                    <small class="mb-0 text-muted">25 Nov,
+                                        2021</small>
+                                </div>
+                            </div>
+                            <div class="acitivity-item py-3 d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-xs acitivity-avatar">
+                                        <div class="avatar-title rounded-circle bg-secondary">
+                                            <i class="mdi mdi-sale fs-14"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Flash sale starting <span class="text-primary">Tomorrow.</span>
+                                    </h6>
+                                    <p class="text-muted mb-0">Flash sale by <a href="javascript:void(0);"
+                                            class="link-secondary fw-medium">Zoetic
+                                            Fashion</a>
+                                    </p>
+                                    <small class="mb-0 text-muted">22 Oct,
+                                        2021</small>
+                                </div>
+                            </div>
+                            <div class="acitivity-item py-3 d-flex">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-xs acitivity-avatar">
+                                        <div class="avatar-title rounded-circle bg-info-subtle text-info">
+                                            <i class="ri-line-chart-line"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Monthly sales report</h6>
+                                    <p class="text-muted mb-2"><span class="text-danger">
+                                            2 days left</span> notification to
+                                        submit the
+                                        monthly sales report. <a href="javascript:void(0);"
+                                            class="link-warning text-decoration-underline">Reports
+                                            Builder</a>
+                                    </p>
+                                    <small class="mb-0 text-muted">15 Oct</small>
+                                </div>
+                            </div>
+                            <div class="acitivity-item d-flex">
+                                <div class="flex-shrink-0">
+                                    <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}" alt=""
+                                        class="avatar-xs rounded-circle acitivity-avatar" />
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Frank Hook Commented</h6>
+                                    <p class="text-muted mb-2 fst-italic">" A
+                                        product that has
+                                        reviews is more likable to be sold than
+                                        a product. "</p>
+                                    <small class="mb-0 text-muted">26 Aug,
+                                        2021</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div><!-- end card body -->

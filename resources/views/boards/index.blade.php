@@ -93,16 +93,8 @@
                                         <!-- Ảnh bìa -->
                                         @if ($task->image)
                                             <div class="tasks-img rounded"
-                                                 style="
-                                                     background-image: url('{{ asset('storage/' . $task->image) }}');
-                                                     background-size: cover;
-                                                     background-position: center;
-                                                     background-repeat: no-repeat;
-                                                     width: 100%;
-                                                     height: 150px;
-                                                 ">
+                                                 style=" background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}'); ">
                                             </div>
-
                                         @endif
                                         <!-- giao việc cho thành viên-->
                                         @if (false)
@@ -195,15 +187,19 @@
                         Thêm thẻ
                     </button>
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
+<<<<<<< Updated upstream
                         <form action="{{ route('tasks.store') }}" class="formItem" method="post" onsubmit="return disableButtonOnSubmit()">
+=======
+                        <form action="{{ route('tasks.store') }}" method="post">
+>>>>>>> Stashed changes
                             @csrf
                             <div class="mb-2">
-                                <input type="text" class="form-control taskNameInput" name="text"
-                                       placeholder="Nhập tên thẻ..." />
+                                <input type="text" class="form-control" id="exampleDropdownFormEmail" name="text"
+                                       placeholder="Nhập tên thẻ..."/>
                                 <input type="hidden" name="catalog_id" value="{{ $data->id }}">
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-                                <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
+                                <button type="submit" class="btn btn-primary">
                                     Thêm thẻ
                                 </button>
                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
@@ -224,22 +220,22 @@
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
+<<<<<<< Updated upstream
                 <form action="{{ route('catalogs.store') }}" method="post" class="formItem" onsubmit="return disableButtonOnSubmit()">
+=======
+                <form action="{{ route('catalogs.store') }}" method="post">
+>>>>>>> Stashed changes
                     @csrf
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
-                            value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <input type="text" class="form-control" id="exampleDropdownFormEmail" name="name"
+                               placeholder="Nhập tên danh sách..."/>
                         <input type="hidden" name="board_id" value="{{ $board->id }}">
                     </div>
                     <div class="mb-2 d-flex align-items-center">
-                        <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
+                        <button type="submit" class="btn btn-primary">
                             Thêm danh sách
                         </button>
-                        <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
-                            aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
+                        <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                     </div>
                 </form>
             </div>
