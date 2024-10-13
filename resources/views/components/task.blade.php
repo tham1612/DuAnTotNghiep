@@ -484,7 +484,7 @@
                                                         {{--                                                                                                                            </div>--}}
                                                         {{--                                                                                                                        </td>--}}
                                                         <td colspan="2">
-                                                            <form
+                                                            <form class="formItem"
                                                                 onsubmit="return FormCheckListItem({{$checklist->id}})">
                                                                 <input type="hidden" name="check_list_id"
                                                                        id="check_list_id_{{$checklist->id}}"
@@ -495,7 +495,7 @@
                                                                        placeholder="Thêm mục"/>
                                                                 <div class="d-flex mt-3 justify-content-between">
                                                                     <div>
-                                                                        <button type="submit"
+                                                                        <button type="submit" disabled
                                                                                 class="btn btn-primary">Thêm
                                                                         </button>
                                                                         <a class="btn btn-outline-dark disable-checklist">Hủy</a>

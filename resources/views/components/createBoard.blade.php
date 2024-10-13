@@ -23,7 +23,7 @@
                         ->get();
 
                 @endphp
-                <form class="p-3" action="{{ route('b.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
+                <form class="formItem" action="{{ route('b.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
                     @csrf
 
                     <div class="mt-3">
@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="mt-3 card">
-                        <button class="btn btn-primary" type="submit" id="btnSubmit" disabled>Tạo mới</button>
+                        <button class="btn btn-primary" type="submit" disabled>Tạo mới</button>
                     </div>
                     <!--end col-->
                 </form>
@@ -65,26 +65,39 @@
 </div>
 
 <script>
-    const boardName = document.getElementById('boardName');
-    const btnSubmit = document.getElementById('btnSubmit');
+     document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.formItem');
 
-    function validateBoard() {
-        const isNameFilled = boardName.value.trim() !== '';
-        btnSubmit.disabled = !isNameFilled;
-    }
+        forms.forEach((form) => {
+            const textInput = form.querySelector('input[type="text"]');
+            const submitButton = form.querySelector('button[type="submit"]');
 
-    boardName.addEventListener('input', validateBoard);
+            if (textInput && submitButton) {
+                // Kiểm tra trạng thái của input để enable/disable button
+                textInput.addEventListener('input', function() {
+                    const isFilled = textInput.value.trim() !== '';
+                    console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
+                    submitButton.disabled = !isFilled;
+                });
 
-    function disableButtonOnSubmit(event) {
-        // Ngăn gửi biểu mẫu ngay lập tức
-        event.preventDefault();
-        // Kiểm tra xem nút đã bị vô hiệu hóa chưa
-        if (btnSubmit.disabled) return;
-        // Vô hiệu hóa nút
-        btnSubmit.disabled = true;
-        // Gửi biểu mẫu ngay lập tức
-        event.target.closest('form').submit();
-    }
-    btnSubmit.addEventListener('click', disableButtonOnSubmit);
+                // Xử lý khi button được nhấn
+                submitButton.addEventListener('click', function(event) {
+                    disableButtonOnSubmit(event, textInput, submitButton);
+                });
+            }
+        });
 
+        function disableButtonOnSubmit(event, input, button) {
+            event.preventDefault();
+            if (button.disabled) return;
+            
+            button.disabled = true;
+            event.target.closest('form').submit();
+            input.value = '';
+
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
+        }
+    });
 </script>

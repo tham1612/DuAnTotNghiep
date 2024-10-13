@@ -6,25 +6,25 @@
 {{--@endphp--}}
 
 @if($checklist)
-    <form id="taskFormUpdate_{{$checklist->id}}" onsubmit="return submitFormCheckList({{$checklist->id}})">
+    <form id="taskFormUpdate_{{$checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$checklist->id}})">
         <div class="mt-2">
             <label class="form-label" for="name_{{$checklist->id}}">Tiêu đề</label>
             <input type="hidden" name="task_id" id="task_id_{{$checklist->id}}" value="{{$task->id}}">
             <input type="text" class="form-control" name="name" id="name_{{$checklist->id}}" value="{{$checklist->name}}"/>
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary">Thay đổi</button>
+            <button type="submit" class="btn btn-primary" disabled>Thay đổi</button>
         </div>
     </form>
 @else
-    <form id="taskFormAdd" onsubmit="return submitAddCheckList({{$task->id}})">
+    <form id="taskFormAdd" class="formItem" onsubmit="return submitAddCheckList({{$task->id}})">
         <div class="mt-2">
             <label class="form-label" for="name_{{$task->id}}">Tiêu đề</label>
             <input type="hidden" name="task_id" id="task_id_{{$task->id}}" value="{{$task->id}}">
             <input type="text" class="form-control" name="name" id="name_{{$task->id}}" placeholder="Việc cần làm"/>
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary">Thêm</button>
+            <button type="submit" class="btn btn-primary" disabled>Thêm</button>
         </div>
     </form>
 @endif

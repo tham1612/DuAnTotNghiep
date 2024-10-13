@@ -185,7 +185,7 @@
         <div class="my-2 cursor-pointer">
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
                     @csrf
                     <div class="mb-2">
                         <input type="text" class="form-control" name="name" id="nameCatalog"
@@ -206,7 +206,7 @@
         <div class="mt-2 cursor-pointer">
             <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
             <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmitTask(this)">
+                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmit()" class="formItem">
                     @csrf
                     <h5 class="text-center">Thêm thẻ</h5>
                     <div class="mb-2">
