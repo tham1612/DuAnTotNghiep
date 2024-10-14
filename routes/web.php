@@ -34,7 +34,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::prefix('workspaces')
             ->as('workspaces.')
             ->group(function () {
-                Route::resource('/', WorkspaceController::class);
+                // Route::resource('/', WorkspaceController::class);
                 Route::get('/{id}', [WorkspaceController::class, 'index'])
                     ->name('index');
                 Route::get('create', [WorkspaceController::class, 'create'])
@@ -133,6 +133,11 @@ Route::get('inboxs', function () {
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
 Auth::routes();
+
+Route::post('/forget-session', function() {
+    session()->forget(['msg', 'action']);
+    return response()->json(['success' => true]);
+})->name('forget.session');
 
 Route::controller(LoginGoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('login-google');
