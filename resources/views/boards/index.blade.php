@@ -7,16 +7,12 @@
     <div class="tasks-board mb-3" id="kanbanboard">
 
         @foreach ($board->catalogs as $data)
-            @php
-                $catalogs = \App\Models\Catalog::find($data->id);
-                $count = $catalogs->tasks->count();
-            @endphp
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $data->id }}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             {{ $data->name }}
-                            <small class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $count }}</small>
+                            <small class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $data->tasks->count() }}</small>
                         </h6>
                     </div>
                     <div class="flex-shrink-0">
