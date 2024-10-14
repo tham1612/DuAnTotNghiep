@@ -34,8 +34,6 @@
         .ck-editor__editable_inline {
             min-height: 100px !important;
             /* Đảm bảo chiều cao giới hạn 150px */
-
-
         }
     </style>
 
@@ -167,51 +165,51 @@
         });
     </script>
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/libs/node-waves/waves.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/libs/feather-icons/feather.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}" async></script>
+    <script src="{{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}" async></script>
+    <script src="{{ asset('theme/assets/libs/node-waves/waves.min.js') }}" async></script>
+    <script src="{{ asset('theme/assets/libs/feather-icons/feather.min.js') }}" async></script>
+    <script src="{{ asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js') }}" async></script>
     <!--Swiper slider js-->
-    <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}" async></script>
 
-    <script src=""></script>
     <!-- glightbox js -->
-    <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}" defer></script>
 
     <!-- fgEmojiPicker js -->
-    <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}" defer></script>
 
     <!--jquery cdn-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
 
-    <!--select2 cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <!-- notifications init -->
-    <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
+    <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}" defer></script>
 
     <!-- prismjs plugin -->
-    <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}" defer></script>
 
     <!-- App js -->
-    <script src="{{ asset('theme/assets/js/app.js') }}"></script>
+    <script src="{{ asset('theme/assets/js/app.js') }}" async></script>
 
     <!-- Lord Icon -->
-    <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
+    <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js" defer></script>
 
     <!-- Modal Js -->
-    <script src="assets/js/pages/modal.init.js"></script>
+    <script src="assets/js/pages/modal.init.js" defer></script>
 
     @if (request()->is('b/*'))
         <!-- dragula init js -->
-        <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
+        <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}" defer></script>
         <!-- dom autoscroll -->
-        <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
-        {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script> --}}
-        <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
-        <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
+        <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}" defer></script>
+        {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}" defer></script> --}}
+        <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}" defer></script>
+        <!--select2 cdn-->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
+        <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}" defer></script>
     @endif
 
     <script>
@@ -236,12 +234,20 @@
             return true; // Vẫn cho phép submit form
         }
 
-        // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+        // xóa thông báo sau 5s
         setTimeout(function() {
             var alertElement = document.getElementById('notification-messenger');
             if (alertElement) {
                 alertElement.style.display = 'none';
+                fetch("{{ route('forget.session') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                });
             }
+
         }, 5000);
 
         $(document).ready(function() {
@@ -352,7 +358,7 @@
                 // Kiểm tra trạng thái của input để enable/disable button
                 textInput.addEventListener('input', function() {
                     const isFilled = textInput.value.trim() !== '';
-                    console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
+                    // console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
                     submitButton.disabled = !isFilled;
                 });
 
@@ -379,6 +385,7 @@
 
 
 </script>
+
 
     @yield('script')
 
