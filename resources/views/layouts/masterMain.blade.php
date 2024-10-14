@@ -377,6 +377,7 @@
         }
     });
 
+
 </script>
 
     @yield('script')
