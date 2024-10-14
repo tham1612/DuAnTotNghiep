@@ -361,51 +361,66 @@
             nameCatalogInput.addEventListener('input', validateCatalogForm);
 
 
-            // Kiểm tra form khi người dùng submit
-            function disableButtonOnSubmit(event) {
-                // Ngăn gửi biểu mẫu ngay lập tức
-                event.preventDefault();
-                // Kiểm tra xem nút đã bị vô hiệu hóa chưa
-                if (btnSubmitCatalog.disabled) return;
-                // Vô hiệu hóa nút
-                btnSubmitCatalog.disabled = true;
-                // Gửi biểu mẫu ngay lập tức
-                event.target.closest('form').submit();
-            }
+        // Kiểm tra form khi người dùng submit
+        function disableButtonOnSubmit(event) {
+           // Ngăn gửi biểu mẫu ngay lập tức
+            event.preventDefault();
+            // Kiểm tra xem nút đã bị vô hiệu hóa chưa
+            if (btnSubmitCatalog.disabled) return;
+            // Vô hiệu hóa nút
+            btnSubmitCatalog.disabled = true;
+            // Gửi biểu mẫu ngay lập tức
+            event.target.closest('form').submit();
+            // làm trống dữ liệu
+            nameCatalogInput.value = '';
+            setTimeout(() => {
+                btnSubmitCatalog.disabled = false;
+            }, 3000);
+        }
+        btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
+    });
+    // validate task
+    document.addEventListener('DOMContentLoaded', function() {
+    // Lấy tất cả các form có class .taskForm
+    const taskForms = document.querySelectorAll('.taskForm');
 
-            btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
+    taskForms.forEach((form) => {
+        // Lấy input[type="text"] và button[type="submit"] trong từng form
+        const textInput = form.querySelector('input[type="text"]');
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        // Kiểm tra trạng thái của input để enable/disable button
+        textInput.addEventListener('input', function() {
+            const isTextFilled = textInput.value.trim() !== '';
+            submitButton.disabled = !isTextFilled;
         });
-        // validate task
-        document.addEventListener('DOMContentLoaded', function() {
-            const taskNameInputs = document.querySelectorAll('.taskNameInput');
-            const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
 
-            taskNameInputs.forEach((input, index) => {
-                const btnSubmit = btnSubmitTasks[index];
-
-                input.addEventListener('input', function() {
-                    const isTaskNameFilled = input.value.trim() !== '';
-                    btnSubmit.disabled = !isTaskNameFilled;
-                });
-
-                btnSubmit.addEventListener('click', function(event) {
-                    disableButtonOnSubmitTask(input.closest('form'), event);
-                });
-            });
-
-            window.disableButtonOnSubmitTask = function(form, event) {
-                const input = form.querySelector('.taskNameInput');
-                const btnSubmit = form.querySelector('.btnSubmitTask');
-                event.preventDefault();
-
-                if (btnSubmit.disabled) return;
-
-                btnSubmit.disabled = true;
-                form.submit();
-            };
-
+        // Xử lý khi button được nhấn
+        submitButton.addEventListener('click', function(event) {
+            disableButtonOnSubmit(form, event);
         });
-    </script>
+    });
+
+    window.disableButtonOnSubmit = function(form, event) {
+        const textInput = form.querySelector('input[type="text"]');
+        const submitButton = form.querySelector('button[type="submit"]');
+        event.preventDefault();
+
+        if (submitButton.disabled) return;
+
+        submitButton.disabled = true;
+        form.submit();
+
+        textInput.value = '';
+
+        setTimeout(() => {
+            submitButton.disabled = false;
+        }, 3000);
+    };
+});
+
+</script>
+
 
     @yield('script')
 
