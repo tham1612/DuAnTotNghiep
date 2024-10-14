@@ -303,7 +303,7 @@
                                                     style="max-height: 100%; overflow-y: auto;">
                                                     <div class="messages-box" id="message-list">
                                                         @foreach ($messages as $message)
-                                                            @if ($message->sender_id == auth()->id())
+                                                            @if ($message->sender_id == auth()->id()) 
                                                                 <div class="message right"
                                                                     style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
                                                                     <div
@@ -312,18 +312,15 @@
                                                                     </div>
                                                                 </div>
                                                             @endif
-
-                                                            @if ($message->receiver_id == request()->route('receiverId'))
-                                                                @php
-                                                                    // Truy vấn thông tin người dùng dựa trên receiver_id
+                                                            @if ($message->receiver_id == request()->route('receiverId'))                                                         
+                                                                @php                                                              
                                                                     $user = \App\Models\User::find(
                                                                         $message->receiver_id,
                                                                     );
                                                                     $initial = $user
                                                                         ? strtoupper(substr($user->name, 0, 1))
-                                                                        : ''; // Lấy ký tự đầu tiên và đổi thành chữ hoa
+                                                                        : '';                                                                   
                                                                 @endphp
-
                                                                 <div class="message left"
                                                                     style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
                                                                     <div class="bg-info-subtle d-flex justify-content-center align-items-center"
@@ -345,14 +342,10 @@
                                                         style="margin-top:300px">
                                                         <h1 class="text-center">Hãy trò chuyện với ai đó</h1>
                                                     </div>
-
                                             @endif
                                         </div>
 
                                     </div>
-
-
-
                                     @if (isset($receiverId) && $receiverId && isset($user) && $user)
                                         <div class="chat-input-section p-3 p-lg-4">
                                             <form onsubmit="return false;" enctype="multipart/form-data">
