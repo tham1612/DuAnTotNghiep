@@ -1,30 +1,26 @@
 <h5 class="mb-3" style="text-align: center">
     Thêm danh sách công việc
 </h5>
-{{--@php--}}
-{{--    $checklist = \App\Models\CheckList::where('task_id', $task->id)->first();--}}
-{{--@endphp--}}
-
-@if($checklist)
-    <form id="taskFormUpdate_{{$checklist->id}}" onsubmit="return submitFormCheckList({{$checklist->id}})">
+@if($task->checklist)
+    <form id="taskFormUpdate_{{$task->checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$task->checklist->id}})">
         <div class="mt-2">
-            <label class="form-label" for="name_{{$checklist->id}}">Tiêu đề</label>
-            <input type="hidden" name="task_id" id="task_id_{{$checklist->id}}" value="{{$task->id}}">
-            <input type="text" class="form-control" name="name" id="name_{{$checklist->id}}" value="{{$checklist->name}}"/>
+            <label class="form-label" for="name_{{$task->checklist->id}}">Tiêu đề</label>
+            <input type="hidden" name="task_id" id="task_id_{{$task->checklist->id}}" value="{{$task->id}}">
+            <input type="text" class="form-control" name="name" id="name_{{$task->checklist->id}}" value="{{$task->checklist->name}}"/>
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary">Thay đổi</button>
+            <button type="submit" class="btn btn-primary" disabled>Thay đổi</button>
         </div>
     </form>
 @else
-    <form id="taskFormAdd" onsubmit="return submitAddCheckList({{$task->id}})">
+    <form id="taskFormAdd" class="formItem" onsubmit="return submitAddCheckList({{$task->id}})">
         <div class="mt-2">
             <label class="form-label" for="name_{{$task->id}}">Tiêu đề</label>
             <input type="hidden" name="task_id" id="task_id_{{$task->id}}" value="{{$task->id}}">
             <input type="text" class="form-control" name="name" id="name_{{$task->id}}" placeholder="Việc cần làm"/>
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary">Thêm</button>
+            <button type="submit" class="btn btn-primary" disabled>Thêm</button>
         </div>
     </form>
 @endif

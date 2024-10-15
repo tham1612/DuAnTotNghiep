@@ -7,16 +7,12 @@
     <div class="tasks-board mb-3" id="kanbanboard">
 
         @foreach ($board->catalogs as $data)
-            @php
-                $catalogs = \App\Models\Catalog::find($data->id);
-                $count = $catalogs->tasks->count();
-            @endphp
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $data->id }}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             {{ $data->name }}
-                            <small class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $count }}</small>
+                            <small class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $data->tasks->count() }}</small>
                         </h6>
                     </div>
                     <div class="flex-shrink-0">
@@ -195,7 +191,7 @@
                         Thêm thẻ
                     </button>
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        <form action="{{ route('tasks.store') }}" method="post" onsubmit="return disableButtonOnSubmitTask(this)">
+                        <form action="{{ route('tasks.store') }}" class="formItem" method="post" onsubmit="return disableButtonOnSubmit()">
                             @csrf
                             <div class="mb-2">
                                 <input type="text" class="form-control taskNameInput" name="text"
@@ -224,7 +220,7 @@
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                <form action="{{ route('catalogs.store') }}" method="post" class="formItem" onsubmit="return disableButtonOnSubmit()">
                     @csrf
                     <div class="mb-2">
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"

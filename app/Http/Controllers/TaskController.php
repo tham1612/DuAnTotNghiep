@@ -34,6 +34,7 @@ class TaskController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'tasks';
+
     public function index($id, Request $request)
     {
 
@@ -80,8 +81,9 @@ class TaskController extends Controller
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
         // event(new TaskUpdated($task));
-        return back()
-            ->with('success');
+        session(['msg' => 'Thêm task ' . $data['text'] . ' thành công!']);
+        session(['action' => 'success']);
+        return back();
     }
 
     public function show()
@@ -123,6 +125,9 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+
+        session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
+        session(['action' => 'success']);
         return response()->json([
             'message' => 'Task đã được cập nhật thành công',
             'success' => true
@@ -329,5 +334,8 @@ class TaskController extends Controller
             'message' => 'Xóa thành viên thành công.'
         ], 200);
     }
+    public function destroy(Request $request)
+    {
 
+    }
 }

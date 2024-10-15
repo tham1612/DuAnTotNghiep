@@ -84,6 +84,7 @@
         </div>
         <div class="row">
             @if (!empty($board_star))
+               @php   session(['$board_star' => $board_star]); @endphp
                 @if ($board_star->isEmpty())
                     <p>Không có bảng nào được đánh dấu là nổi bật.</p>
                 @else

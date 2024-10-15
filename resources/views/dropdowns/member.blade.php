@@ -137,9 +137,10 @@
 
 
     function removeMemberFromTask(user_id, task_id) {
+        console.log('User ID:', user_id, 'Task ID:', task_id);
         $.ajax({
             url: `/tasks/deleteTaskMember`,
-            type: 'POST',
+            type: 'DELETE',
             data: {
                 user_id: user_id,
                 task_id: task_id
@@ -160,12 +161,19 @@
 
 
     // Thêm sự kiện click cho từng thành viên của bảng
-    document.querySelectorAll('.board-member-item').forEach(item => {
-        item.addEventListener('click', function () {
-            var user_id = this.getAttribute('data-user-id');
-            var name = this.getAttribute('data-user-name');
-            var task_id = this.getAttribute('data-task-id');
-            addMemberToTask(user_id, name,task_id);
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.board-member-item').forEach(item => {
+            item.addEventListener('click', function () {
+                var user_id = this.getAttribute('data-user-id');
+                var name = this.getAttribute('data-user-name');
+                var task_id = this.getAttribute('data-task-id');
+
+                addMemberToTask(user_id, name, task_id);
+
+                // Ẩn thành viên này trong danh sách
+                this.style.display = 'none'; // Ẩn item
+            });
         });
     });
+
 </script>

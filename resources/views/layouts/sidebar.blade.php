@@ -206,7 +206,7 @@
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                                 <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                     src="{{ asset('storage/' . $board->image) }}" style="width: 40px;height: 40px"
+                                                     src="{{ asset('storage/' . $board->image) }}" style="width: 30px; height: 30px"
                                                 alt="image"/>
                                         @else
                                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
@@ -219,10 +219,17 @@
                                     </div>
                                 </a>
                                 @php
-                                    $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-                                    ->where('user_id', auth()->id())
-                                    ->value('is_star');
-                                    session(['member_Is_star' => $member_Is_star]);
+                                    $boardMembers=$board->users->unique('id');
+                                        session(['boardMembers' => $boardMembers]);
+   //                                    $member = $board->members()->where('user_id', auth()->id())->first();
+   //
+   //                                     $member_Is_star = $member ? $member->is_star : false;
+                                             $member=$boardMembers->where('user_id', auth()->id())->first();
+                                             $member_Is_star = $member ? $member->is_star : false;
+//                                            $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+//                                            ->where('user_id', auth()->id())
+//                                            ->value('is_star');
+                                            session(['member_Is_star' => $member_Is_star]);
 
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">

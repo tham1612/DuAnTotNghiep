@@ -28,7 +28,8 @@
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
                     <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                        <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                        <form action="{{ route('catalogs.store') }}" method="post" 
+                            class="formItem" onsubmit="return disableButtonOnSubmit()">
                             @csrf
                             <div class="mb-2">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
@@ -110,7 +111,8 @@
                                     </button>
                                     <div class="dropdown-menu p-3" style="width: 285px"
                                          aria-labelledby="dropdownMenuOffset3">
-                                        <form action="{{ route('tasks.store') }}" method="post" onsubmit="return disableButtonOnSubmitTask(this)">
+                                        <form action="{{ route('tasks.store') }}" method="post"
+                                        class="formItem" onsubmit="return disableButtonOnSubmit()">
                                             @csrf
                                             <div class="mb-2">
                                                 <input type="text" class="form-control taskNameInput" name="text"

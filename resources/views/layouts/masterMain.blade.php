@@ -34,8 +34,6 @@
         .ck-editor__editable_inline {
             min-height: 100px !important;
             /* Đảm bảo chiều cao giới hạn 150px */
-
-
         }
     </style>
 
@@ -175,7 +173,6 @@
     <!--Swiper slider js-->
     <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
-    <script src=""></script>
     <!-- glightbox js -->
     <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>
 
@@ -186,8 +183,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <!--select2 cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <!-- notifications init -->
     <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
@@ -202,7 +198,7 @@
     <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
 
     <!-- Modal Js -->
-    <script src="assets/js/pages/modal.init.js"></script>
+    <script src="{{asset('theme/assets/js/pages/modal.init.js')}}"></script>
 
     @if (request()->is('b/*'))
         <!-- dragula init js -->
@@ -211,6 +207,8 @@
         <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
         {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script> --}}
         <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
+        <!--select2 cdn-->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     @endif
 
@@ -236,12 +234,20 @@
             return true; // Vẫn cho phép submit form
         }
 
-        // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
+        // xóa thông báo sau 5s
         setTimeout(function() {
             var alertElement = document.getElementById('notification-messenger');
             if (alertElement) {
                 alertElement.style.display = 'none';
+                fetch("/forget-session", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+            });
             }
+
         }, 5000);
 
         $(document).ready(function() {
@@ -340,65 +346,46 @@
             });
         });
 
-        // validate Catalog
-        document.addEventListener('DOMContentLoaded', function() {
-            const nameCatalogInput = document.getElementById('nameCatalog');
-            const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
-
-            // Kiểm tra trạng thái của input
-            function validateCatalogForm() {
-                const isNameFilled = nameCatalogInput.value.trim() !== '';
-                btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
-            }
-
-            // Lắng nghe sự kiện khi người dùng nhập dữ liệu vào input
-            nameCatalogInput.addEventListener('input', validateCatalogForm);
-
-
-        // Kiểm tra form khi người dùng submit
-        function disableButtonOnSubmit(event) {
-           // Ngăn gửi biểu mẫu ngay lập tức
-            event.preventDefault();
-            // Kiểm tra xem nút đã bị vô hiệu hóa chưa
-            if (btnSubmitCatalog.disabled) return;
-            // Vô hiệu hóa nút
-            btnSubmitCatalog.disabled = true;
-            // Gửi biểu mẫu ngay lập tức
-            event.target.closest('form').submit();
-        }
-        btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
-    });
-    // validate task
+    // // validate form
     document.addEventListener('DOMContentLoaded', function() {
-        const taskNameInputs = document.querySelectorAll('.taskNameInput');
-        const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
+        const forms = document.querySelectorAll('.formItem');
 
-        taskNameInputs.forEach((input, index) => {
-            const btnSubmit = btnSubmitTasks[index];
-            
-            input.addEventListener('input', function() {
-                const isTaskNameFilled = input.value.trim() !== '';
-                btnSubmit.disabled = !isTaskNameFilled;
-            });
+        forms.forEach((form) => {
+            const textInput = form.querySelector('input[type="text"]');
+            const submitButton = form.querySelector('button[type="submit"]');
 
-            btnSubmit.addEventListener('click', function(event) {
-                disableButtonOnSubmitTask(input.closest('form'), event);
-            });
+            if (textInput && submitButton) {
+                // Kiểm tra trạng thái của input để enable/disable button
+                textInput.addEventListener('input', function() {
+                    const isFilled = textInput.value.trim() !== '';
+                    // console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
+                    submitButton.disabled = !isFilled;
+                });
+
+                // Xử lý khi button được nhấn
+                submitButton.addEventListener('click', function(event) {
+                    disableButtonOnSubmit(event, textInput, submitButton);
+                });
+            }
         });
 
-        window.disableButtonOnSubmitTask = function(form, event) {
-            const input = form.querySelector('.taskNameInput');
-            const btnSubmit = form.querySelector('.btnSubmitTask');
+        function disableButtonOnSubmit(event, input, button) {
             event.preventDefault();
+            if (button.disabled) return;
 
-            if (btnSubmit.disabled) return;
+            button.disabled = true;
+            event.target.closest('form').submit();
+            input.value = '';
 
-            btnSubmit.disabled = true; 
-            form.submit();
-        };
-
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
+        }
     });
+
+
 </script>
+
 
     @yield('script')
 
