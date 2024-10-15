@@ -239,8 +239,9 @@
                         <div class="col-auto ms-sm-auto">
                             <div class="avatar-group">
                                 @php
-                                    $boardMembers=$board->users->unique('id');
-                                     session(['boardMembers' => $boardMembers]);
+//                                    $boardMembers=$board->users->unique('id');
+//                                     session(['boardMembers' => $boardMembers]);
+                                       $boardMembers=session('boardMembers');
                                     @endphp
 
 

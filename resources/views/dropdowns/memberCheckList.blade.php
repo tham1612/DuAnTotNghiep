@@ -10,10 +10,10 @@
         <!-- thành viên của thẻ -->
     <div class="mt-3">
         <label class="fs-14">Thành viên của thẻ</label>
-        <ul id="cardMembersList" class="" style="list-style: none; margin-left: -32px">
+        <ul id="cardMembersList-{{$checklistItem->id}}" class="" style="list-style: none; margin-left: -32px">
             @if(!empty($checklistItem->checkListItemMembers))
                  @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
-                <li id="card-member-{{$checkListItemMember->id}}" class="d-flex justify-content-between align-items-center">
+                <li id="card-member-{{$checkListItemMember->user->id}}-{{$checkListItemMember->check_list_item_id}})" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <a href="javascript: void(0);" class="avatar-group-item"
                            data-bs-toggle="tooltip" data-bs-placement="top"
@@ -110,9 +110,9 @@
                 check_list_item_id: checklistItemId,
             },
             success: function(response) {
-                var cardMembersList = document.getElementById('cardMembersList');
+                var cardMembersList = document.getElementById('cardMembersList' + checklistiemid);
                 var listItem = `
-                <li id="card-member-${memberId}" class="d-flex justify-content-between align-items-center">
+                <li id="card-member-${memberId}-${checklistItemId}" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip" data-bs-placement="top" title="${memberName}">
                             <div class="avatar-sm">
@@ -145,7 +145,7 @@
                 check_list_item_id:checklistItemId
             },
             success: function(response) {
-                var memberElement = document.getElementById('card-member-' + memberId);
+                var memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
                 if (memberElement) {
                     memberElement.remove();
                 }

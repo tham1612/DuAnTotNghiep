@@ -219,10 +219,17 @@
                                     </div>
                                 </a>
                                 @php
-                                    $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-                                    ->where('user_id', auth()->id())
-                                    ->value('is_star');
-                                    session(['member_Is_star' => $member_Is_star]);
+                                    $boardMembers=$board->users->unique('id');
+                                        session(['boardMembers' => $boardMembers]);
+   //                                    $member = $board->members()->where('user_id', auth()->id())->first();
+   //
+   //                                     $member_Is_star = $member ? $member->is_star : false;
+                                             $member=$boardMembers->where('user_id', auth()->id())->first();
+                                             $member_Is_star = $member ? $member->is_star : false;
+//                                            $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+//                                            ->where('user_id', auth()->id())
+//                                            ->value('is_star');
+                                            session(['member_Is_star' => $member_Is_star]);
 
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">

@@ -1,16 +1,12 @@
 <h5 class="mb-3" style="text-align: center">
     Thêm danh sách công việc
 </h5>
-{{--@php--}}
-{{--    $checklist = \App\Models\CheckList::where('task_id', $task->id)->first();--}}
-{{--@endphp--}}
-
-@if($checklist)
-    <form id="taskFormUpdate_{{$checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$checklist->id}})">
+@if($task->checklist)
+    <form id="taskFormUpdate_{{$task->checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$task->checklist->id}})">
         <div class="mt-2">
-            <label class="form-label" for="name_{{$checklist->id}}">Tiêu đề</label>
-            <input type="hidden" name="task_id" id="task_id_{{$checklist->id}}" value="{{$task->id}}">
-            <input type="text" class="form-control" name="name" id="name_{{$checklist->id}}" value="{{$checklist->name}}"/>
+            <label class="form-label" for="name_{{$task->checklist->id}}">Tiêu đề</label>
+            <input type="hidden" name="task_id" id="task_id_{{$task->checklist->id}}" value="{{$task->id}}">
+            <input type="text" class="form-control" name="name" id="name_{{$task->checklist->id}}" value="{{$task->checklist->name}}"/>
         </div>
         <div class="mt-2">
             <button type="submit" class="btn btn-primary" disabled>Thay đổi</button>

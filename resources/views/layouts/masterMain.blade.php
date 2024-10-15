@@ -372,7 +372,7 @@
         function disableButtonOnSubmit(event, input, button) {
             event.preventDefault();
             if (button.disabled) return;
-            
+
             button.disabled = true;
             event.target.closest('form').submit();
             input.value = '';
