@@ -9,6 +9,7 @@ use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\BoardMember;
 use App\Models\CheckListItem;
+use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskMember;
@@ -288,6 +289,45 @@ class TaskController extends Controller
         }
 
         $task->update($data);
+    }
+
+    public function addMemberTask(Request $request)
+    {
+        $existingMember = TaskMember::where('task_id', $request->task_id)
+            ->where('user_id', $request->user_id)
+            ->first();
+
+        if ($existingMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Thành viên đã tồn tại trong task.'
+            ], 400);
+        }
+
+        $data = $request->except(['_token', '_method']);
+        TaskMember::create($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thêm thành viên thành công.'
+        ]);
+    }
+    public function deleteTaskMember(Request $request)
+    {
+        $taskMember = TaskMember::where('task_id', $request->task_id)
+            ->where('user_id', $request->user_id)
+            ->first();
+        if (!$taskMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Thành viên không tồn tại trong task này.'
+            ], 404);
+        }
+        $taskMember->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Xóa thành viên thành công.'
+        ], 200);
     }
 
 }

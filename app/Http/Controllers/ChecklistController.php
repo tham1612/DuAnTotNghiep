@@ -31,6 +31,7 @@ class ChecklistController extends Controller
         CheckList::create($data);
         return response()->json([
             'success' => "them thao tác thành công",
+             'msg' => true
         ]);
     }
     public function createChecklistItem(Request $request)
@@ -39,6 +40,7 @@ class ChecklistController extends Controller
         CheckListItem::create($data);
         return response()->json([
             'success' => "them ChecklistItem thành công",
+             'msg' => true
         ]);
     }
 
@@ -52,6 +54,7 @@ class ChecklistController extends Controller
         $checkList->update($data);
         return response()->json([
             'success' => "update checkList thành công",
+             'msg' => true
         ]);
     }
     public function updateChecklistItem(Request $request, string $id)
@@ -61,6 +64,7 @@ class ChecklistController extends Controller
         $checkListItem->update($data);
         return response()->json([
             'success' => "update checkListItem thành công",
+             'msg' => true
         ]);
     }
     public function addMemberChecklist(Request $request)
@@ -69,6 +73,7 @@ class ChecklistController extends Controller
         CheckListItemMember::create($data);
         return response()->json([
             'success' => "them CheckListItemMember thành công",
+             'msg' => true
         ]);
     }
     public function deleteMemberChecklist( Request $request )
@@ -79,6 +84,7 @@ class ChecklistController extends Controller
         $checklistItem->delete();
         return response()->json([
             'success' => "xoas CheckListItemMember thành công",
+             'msg' => true
         ]);
     }
 

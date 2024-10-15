@@ -61,7 +61,7 @@
                                                         class="d-flex justify-content-center align-items-center cursor-pointer ">
                                                         <div class="col-auto ms-sm-auto">
                                                             <div class="avatar-group">
-                                                                @if ($task->members->isNotEmpty())
+                                                                @if (!empty($task->members))
 
                                                                     @php
                                                                         // Đếm số lượng board members
@@ -451,13 +451,16 @@
                                                                            data-bs-toggle="dropdown"
                                                                            aria-haspopup="true"
                                                                            aria-expanded="false"
-
                                                                            id="dropdownToggle_{{$checklistItem->id}}"></i>
-                                                                        <div
-                                                                            class="dropdown-menu dropdown-menu-md p-3 w-50 ">
-                                                                            @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem])
+
+                                                                        <!-- Dropdown menu với ID riêng -->
+                                                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50"
+                                                                             aria-labelledby="dropdownToggle_{{$checklistItem->id}}"
+                                                                             id="dropdownMenu_{{$checklistItem->id}}">
+                                                                            @include('dropdowns.memberCheckList', ['checklistItem_id' => $checklistItem->id])
                                                                         </div>
                                                                     </div>
+
 
                                                                     <div>
                                                                         <i class="ri-more-fill fs-20 ms-2"
@@ -574,17 +577,17 @@
                             <div class="col-3">
                                 <h5 class="mt-3 mb-3"><strong>Thêm vào thẻ</strong></h5>
                                 <div class="d-flex mt-3 mb-3 cursor-pointer">
-                                    <div
-                                        class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                        style=" height: 30px; background-color: #c7c7c7">
+                                    <div class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
+                                         style="height: 30px; background-color: #c7c7c7">
                                         <i class="las la-user"></i>
+                                        <!-- Phần tử toggle cho dropdown -->
                                         <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                                           aria-expanded="false" data-bs-offset="-40,10">
+                                           aria-expanded="false" id="dropdownToggle_{{$task->id}}">
                                             Thành viên
                                         </p>
-                                        <!--dropdown thành viên-->
-                                        <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                            @include('dropdowns.member')
+                                        <!-- Dropdown menu -->
+                                        <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" aria-labelledby="dropdownToggle_{{$task->id}}">
+                                            @include('dropdowns.member', ['task_id' => $task->id])
                                         </div>
                                     </div>
                                 </div>

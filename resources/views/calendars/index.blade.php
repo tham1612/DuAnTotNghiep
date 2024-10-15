@@ -24,7 +24,7 @@
                         <label for="exampleInputEmail1" class="form-label">Danh sách</label>
                         <select name="catalog_id" id="catalog_id" class="form-select">
                             <option hidden="">---Lựa chọn---</option>
-                            @foreach ($catalogs as $catalog)
+                            @foreach ($board->catalogs as $catalog)
                                 <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                             @endforeach
                         </select>
