@@ -165,51 +165,51 @@
         });
     </script>
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}" async></script>
-    <script src="{{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}" async></script>
-    <script src="{{ asset('theme/assets/libs/node-waves/waves.min.js') }}" async></script>
-    <script src="{{ asset('theme/assets/libs/feather-icons/feather.min.js') }}" async></script>
-    <script src="{{ asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js') }}" async></script>
+    <script src="{{ asset('theme/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/libs/feather-icons/feather.min.js') }}"></script>
+    <script src="{{ asset('theme/assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
     <!--Swiper slider js-->
-    <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}" async></script>
+    <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
     <!-- glightbox js -->
-    <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}" defer></script>
+    <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>
 
     <!-- fgEmojiPicker js -->
-    <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}" defer></script>
+    <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
 
     <!--jquery cdn-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 
 
     <!-- notifications init -->
-    <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}" defer></script>
+    <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
 
     <!-- prismjs plugin -->
-    <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}" defer></script>
+    <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
 
     <!-- App js -->
-    <script src="{{ asset('theme/assets/js/app.js') }}" async></script>
+    <script src="{{ asset('theme/assets/js/app.js') }}"></script>
 
     <!-- Lord Icon -->
-    <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js" defer></script>
+    <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
 
     <!-- Modal Js -->
-    <script src="assets/js/pages/modal.init.js" defer></script>
+    <script src="{{asset('theme/assets/js/pages/modal.init.js')}}"></script>
 
     @if (request()->is('b/*'))
         <!-- dragula init js -->
-        <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}" defer></script>
+        <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
         <!-- dom autoscroll -->
-        <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}" defer></script>
-        {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}" defer></script> --}}
-        <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}" defer></script>
+        <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
+        {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script> --}}
+        <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
         <!--select2 cdn-->
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
-        <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     @endif
 
     <script>
@@ -239,13 +239,13 @@
             var alertElement = document.getElementById('notification-messenger');
             if (alertElement) {
                 alertElement.style.display = 'none';
-                fetch("{{ route('forget.session') }}", {
+                fetch("/forget-session", {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json'
                     }
-                });
+            });
             }
 
         }, 5000);
