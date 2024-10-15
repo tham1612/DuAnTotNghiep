@@ -151,8 +151,8 @@
                                                         ->value('follow');
                                                 @endphp
                                                 <div
-                                                    class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                    style="height: 35px; background-color: #c7c7c7"
+                                                    class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                                                    style="height: 35px; background-color: #091e420f; color: #172b4d"
                                                     id="notification_{{$task->id}}"
                                                     onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
                                                     <i class="@if($memberFollow == 0)
@@ -176,8 +176,8 @@
                                                     $endDate = \Carbon\Carbon::parse($task->end_date);
                                                 @endphp
                                                 <div
-                                                    class="d-flex align-items-center justify-content-between rounded p-3 text-white cursor-pointer"
-                                                    style="height: 35px; background-color: #c7c7c7">
+                                                    class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                                                    style="height: 35px; background-color: #091e420f; color: #172b4d">
                                                     <input type="checkbox" id="due_date_checkbox_{{ $task->id }}"
                                                            class="form-check-input"
                                                            onchange="updateTask2({{ $task->id }})" name="progress"
@@ -511,6 +511,36 @@
                                                                         </div>
                                                                     </td>
                                                                 </tr>
+                                                                <tr class="cursor-pointer addOrUpdate-checklist d-none">
+                                                                    {{--                                                                                                                        <td class="col-1">--}}
+                                                                    {{--                                                                                                                            <div class="form-check">--}}
+                                                                    {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
+                                                                    {{--                                                                                                                                       value=""/>--}}
+                                                                    {{--                                                                                                                            </div>--}}
+                                                                    {{--                                                                                                                        </td>--}}
+                                                                    <td colspan="2">
+                                                                        <form
+                                                                            onsubmit="return FormCheckListItem({{$checklist->id}})">
+                                                                            <input type="hidden" name="check_list_id"
+                                                                                   id="check_list_id_{{$checklist->id}}"
+                                                                                   value="{{$checklist->id}}">
+                                                                            <input type="text" name="name"
+                                                                                   id="name_{{$checklist->id}}"
+                                                                                   class="form-control checklistItem"
+                                                                                   placeholder="Thêm mục"/>
+                                                                            <div
+                                                                                class="d-flex mt-3 justify-content-between">
+                                                                                <div>
+                                                                                    <button type="submit"
+                                                                                            class="btn btn-primary">Thêm
+                                                                                    </button>
+                                                                                    <a class="btn btn-outline-dark disable-checklist">Hủy</a>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
                                                             @endforeach
                                                         @endif
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
@@ -521,8 +551,8 @@
                                                             {{--                                                                                                                            </div>--}}
                                                             {{--                                                                                                                        </td>--}}
                                                             <td colspan="2">
-                                                                <form
-                                                                    onsubmit="return FormCheckListItem({{$checklist->id}})">
+                                                                <form class="formItem"
+                                                                      onsubmit="return FormCheckListItem({{$checklist->id}})">
                                                                     <input type="hidden" name="check_list_id"
                                                                            id="check_list_id_{{$checklist->id}}"
                                                                            value="{{$checklist->id}}">
@@ -532,41 +562,11 @@
                                                                            placeholder="Thêm mục"/>
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button type="submit"
+                                                                            <button type="submit" disabled
                                                                                     class="btn btn-primary">Thêm
                                                                             </button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
-
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @endif
-                                                    <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                        {{--                                                                                                                        <td class="col-1">--}}
-                                                        {{--                                                                                                                            <div class="form-check">--}}
-                                                        {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
-                                                        {{--                                                                                                                                       value=""/>--}}
-                                                        {{--                                                                                                                            </div>--}}
-                                                        {{--                                                                                                                        </td>--}}
-                                                        <td colspan="2">
-                                                            <form class="formItem"
-                                                                onsubmit="return FormCheckListItem({{$checklist->id}})">
-                                                                <input type="hidden" name="check_list_id"
-                                                                       id="check_list_id_{{$checklist->id}}"
-                                                                       value="{{$checklist->id}}">
-                                                                <input type="text" name="name"
-                                                                       id="name_{{$checklist->id}}"
-                                                                       class="form-control checklistItem"
-                                                                       placeholder="Thêm mục"/>
-                                                                <div class="d-flex mt-3 justify-content-between">
-                                                                    <div>
-                                                                        <button type="submit" disabled
-                                                                                class="btn btn-primary">Thêm
-                                                                        </button>
-                                                                        <a class="btn btn-outline-dark disable-checklist">Hủy</a>
-                                                                    </div>
 
 
                                                                     </div>
@@ -643,10 +643,10 @@
                                     <h5 class="mt-3 mb-3"><strong>Thêm vào thẻ</strong></h5>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-user"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-user fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Thành viên
                                             </p>
@@ -658,10 +658,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-tag"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-tag fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Nhãn
                                             </p>
@@ -673,10 +673,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-check-square"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-check-square fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Việc cần làm
                                             </p>
@@ -688,10 +688,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-clock"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-clock fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10"
                                                id="dropdownToggle_{{$task->id}}">
                                                 Ngày
@@ -704,10 +704,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-paperclip"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-paperclip fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Đính kèm
                                             </p>
@@ -719,10 +719,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-map-marker"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-map-marker fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
                                                 Vị trí
                                             </p>
@@ -740,10 +740,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-credit-card"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-credit-card fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Ảnh bìa
                                             </p>
@@ -756,10 +756,10 @@
                                     <h5 class="mt-3 mb-3"><strong>Thao tác</strong></h5>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style="height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-arrow-circle-right"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style="height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-arrow-circle-right fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Di chuyển
                                             </p>
@@ -771,10 +771,10 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-copy"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-copy fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Sao chép
                                             </p>
@@ -788,10 +788,10 @@
                                     <!-- lưu trữ-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="ri-archive-line"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="ri-archive-line fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
                                                 Lưu trữ
                                             </p>
@@ -801,10 +801,10 @@
                                     <!--                            hoàn tác-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las la-window-restore"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las la-window-restore fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
                                                 Khôi phục
                                             </p>
@@ -814,10 +814,10 @@
                                     <!--                            xóa vĩnh viễn-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3  w-100"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                                             style=" height: 30px; background-color: red">
-                                            <i class="las la-window-restore"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            <i class="las la-window-restore fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
                                                 Xóa
                                             </p>
@@ -827,10 +827,10 @@
 
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                            class="d-flex align-items-center justify-content-flex-start rounded p-3 text-white w-100"
-                                            style=" height: 30px; background-color: #c7c7c7">
-                                            <i class="las ri-share-line"></i>
-                                            <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            <i class="las ri-share-line fs-20"></i>
+                                            <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">Chia sẻ</p>
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
                                                 @include('dropdowns.share')
