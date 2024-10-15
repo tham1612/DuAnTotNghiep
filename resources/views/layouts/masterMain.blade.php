@@ -346,78 +346,43 @@
             });
         });
 
-        // validate Catalog
-        document.addEventListener('DOMContentLoaded', function() {
-            const nameCatalogInput = document.getElementById('nameCatalog');
-            const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
+    // // validate form
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.formItem');
 
-            // Kiểm tra trạng thái của input
-            function validateCatalogForm() {
-                const isNameFilled = nameCatalogInput.value.trim() !== '';
-                btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
+        forms.forEach((form) => {
+            const textInput = form.querySelector('input[type="text"]');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            if (textInput && submitButton) {
+                // Kiểm tra trạng thái của input để enable/disable button
+                textInput.addEventListener('input', function() {
+                    const isFilled = textInput.value.trim() !== '';
+                    // console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
+                    submitButton.disabled = !isFilled;
+                });
+
+                // Xử lý khi button được nhấn
+                submitButton.addEventListener('click', function(event) {
+                    disableButtonOnSubmit(event, textInput, submitButton);
+                });
             }
+        });
 
-            // Lắng nghe sự kiện khi người dùng nhập dữ liệu vào input
-            nameCatalogInput.addEventListener('input', validateCatalogForm);
-
-
-        // Kiểm tra form khi người dùng submit
-        function disableButtonOnSubmit(event) {
-           // Ngăn gửi biểu mẫu ngay lập tức
+        function disableButtonOnSubmit(event, input, button) {
             event.preventDefault();
-            // Kiểm tra xem nút đã bị vô hiệu hóa chưa
-            if (btnSubmitCatalog.disabled) return;
-            // Vô hiệu hóa nút
-            btnSubmitCatalog.disabled = true;
-            // Gửi biểu mẫu ngay lập tức
+            if (button.disabled) return;
+            
+            button.disabled = true;
             event.target.closest('form').submit();
-            // làm trống dữ liệu
-            nameCatalogInput.value = '';
+            input.value = '';
+
             setTimeout(() => {
-                btnSubmitCatalog.disabled = false;
+                button.disabled = false;
             }, 3000);
         }
-        btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
-    });
-    // validate task
-    document.addEventListener('DOMContentLoaded', function() {
-    // Lấy tất cả các form có class .taskForm
-    const taskForms = document.querySelectorAll('.taskForm');
-
-    taskForms.forEach((form) => {
-        // Lấy input[type="text"] và button[type="submit"] trong từng form
-        const textInput = form.querySelector('input[type="text"]');
-        const submitButton = form.querySelector('button[type="submit"]');
-
-        // Kiểm tra trạng thái của input để enable/disable button
-        textInput.addEventListener('input', function() {
-            const isTextFilled = textInput.value.trim() !== '';
-            submitButton.disabled = !isTextFilled;
-        });
-
-        // Xử lý khi button được nhấn
-        submitButton.addEventListener('click', function(event) {
-            disableButtonOnSubmit(form, event);
-        });
     });
 
-    window.disableButtonOnSubmit = function(form, event) {
-        const textInput = form.querySelector('input[type="text"]');
-        const submitButton = form.querySelector('button[type="submit"]');
-        event.preventDefault();
-
-        if (submitButton.disabled) return;
-
-        submitButton.disabled = true;
-        form.submit();
-
-        textInput.value = '';
-
-        setTimeout(() => {
-            submitButton.disabled = false;
-        }, 3000);
-    };
-});
 
 </script>
 
