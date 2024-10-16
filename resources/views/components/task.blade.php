@@ -46,11 +46,8 @@
                                 <label for="file-upload" class="custom-file-upload">
                                     <i class=" ri-image-add-line fs-24"></i>
                                     <input type="file" class="file-upload"
-                                           onchange="updateTask2({{ $task->id }})" id="image_{{ $task->id }}">
+                                           onchange="updateTask2({{ $task->id }})" id="image_task_{{ $task->id }}">
                                 </label>
-                                {{--                                <input type="file" onchange="updateTask2({{ $task->id }})"--}}
-                                {{--                                       class="profile-img-file-input d-inline"--}}
-                                {{--                                       id="image_{{ $task->id }}" value="{{ $task->text }}">--}}
                             </div>
 
                             <button type="button" class="btn-close bg-white" style="margin: -100px -5px 0px 0px"
@@ -419,11 +416,14 @@
                                                             <tr class="cursor-pointer">
                                                                 <td class="col-1">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input"
-                                                                               type="checkbox" name="check_list_id"
-                                                                               value="{{$checklistItem->id}}"
-                                                                               id="check_list_{{$checklistItem->id}}"/>
+                                                                        <input class="form-check-input-checkList"
+                                                                               type="checkbox" name="is_complete"
+                                                                               value="100"
+                                                                               id="is_complete-{{ $checklistItem->id }}"
+                                                                               data-checklist-id="{{ $checklistItem->id }}" />
                                                                     </div>
+
+
                                                                 </td>
                                                                 <td>
                                                                     <p>{{$checklistItem->name}}</p>
@@ -529,30 +529,6 @@
                                                                     </div>
                                                                 </td>
                                                             </tr>
-                                                            {{--                                                                <tr class="cursor-pointer addOrUpdate-checklist d-none">--}}
-                                                            {{--                                                                    <td colspan="2">--}}
-                                                            {{--                                                                        <form--}}
-                                                            {{--                                                                            onsubmit="return FormCheckListItem({{$checklist->id}})">--}}
-                                                            {{--                                                                            <input type="hidden" name="check_list_id"--}}
-                                                            {{--                                                                                   id="check_list_id_{{$checklist->id}}"--}}
-                                                            {{--                                                                                   value="{{$checklist->id}}">--}}
-                                                            {{--                                                                            <input type="text" name="name"--}}
-                                                            {{--                                                                                   id="name_{{$checklist->id}}"--}}
-                                                            {{--                                                                                   class="form-control checklistItem"--}}
-                                                            {{--                                                                                   placeholder="Thêm mục"/>--}}
-                                                            {{--                                                                            <div--}}
-                                                            {{--                                                                                class="d-flex mt-3 justify-content-between">--}}
-                                                            {{--                                                                                <div>--}}
-                                                            {{--                                                                                    <button type="submit"--}}
-                                                            {{--                                                                                            class="btn btn-primary">Thêm--}}
-                                                            {{--                                                                                    </button>--}}
-                                                            {{--                                                                                    <a class="btn btn-outline-dark disable-checklist">Hủy</a>--}}
-                                                            {{--                                                                                </div>--}}
-
-                                                            {{--                                                                            </div>--}}
-                                                            {{--                                                                        </form>--}}
-                                                            {{--                                                                    </td>--}}
-                                                            {{--                                                                </tr>--}}
                                                         @endforeach
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
                                                             <td colspan="2">
@@ -1033,7 +1009,7 @@
     function updateTask2(taskId) {
         var description = editors['description_' + taskId].getData();
         var checkbox = document.getElementById('due_date_checkbox_' + taskId);
-        var image = document.getElementById('image_' + taskId);
+        var image = document.getElementById('image_task_' + taskId);
 
         var formData = new FormData();
         formData.append('description', description);
@@ -1042,6 +1018,7 @@
 
         // Kiểm tra và thêm file ảnh nếu có
         if (image.files.length > 0) {
+            console.log('xxxx'),
             formData.append('image', image.files[0]);
         }
         formData.append('_method', 'PUT');
@@ -1109,6 +1086,38 @@
 
         return false;
     }
+    $(document).ready(function () {
+        $('.form-check-input-checkList').on('change', function () {
+            let checkListItemId = $(this).data('checklist-id');
+            let checkbox = $(this);
+
+            if (!checkbox.length) {
+                console.log('Không tìm thấy checkbox với checkListItemId:', checkListItemId);
+                return;
+            }
+            var formData = new FormData();
+            formData.append('is_complete', checkbox.is(':checked') ? 1 : 0);
+            console.log([...formData]);
+
+
+            $.ajax({
+                url: `/tasks/checklist/checklistItem/${checkListItemId}/update`,
+                type: 'PUT',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log('ChecklistItem đã được cập nhật thành công!', response);
+                },
+                error: function (xhr) {
+                    alert('Đã xảy ra lỗi!');
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+
+
 
 
 </script>
