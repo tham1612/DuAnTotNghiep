@@ -140,7 +140,7 @@
         console.log('User ID:', user_id, 'Task ID:', task_id);
         $.ajax({
             url: `/tasks/deleteTaskMember`,
-            type: 'DELETE',
+            type: 'POST',
             data: {
                 user_id: user_id,
                 task_id: task_id
