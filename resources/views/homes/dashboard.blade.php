@@ -84,6 +84,7 @@
         </div>
         <div class="row">
             @if (!empty($board_star))
+                @php   session(['$board_star' => $board_star]); @endphp
                 @if ($board_star->isEmpty())
                     <p>Không có bảng nào được đánh dấu là nổi bật.</p>
                 @else
@@ -91,52 +92,96 @@
                         <div class="col-3 project-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
-                                        <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-                                            <button type="button"
-                                                class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }} "
-                                                onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                id="is_star_{{ $board->id }}">
-                                                <span class="avatar-title bg-transparent fs-15">
-                                                    <i class="ri-star-fill"></i>
-                                                </span>
-                                            </button>
-                                            <div class="dropdown">
-                                                <button
-                                                    class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <i data-feather="more-horizontal" class="icon-sm"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                                       role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                                       aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                       class=" dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        View</a>
-                                                    <a class="dropdown-item" href=""><i
-                                                            class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                        Edit</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#removeProjectModal"><i
-                                                            class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                        Remove</a>
+                                    <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
+                                        @if ($board && $board->image && \Storage::exists($board->image))
+                                            <div class="image-container"
+                                                style="width:280px; height: 100px; overflow: hidden;">
+                                                <img src="{{ \Storage::url($board->image) }}"
+                                                    alt="{{ $board->name }}'s image" class="img-fluid"
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                <div class="position-absolute top-0 end-0 p-1">
+                                                    <button type="button"
+                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                        id="is_star_{{ $board->id }}">
+                                                        <span class="avatar-title bg-transparent fs-15">
+                                                            <i class="ri-star-fill"></i>
+                                                        </span>
+                                                    </button>
+
+                                                    <div class="dropdown d-inline-block">
+                                                        <button
+                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="true">
+                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
+                                                        </button>
+
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                                                role="tab"
+                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                                class="dropdown-item"><i
+                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
+
+                                                            <a class="dropdown-item" href=""><i
+                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#removeProjectModal"><i
+                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="text-center pb-3" style="height: 50px;">
-                                            @if ($board && $board->image)
-                                                <img src="{{ \Storage::url($board->image) }}" alt="" height="32">
-                                            @else
-                                            @endif
-                                        </div>
-                                    </div>
+                                        @else
+                                            <div class="text-center pb-3" style="height:100px;">
+                                                <div class="position-absolute top-0 end-0 p-1">
+                                                    <button type="button"
+                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                        id="is_star_{{ $board->id }}">
+                                                        <span class="avatar-title bg-transparent fs-15">
+                                                            <i class="ri-star-fill"></i>
+                                                        </span>
+                                                    </button>
 
+                                                    <div class="dropdown d-inline-block">
+                                                        <button
+                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="true">
+                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
+                                                        </button>
+
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                                                role="tab"
+                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                                class="dropdown-item"><i
+                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
+
+                                                            <a class="dropdown-item" href=""><i
+                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#removeProjectModal"><i
+                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
                                     <div class="py-3">
                                         <h5 class="fs-14 mb-3">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                               role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                               aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                role="tab"
+                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
                                         <div class="row gy-3">
@@ -254,57 +299,100 @@
                         <div class="col-3 project-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="p-3 mt-n3 mx-n3 bg-secondary-subtle rounded-top">
-                                        <div class="d-flex gap-1 align-items-center justify-content-end my-n2">
-                                            <button type="button"
-                                                class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }} "
-                                                onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                id="is_star_{{ $board->id }}">
-                                                <span class="avatar-title bg-transparent fs-15">
-                                                    <i class="ri-star-fill"></i>
-                                                </span>
-                                            </button>
+                                    <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
+                                        @if ($board && $board->image && \Storage::exists($board->image))
+                                            <div class="image-container"
+                                                style="width:280px; height: 100px; overflow: hidden;">
+                                                <img src="{{ \Storage::url($board->image) }}"
+                                                    alt="{{ $board->name }}'s image" class="img-fluid"
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                <div class="position-absolute top-0 end-0 p-1">
+                                                    <button type="button"
+                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                        id="is_star_{{ $board->id }}">
+                                                        <span class="avatar-title bg-transparent fs-15">
+                                                            <i class="ri-star-fill"></i>
+                                                        </span>
+                                                    </button>
 
-                                            <div class="dropdown">
-                                                <button
-                                                    class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <i data-feather="more-horizontal" class="icon-sm"></i>
-                                                </button>
+                                                    <div class="dropdown d-inline-block">
+                                                        <button
+                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="true">
+                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
+                                                        </button>
 
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                                       role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                                       aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                       class=" dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        View</a>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                                                role="tab"
+                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                                class="dropdown-item"><i
+                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
 
-                                                    <a class="dropdown-item" href=""><i
-                                                            class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                        Edit</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#removeProjectModal"><i
-                                                            class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                        Remove</a>
+                                                            <a class="dropdown-item" href=""><i
+                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#removeProjectModal"><i
+                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="text-center pb-3" style="height: 50px;">
-                                            @if ($board && $board->image)
-                                                <img src="{{ \Storage::url($board->image) }}" alt=""
-                                                    height="32">
-                                            @else
-                                            @endif
-                                        </div>
+                                        @else
+                                            <div class="text-center pb-3" style="height:100px;">
+                                                <div class="position-absolute top-0 end-0 p-1">
+                                                    <button type="button"
+                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                        id="is_star_{{ $board->id }}">
+                                                        <span class="avatar-title bg-transparent fs-15">
+                                                            <i class="ri-star-fill"></i>
+                                                        </span>
+                                                    </button>
+
+                                                    <div class="dropdown d-inline-block">
+                                                        <button
+                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="true">
+                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
+                                                        </button>
+
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
+                                                                role="tab"
+                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                                class="dropdown-item"><i
+                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
+
+                                                            <a class="dropdown-item" href=""><i
+                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#removeProjectModal"><i
+                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
+
 
                                     <div class="py-3">
                                         <h5 class="fs-14 mb-3">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                               role="tab"  aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                               aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                               class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
+                                                role="tab"
+                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
+                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
+                                                class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
 
                                         <div class="row gy-3">
@@ -446,6 +534,7 @@
                 }
             });
         }
+
         function updateFollow(boardId, userId) {
 
             $.ajax({

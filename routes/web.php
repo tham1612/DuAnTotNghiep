@@ -1,4 +1,5 @@
 <?php
+
 use \App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\LoginGoogleController;
@@ -77,6 +78,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
         Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
+        Route::get('/chat/load-more', [ChatAIController::class, 'loadMore'])->name('chat.loadMore');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
@@ -112,6 +114,10 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
         Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
+        Route::post('/tasks/addMember', [TaskController::class, 'addMemberTask'])
+            ->name('tasks.addMemberTask');
+        Route::post('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
+            ->name('tasks.deleteTaskMember');
 
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
             ->name('checklist.create');
@@ -125,6 +131,12 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.addMemberChecklist');
         Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
             ->name('checklist.deleteMemberChecklist');
+
+//       task tag
+        Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
+            ->name('tags.create');
+        Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
+            ->name('tags.update');
     });
 
 
@@ -133,6 +145,11 @@ Route::get('inboxs', function () {
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
 Auth::routes();
+
+Route::post('/forget-session', function () {
+    session()->forget(['msg', 'action']);
+    return response()->json(['success' => true]);
+})->name('forget.session');
 
 Route::controller(LoginGoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('login-google');

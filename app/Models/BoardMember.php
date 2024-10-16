@@ -35,4 +35,5 @@ class BoardMember extends Model
         return $this->belongsTo(Board::class);
     }
 
+
 }

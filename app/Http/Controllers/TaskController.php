@@ -9,6 +9,7 @@ use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\BoardMember;
 use App\Models\CheckListItem;
+use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskMember;
@@ -33,6 +34,7 @@ class TaskController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'tasks';
+
     public function index($id, Request $request)
     {
 
@@ -79,8 +81,9 @@ class TaskController extends Controller
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
         // event(new TaskUpdated($task));
-        return back()
-            ->with('success');
+        session(['msg' => 'Thêm task ' . $data['text'] . ' thành công!']);
+        session(['action' => 'success']);
+        return back();
     }
 
     public function show()
@@ -122,6 +125,9 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+
+        session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
+        session(['action' => 'success']);
         return response()->json([
             'message' => 'Task đã được cập nhật thành công',
             'success' => true
@@ -290,4 +296,57 @@ class TaskController extends Controller
         $task->update($data);
     }
 
+    public function addMemberTask(Request $request)
+    {
+        $existingMember = TaskMember::where('task_id', $request->task_id)
+            ->where('user_id', $request->user_id)
+            ->first();
+
+        if ($existingMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Thành viên đã tồn tại trong task.'
+            ], 400);
+        }
+
+        $data = $request->except(['_token', '_method']);
+        TaskMember::create($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thêm thành viên thành công.'
+        ]);
+    }
+
+    public function deleteTaskMember(Request $request)
+    {
+//        dd($request->all());
+        $taskMember = TaskMember::query()
+            ->where('task_id', $request->task_id)
+            ->where('user_id', $request->user_id)
+            ->first();
+
+        if (!$taskMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Thành viên không tồn tại trong task này.'
+            ], 404);
+        }
+        try {
+            $check = $taskMember->delete();
+            dd($check);
+        } catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Xóa thành viên thành công.'
+        ], 200);
+    }
+
+    public function destroy(Request $request)
+    {
+
+    }
 }
