@@ -4,7 +4,7 @@
 
     @php
         $boardMembers = session('boardMembers');
-
+k
     @endphp
 
         <!-- thành viên của thẻ -->
@@ -13,7 +13,7 @@
         <ul id="cardMembersList-{{$task->id}}" class="" style="list-style: none; margin-left: -32px">
             @if(!empty($task->members))
                 @foreach ($task->members as $taskMember)
-                    <li id="card-member-{{$taskMember->id}}-{{$task->id}}" class="d-flex justify-content-between align-items-center">
+                    <li id="card-member-task-{{$taskMember->id}}-{{$task->id}}" class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <a href="javascript: void(0);" class="avatar-group-item"
                                data-bs-toggle="tooltip" data-bs-placement="top"
@@ -47,7 +47,7 @@
         <ul class="" style="list-style: none; margin-left: -32px">
             @php $boardMembers=  session('boardMembers');@endphp
             @foreach ($boardMembers as $boardMember)
-                <li class="d-flex justify-content-between align-items-center board-member-item"
+                <li class="d-flex justify-content-between align-items-center board-member-item-{{$boardMember['id']}}"
                     data-user-id="{{ $boardMember['id'] }}" data-task-id="{{$task->id}}"
                     data-user-name="{{ $boardMember['name'] }}">
                     <div class="d-flex align-items-center">
@@ -98,7 +98,7 @@
 <script>
 
     function addMemberToTask(user_id, name, task_id) {
-        if (document.getElementById('card-member-' + user_id  + '-' + task_id)) {
+        if (document.getElementById('card-member-task-' + user_id  + '-' + task_id)) {
             alert(name + " đã có trong danh sách thành viên của thẻ.");
             return;
         }
@@ -112,7 +112,7 @@
             success: function(response) {
                 var cardMembersList = document.getElementById('cardMembersList-' + task_id);
                 var listItem = `
-                <li id="card-member-${user_id}-${task_id}" class="d-flex justify-content-between align-items-center">
+                <li id="card-member-task-${user_id}-${task_id}" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip" data-bs-placement="top" title="${name}">
                             <div class="avatar-sm">
@@ -140,13 +140,13 @@
         console.log('User ID:', user_id, 'Task ID:', task_id);
         $.ajax({
             url: `/tasks/deleteTaskMember`,
-            type: 'DELETE',
+            type: 'POST',
             data: {
                 user_id: user_id,
                 task_id: task_id
             },
             success: function(response) {
-                var memberElement = document.getElementById('card-member-' + user_id + '-' + task_id);
+                var memberElement = document.getElementById('card-member-task-' + user_id + '-' + task_id);
                 if (memberElement) {
                     memberElement.remove();
                 }
@@ -159,10 +159,10 @@
         });
     }
 
-
+    @foreach ($boardMembers as $boardMember)
     // Thêm sự kiện click cho từng thành viên của bảng
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.board-member-item').forEach(item => {
+        document.querySelectorAll('.board-member-item-{{$boardMember['id']}}').forEach(item => {
             item.addEventListener('click', function () {
                 var user_id = this.getAttribute('data-user-id');
                 var name = this.getAttribute('data-user-name');
@@ -174,6 +174,7 @@
                 this.style.display = 'none'; // Ẩn item
             });
         });
-    });
+    });  @endforeach
+
 
 </script>

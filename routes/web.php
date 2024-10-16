@@ -115,7 +115,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
         Route::post('/tasks/addMember', [TaskController::class, 'addMemberTask'])
             ->name('tasks.addMemberTask');
-        Route::delete('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
+        Route::post('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
             ->name('tasks.deleteTaskMember');
 
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
