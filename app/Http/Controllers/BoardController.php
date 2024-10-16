@@ -8,6 +8,7 @@ use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Task;
+use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
 use Carbon\Carbon;
@@ -162,7 +163,8 @@ class BoardController extends Controller
             },
             'catalogs.tasks.catalog:id,name',
             'catalogs.tasks.members',
-            'catalogs.tasks.checkList',
+            'catalogs.tasks.checkList.checkListItems',
+            'catalogs.tasks.tags',
             'catalogs.tasks.followMembers'
         ]);
 
@@ -173,6 +175,9 @@ class BoardController extends Controller
             ->get();
         // Lấy danh sách catalogs
         $catalogs = $board->catalogs;
+        $colors = \App\Models\Color::query()->get();
+
+
         /*
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
@@ -225,16 +230,16 @@ class BoardController extends Controller
             ->get();
         switch ($viewType) {
             case 'dashboard':
-                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'list':
-                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'table':
-                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'calendar':
                 $listEvent = array();
@@ -270,10 +275,10 @@ class BoardController extends Controller
                         'end' => Carbon::parse($event->end_date)->toIso8601String(),
                     ];
                 }
-                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             default:
-                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember'));
+                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
         }
 
     }

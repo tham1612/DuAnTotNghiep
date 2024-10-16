@@ -101,22 +101,58 @@
 
                                         @endif
                                         <!-- giao việc cho thành viên-->
-                                        @if (false)
-                                            <div class="flex-shrink-0 d-flex align-items-center">
+                                        @if ($task->members->count() >= 1)
+                                            <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-account-circle-line fs-20 me-2"></i>
-                                                <div class="avatar-group">
-                                                    <a href="javascript: void(0);" class="avatar-group-item"
-                                                       data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                       data-bs-placement="top" title="Alexis">
-                                                        <img src="{{ asset('theme/assets/images/users/avatar-6.jpg') }}"
-                                                             alt="" class="rounded-circle avatar-xxs"/>
-                                                    </a>
-                                                    <a href="javascript: void(0);" class="avatar-group-item"
-                                                       data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                       data-bs-placement="top" title="Nancy">
-                                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                                             alt="" class="rounded-circle avatar-xxs"/>
-                                                    </a>
+                                                <div class="avatar-group mt-3">
+                                                    @if ($task->members->isNotEmpty())
+                                                        @php
+                                                            // Đếm số lượng board members
+                                                            $maxDisplay = 3;
+                                                            $count = 0;
+                                                        @endphp
+                                                        @foreach ($task->members as $taskMember)
+                                                            @if ($count < $maxDisplay)
+                                                                <a href="javascript: void(0);"
+                                                                   class="avatar-group-item"
+                                                                   data-bs-toggle="tooltip"
+                                                                   data-bs-placement="top"
+                                                                   title="{{ $taskMember['name'] }}">
+                                                                    @if ($taskMember['image'])
+                                                                        <img
+                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                            alt=""
+                                                                            class="rounded-circle avatar-sm">
+                                                                    @else
+                                                                        <div class="avatar-sm">
+                                                                            <div
+                                                                                class="avatar-title rounded-circle bg-light text-primary"
+                                                                                style="width: 30px;height: 30px">
+                                                                                {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                </a>
+                                                                @php $count++; @endphp
+                                                            @endif
+                                                        @endforeach
+
+                                                        @if ($task->members->count() > $maxDisplay)
+                                                            <a href="javascript: void(0);"
+                                                               class="avatar-group-item"
+                                                               data-bs-toggle="tooltip"
+                                                               data-bs-placement="top"
+                                                               title="{{ $task->members->count() - $maxDisplay }} more">
+                                                                <div class="avatar-sm">
+                                                                    <div
+                                                                        class="avatar-title rounded-circle">
+                                                                        +{{ $task->members->count() - $maxDisplay }}
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        @endif
+                                                    @endif
+
                                                 </div>
                                             </div>
                                         @endif
@@ -137,10 +173,21 @@
                                             </div>
                                         @endif
                                         <!-- nhãn -->
-                                        @if ($task->tag)
+                                        @if ($task->tags->isNotEmpty())
                                             <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-price-tag-3-line fs-20 me-2"></i>
-                                                <span class="badge bg-success text-whites-12"> làm nhanh </span>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    @foreach($task->tags as $tag)
+                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                             data-bs-placement="top"
+                                                             title="{{$tag->name}}">
+                                                            <div
+                                                                class="text-white border rounded d-flex align-items-center justify-content-center"
+                                                                style="width: 40px;height: 15px; background-color: {{$tag->color_code}}">
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         @endif
                                     </div>

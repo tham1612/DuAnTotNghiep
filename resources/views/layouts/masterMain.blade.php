@@ -208,9 +208,9 @@
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
+    {{-- xử lý tag   --}}
     <script>
-        // xử lý thêm tag
-        // Hàm tạo chuỗi ngẫu nhiên
+        // Hàm tạo ra ID ngẫu nhiên với độ dài tùy chỉnh
         function generateRandomId(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let result = '';
@@ -220,43 +220,97 @@
             return result;
         }
 
-        // Sinh id ngẫu nhiên cho thẻ form khi trang được tải
+        // Gán ID ngẫu nhiên cho mỗi form và thêm thuộc tính data-form-id cho các button
         $('form').each(function () {
-            const randomId = generateRandomId(10); // Tạo ID ngẫu nhiên dài 10 ký tự
-            $(this).attr('id', randomId); // Gán ID ngẫu nhiên cho form
-            $(this).find('button').attr('data-form-id', randomId); // Gán id này vào data-form-id của button
+            const randomId = generateRandomId(10);
+            $(this).attr('id', randomId); // Gán ID cho form
+            $(this).find('button').attr('data-form-id', randomId); // Gán data-form-id cho button
         });
 
-        // Bắt sự kiện click của button trong form
-        $('button.create-tag-form').on('click', function (e) {
-            e.preventDefault(); // Ngăn chặn hành vi submit mặc định
+        // Hàm chuyển đổi từ RGB sang HEX
+        function rgbToHex(rgb) {
+            const rgbValues = rgb.match(/\d+/g); // Tách chuỗi RGB thành r, g, b
+            const r = parseInt(rgbValues[0]).toString(16).padStart(2, '0');
+            const g = parseInt(rgbValues[1]).toString(16).padStart(2, '0');
+            const b = parseInt(rgbValues[2]).toString(16).padStart(2, '0');
+            return `#${r}${g}${b}`.toUpperCase(); // Trả về mã màu HEX
+        }
 
-            // Lấy ID của form từ thuộc tính data-form-id của button
-            var formId = $(this).data('form-id');
+        // Biến lưu trữ mã màu được chọn, khởi tạo là null
+        let selectedColor = null;
 
-            // Lấy form dựa trên ID đã gán ngẫu nhiên
-            var form = $('#' + formId);
-            console.log(form)
+        // Gán sự kiện cho phần tử cha
+        $('.select-color').on('click', 'div', function (e) {
+            e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+            console.log("Đã click vào ô màu."); // Log để kiểm tra
+            // Đảm bảo lấy đúng element chứa màu
+            const rgb = $(this).css('background-color'); // Lấy giá trị background-color của div được click
+
+            // Kiểm tra nếu giá trị thực sự là dạng rgb trước khi chuyển sang hex
+            if (rgb && rgb.startsWith('rgb')) {
+                selectedColor = rgbToHex(rgb); // Chuyển đổi sang mã màu HEX
+                console.log('Màu đã chọn (HEX):', selectedColor); // Hiển thị mã màu đã chọn
+            } else {
+                console.log('Không có màu hợp lệ được chọn.');
+            }
+        });
+
+        // Sự kiện click cho button tạo thẻ tag
+        $('button.create-tag-form').off('click').on('click', function (e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của button
+
+            // Kiểm tra xem người dùng đã chọn màu chưa
+            if (!selectedColor) {
+                alert('Vui lòng chọn một màu trước khi tạo tag.');
+                return; // Ngừng nếu chưa chọn màu
+            }
+
+            const formId = $(this).data('form-id'); // Lấy ID của form từ button
+            const form = $('#' + formId); // Lấy form theo ID
+
             // Lấy dữ liệu từ form cụ thể
-            var formData = {
+            const formData = {
                 board_id: form.find('input[name="board_id"]').val(),
                 name: form.find('input[name="name"]').val(),
-                color_code: form.find('input[name="color_code"]').val()
+                color_code: selectedColor // Sử dụng mã màu đã chọn trước đó
             };
-            // Gửi AJAX
+
+            // Gửi dữ liệu qua AJAX
             $.ajax({
                 type: 'POST',
                 url: '/tasks/tag/create',
                 data: formData,
                 success: function (response) {
-                    // Đóng dropdown
+                    // Đóng dropdown khi AJAX thành công
                     $('.dropdown-menu').hide();
+                    console.log('Tạo tag thành công:', response);
                 },
                 error: function (error) {
                     console.error('Lỗi:', error);
                 }
             });
         });
+
+        // Xử lý sự kiện khi checkbox được chọn
+        $('.form-check-input').on('change', function () {
+            var data = $(this).val(); // Lấy giá trị tag ID
+
+            $.ajax({
+                url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
+                type: 'POST',
+                data: {
+                    data: data,
+                },
+                success: function (response) {
+                    console.log('Checkbox đã được cập nhật:', response);
+                    // Xử lý thêm nếu cần
+                },
+                error: function (xhr, status, error) {
+                    console.error('Có lỗi xảy ra:', error);
+                }
+            });
+        });
+
     </script>
 
     <script>
