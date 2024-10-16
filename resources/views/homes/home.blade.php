@@ -674,17 +674,19 @@
                                 <div class="card-body">
                                     <div class="d-flex mb-3">
                                         <div class="flex-shrink-0 avatar-sm">
-                                            <div class="avatar-title bg-light rounded">
+
                                                 @if ($board && $board->image)
                                                     <img src="{{ \Storage::url($board->image) }}" alt=""
                                                         height="32">
                                                 @else
+                                                <div class="avatar-title bg-light rounded">
                                                     <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center text-black"
                                                          style="width: 50px;height: 50px;">
                                                         {{ strtoupper(substr($board->name, 0, 1)) }}
                                                     </div>
+                                                </div>
                                                 @endif
-                                            </div>
+
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h5 class="fs-15 mb-1"><a href=""
@@ -745,17 +747,19 @@
                                 <div class="card-body">
                                     <div class="d-flex mb-3">
                                         <div class="flex-shrink-0 avatar-sm">
-                                            <div class="avatar-title bg-light rounded">
+
                                                 @if ($board && $board->image)
                                                     <img src="{{ \Storage::url($board->image) }}" alt=""
                                                         height="32">
                                                 @else
+                                                <div class="avatar-title bg-light rounded">
                                                     <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center text-black"
                                                          style="width: 50px;height: 50px;">
                                                         {{ strtoupper(substr($board->name, 0, 1)) }}
                                                     </div>
+                                                </div>
                                                 @endif
-                                            </div>
+
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h5 class="fs-15 mb-1"><a href=""
@@ -777,10 +781,7 @@
                                 </div>
                                 <div class="card-body border-top border-top-dashed">
                                     <div class="d-flex">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
-                                            </h6>
-                                        </div>
+                                        
                                         <h6 class="flex-shrink-0 text-danger mb-0"><i
                                                 class="ri-time-line align-bottom"></i>
                                             05

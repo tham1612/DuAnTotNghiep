@@ -9,15 +9,26 @@ use Illuminate\Support\Facades\Log;
 
 class ChatAIController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Retrieve the authenticated user
         $user = auth()->user();
 
-        // Get only the chats belonging to the authenticated user
-        $chats = ChatAI::where('user_id', $user->id)->get();
+        // Define pagination variables
+        $perPage = 3; // Number of messages to load per request
+        $page = $request->query('page', 1); // Get current page from query parameters
 
-        return view('chatAI', compact('chats'));
+        // Get chats belonging to the authenticated user with pagination
+        $chats = ChatAI::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        // Get the total number of chats for pagination
+        $totalChats = ChatAI::where('user_id', $user->id)->count();
+
+        return view('chatAI', compact('chats', 'totalChats', 'page'));
     }
 
 
@@ -106,4 +117,6 @@ class ChatAIController extends Controller
             return response()->json(['error' => 'Failed to delete chat history'], 500);
         }
     }
+
+    
 }
