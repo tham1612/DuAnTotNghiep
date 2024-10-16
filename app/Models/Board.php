@@ -34,6 +34,7 @@ class Board extends Model
     {
         return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id');
     }
+
     public function workspace()
     {
         return $this->belongsTo(Workspace::class);
@@ -54,6 +55,7 @@ class Board extends Model
     {
         return $this->morphMany(TaskLink::class, 'linkable');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -63,6 +65,13 @@ class Board extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
+
     public function members()
     {
         return $this->hasMany(BoardMember::class);

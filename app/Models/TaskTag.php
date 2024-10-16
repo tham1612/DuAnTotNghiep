@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TaskLabel extends Model
+class TaskTag extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'task_id',
-        'label_id',
-    ];
 }

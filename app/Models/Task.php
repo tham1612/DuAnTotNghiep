@@ -52,6 +52,7 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'task_members');
     }
+
     public function membersFl()
     {
         return $this->belongsToMany(User::class, 'follow_members')->withPivot('follow');
@@ -60,9 +61,13 @@ class Task extends Model
     {
         return $this->hasMany(Follow_member::class);
     }
-    public function checkLists()
+    public function checkList()
     {
-        return $this->hasMany(CheckList::class);
+        return $this->hasOne(CheckList::class);
     }
 
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
 }
