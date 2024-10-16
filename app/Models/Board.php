@@ -63,8 +63,15 @@ class Board extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+
     public function members()
     {
         return $this->hasMany(BoardMember::class);
+
     }
 }
