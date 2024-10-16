@@ -1,17 +1,19 @@
 <h5 class="mb-3" style="text-align: center">
     Thêm danh sách công việc
 </h5>
-@if($task->checklist)
-    <form id="taskFormUpdate_{{$task->checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$task->checklist->id}})">
+@if($task->checklists)
+    @foreach ($task->checklists as $checklist)
+    <form id="taskFormUpdate_{{$checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$checklist->id}})">
         <div class="mt-2">
-            <label class="form-label" for="name_{{$task->checklist->id}}">Tiêu đề</label>
-            <input type="hidden" name="task_id" id="task_id_{{$task->checklist->id}}" value="{{$task->id}}">
-            <input type="text" class="form-control" name="name" id="name_{{$task->checklist->id}}" value="{{$task->checklist->name}}"/>
+            <label class="form-label" for="name_{{$checklist->id}}">Tiêu đề</label>
+            <input type="hidden" name="task_id" id="task_id_{{$checklist->id}}" value="{{$task->id}}">
+            <input type="text" class="form-control" name="name" id="name_{{$checklist->id}}" value="{{$checklist->name}}"/>
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary" disabled>Thay đổi</button>
+            <button type="submit" class="btn btn-primary" >Thay đổi</button>
         </div>
     </form>
+    @endforeach
 @else
     <form id="taskFormAdd" class="formItem" onsubmit="return submitAddCheckList({{$task->id}})">
         <div class="mt-2">
@@ -20,7 +22,7 @@
             <input type="text" class="form-control" name="name" id="name_{{$task->id}}" placeholder="Việc cần làm"/>
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary" disabled>Thêm</button>
+            <button type="submit" class="btn btn-primary" >Thêm</button>
         </div>
     </form>
 @endif
@@ -31,7 +33,8 @@
     function submitAddCheckList(taskId) {
         var formData = {
             task_id: $('#task_id_' + taskId).val(),
-            name: $('#name_' + taskId).val()
+            name: $('#name_' + taskId).val(),
+            method:'POST'
         };
         if (!formData.name.trim()) {
             alert('Tiêu đề không được để trống!');

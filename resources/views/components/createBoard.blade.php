@@ -65,39 +65,39 @@
 </div>
 
 <script>
-     document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('.formItem');
-
-        forms.forEach((form) => {
-            const textInput = form.querySelector('input[type="text"]');
-            const submitButton = form.querySelector('button[type="submit"]');
-
-            if (textInput && submitButton) {
-                // Kiểm tra trạng thái của input để enable/disable button
-                textInput.addEventListener('input', function() {
-                    const isFilled = textInput.value.trim() !== '';
-                    console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
-                    submitButton.disabled = !isFilled;
-                });
-
-                // Xử lý khi button được nhấn
-                submitButton.addEventListener('click', function(event) {
-                    disableButtonOnSubmit(event, textInput, submitButton);
-                });
-            }
-        });
-
-        function disableButtonOnSubmit(event, input, button) {
-            event.preventDefault();
-            if (button.disabled) return;
-            
-            button.disabled = true;
-            event.target.closest('form').submit();
-            input.value = '';
-
-            setTimeout(() => {
-                button.disabled = false;
-            }, 3000);
-        }
-    });
+    //  document.addEventListener('DOMContentLoaded', function() {
+    //     const forms = document.querySelectorAll('.formItem');
+    //
+    //     forms.forEach((form) => {
+    //         const textInput = form.querySelector('input[type="text"]');
+    //         const submitButton = form.querySelector('button[type="submit"]');
+    //
+    //         if (textInput && submitButton) {
+    //             // Kiểm tra trạng thái của input để enable/disable button
+    //             textInput.addEventListener('input', function() {
+    //                 const isFilled = textInput.value.trim() !== '';
+    //                 console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
+    //                 submitButton.disabled = !isFilled;
+    //             });
+    //
+    //             // Xử lý khi button được nhấn
+    //             submitButton.addEventListener('click', function(event) {
+    //                 disableButtonOnSubmit(event, textInput, submitButton);
+    //             });
+    //         }
+    //     });
+    //
+    //     function disableButtonOnSubmit(event, input, button) {
+    //         event.preventDefault();
+    //         if (button.disabled) return;
+    //
+    //         button.disabled = true;
+    //         event.target.closest('form').submit();
+    //         input.value = '';
+    //
+    //         setTimeout(() => {
+    //             button.disabled = false;
+    //         }, 3000);
+    //     }
+    // });
 </script>
