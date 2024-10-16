@@ -52,9 +52,14 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'task_members');
     }
+
     public function membersFl()
     {
         return $this->belongsToMany(User::class, 'follow_members')->withPivot('follow');
     }
 
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 use \App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\LoginGoogleController;
@@ -34,7 +35,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::prefix('workspaces')
             ->as('workspaces.')
             ->group(function () {
-                 Route::resource('/', WorkspaceController::class);
+                Route::resource('/', WorkspaceController::class);
                 Route::get('/{id}', [WorkspaceController::class, 'index'])
                     ->name('index');
                 Route::get('create', [WorkspaceController::class, 'create'])
@@ -125,6 +126,10 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.addMemberChecklist');
         Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
             ->name('checklist.deleteMemberChecklist');
+
+//       task tag
+        Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
+            ->name('tags.create');
     });
 
 
@@ -134,7 +139,7 @@ Route::get('inboxs', function () {
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
 Auth::routes();
 
-Route::post('/forget-session', function() {
+Route::post('/forget-session', function () {
     session()->forget(['msg', 'action']);
     return response()->json(['success' => true]);
 })->name('forget.session');
