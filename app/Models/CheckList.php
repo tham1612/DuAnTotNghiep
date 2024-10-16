@@ -12,4 +12,8 @@ class CheckList extends Model
         'task_id',
         'name',
     ];
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }

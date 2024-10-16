@@ -219,16 +219,23 @@
                                     </div>
                                 </a>
                                 @php
-                                    $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-                                    ->where('user_id', auth()->id())
-                                    ->value('is_star');
-                                    session(['member_Is_star' => $member_Is_star]);
+                                    $boardMembers=$board->users->unique('id');
+                                        session(['boardMembers' => $boardMembers]);
+   //                                    $member = $board->members()->where('user_id', auth()->id())->first();
+   //
+   //                                     $member_Is_star = $member ? $member->is_star : false;
+//                                             $member=$boardMembers->where('user_id', auth()->id())->first();
+//                                             $member_Is_star = $member ? $member->is_star : false;
+                                            $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
+                                            ->where('user_id', auth()->id())
+                                            ->value('is_star');
+                                            session(['member_Is_star' => $member_Is_star]);
 
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">
                                     <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if( $member_Is_star == 1) active @endif"
-                                            onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
+                                            onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
                                             id="is_star_{{ $board->id }}">
                                         <span class="avatar-title bg-transparent fs-15" >
                                             <i class="ri-star-fill fs-20 mx-2"></i>
@@ -397,6 +404,23 @@
             contentType: false,  // Bắt buộc phải false để đặt đúng 'multipart/form-data'
             success: function (response) {
                 console.log('Đã cập nhật bảng:', response);
+            },
+            error: function (xhr) {
+                console.error('An error occurred:', xhr.responseText);
+            }
+        });
+    }
+    function updateIsStar2(boardId, userId,) {
+
+        $.ajax({
+            url: `/b/${boardId}/updateBoardMember`,
+            method: "PUT",
+            data: {
+                board_id: boardId,
+                user_id: userId,
+            },
+            success: function (response) {
+                console.log('Người dùng đã đánh dấu bảng nối bật:', response);
             },
             error: function (xhr) {
                 console.error('An error occurred:', xhr.responseText);
