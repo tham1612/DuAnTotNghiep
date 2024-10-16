@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Models\TaskTag;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -55,9 +56,20 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        list($task_id, $tag_id) = explode("-", $request->data);
+
+        $check = TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->first();
+        if ($check) {
+            TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->delete();
+        } else {
+            TaskTag::query()->insert([
+                'task_id' => $task_id,
+                'tag_id' => $tag_id,
+            ]);
+        }
+        return response()->json(['success' => true]);
     }
 
     /**

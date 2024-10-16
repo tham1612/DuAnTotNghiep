@@ -8,8 +8,8 @@
             @foreach($board->tags as $tag)
                 <li class="mt-1 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center w-100">
-                        <input type="checkbox" name="" id="danger_tags"
-                               class="form-check-input" value="{{$tag->id}}"/>
+                        <input type="checkbox" @checked($task->tags->pluck('id')->contains($tag->id))
+                        class="form-check-input" value="{{$task->id}}-{{$tag->id}}"/>
                         <span class=" mx-2 rounded p-2 col-10 text-white"
                               style="background-color: {{$tag->color_code}}">{{$tag->name}} </span>
                     </div>

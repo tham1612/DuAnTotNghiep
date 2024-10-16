@@ -115,7 +115,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
         Route::post('/tasks/addMember', [TaskController::class, 'addMemberTask'])
             ->name('tasks.addMemberTask');
-        Route::delete('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
+        Route::post('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
             ->name('tasks.deleteTaskMember');
 
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
@@ -134,6 +134,8 @@ Route::middleware(['auth', 'isWorkspace'])
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
             ->name('tags.create');
+        Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
+            ->name('tags.update');
     });
 
 
