@@ -326,7 +326,7 @@ class TaskController extends Controller
             ->where('task_id', $request->task_id)
             ->where('user_id', $request->user_id)
             ->first();
-
+//        dd($taskMember);
         if (!$taskMember) {
             return response()->json([
                 'success' => false,
@@ -335,7 +335,7 @@ class TaskController extends Controller
         }
         try {
             $check = $taskMember->delete();
-            dd($check);
+//            dd($check);
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }

@@ -154,6 +154,7 @@ class BoardController extends Controller
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
+            'tags',
             'users',
             // 'members',
             'catalogs',
@@ -163,6 +164,7 @@ class BoardController extends Controller
             'catalogs.tasks.catalog:id,name',
             'catalogs.tasks.members',
             'catalogs.tasks.checkList.checkListItems',
+//            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
             'catalogs.tasks.tags',
             'catalogs.tasks.followMembers'
         ]);

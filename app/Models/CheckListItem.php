@@ -30,7 +30,7 @@ class CheckListItem extends Model
 
     public function checkListItemMembers()
     {
-        return $this->hasMany(CheckListItemMember::class, 'check_list_item_id');
+        return $this->hasMany(CheckListItemMember::class);
     }
 
     public function checkList(){
