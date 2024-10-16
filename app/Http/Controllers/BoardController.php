@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
 
-// use function Laravel\Prompts\select;
-const PATH_UPLOAD = 'board';
 class BoardController extends Controller
 {
     const PATH_UPLOAD = 'boards.';
@@ -40,50 +38,45 @@ class BoardController extends Controller
      */
 
 
-    public function index($workspaceId)
-    {
-        $userId = Auth::id();
+     public function index($workspaceId)
+     {
+         $userId = Auth::id();
 
-        // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
-        $boards = Board::where('workspace_id', $workspaceId)
-            ->where(function ($query) use ($userId) {
-                $query->where('created_at', $userId)
-                    ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                        $query->where('user_id', $userId);
-                    });
-            })
+         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
+         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
+         $boards = Board::where('workspace_id', $workspaceId)
+             ->where(function ($query) use ($userId) {
+                 $query->where('created_at', $userId) // Ensure 'created_by' is the correct field
+                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
+                         $query->where('user_id', $userId);
+                     });
+             })
 
-            ->with(['workspace', 'boardMembers'])
-            ->get()
-            ->map(function ($board) use ($userId) {
-                // Tính tổng số thành viên trong bảng
-                $board->total_members = $board->boardMembers->count();
+             ->with(['workspace', 'boardMembers'])
+             ->get()
+             ->map(function ($board) use ($userId) {
+                 $board->total_members = $board->boardMembers->count();
+                 $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
+                     return $member->user_id == $userId && $member->is_star == 1;
+                 });
+                 $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
+                     return $member->user_id == $userId && $member->follow == 1;
+                 });
 
-                // Kiểm tra xem user có đánh dấu sao cho bảng này không
-                $board->is_star = $board->boardMembers->contains(function ($member) use ($userId) {
-                    return $member->user_id == $userId && $member->is_star == 1;
-                });
+                 return $board;
+             });
 
-                // Kiểm tra xem user có theo dõi bảng này không (follow = 1)
-                $board->follow = $board->boardMembers->contains(function ($member) use ($userId) {
-                    return $member->user_id == $userId && $member->follow == 1;
-                });
+         // Lọc danh sách các bảng mà user đã đánh dấu sao
+         $board_star = $boards->filter(function ($board) use ($userId) {
+             return $board->boardMembers->contains(function ($member) use ($userId) {
+                 return $member->user_id == $userId && $member->is_star == 1;
+             });
+         });
+         // dd($workspaceId);
 
-                return $board;
-            });
-
-        // Lọc danh sách các bảng mà user đã đánh dấu sao
-        $board_star = $boards->filter(function ($board) use ($userId) {
-            return $board->boardMembers->contains(function ($member) use ($userId) {
-                return $member->user_id == $userId && $member->is_star == 1;
-            });
-        });
-        // dd($workspaceId);
-
-        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
-        return view('homes.dashboard', compact('boards', 'board_star'));
-
-    }
+         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
+         return view('homes.dashboard', compact('boards', 'board_star'));
+     }
 
     /**
      * Show the form for creating a new resource.
