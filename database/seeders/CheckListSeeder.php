@@ -10,6 +10,7 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskLabel;
 use App\Models\User;
+use DB;
 use Illuminate\Database\Seeder;
 
 class CheckListSeeder extends Seeder
@@ -19,50 +20,8 @@ class CheckListSeeder extends Seeder
      */
     public function run(): void
     {
-
         $tasks = Task::all();
-        $users = User::all();
-
-        if ($tasks->isEmpty() || $users->isEmpty()) {
-            return;
-        }
-
-
-        foreach ($tasks as $task) {
-            CheckList::query()->create([
-                'task_id' => $task->id,
-                'name' => fake()->name(),
-            ]);
-        }
-
-
-        $checkLists = CheckList::all();
-
-
-        foreach ($checkLists as $checkList) {
-            CheckListItem::query()->create([
-                'check_list_id' => $checkList->id,
-                'name' => fake()->sentence(3),
-                'parent_id' => null,
-                'is_complete' => fake()->boolean(),
-                'start_date' => fake()->date(),
-                'end_date' => fake()->date(),
-                'reminder_date' => fake()->date(),
-            ]);
-        }
-
-
-        $checkListItems = CheckListItem::all();
-
-
-        foreach ($checkListItems as $checkListItem) {
-            CheckListItemMember::query()->create([
-                'check_list_item_id' => $checkListItem->id,
-                'user_id' => $users->random()->id,
-            ]);
-        }
-
-
+        
         $colors = [
             ['name' => 'Red', 'code' => '#FF0000'],
             ['name' => 'Green', 'code' => '#00FF00'],
@@ -82,23 +41,44 @@ class CheckListSeeder extends Seeder
             ]);
         }
 
+        $users = User::all();
 
-        $colors = Color::all();
+        if ($tasks->isEmpty() || $users->isEmpty()) {
+            return;
+        }
 
-
-        foreach ($colors as $color) {
-            Label::query()->create([
-                'color_id' => $color->id,
-                'name' => fake()->word(),
+        // Thêm CheckList
+        foreach ($tasks as $task) {
+            DB::table('check_lists')->insert([
+                'task_id' => $task->id,
+                'name' => fake()->text(30),
             ]);
         }
 
+        // Lấy tất cả check_lists
+        $checkLists = DB::table('check_lists')->get();
 
-        $labels = Label::all();
-        foreach ($tasks as $task) {
-            TaskLabel::query()->create([
-                'task_id' => $task->id,
-                'label_id' => $labels->random()->id,
+        // Thêm CheckListItem
+        foreach ($checkLists as $checkList) {
+            DB::table('check_list_items')->insert([
+                'check_list_id' => $checkList->id,
+                'name' => fake()->sentence(3),
+                'parent_id' => null,
+                'is_complete' => fake()->boolean(),
+                'start_date' => fake()->date(),
+                'end_date' => fake()->date(),
+                'reminder_date' => fake()->date(),
+            ]);
+        }
+
+        // Lấy tất cả check_list_items
+        $checkListItems = DB::table('check_list_items')->get();
+
+        // Thêm CheckListItemMember
+        foreach ($checkListItems as $checkListItem) {
+            DB::table('check_list_item_members')->insert([
+                'check_list_item_id' => $checkListItem->id,
+                'user_id' => $users->random()->id,
             ]);
         }
     }
