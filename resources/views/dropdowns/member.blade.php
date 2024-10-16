@@ -4,7 +4,7 @@
 
     @php
         $boardMembers = session('boardMembers');
-k
+
     @endphp
 
         <!-- thành viên của thẻ -->

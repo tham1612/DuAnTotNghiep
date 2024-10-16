@@ -97,6 +97,7 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
+
         if ($request->hasFile('image')) {
             $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
             $data['image'] = $imagePath;
@@ -104,7 +105,7 @@ class TaskController extends Controller
                 Storage::delete($task->image);
             }
         }
-//        dd($data);
+//        dd(file_get_contents('php://input'));
         if (isset($data['start_date']) || isset($data['end_date'])) {
             $this->updateCalendar($request, $id);
         }
