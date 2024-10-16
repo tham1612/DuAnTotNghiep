@@ -78,8 +78,8 @@
 
                                             </div>
                                         </div>
-                                        <div class="col-12 d-flex mt-3">
-                                            @if($task->members->count() > 1)
+                                        <div class="col-12 d-flex mt-3 flex-wrap">
+                                            @if($task->members->count() >= 1)
                                                 <div class="p-3 col-3">
                                                     <strong>Thành viên</strong>
                                                     <section class="d-flex">
@@ -111,7 +111,8 @@
                                                                                     @else
                                                                                         <div class="avatar-sm">
                                                                                             <div
-                                                                                                class="avatar-title rounded-circle bg-light text-primary">
+                                                                                                class="avatar-title rounded-circle bg-light text-primary"
+                                                                                                style="width: 35px;height: 35px">
                                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                                             </div>
                                                                                         </div>
@@ -147,11 +148,11 @@
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
                                                 @php
-//                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
-//                                                        ->where('user_id', auth()->id())
-//                                                        ->value('follow');
-                                                 $memberFollow1 = $task->followMembers->firstWhere('user_id', auth()->id());
-                                                 $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
+                                                    //                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
+                                                    //                                                        ->where('user_id', auth()->id())
+                                                    //                                                        ->value('follow');
+                                                                                                     $memberFollow1 = $task->followMembers->firstWhere('user_id', auth()->id());
+                                                                                                     $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
 
                                                 @endphp
                                                 <div
@@ -171,7 +172,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
 
                                             <div class="p-3 ">
                                                 <strong>Ngày hết hạn</strong>
@@ -198,6 +198,24 @@
                                                 </div>
                                             </div>
 
+                                            @if($task->tags->isNotEmpty())
+                                                <div class="p-3">
+                                                    <strong>Nhãn</strong>
+                                                    <div class="d-flex flex-wrap gap-2">
+                                                        @foreach($task->tags as $tag)
+                                                            <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                 data-bs-placement="top"
+                                                                 title="{{$tag->name}}">
+                                                                <div
+                                                                    class="text-white border rounded d-flex align-items-center justify-content-center"
+                                                                    style="width: 60px;height: 35px; background-color: {{$tag->color_code}}">
+                                                                    {{$tag->name}}
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <!-- mô tả -->
@@ -365,7 +383,7 @@
                                             <section class="d-flex justify-content-between">
                                                 <section class="d-flex">
                                                     <i class="ri-checkbox-line fs-22"></i>
-                                                     <!-- Lặp qua từng checklist -->
+                                                    <!-- Lặp qua từng checklist -->
                                                     <p class="fs-18 ms-2 mt-1">{{ $task->checklist->name }}</p>
 
                                                 </section>
@@ -397,154 +415,163 @@
                                                 <div class="table-responsive table-hover table-card">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
-                                                            @foreach($task->checklist->checkListItems as $checklistItem)
-                                                                <tr class="cursor-pointer">
-                                                                    <td class="col-1">
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                   type="checkbox" name="check_list_id"
-                                                                                   value="{{$checklistItem->id}}"
-                                                                                   id="check_list_{{$checklistItem->id}}"/>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <p>{{$checklistItem->name}}</p>
-                                                                    </td>
-                                                                    <td class=" d-flex justify-content-end">
-                                                                        <div>
-                                                                            @if(!empty($checklistItem->end_date))
-                                                                                <span data-bs-toggle="dropdown"
-                                                                                      aria-haspopup="true"
-                                                                                      aria-expanded="false"
-                                                                                      id="dropdownToggle_{{$checklistItem->id}}">
+                                                        @foreach($task->checklist->checkListItems as $checklistItem)
+                                                            <tr class="cursor-pointer">
+                                                                <td class="col-1">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input"
+                                                                               type="checkbox" name="check_list_id"
+                                                                               value="{{$checklistItem->id}}"
+                                                                               id="check_list_{{$checklistItem->id}}"/>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <p>{{$checklistItem->name}}</p>
+                                                                </td>
+                                                                <td class=" d-flex justify-content-end">
+                                                                    <div>
+                                                                        @if(!empty($checklistItem->end_date))
+                                                                            <span data-bs-toggle="dropdown"
+                                                                                  aria-haspopup="true"
+                                                                                  aria-expanded="false"
+                                                                                  id="dropdownToggle_{{$checklistItem->id}}">
                                                                                     {{$checklistItem->end_date}}
                                                                                 </span>
 
-                                                                            @else
-                                                                                <i class="ri-time-line fs-20 ms-2"
-                                                                                   data-bs-toggle="dropdown"
-                                                                                   aria-haspopup="true"
-                                                                                   aria-expanded="false"
-                                                                                   id="dropdownToggle_{{$checklistItem->id}}"></i>
-                                                                            @endif
-                                                                            <div
-                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50"
-                                                                                aria-labelledby="dropdownToggle_{{$checklistItem->id}}">
-                                                                                @include('dropdowns.dateCheckList', ['checklistItem' => $checklistItem])
-                                                                            </div>
+                                                                        @else
+                                                                            <i class="ri-time-line fs-20 ms-2"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-haspopup="true"
+                                                                               aria-expanded="false"
+                                                                               id="dropdownToggle_{{$checklistItem->id}}"></i>
+                                                                        @endif
+                                                                        <div
+                                                                            class="dropdown-menu dropdown-menu-md p-3 w-50"
+                                                                            aria-labelledby="dropdownToggle_{{$checklistItem->id}}">
+                                                                            @include('dropdowns.dateCheckList', ['checklistItem' => $checklistItem])
                                                                         </div>
-                                                                        @if(!empty($checklistItem->checkListItemMembers))
-                                                                            <div class="">
-                                                                                @php
-                                                                                    // Đếm số lượng checkListItemMember
-                                                                                    $maxDisplay = 3;
-                                                                                    $count = 0;
-                                                                                @endphp
+                                                                    </div>
+                                                                    @if(!empty($checklistItem->checkListItemMembers))
+                                                                        <div class="">
+                                                                            @php
+                                                                                // Đếm số lượng checkListItemMember
+                                                                                $maxDisplay = 3;
+                                                                                $count = 0;
+                                                                            @endphp
 
-                                                                                @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
-                                                                                    @if ($count < $maxDisplay)
-                                                                                        <a href="javascript: void(0);"
-                                                                                           class="avatar-group-item"
-                                                                                           data-bs-toggle="tooltip"
-                                                                                           data-bs-placement="top"
-                                                                                           title="{{ $checkListItemMember->user->name }}">
-                                                                                            @if ($checkListItemMember->user->image)
-                                                                                                <img
-                                                                                                    src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
-                                                                                                    alt=""
-                                                                                                    class="rounded-circle avatar-sm object-fit-cover"
-                                                                                                    style="width: 20px;height: 20px">
-                                                                                            @else
-                                                                                                <div class="avatar-sm">
-                                                                                                    <div
-                                                                                                        class="avatar-title rounded-circle bg-light text-primary">
-                                                                                                        {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            @endif
-                                                                                        </a>
-                                                                                        @php $count++; @endphp
-                                                                                    @endif
-                                                                                @endforeach
-
-                                                                                @if (count($checklistItem->checkListItemMembers) > $maxDisplay)
+                                                                            @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
+                                                                                @if ($count < $maxDisplay)
                                                                                     <a href="javascript: void(0);"
                                                                                        class="avatar-group-item"
                                                                                        data-bs-toggle="tooltip"
                                                                                        data-bs-placement="top"
-                                                                                       title="{{ count($checklistItem->checkListItemMembers) - $maxDisplay }} more">
-                                                                                        <div class="avatar-sm">
-                                                                                            <div
-                                                                                                class="avatar-title rounded-circle">
-                                                                                                +{{ count($checklistItem->checkListItemMembers) - $maxDisplay }}
+                                                                                       title="{{ $checkListItemMember->user->name }}">
+                                                                                        @if ($checkListItemMember->user->image)
+                                                                                            <img
+                                                                                                src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
+                                                                                                alt=""
+                                                                                                class="rounded-circle avatar-sm object-fit-cover"
+                                                                                                style="width: 20px;height: 20px">
+                                                                                        @else
+                                                                                            <div class="avatar-sm">
+                                                                                                <div
+                                                                                                    class="avatar-title rounded-circle bg-light text-primary">
+                                                                                                    {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        @endif
                                                                                     </a>
+                                                                                    @php $count++; @endphp
                                                                                 @endif
-                                                                            </div>
-                                                                        @endif
-                                                                        <div>
-                                                                            <i class="ri-user-add-line fs-20 ms-2"
-                                                                               data-bs-toggle="dropdown"
-                                                                               aria-haspopup="true"
-                                                                               aria-expanded="false"
+                                                                            @endforeach
 
-                                                                               id="dropdownToggle_{{$checklistItem->id}}"></i>
-                                                                            <div
-                                                                                class="dropdown-menu dropdown-menu-md p-3 w-50 ">
-                                                                                @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem])
-                                                                            </div>
+                                                                            @if (count($checklistItem->checkListItemMembers) > $maxDisplay)
+                                                                                <a href="javascript: void(0);"
+                                                                                   class="avatar-group-item"
+                                                                                   data-bs-toggle="tooltip"
+                                                                                   data-bs-placement="top"
+                                                                                   title="{{ count($checklistItem->checkListItemMembers) - $maxDisplay }} more">
+                                                                                    <div class="avatar-sm">
+                                                                                        <div
+                                                                                            class="avatar-title rounded-circle">
+                                                                                            +{{ count($checklistItem->checkListItemMembers) - $maxDisplay }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            @endif
                                                                         </div>
+                                                                    @endif
+                                                                    <div>
+                                                                        <i class="ri-user-add-line fs-20 ms-2"
+                                                                           data-bs-toggle="dropdown"
+                                                                           aria-haspopup="true"
+                                                                           aria-expanded="false"
 
-                                                                        <div>
-                                                                            <i class="ri-more-fill fs-20 ms-2"
-                                                                               data-bs-toggle="dropdown"
-                                                                               aria-haspopup="true"
-                                                                               aria-expanded="false"></i>
-                                                                            <div class="dropdown-menu dropdown-menu-md"
-                                                                                 style="padding: 15px 15px 0 15px">
-                                                                                <h5 class="text-center">Thao tác
-                                                                                    mục</h5>
-                                                                                <p class="mt-2">Chuyển sang thẻ</p>
-                                                                                <p>Xóa</p>
-                                                                            </div>
+                                                                           id="dropdownToggle_{{$checklistItem->id}}"></i>
+                                                                        <div
+                                                                            class="dropdown-menu dropdown-menu-md p-3 w-50 ">
+                                                                            @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem])
                                                                         </div>
-                                                                    </td>
-                                                                </tr>
-{{--                                                                <tr class="cursor-pointer addOrUpdate-checklist d-none">--}}
-{{--                                                                    <td colspan="2">--}}
-{{--                                                                        <form--}}
-{{--                                                                            onsubmit="return FormCheckListItem({{$checklist->id}})">--}}
-{{--                                                                            <input type="hidden" name="check_list_id"--}}
-{{--                                                                                   id="check_list_id_{{$checklist->id}}"--}}
-{{--                                                                                   value="{{$checklist->id}}">--}}
-{{--                                                                            <input type="text" name="name"--}}
-{{--                                                                                   id="name_{{$checklist->id}}"--}}
-{{--                                                                                   class="form-control checklistItem"--}}
-{{--                                                                                   placeholder="Thêm mục"/>--}}
-{{--                                                                            <div--}}
-{{--                                                                                class="d-flex mt-3 justify-content-between">--}}
-{{--                                                                                <div>--}}
-{{--                                                                                    <button type="submit"--}}
-{{--                                                                                            class="btn btn-primary">Thêm--}}
-{{--                                                                                    </button>--}}
-{{--                                                                                    <a class="btn btn-outline-dark disable-checklist">Hủy</a>--}}
-{{--                                                                                </div>--}}
+                                                                    </div>
 
-{{--                                                                            </div>--}}
-{{--                                                                        </form>--}}
-{{--                                                                    </td>--}}
-{{--                                                                </tr>--}}
-                                                            @endforeach
+                                                                    <div>
+                                                                        <i class="ri-more-fill fs-20 ms-2"
+                                                                           data-bs-toggle="dropdown"
+                                                                           aria-haspopup="true"
+                                                                           aria-expanded="false"></i>
+                                                                        <div class="dropdown-menu dropdown-menu-md"
+                                                                             style="padding: 15px 15px 0 15px">
+                                                                            <h5 class="text-center">Thao tác
+                                                                                mục</h5>
+                                                                            <p class="mt-2">Chuyển sang thẻ</p>
+                                                                            <p>Xóa</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            {{--                                                                <tr class="cursor-pointer addOrUpdate-checklist d-none">--}}
+                                                            {{--                                                                    <td colspan="2">--}}
+                                                            {{--                                                                        <form--}}
+                                                            {{--                                                                            onsubmit="return FormCheckListItem({{$checklist->id}})">--}}
+                                                            {{--                                                                            <input type="hidden" name="check_list_id"--}}
+                                                            {{--                                                                                   id="check_list_id_{{$checklist->id}}"--}}
+                                                            {{--                                                                                   value="{{$checklist->id}}">--}}
+                                                            {{--                                                                            <input type="text" name="name"--}}
+                                                            {{--                                                                                   id="name_{{$checklist->id}}"--}}
+                                                            {{--                                                                                   class="form-control checklistItem"--}}
+                                                            {{--                                                                                   placeholder="Thêm mục"/>--}}
+                                                            {{--                                                                            <div--}}
+                                                            {{--                                                                                class="d-flex mt-3 justify-content-between">--}}
+                                                            {{--                                                                                <div>--}}
+                                                            {{--                                                                                    <button type="submit"--}}
+                                                            {{--                                                                                            class="btn btn-primary">Thêm--}}
+                                                            {{--                                                                                    </button>--}}
+                                                            {{--                                                                                    <a class="btn btn-outline-dark disable-checklist">Hủy</a>--}}
+                                                            {{--                                                                                </div>--}}
+
+                                                            {{--                                                                            </div>--}}
+                                                            {{--                                                                        </form>--}}
+                                                            {{--                                                                    </td>--}}
+                                                            {{--                                                                </tr>--}}
+                                                        @endforeach
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
                                                             <td colspan="2">
                                                                 <form class="formItem">
-                                                                    <input type="hidden" name="check_list_id" id="check_list_id_{{$task->checklist->id}}" value="{{$task->checklist->id}}">
-                                                                    <input type="text" name="name" id="name_{{$task->checklist->id}}" class="form-control checklistItem" placeholder="Thêm mục"/>
+                                                                    <input type="hidden" name="check_list_id"
+                                                                           id="check_list_id_{{$task->checklist->id}}"
+                                                                           value="{{$task->checklist->id}}">
+                                                                    <input type="text" name="name"
+                                                                           id="name_{{$task->checklist->id}}"
+                                                                           class="form-control checklistItem"
+                                                                           placeholder="Thêm mục"/>
 
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button type="button" class="btn btn-primary" onclick="FormCheckListItem({{$task->checklist->id}})" >Thêm</button>
+                                                                            <button type="button"
+                                                                                    class="btn btn-primary"
+                                                                                    onclick="FormCheckListItem({{$task->checklist->id}})">
+                                                                                Thêm
+                                                                            </button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
 

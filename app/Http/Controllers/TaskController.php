@@ -317,23 +317,34 @@ class TaskController extends Controller
             'message' => 'Thêm thành viên thành công.'
         ]);
     }
+
     public function deleteTaskMember(Request $request)
     {
-        $taskMember = TaskMember::where('task_id', $request->task_id)
+//        dd($request->all());
+        $taskMember = TaskMember::query()
+            ->where('task_id', $request->task_id)
             ->where('user_id', $request->user_id)
             ->first();
+
         if (!$taskMember) {
             return response()->json([
                 'success' => false,
                 'message' => 'Thành viên không tồn tại trong task này.'
             ], 404);
         }
-        $taskMember->delete();
+        try {
+            $check = $taskMember->delete();
+            dd($check);
+        } catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Xóa thành viên thành công.'
         ], 200);
     }
+
     public function destroy(Request $request)
     {
 

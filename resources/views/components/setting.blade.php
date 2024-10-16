@@ -331,19 +331,18 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
-        <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
+        <div data-simplebar style="height: calc(100vh)" class="p-2">
             <form action="">
                 <input type="text" name="" id=""
                        class="form-control border-1" placeholder="Tìm nhãn..."/>
                 <div class="mt-3">
-                    <strong class="fs-14">Nhãn</strong>
                     <ul class="" style="list-style: none; margin-left: -32px">
                         @foreach($board->tags as $tag)
                             <li class="mt-1 d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center w-100">
-                                    <input type="checkbox" name="" id="danger_tags"
-                                           class="form-check-input"/>
-                                    <span class=" mx-2 rounded p-2 col-10 text-white"
+{{--                                    <input type="checkbox" name="" id="danger_tags"--}}
+{{--                                           class="form-check-input"/>--}}
+                                    <span class=" mx-2 rounded p-2 col-11 text-white"
                                           style="background-color: {{$tag->color_code}}">{{$tag->name}}  </span>
                                 </div>
                                 <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
@@ -356,12 +355,12 @@
                                         <div class="mt-3">
                                             <label for="">Tiêu đề</label>
                                             <input type="text" name="name" class="form-control border-1"
-                                                   placeholder="Nhập tên nhãn" value="{{$tag->name}}" />
+                                                   placeholder="Nhập tên nhãn" value="{{$tag->name}}"/>
                                         </div>
                                         <div class="mt-3">
                                             <label class="fs-14">Chọn màu</label>
                                             <input type="color" name="color_code" class="form-control"
-                                                   style="height: 40px" value="{{$tag->color_code}}" />
+                                                   style="height: 40px" value="{{$tag->color_code}}"/>
                                         </div>
                                         <div class="mt-3">
                                             <button class="btn btn-primary" id="update-tag-form">
@@ -379,7 +378,7 @@
                         class="d-flex align-items-center justify-content-center rounded p-3 w-100 cursor-pointer"
                         style=" height: 30px; background-color: #e4e6ea">
                         <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-bs-offset="110,10">
+                           aria-expanded="false" data-bs-offset="-110,-250">
                             Tạo nhãn mới
                         </p>
                         <!--dropdown nhãn-->

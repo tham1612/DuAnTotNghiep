@@ -134,6 +134,8 @@ Route::middleware(['auth', 'isWorkspace'])
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
             ->name('tags.create');
+        Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
+            ->name('tags.update');
     });
 
 
