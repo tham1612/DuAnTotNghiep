@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('task_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Task::class)->unique()->constrained();
-            $table->foreignIdFor(\App\Models\User::class)->unique()->constrained();
+            $table->foreignIdFor(\App\Models\Task::class)->constrained();
+            $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(['task_id', 'user_id']);
         });
+
     }
 
     /**

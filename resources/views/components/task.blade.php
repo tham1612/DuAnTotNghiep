@@ -146,9 +146,13 @@
 
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
-                                                @php $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
-                                                        ->where('user_id', auth()->id())
-                                                        ->value('follow');
+                                                @php
+//                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
+//                                                        ->where('user_id', auth()->id())
+//                                                        ->value('follow');
+                                                 $memberFollow1 = $task->followMembers->firstWhere('user_id', auth()->id());
+                                                 $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
+
                                                 @endphp
                                                 <div
                                                     class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
@@ -353,16 +357,22 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @php    $checklist = \App\Models\CheckList::where('task_id', $task->id)
-                                           ->first();
-                                    @endphp
-                                    @if(!empty($checklist))
+{{--                                    @php--}}
+{{--                                        //   $checklist = $task = \App\Models\Task::with('checkLists')->find($task->id);--}}
+{{--                                      $checklist = $task->checklist;--}}
+
+{{--                                    @endphp--}}
+
+                                    @if(!empty($task->checklists))
+                                        @foreach ($task->checklists as $checklist)
                                         <!-- việc cần làm -->
                                         <div class="row mt-3">
                                             <section class="d-flex justify-content-between">
                                                 <section class="d-flex">
                                                     <i class="ri-checkbox-line fs-22"></i>
-                                                    <p class="fs-18 ms-2 mt-1">{{$checklist->name}}</p>
+                                                     <!-- Lặp qua từng checklist -->
+                                                    <p class="fs-18 ms-2 mt-1">{{ $checklist->name }}</p>
+
                                                 </section>
                                                 <button class="btn btn-outline-dark" style="height: 35px"
                                                         data-bs-toggle="dropdown" aria-haspopup="true"
@@ -390,7 +400,7 @@
                                                 </div>
                                                 @php
                                                     $checklistItems = \App\Models\CheckListItem::with(['checkListItemMembers.user'])
-                                                            ->where('check_list_id', $checklist->id)
+                                                            ->where('check_list_id',  $checklist->id)
                                                             ->get();
                                                 @endphp
                                                 <div class="table-responsive table-hover table-card">
@@ -511,101 +521,48 @@
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                                    {{--                                                                                                                        <td class="col-1">--}}
-                                                                    {{--                                                                                                                            <div class="form-check">--}}
-                                                                    {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
-                                                                    {{--                                                                                                                                       value=""/>--}}
-                                                                    {{--                                                                                                                            </div>--}}
-                                                                    {{--                                                                                                                        </td>--}}
-                                                                    <td colspan="2">
-                                                                        <form
-                                                                            onsubmit="return FormCheckListItem({{$checklist->id}})">
-                                                                            <input type="hidden" name="check_list_id"
-                                                                                   id="check_list_id_{{$checklist->id}}"
-                                                                                   value="{{$checklist->id}}">
-                                                                            <input type="text" name="name"
-                                                                                   id="name_{{$checklist->id}}"
-                                                                                   class="form-control checklistItem"
-                                                                                   placeholder="Thêm mục"/>
-                                                                            <div
-                                                                                class="d-flex mt-3 justify-content-between">
-                                                                                <div>
-                                                                                    <button type="submit"
-                                                                                            class="btn btn-primary">Thêm
-                                                                                    </button>
-                                                                                    <a class="btn btn-outline-dark disable-checklist">Hủy</a>
-                                                                                </div>
+{{--                                                                <tr class="cursor-pointer addOrUpdate-checklist d-none">--}}
+{{--                                                                    <td colspan="2">--}}
+{{--                                                                        <form--}}
+{{--                                                                            onsubmit="return FormCheckListItem({{$checklist->id}})">--}}
+{{--                                                                            <input type="hidden" name="check_list_id"--}}
+{{--                                                                                   id="check_list_id_{{$checklist->id}}"--}}
+{{--                                                                                   value="{{$checklist->id}}">--}}
+{{--                                                                            <input type="text" name="name"--}}
+{{--                                                                                   id="name_{{$checklist->id}}"--}}
+{{--                                                                                   class="form-control checklistItem"--}}
+{{--                                                                                   placeholder="Thêm mục"/>--}}
+{{--                                                                            <div--}}
+{{--                                                                                class="d-flex mt-3 justify-content-between">--}}
+{{--                                                                                <div>--}}
+{{--                                                                                    <button type="submit"--}}
+{{--                                                                                            class="btn btn-primary">Thêm--}}
+{{--                                                                                    </button>--}}
+{{--                                                                                    <a class="btn btn-outline-dark disable-checklist">Hủy</a>--}}
+{{--                                                                                </div>--}}
 
-                                                                            </div>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
+{{--                                                                            </div>--}}
+{{--                                                                        </form>--}}
+{{--                                                                    </td>--}}
+{{--                                                                </tr>--}}
                                                             @endforeach
                                                         @endif
-                                                        <form class="cursor-pointer addOrUpdate-checklist d-none">
-                                                            {{--                                                                                                                        <td class="col-1">--}}
-                                                            {{--                                                                                                                            <div class="form-check">--}}
-                                                            {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
-                                                            {{--                                                                                                                                       value=""/>--}}
-                                                            {{--                                                                                                                            </div>--}}
-                                                            {{--                                                                                                                        </td>--}}
-                                                            <td colspan="2">
-                                                                <form class="formItem"
 
-                                                                      onsubmit="return FormCheckListItem({{$checklist->id}})">
-
-                                                                    <input type="hidden" name="check_list_id"
-                                                                           id="check_list_id_{{$checklist->id}}"
-                                                                           value="{{$checklist->id}}">
-                                                                    <input type="text" name="name"
-                                                                           id="name_{{$checklist->id}}"
-                                                                           class="form-control checklistItem"
-                                                                           placeholder="Thêm mục"/>
-                                                                    <div class="d-flex mt-3 justify-content-between">
-                                                                        <div>
-                                                                            <button type="submit" disabled
-                                                                                    class="btn btn-primary">Thêm
-                                                                            </button>
-                                                                            <a class="btn btn-outline-dark disable-checklist">Hủy</a>
-                                                                        </div>
-
-
-                                                                    </div>
-
-                                                            </td>
-                                                        </form>
-                                                        </tr>
-                                                        {{-- @endforeach --}}
-                                                        {{-- @endif --}}
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
-                                                            {{--                                                                                                                        <td class="col-1">--}}
-                                                            {{--                                                                                                                            <div class="form-check">--}}
-                                                            {{--                                                                                                                                <input class="form-check-input" type="checkbox"--}}
-                                                            {{--                                                                                                                                       value=""/>--}}
-                                                            {{--                                                                                                                            </div>--}}
-                                                            {{--                                                                                                                        </td>--}}
                                                             <td colspan="2">
-                                                                <form class="formItem"
-                                                                      onsubmit="return FormCheckListItem({{$checklist->id}})">
-                                                                    <input type="hidden" name="check_list_id"
-                                                                           id="check_list_id_{{$checklist->id}}"
-                                                                           value="{{$checklist->id}}">
-                                                                    <input type="text" name="name"
-                                                                           id="name_{{$checklist->id}}"
-                                                                           class="form-control checklistItem"
-                                                                           placeholder="Thêm mục"/>
+                                                                <form class="formItem">
+                                                                    <input type="hidden" name="check_list_id" id="check_list_id_{{$checklist->id}}" value="{{$checklist->id}}">
+                                                                    <input type="text" name="name" id="name_{{$checklist->id}}" class="form-control checklistItem" placeholder="Thêm mục"/>
+
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button type="submit" disabled
-                                                                                    class="btn btn-primary">Thêm
-                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary" onclick="FormCheckListItem({{$checklist->id}})" >Thêm</button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
-
 
                                                                     </div>
                                                                 </form>
+
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -617,6 +574,7 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        @endforeach
                                     @endif
                                     <div class="row mt-4">
                                         <section class="d-flex">

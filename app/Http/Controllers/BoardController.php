@@ -161,8 +161,11 @@ class BoardController extends Controller
                 $query->orderBy('position', 'asc');
             },
             'catalogs.tasks.catalog:id,name',
-            'catalogs.tasks.members'
+            'catalogs.tasks.members',
+            'catalogs.tasks.checkLists',
+            'catalogs.tasks.followMembers'
         ]);
+
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
             ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id')
@@ -175,7 +178,10 @@ class BoardController extends Controller
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
         $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-        $activities = Activity::where('properties->board_id', $boardId)->orderBy('created_at', 'desc')->get();
+        $activities = Activity::with('causer')
+            ->where('properties->board_id', $boardId)
+            ->orderBy('created_at', 'desc')
+            ->get();
         //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
 //        $boardName = $board->name; // Lấy tên của board
 
