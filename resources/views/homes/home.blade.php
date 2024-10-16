@@ -101,48 +101,6 @@
     </div>
     <!--end row-->
     <div class="card">
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-xxl-4 col-lg-6">
-                    <div class="search-box">
-                        <input type="text" class="form-control" placeholder="Search to ICOs...">
-                        <i class="ri-search-line search-icon"></i>
-                    </div>
-                </div>
-                <!--end col-->
-                <div class="col-xxl-3 col-lg-6">
-                    <input type="text" class="form-control" data-provider="flatpickr" data-date-format="d M, Y"
-                        data-range-date="true" placeholder="Select date">
-                </div>
-                <div class="col-xxl-2 col-lg-4">
-                    <select class="form-control" data-choices data-choices-search-false name="choices-single-default2"
-                        id="choices-single-default2">
-                        <option value="Active">Active</option>
-                        <option value="Ended">Ended</option>
-                        <option value="Upcoming">Upcoming</option>
-                    </select>
-                </div>
-                <!--end col-->
-                <div class="col-xxl-2 col-lg-4">
-                    <select class="form-control" data-choices data-choices-search-false name="choices-single-default"
-                        id="choices-single-default">
-                        <option value="">Select Rating</option>
-                        <option value="1">1 star</option>
-                        <option value="2">2 star</option>
-                        <option value="3">3 star</option>
-                        <option value="4">4 star</option>
-                        <option value="5">5 star</option>
-                    </select>
-                </div>
-                <!--end col-->
-                <div class="col-xxl-1 col-lg-4">
-                    <button class="btn btn-primary w-100"><i class="ri-equalizer-line align-bottom me-1"></i>
-                        Filters
-                    </button>
-                </div>
-            </div>
-            <!--end row-->
-        </div>
         <div class="row">
             <div class="col-xxl-5">
                 <div class="card card-height-100">
@@ -703,7 +661,7 @@
             <div class="col-xxl-3 col-md-6">
                 <div class="card overflow-hidden">
                     <div class="card-body bg-primary-subtle">
-                        <h5 class="fs-17 text-center mb-0">Nổi bật</h5>
+                        <h5 class="fs-17 text-center mb-0">Bảng nổi bật</h5>
                     </div>
                 </div>
                 <div data-simplebar style="max-height: 500px;">
@@ -780,7 +738,7 @@
                 <div data-simplebar style="max-height: 500px;">
                     @if(!empty($boards))
                     @if ($boards->isEmpty())
-                        <p>Không có bảng nào được đánh dấu là nổi bật.</p>
+                        <p>Không có bảng nào</p>
                     @else
                         @foreach ($boards as $board)
                             <div class="card mb-2">
