@@ -86,12 +86,12 @@ class CheckListSeeder extends Seeder
         $colors = Color::all();
 
 
-        foreach ($colors as $color) {
-            Label::query()->create([
-                'color_id' => $color->id,
-                'name' => fake()->word(),
-            ]);
-        }
+        // foreach ($colors as $color) {
+        //     Label::query()->create([
+        //         'color_id' => $color->id,
+        //         'name' => fake()->word(),
+        //     ]);
+        // }
 
 
         $labels = Label::all();

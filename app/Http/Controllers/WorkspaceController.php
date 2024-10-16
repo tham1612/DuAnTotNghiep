@@ -200,13 +200,13 @@ class WorkspaceController extends Controller
 
                         // ghi lại hoạt động khi thêm người dùng vào ws
 
-                        // activity('Thêm người dùng vào Bảng')
-                        //     ->causedBy(Auth::user())
-                        //     ->withProperties(['added_user_id' => $user->id])
-                        //     ->tap(function (Activity $activity) use ($workspace) {
-                        //         $activity->Workspace_id = $workspace->id;
-                        //     })
-                        //     ->log('add người thành công vào Bảng');
+                        activity('Thêm người dùng vào Wordspace')
+                            ->causedBy(Auth::user())
+                            ->withProperties(['added_user_id' => $user->id])
+                            ->tap(function (Activity $activity) use ($workspace) {
+                                $activity->Workspace_id = $workspace->id;
+                            })
+                            ->log('add người thành công vào Wordspace');
 
                         //xóa các session sau khi xong
                         Session::forget('invited_board');
@@ -305,7 +305,7 @@ class WorkspaceController extends Controller
             return redirect()->route('home');
         } catch (\Exception $exception) {
             DB::rollBack();
-            dd($exception->getMessage());
+            // dd($exception->getMessage());
             return back()->with([
                 'action' => 'error',
                 'msg' => 'Error: ' . $exception->getMessage()
