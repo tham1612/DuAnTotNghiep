@@ -94,12 +94,12 @@ class CheckListSeeder extends Seeder
         // }
 
 
-        $labels = Label::all();
-        foreach ($tasks as $task) {
-            TaskLabel::query()->create([
-                'task_id' => $task->id,
-                'label_id' => $labels->random()->id,
-            ]);
-        }
+        // $labels = Label::all();
+        // foreach ($tasks as $task) {
+        //     TaskLabel::query()->create([
+        //         'task_id' => $task->id,
+        //         'label_id' => $labels->random()->id,
+        //     ]);
+        // }
     }
 }

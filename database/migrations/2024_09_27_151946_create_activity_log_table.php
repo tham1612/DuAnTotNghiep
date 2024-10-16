@@ -1,9 +1,5 @@
 <?php
 
-use App\Models\Board;
-use App\Models\Catalog;
-use App\Models\Task;
-use App\Models\Workspace;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,10 +11,10 @@ class CreateActivityLogTable extends Migration
         Schema::connection(config('activitylog.database_connection'))->create(config('activitylog.table_name'), function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('log_name')->nullable();
-            $table->foreignIdFor(Workspace::class)->constrained();
-            $table->foreignIdFor(Board::class)->constrained();
-            $table->foreignIdFor(Catalog::class)->constrained();
-            $table->foreignIdFor(Task::class)->constrained(); 
+            $table->unsignedBigInteger('workspace_id')->nullable();
+            $table->unsignedBigInteger('board_id')->nullable(); // ID của board
+            $table->unsignedBigInteger('catalog_id')->nullable(); // ID của catalog (list)
+            $table->unsignedBigInteger('task_id')->nullable(); // ID của task
             $table->text('description');
             $table->nullableMorphs('subject', 'subject');
             $table->nullableMorphs('causer', 'causer');

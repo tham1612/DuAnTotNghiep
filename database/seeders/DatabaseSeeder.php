@@ -15,20 +15,20 @@ class DatabaseSeeder extends Seeder
         //  \App\Models\User::factory(10)->create();
 
          \App\Models\User::factory(10)->create();
-         $this->call([
-            BoardSeeder::class,
-            CheckListSeeder::class,
-            TaskSeeder::class,
-            TemplateBoardSeeder::class,
-            WorkspaceSeeder::class,
-        ]);
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
+        //  $this->call([
+        //     BoardSeeder::class,
+        //     CheckListSeeder::class,
+        //     TaskSeeder::class,
+        //     TemplateBoardSeeder::class,
+        //     WorkspaceSeeder::class,
         // ]);
+        // // \App\Models\User::factory()->create([
+        // //     'name' => 'Test User',
+        // //     'email' => 'test@example.com',
+        // // ]);
         $this->call([
-            WorkspaceSeeder::class,
-            BoardSeeder::class,
+        //     WorkspaceSeeder::class,
+        //     BoardSeeder::class,
             TaskSeeder::class,
         ]);
     }
