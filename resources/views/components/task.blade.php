@@ -549,24 +549,17 @@
                                                         @endif
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
                                                             <td colspan="2">
-                                                                <form class="formItem"
-                                                                      onsubmit="return FormCheckListItem({{$checklist->id}})">
-                                                                    <input type="hidden" name="check_list_id"
-                                                                           id="check_list_id_{{$checklist->id}}"
-                                                                           value="{{$checklist->id}}">
-                                                                    <input type="text" name="name"
-                                                                           id="name_{{$checklist->id}}"
-                                                                           class="form-control checklistItem"
-                                                                           placeholder="Thêm mục"/>
+                                                                <form class="formItem">
+                                                                    <input type="hidden" name="check_list_id" id="check_list_id_{{$checklist->id}}" value="{{$checklist->id}}">
+                                                                    <input type="text" name="name" id="name_{{$checklist->id}}" class="form-control checklistItem" placeholder="Thêm mục"/>
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button type="submit" disabled
-                                                                                    class="btn btn-primary">Thêm
-                                                                            </button>
+                                                                            <button type="button" class="btn btn-primary" onclick="FormCheckListItem({{$checklist->id}})" >Thêm</button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
                                                                     </div>
                                                                 </form>
+
                                                             </td>
                                                         </tr>
                                                         </tbody>
