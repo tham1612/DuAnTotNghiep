@@ -228,7 +228,7 @@
         });
 
         // Bắt sự kiện click của button trong form
-        $('button').on('click', function (e) {
+        $('button.create-tag-form').on('click', function (e) {
             e.preventDefault(); // Ngăn chặn hành vi submit mặc định
 
             // Lấy ID của form từ thuộc tính data-form-id của button
@@ -258,6 +258,63 @@
             });
         });
     </script>
+
+    <script>
+        function submitAddCheckList(taskId) {
+            var formData = {
+                task_id: $('#task_id_' + taskId).val(),
+                name: $('#name_' + taskId).val(),
+                method: 'POST'
+            };
+            if (!formData.name.trim()) {
+                alert('Tiêu đề không được để trống!');
+                return false;
+            }
+            $.ajax({
+                url: `/tasks/checklist/create`,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    console.log('Task đã được thêm thành công!', response);
+                },
+                error: function (xhr) {
+                    alert('Đã xảy ra lỗi!');
+                    console.log(xhr.responseText);
+                }
+            });
+
+            return false;
+        }
+
+        function submitFormCheckList(checklistId) {
+            var formData = {
+                task_id: $('#task_id_' + checklistId).val(),
+                name: $('#name_' + checklistId).val()
+            };
+
+
+            if (!formData.name.trim()) {
+                alert('Tiêu đề không được để trống!');
+                return false;
+            }
+
+            $.ajax({
+                url: `/tasks/${checklistId}/checklist`,
+                type: 'PUT',
+                data: formData,
+                success: function (response) {
+                    console.log('Task đã được cập nhật thành công!', response);
+                },
+                error: function (xhr) {
+                    alert('Đã xảy ra lỗi!');
+                    console.log(xhr.responseText);
+                }
+            });
+
+            return false;
+        }
+    </script>
+
 @endif
 
 <script>

@@ -357,21 +357,16 @@
                                             </div>
                                         </div>
                                     @endif
-{{--                                    @php--}}
-{{--                                        //   $checklist = $task = \App\Models\Task::with('checkLists')->find($task->id);--}}
-{{--                                      $checklist = $task->checklist;--}}
 
-{{--                                    @endphp--}}
+                                    @if(!empty($task->checklist))
 
-                                    @if(!empty($task->checklists))
-                                        @foreach ($task->checklists as $checklist)
                                         <!-- việc cần làm -->
                                         <div class="row mt-3">
                                             <section class="d-flex justify-content-between">
                                                 <section class="d-flex">
                                                     <i class="ri-checkbox-line fs-22"></i>
                                                      <!-- Lặp qua từng checklist -->
-                                                    <p class="fs-18 ms-2 mt-1">{{ $checklist->name }}</p>
+                                                    <p class="fs-18 ms-2 mt-1">{{ $task->checklist->name }}</p>
 
                                                 </section>
                                                 <button class="btn btn-outline-dark" style="height: 35px"
@@ -398,16 +393,11 @@
                                                         50%
                                                     </div>
                                                 </div>
-                                                @php
-                                                    $checklistItems = \App\Models\CheckListItem::with(['checkListItemMembers.user'])
-                                                            ->where('check_list_id',  $checklist->id)
-                                                            ->get();
-                                                @endphp
+
                                                 <div class="table-responsive table-hover table-card">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
-                                                        @if($checklistItems)
-                                                            @foreach($checklistItems as $checklistItem)
+                                                            @foreach($task->checklist->checkListItems as $checklistItem)
                                                                 <tr class="cursor-pointer">
                                                                     <td class="col-1">
                                                                         <div class="form-check">
@@ -546,17 +536,15 @@
 {{--                                                                    </td>--}}
 {{--                                                                </tr>--}}
                                                             @endforeach
-                                                        @endif
-
                                                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
                                                             <td colspan="2">
                                                                 <form class="formItem">
-                                                                    <input type="hidden" name="check_list_id" id="check_list_id_{{$checklist->id}}" value="{{$checklist->id}}">
-                                                                    <input type="text" name="name" id="name_{{$checklist->id}}" class="form-control checklistItem" placeholder="Thêm mục"/>
+                                                                    <input type="hidden" name="check_list_id" id="check_list_id_{{$task->checklist->id}}" value="{{$task->checklist->id}}">
+                                                                    <input type="text" name="name" id="name_{{$task->checklist->id}}" class="form-control checklistItem" placeholder="Thêm mục"/>
 
                                                                     <div class="d-flex mt-3 justify-content-between">
                                                                         <div>
-                                                                            <button type="button" class="btn btn-primary" onclick="FormCheckListItem({{$checklist->id}})" >Thêm</button>
+                                                                            <button type="button" class="btn btn-primary" onclick="FormCheckListItem({{$task->checklist->id}})" >Thêm</button>
                                                                             <a class="btn btn-outline-dark disable-checklist">Hủy</a>
                                                                         </div>
 
@@ -574,7 +562,7 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        @endforeach
+
                                     @endif
                                     <div class="row mt-4">
                                         <section class="d-flex">

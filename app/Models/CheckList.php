@@ -16,4 +16,9 @@ class CheckList extends Model
     {
         return $this->belongsTo(Task::class);
     }
+
+    public function checkListItems()
+    {
+        return $this->hasMany(CheckListItem::class);
+    }
 }

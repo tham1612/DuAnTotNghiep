@@ -61,9 +61,9 @@ class Task extends Model
     {
         return $this->hasMany(Follow_member::class);
     }
-    public function checkLists()
+    public function checkList()
     {
-        return $this->hasMany(CheckList::class);
+        return $this->hasOne(CheckList::class);
     }
 
     public function tags()
