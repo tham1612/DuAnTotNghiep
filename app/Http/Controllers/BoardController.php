@@ -41,9 +41,9 @@ class BoardController extends Controller
      */
 
 
-    public function index($workspaceId)
-    {
-        $userId = Auth::id();
+     public function index($workspaceId)
+     {
+         $userId = Auth::id();
 
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
@@ -69,21 +69,20 @@ class BoardController extends Controller
                     return $member->user_id == $userId && $member->follow == 1;
                 });
 
-                return $board;
-            });
+                 return $board;
+             });
 
-        // Lọc danh sách các bảng mà user đã đánh dấu sao
-        $board_star = $boards->filter(function ($board) use ($userId) {
-            return $board->boardMembers->contains(function ($member) use ($userId) {
-                return $member->user_id == $userId && $member->is_star == 1;
-            });
-        });
-        // dd($workspaceId);
+         // Lọc danh sách các bảng mà user đã đánh dấu sao
+         $board_star = $boards->filter(function ($board) use ($userId) {
+             return $board->boardMembers->contains(function ($member) use ($userId) {
+                 return $member->user_id == $userId && $member->is_star == 1;
+             });
+         });
+         // dd($workspaceId);
 
-        // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
-        return view('homes.dashboard', compact('boards', 'board_star'));
-
-    }
+         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
+         return view('homes.dashboard', compact('boards', 'board_star'));
+     }
 
     /**
      * Show the form for creating a new resource.
