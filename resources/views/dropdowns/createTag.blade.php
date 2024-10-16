@@ -10,7 +10,7 @@
         <input type="color" name="color_code" class="form-control" style="height: 40px">
     </div>
     <div class="mt-3">
-        <button class="btn btn-primary" id="create-tag-form">
+        <button class="btn btn-primary create-tag-form" id="">
             Tạo mới
         </button>
     </div>

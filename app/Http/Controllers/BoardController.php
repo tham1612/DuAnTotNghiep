@@ -162,7 +162,7 @@ class BoardController extends Controller
             },
             'catalogs.tasks.catalog:id,name',
             'catalogs.tasks.members',
-            'catalogs.tasks.checkLists',
+            'catalogs.tasks.checkList',
             'catalogs.tasks.followMembers'
         ]);
 
