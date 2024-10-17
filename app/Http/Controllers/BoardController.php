@@ -164,7 +164,8 @@ class BoardController extends Controller
             'catalogs.tasks.members',
             'catalogs.tasks.checkList.checkListItems',
             'catalogs.tasks.tags',
-            'catalogs.tasks.followMembers'
+            'catalogs.tasks.followMembers',
+            'catalogs.tasks.attachments'
         ]);
 
         $boardMemberMain = BoardMember::query()

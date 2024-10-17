@@ -49,6 +49,14 @@
                 /* Cho phép nội dung xuống dòng */
                 width: 200%;
                 /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+
+            }
+            .attachments-container {
+                max-height: 400px; /* Đặt chiều cao tối đa để tạo scroll khi cần */
+                overflow-y: auto; /* Cho phép cuộn dọc khi vượt quá chiều cao */
+            }
+            .attachments-container::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
             }
         </style>
     @endif
@@ -122,6 +130,7 @@
                     @include('components.setting')
                     @include('components.task')
                     @include('components.member')
+
                 @endif
 
                 {{-- các màn hình hiển thị --}}
@@ -130,6 +139,7 @@
                 @include('components.createBoard')
                 @include('components.createTemplateBoard')
                 @include('components.workspace')
+
             </div>
             <!-- container-fluid -->
         </div>
@@ -366,6 +376,33 @@
             });
 
             return false;
+        }
+        function uploadTaskAttachments(taskId) {
+            var formData = new FormData();
+            formData.append('task_id', taskId);
+            var fileInput = document.getElementById('file_name_task_' + taskId);
+            var files = fileInput.files;
+            for (var i = 0; i < files.length; i++) {
+                formData.append(`file_name[]`, files[i]);
+                formData.append(`name[]`, files[i].name);
+            }
+            console.log(files)
+            console.log(formData)
+
+            $.ajax({
+                url: `/tasks/attachments/create`,
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log('tệp đã được thêm vào thành công');
+                    console.log(response);
+                },
+                error: function(xhr) {
+                    console.log('Error occurred:', xhr.responseText);
+                }
+            });
         }
     </script>
 

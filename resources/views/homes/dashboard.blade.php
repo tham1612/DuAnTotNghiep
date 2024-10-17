@@ -96,7 +96,7 @@
                                         @if ($board && $board->image && \Storage::exists($board->image))
                                             <div class="image-container"
                                                 style="width:280px; height: 100px; overflow: hidden;">
-                                                <img src="{{ \Storage::url($board->image) }}"
+                                                <img src="{{ asset('storage/' . $board->image)}}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
                                                     style="width: 100%; height: 100%; object-fit: cover;">
                                                 <div class="position-absolute top-0 end-0 p-1">
@@ -303,7 +303,7 @@
                                         @if ($board && $board->image && \Storage::exists($board->image))
                                             <div class="image-container"
                                                 style="width:280px; height: 100px; overflow: hidden;">
-                                                <img src="{{ \Storage::url($board->image) }}"
+                                                <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
                                                     style="width: 100%; height: 100%; object-fit: cover;">
                                                 <div class="position-absolute top-0 end-0 p-1">
