@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('task_attachments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Task::class)->constrained();
-            $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->string('file_name');
-            $table->softDeletes();
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
