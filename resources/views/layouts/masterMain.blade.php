@@ -292,7 +292,7 @@
                 data: formData,
                 success: function (response) {
                     // Đóng dropdown khi AJAX thành công
-                    $('.dropdown-menu').hide();
+                    // $('.dropdown-menu').hide();
                     console.log('Tạo tag thành công:', response);
                 },
                 error: function (error) {
