@@ -60,7 +60,7 @@ class ChecklistController extends Controller
     public function updateChecklistItem(Request $request, string $id)
     {
         $checkListItem = CheckListItem::query()->findOrFail($id);
-        $data=$request->only(['reminder_date','end_date','start_date']);
+        $data=$request->only(['reminder_date','end_date','start_date','is_complete']);
         $checkListItem->update($data);
         return response()->json([
             'success' => "update checkListItem thành công",
@@ -87,6 +87,18 @@ class ChecklistController extends Controller
              'msg' => true
         ]);
     }
+////    public function getProgress( Request $request )
+////    {
+////        $checklistItem = CheckListItemMember::where('check_list_item_id',$request->check_list_item_id)
+////            ->where('user_id',$request->user_id)
+////            ->first();
+////        $checklistItem->delete();
+////        return response()->json([
+////            'success' => "xoas CheckListItemMember thành công",
+////            'msg' => true
+////        ]);
+//    }
+
 
 
     /**

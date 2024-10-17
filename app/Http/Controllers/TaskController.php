@@ -97,6 +97,7 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
+
         if ($request->hasFile('image')) {
             $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
             $data['image'] = $imagePath;
@@ -104,7 +105,7 @@ class TaskController extends Controller
                 Storage::delete($task->image);
             }
         }
-//        dd($data);
+//        dd(file_get_contents('php://input'));
         if (isset($data['start_date']) || isset($data['end_date'])) {
             $this->updateCalendar($request, $id);
         }
@@ -325,7 +326,7 @@ class TaskController extends Controller
             ->where('task_id', $request->task_id)
             ->where('user_id', $request->user_id)
             ->first();
-
+//        dd($taskMember);
         if (!$taskMember) {
             return response()->json([
                 'success' => false,
@@ -334,7 +335,7 @@ class TaskController extends Controller
         }
         try {
             $check = $taskMember->delete();
-            dd($check);
+//            dd($check);
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }

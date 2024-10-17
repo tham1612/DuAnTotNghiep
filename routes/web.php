@@ -78,6 +78,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
         Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
+        Route::get('/chat/load-more', [ChatAIController::class, 'loadMore'])->name('chat.loadMore');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
@@ -130,6 +131,8 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.addMemberChecklist');
         Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
             ->name('checklist.deleteMemberChecklist');
+        Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
+            ->name('checklist.getProgress');
 
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
