@@ -311,7 +311,7 @@ class TaskController extends Controller
         }
 
         $data = $request->except(['_token', '_method']);
-        TaskMember::create($data);
+        TaskMember::query()->insert($data);
 
         return response()->json([
             'success' => true,

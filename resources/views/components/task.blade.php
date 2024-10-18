@@ -108,7 +108,7 @@
                                                                                     @else
                                                                                         <div class="avatar-sm">
                                                                                             <div
-                                                                                                class="avatar-title rounded-circle bg-light text-primary"
+                                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                                 style="width: 35px;height: 35px">
                                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                                             </div>
@@ -157,11 +157,15 @@
                                                     style="height: 35px; background-color: #091e420f; color: #172b4d"
                                                     id="notification_{{$task->id}}"
                                                     onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
-                                                    <i class="@if($memberFollow == 0)
-                                                    ri-eye-off-line @elseif($memberFollow == 1) ri-eye-line @endif
+                                                    <i class="@if($memberFollow == 1)
+                                                    ri-eye-line @else ri-eye-off-line @endif
                                                     fs-22" id="notification_icon_{{$task->id}}"></i>
-                                                    <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">Theo
-                                                        dõi</p>
+                                                    <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">
+                                                        @if($memberFollow == 1)
+                                                            Đang theo dõi
+                                                        @else
+                                                            Theo dõi
+                                                        @endif</p>
                                                     <div @if( $memberFollow == 0) class="d-none"
                                                          @endif id="notification_follow_{{$task->id}}">
                                                         <i class="ri-check-line fs-22 bg-light ms-2 rounded"
@@ -401,26 +405,33 @@
 
                                             <div class="ps-4">
                                                 <div class="progress animated-progress bg-light-subtle"
-                                                     style="height: 20px">
-                                                    <div class="progress-bar bg-success" role="progressbar"
-                                                         style="width: 50%"
-                                                         aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                        50%
+                                                     style="height: 20px"
+                                                     data-task-id="{{ $task->id }}">
+                                                    <div class="progress-bar bg-success"
+                                                         role="progressbar"
+                                                         style="width: 0"
+                                                         id="progress-bar-{{ $task->id }}"
+                                                         aria-valuenow="0"
+                                                         aria-valuemin="0"
+                                                         aria-valuemax="100">
+                                                        0%
                                                     </div>
                                                 </div>
-
                                                 <div class="table-responsive table-hover table-card">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
                                                         @foreach($task->checklist->checkListItems as $checklistItem)
+
                                                             <tr class="cursor-pointer">
                                                                 <td class="col-1">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input-checkList"
                                                                                type="checkbox" name="is_complete"
+                                                                               @checked($checklistItem->is_complete)
                                                                                value="100"
                                                                                id="is_complete-{{ $checklistItem->id }}"
-                                                                               data-checklist-id="{{ $checklistItem->id }}" />
+                                                                               data-checklist-id="{{ $checklistItem->id }}"
+                                                                               data-task-id="{{ $task->id }}"/>
                                                                     </div>
 
 
@@ -439,7 +450,7 @@
                                                                                 </span>
 
                                                                         @else
-                                                                            <i class="ri-time-line fs-20 ms-2"
+                                                                            <i class="ri-time-line fs-20 "
                                                                                data-bs-toggle="dropdown"
                                                                                aria-haspopup="true"
                                                                                aria-expanded="false"
@@ -451,71 +462,74 @@
                                                                             @include('dropdowns.dateCheckList', ['checklistItem' => $checklistItem])
                                                                         </div>
                                                                     </div>
-                                                                    @if(!empty($checklistItem->checkListItemMembers))
-                                                                        <div class="">
-                                                                            @php
-                                                                                // Đếm số lượng checkListItemMember
-                                                                                $maxDisplay = 3;
-                                                                                $count = 0;
-                                                                            @endphp
 
-                                                                            @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
-                                                                                @if ($count < $maxDisplay)
+
+                                                                    <div class="d-flex ms-4">
+                                                                        @if($checklistItem->checkListItemMembers)
+                                                                            <div style="margin-right: -15px">
+                                                                                @php
+                                                                                    // Đếm số lượng checkListItemMember
+                                                                                    $maxDisplay = 3;
+                                                                                    $count = 0;
+                                                                                @endphp
+
+                                                                                @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
+                                                                                    @if ($count < $maxDisplay)
+                                                                                        <a href="javascript: void(0);"
+                                                                                           class="avatar-group-item"
+                                                                                           data-bs-toggle="tooltip"
+                                                                                           data-bs-placement="top"
+                                                                                           title="{{ $checkListItemMember->user->name }}">
+                                                                                            @if ($checkListItemMember->user->image)
+                                                                                                <img
+                                                                                                    src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
+                                                                                                    alt=""
+                                                                                                    class="rounded-circle avatar-sm object-fit-cover"
+                                                                                                    style="width: 20px;height: 20px">
+                                                                                            @else
+                                                                                                <div class="avatar-sm">
+                                                                                                    <div
+                                                                                                        class="avatar-title rounded-circle bg-info-subtle text-primary"
+                                                                                                        style="width: 30px;height: 30px">
+                                                                                                        {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            @endif
+                                                                                        </a>
+                                                                                        @php $count++; @endphp
+                                                                                    @endif
+                                                                                @endforeach
+
+                                                                                @if (count($checklistItem->checkListItemMembers) > $maxDisplay)
                                                                                     <a href="javascript: void(0);"
                                                                                        class="avatar-group-item"
                                                                                        data-bs-toggle="tooltip"
                                                                                        data-bs-placement="top"
-                                                                                       title="{{ $checkListItemMember->user->name }}">
-                                                                                        @if ($checkListItemMember->user->image)
-                                                                                            <img
-                                                                                                src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
-                                                                                                alt=""
-                                                                                                class="rounded-circle avatar-sm object-fit-cover"
-                                                                                                style="width: 20px;height: 20px">
-                                                                                        @else
-                                                                                            <div class="avatar-sm">
-                                                                                                <div
-                                                                                                    class="avatar-title rounded-circle bg-light text-primary">
-                                                                                                    {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
-                                                                                                </div>
+                                                                                       title="{{ count($checklistItem->checkListItemMembers) - $maxDisplay }} more">
+                                                                                        <div class="avatar-sm">
+                                                                                            <div
+                                                                                                class="avatar-title rounded-circle">
+                                                                                                +{{ count($checklistItem->checkListItemMembers) - $maxDisplay }}
                                                                                             </div>
-                                                                                        @endif
-                                                                                    </a>
-                                                                                    @php $count++; @endphp
-                                                                                @endif
-                                                                            @endforeach
-
-                                                                            @if (count($checklistItem->checkListItemMembers) > $maxDisplay)
-                                                                                <a href="javascript: void(0);"
-                                                                                   class="avatar-group-item"
-                                                                                   data-bs-toggle="tooltip"
-                                                                                   data-bs-placement="top"
-                                                                                   title="{{ count($checklistItem->checkListItemMembers) - $maxDisplay }} more">
-                                                                                    <div class="avatar-sm">
-                                                                                        <div
-                                                                                            class="avatar-title rounded-circle">
-                                                                                            +{{ count($checklistItem->checkListItemMembers) - $maxDisplay }}
                                                                                         </div>
-                                                                                    </div>
-                                                                                </a>
-                                                                            @endif
-                                                                        </div>
-                                                                    @endif
-                                                                    <div>
-                                                                        <i class="ri-user-add-line fs-20 ms-2"
+                                                                                    </a>
+                                                                                @endif
+                                                                            </div>
+                                                                        @endif
+                                                                        <i class="ri-user-add-line fs-20"
                                                                            data-bs-toggle="dropdown"
                                                                            aria-haspopup="true"
                                                                            aria-expanded="false"
 
                                                                            id="dropdownToggle_{{$checklistItem->id}}"></i>
                                                                         <div
-                                                                            class="dropdown-menu dropdown-menu-md p-3 w-50 ">
+                                                                            class="dropdown-menu dropdown-menu-md p-3 w-50">
                                                                             @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem])
                                                                         </div>
                                                                     </div>
 
                                                                     <div>
-                                                                        <i class="ri-more-fill fs-20 ms-2"
+                                                                        <i class="ri-more-fill fs-20"
                                                                            data-bs-toggle="dropdown"
                                                                            aria-haspopup="true"
                                                                            aria-expanded="false"></i>
@@ -537,7 +551,7 @@
                                                                            id="check_list_id_{{$task->checklist->id}}"
                                                                            value="{{$task->checklist->id}}">
                                                                     <input type="text" name="name"
-                                                                           id="name_{{$task->checklist->id}}"
+                                                                           id="name_check_list_item_{{$task->checklist->id}}"
                                                                            class="form-control checklistItem"
                                                                            placeholder="Thêm mục"/>
 
@@ -947,6 +961,7 @@
 </script>
 
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
         const notificationElements = document.querySelectorAll('[id^="notification_"]');
 
@@ -979,6 +994,8 @@
                 console.log('Bạn đã click vào thông báo của task với ID:', taskId);
             });
         });
+
+
     });
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(checkbox => {
@@ -1019,7 +1036,7 @@
         // Kiểm tra và thêm file ảnh nếu có
         if (image.files.length > 0) {
             console.log('xxxx'),
-            formData.append('image', image.files[0]);
+                formData.append('image', image.files[0]);
         }
         formData.append('_method', 'PUT');
         console.log([...formData]);
@@ -1062,13 +1079,14 @@
     function FormCheckListItem(checkListId) {
         var formData = {
             check_list_id: $('#check_list_id_' + checkListId).val(),
-            name: $('#name_' + checkListId).val()
+            name: $('#name_check_list_item_' + checkListId).val()
         };
+        console.log(formData)
         if (!formData.name.trim()) {
             alert('Tiêu đề không được để trống!');
             return false;
         }
-        console.log(formData);
+
         $.ajax({
             url: `/tasks/checklist/checklistItem/create`,
             type: 'POST',
@@ -1086,9 +1104,11 @@
 
         return false;
     }
+
     $(document).ready(function () {
         $('.form-check-input-checkList').on('change', function () {
             let checkListItemId = $(this).data('checklist-id');
+            console.log(checkListItemId)
             let checkbox = $(this);
 
             if (!checkbox.length) {
@@ -1097,12 +1117,12 @@
             }
             var formData = new FormData();
             formData.append('is_complete', checkbox.is(':checked') ? 1 : 0);
-            console.log([...formData]);
+            formData.append('id', checkListItemId);
 
 
             $.ajax({
-                url: `/tasks/checklist/checklistItem/${checkListItemId}/update`,
-                type: 'PUT',
+                url: `/tasks/checklist/checklistItem/update`,
+                type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -1118,6 +1138,39 @@
     });
 
 
+</script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy tất cả các checkbox
+        const checkboxes = document.querySelectorAll('.form-check-input-checkList');
 
+        function updateProgressBar(taskId) {
+            // Lọc các checkbox thuộc về task có taskId cụ thể
+            const taskCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.getAttribute('data-task-id') === taskId);
+            const totalCheckboxes = taskCheckboxes.length;
+            const checkedCheckboxes = taskCheckboxes.filter(checkbox => checkbox.checked).length;
+
+            // Tính phần trăm hoàn thành
+            const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
+
+            // Cập nhật thanh tiến trình cho task tương ứng
+            const progressBar = document.getElementById('progress-bar-' + taskId);
+            progressBar.style.width = percentCompleted + '%';
+            progressBar.setAttribute('aria-valuenow', percentCompleted);
+            progressBar.innerHTML = Math.round(percentCompleted) + '%'; // Làm tròn phần trăm
+        }
+
+        // Lắng nghe sự kiện thay đổi trên từng checkbox
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const taskId = this.getAttribute('data-task-id');
+                updateProgressBar(taskId);
+            });
+        });
+
+        // Gọi hàm để cập nhật thanh tiến trình ban đầu cho mỗi task
+        const tasks = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-task-id')));
+        tasks.forEach(taskId => updateProgressBar(taskId));
+    });
 </script>

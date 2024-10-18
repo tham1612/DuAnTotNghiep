@@ -38,6 +38,8 @@
             min-height: 100px !important;
             /* Đảm bảo chiều cao giới hạn 150px */
         }
+
+
     </style>
 
     @if (request()->is('b/*'))
@@ -49,6 +51,10 @@
                 /* Cho phép nội dung xuống dòng */
                 width: 200%;
                 /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+            }
+
+            .selected-tag {
+                box-shadow: 0 0 15px #000000; /* Hiệu ứng bóng */
             }
         </style>
     @endif
@@ -115,7 +121,8 @@
                 @if (request()->is('b/*'))
                     @php
                         $board = session('board');
-
+                        $member_Is_star = session('member_Is_star');
+                        $colors = session('colors');
                     @endphp
 
                     @include('layouts.navbar')
@@ -210,6 +217,16 @@
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     {{-- xử lý tag   --}}
     <script>
+        document.querySelectorAll('.color-box').forEach(box => {
+            box.addEventListener('click', function () {
+                console.log(123)
+                // Xóa lớp 'selected' khỏi tất cả các ô màu
+                document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected-tag'));
+                // Thêm lớp 'selected' vào ô màu đang được click
+                this.classList.add('selected-tag');
+            });
+        });
+
         // Hàm tạo ra ID ngẫu nhiên với độ dài tùy chỉnh
         function generateRandomId(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -369,6 +386,51 @@
         }
     </script>
 
+    {{--    call ajax lọc--}}
+    <script>
+        {{--        $(document).ready(function () {--}}
+        {{--            const $form = $('.dropdown-menu');--}}
+
+        {{--            // Hàm debounce để chỉ gửi request khi người dùng dừng thao tác trong một khoảng thời gian--}}
+        {{--            function debounce(func, delay) {--}}
+        {{--                let timeout;--}}
+        {{--                return function (...args) {--}}
+        {{--                    clearTimeout(timeout);--}}
+        {{--                    timeout = setTimeout(() => func.apply(this, args), delay);--}}
+        {{--                };--}}
+        {{--            }--}}
+
+        {{--            // Hàm xử lý gửi AJAX khi có thay đổi trên form--}}
+        {{--            function handleFormChange() {--}}
+        {{--                // Thu thập dữ liệu từ form--}}
+        {{--                const formData = $form.serialize(); // Chuyển toàn bộ dữ liệu form thành chuỗi URL-encoded--}}
+        {{--                const boardId = $('#board_id').val();--}}
+        {{--                const viewType = $('#viewType').val();--}}
+        {{--                const updatedFormData = formData + '&board_id=' + encodeURIComponent(boardId) + '&viewType=' + encodeURIComponent(viewType);--}}
+        {{--                // Gửi AJAX request lên server--}}
+        {{--                $.ajax({--}}
+        {{--                    url: `/b/${boardId}/edit`, // Đường dẫn API bạn muốn gửi request--}}
+        {{--                    method: 'GET', // Phương thức gửi dữ liệu--}}
+        {{--                    data: updatedFormData, // Dữ liệu gửi lên server--}}
+
+        {{--                    success: function (response) {--}}
+        {{--                        // Xử lý phản hồi từ server, ví dụ cập nhật giao diện với dữ liệu đã lọc--}}
+        {{--                        console.log('Thành công:', response);--}}
+        {{--                        // Cập nhật lại giao diện tại đây nếu cần--}}
+        {{--                    },--}}
+        {{--                    error: function (xhr, status, error) {--}}
+        {{--                        console.error('Lỗi:', error);--}}
+        {{--                    }--}}
+        {{--                });--}}
+        {{--            }--}}
+
+        {{--            // Sử dụng hàm debounce để tránh gửi nhiều request liên tục--}}
+        {{--            const debouncedHandleFormChange = debounce(handleFormChange, 1000); // Gửi request sau 500ms ngừng thao tác--}}
+
+        {{--            // Lắng nghe các sự kiện thay đổi trên form (input, checkbox, select,...)--}}
+        {{--            $form.on('input change', debouncedHandleFormChange);--}}
+        {{--        });--}}
+    </script>
 @endif
 
 <script>
