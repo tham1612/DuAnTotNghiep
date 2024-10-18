@@ -90,6 +90,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('create', [BoardController::class, 'create'])->name('create');
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
+                Route::post('{id}/filter', [BoardController::class, 'filter']);
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
                 Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
@@ -125,7 +126,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.update');
         Route::post('/tasks/checklist/checklistItem/create', [ChecklistController::class, 'createChecklistItem'])
             ->name('checklist.createChecklistItem');
-        Route::put('/tasks/checklist/checklistItem/{checklistItem}/update', [ChecklistController::class, 'updateChecklistItem'])
+        Route::post('/tasks/checklist/checklistItem/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
         Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
             ->name('checklist.addMemberChecklist');

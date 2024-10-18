@@ -359,8 +359,17 @@
                                         </div>
                                         <div class="mt-3">
                                             <label class="fs-14">Chọn màu</label>
-                                            <input type="color" name="color_code" class="form-control"
-                                                   style="height: 40px" value="{{$tag->color_code}}"/>
+                                            <div class="d-flex flex-wrap gap-2 select-color">
+                                                @foreach($colors as $color)
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                                         title="{{$color->name}}">
+                                                        <div
+                                                            class="color-box border rounded @if($color->code == $tag->color_code) selected-tag @endif"
+                                                            style="width: 50px;height: 30px; background-color: {{$color->code}}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                         <div class="mt-3">
                                             <button class="btn btn-primary" id="update-tag-form">
@@ -378,7 +387,7 @@
                         class="d-flex align-items-center justify-content-center rounded p-3 w-100 cursor-pointer"
                         style=" height: 30px; background-color: #e4e6ea">
                         <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-bs-offset="-110,-250">
+                           aria-expanded="false" data-bs-offset="50,-250">
                             Tạo nhãn mới
                         </p>
                         <!--dropdown nhãn-->
