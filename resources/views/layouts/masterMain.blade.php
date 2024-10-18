@@ -112,6 +112,7 @@
             <!-- /.modal-content -->
         </div>
 
+
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
@@ -184,6 +185,7 @@
                 this.value = this.defaultValue;
             }
         });
+
     });
 </script>
 <!-- JAVASCRIPT -->
