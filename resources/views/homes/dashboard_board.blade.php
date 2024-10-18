@@ -74,12 +74,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Card</h4>
+                <h4 class="mb-sm-0">Dashboard_board</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                        <li class="breadcrumb-item active">Card</li>
+                        <li class="breadcrumb-item active">Dashboard_board</li>
                     </ol>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                     <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
                         <div class="col">
                             <div class="py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Thành viên
+                                <h5 class="text-muted text-uppercase fs-13">Thành viên trong bảng
                                     <i class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -114,7 +114,7 @@
                         </div><!-- end col -->
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Hoàn thành
+                                <h5 class="text-muted text-uppercase fs-13">Task hoàn thành
                                     <i class="ri-checkbox-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -133,7 +133,7 @@
 
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Chưa hoàn thành
+                                <h5 class="text-muted text-uppercase fs-13">Task chưa hoàn thành
                                     <i class="ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -151,7 +151,7 @@
                         </div><!-- end col -->
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Quá hạn
+                                <h5 class="text-muted text-uppercase fs-13">Task quá hạn
                                     <i class="ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -168,7 +168,7 @@
 
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Tổng
+                                <h5 class="text-muted text-uppercase fs-13">Tổng task
                                     <i class="ri-add-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
@@ -326,13 +326,12 @@
                                         <!-- Độ ưu tiên -->
                                         <td>
                                             <span
-                                                class="badge fs-14
-                                        @if ($task->priority == 'High') bg-danger
-                                        @elseif ($task->priority == 'Medium') bg-warning
-                                        @elseif ($task->priority == 'Low') bg-success
-                                        @else '' @endif">
+                                                class="badge
+                                                @if ($task->priority == 'High') bg-danger-subtle text-danger
+                                                @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
+                                                @elseif ($task->priority == 'Low') bg-success-subtle text-success
+                                                @else bg-info-subtle text-info @endif">
                                                 {{ $task->priority }}
-                                            </span>
                                         </td>
 
                                         <!-- Danh sách -->
@@ -421,13 +420,14 @@
                                     <!-- Hiển thị tên danh sách -->
                                     <td>
                                         <span
-                                            class="badge fs-14
-                                        @if ($task->priority == 'High') bg-danger
-                                        @elseif ($task->priority == 'Medium') bg-warning
-                                        @elseif ($task->priority == 'Low') bg-success
-                                        @else '' @endif">
+                                            class="badge
+                                            @if ($task->priority == 'High') bg-danger-subtle text-danger
+                                            @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
+                                            @elseif ($task->priority == 'Low') bg-success-subtle text-success
+                                            @else bg-info-subtle text-info @endif">
                                             {{ $task->priority }}
                                         </span>
+
                                     </td> <!-- Hiển thị độ ưu tiên với màu sắc tương ứng -->
                                 </tr>
                             @endforeach
