@@ -180,7 +180,6 @@ class BoardController extends Controller
             'users',
             'catalogs' => function ($query) use ($request) {
                 $query->with(['tasks' => function ($taskQuery) use ($request) {
-                    // Bắt đầu truy vấn cho tasks
                     $taskQuery->where(function ($subQuery) use ($request) {
 
                         // Điều kiện 1: Lọc thành viên
@@ -199,7 +198,6 @@ class BoardController extends Controller
                                 }
                             });
                         }
-
 
                         // Điều kiện 2: Ngày hết hạn
                         if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
@@ -235,10 +233,20 @@ class BoardController extends Controller
                             });
                         }
                     })
-                        ->with(['members', 'checkList', 'checkList.checkListItems', 'checkList.checkListItems.checkListItemMembers', 'tags', 'followMembers','attachments']);
+                        ->orderBy('position', 'asc')
+                        ->with([
+                            'members',
+                            'checkList',
+                            'checkList.checkListItems',
+                            'checkList.checkListItems.checkListItemMembers',
+                            'tags',
+                            'followMembers',
+                            'attachments'
+                        ]);
                 }]);
             }
         ]);
+
         if ($request->ajax()) {
             $viewType = $request->viewType;
 //            $this->middleware('csrf', ['except' => ['edit']]);
@@ -248,7 +256,6 @@ class BoardController extends Controller
             ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id')
             ->where('board_members.board_id', $board->id)
             ->get();
-
 
         /*
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
@@ -301,16 +308,16 @@ class BoardController extends Controller
 
         switch ($viewType) {
             case 'dashboard':
-                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember','colors'));
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'list':
-                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember','colors'));
+                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember','colors'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'table':
-                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember','colors'));
+                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             case 'calendar':
                 $listEvent = array();
@@ -346,10 +353,10 @@ class BoardController extends Controller
                         'end' => Carbon::parse($event->end_date)->toIso8601String(),
                     ];
                 }
-                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember','colors'));
+                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
 
             default:
-                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember','colors'));
+                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
         }
 
     }

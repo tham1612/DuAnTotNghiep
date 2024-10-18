@@ -159,7 +159,6 @@ Auth::routes();
 
 Route::post('/forget-session', function () {
     session()->forget(['msg', 'action']);
-    return response()->json(['success' => true]);
 })->name('forget.session');
 
 Route::controller(LoginGoogleController::class)->group(function () {

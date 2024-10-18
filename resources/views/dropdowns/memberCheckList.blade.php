@@ -46,7 +46,7 @@
         <ul class="" style="list-style: none; margin-left: -32px">
             @php $boardMembers=  session('boardMembers');@endphp
             @foreach ($boardMembers as $boardMember)
-                <li class="d-flex justify-content-between align-items-center board-member-item"
+                <li class="d-flex justify-content-between align-items-center checklist-member-item"
                     data-member-id="{{ $boardMember['id'] }}" data-check-list-item="{{$checklistItem->id}}"
                     data-member-name="{{ $boardMember['name'] }}">
                     <div class="d-flex align-items-center">
@@ -93,78 +93,3 @@
         </div>
     @endif
 </form>
-
-<script>
-
-    function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
-        if (document.getElementById('card-member-' + memberId + '-' + checklistItemId)) {
-            alert(memberName + " đã có trong danh sách thành viên của thẻ.");
-            return;
-        }
-        $.ajax({
-            url: `/checklistItem/addMemberChecklist`,
-            type: 'POST',
-            data: {
-                user_id: memberId,
-                check_list_item_id: checklistItemId,
-            },
-            success: function(response) {
-                var cardMembersList = document.getElementById('cardMembersList' + checklistiemid);
-                var listItem = `
-                <li id="card-member-${memberId}-${checklistItemId}" class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip" data-bs-placement="top" title="${memberName}">
-                            <div class="avatar-sm">
-                                <div class="avatar-title rounded-circle bg-light text-primary">
-                                    ${memberName.charAt(0).toUpperCase()}
-                                </div>
-                            </div>
-                        </a>
-                        <p class="ms-3 mt-3">${memberName}</p>
-                    </div>
-                    <i class="ri-close-line fs-20" onclick="removeMemberFromCard(${memberId}, ${checklistItemId})"></i>
-                </li>
-            `;
-                cardMembersList.innerHTML += listItem;
-                console.log('Thành viên đã được thêm vào thẻ thành công.');
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        });
-    }
-
-
-    function removeMemberFromCard(memberId, checklistItemId) {
-        $.ajax({
-            url: `/checklistItem/deleteMemberChecklist`,
-            type: 'POST',
-            data: {
-                user_id: memberId,
-                check_list_item_id:checklistItemId
-            },
-            success: function(response) {
-                var memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
-                if (memberElement) {
-                    memberElement.remove();
-                }
-                console.log('Thành viên đã được xóa thành công khỏi thẻ.');
-            },
-            error: function(xhr) {
-                alert('Có lỗi xảy ra khi xóa thành viên.');
-                console.log(xhr.responseText);
-            }
-        });
-    }
-
-
-    // Thêm sự kiện click cho từng thành viên của bảng
-    document.querySelectorAll('.board-member-item').forEach(item => {
-        item.addEventListener('click', function () {
-            var memberId = this.getAttribute('data-member-id');
-            var memberName = this.getAttribute('data-member-name');
-            var check_list_item_id = this.getAttribute('data-check-list-item');
-            addMemberToCheckListItem(memberId, memberName,check_list_item_id);
-        });
-    });
-</script>

@@ -187,6 +187,7 @@
                                                            class="form-check-input"
                                                            onchange="updateTask2({{ $task->id }})" name="progress"
                                                            @if($task->progress == 100 ) checked @endif />
+
                                                     @if(!empty($task->end_date) || !empty($task->start_date))
                                                         <p class="ms-2 mt-3">{{ $task->end_date }}</p>
                                                     @endif
@@ -241,126 +242,131 @@
                                                 <p class="fs-18 ms-2 mt-1">Tệp đính kèm</p>
                                             </section>
                                             @if(false)
-                                            <div class="ps-4">
-                                                <strong>Thẻ tên dự án</strong>
-                                                <div class="d-flex flex-wrap row mt-2" style="align-items: start">
-                                                    <!-- start card -->
-                                                    <div class="col-6">
-                                                        <div class="card card-height-100">
-                                                            <div class="card-body">
-                                                                <div class="d-flex flex-column h-100">
-                                                                    <div class="d-flex">
-                                                                        <div class="flex-grow-1">
-                                                                            <p class="text-muted"></p>
-                                                                        </div>
-                                                                        <!--   cài đặt thẻ link-->
-                                                                        <div class="flex-shrink-0">
-                                                                            <div
-                                                                                class="d-flex gap-1 align-items-center">
-                                                                                <i class="ri-more-fill fs-20 cursor-pointer"
-                                                                                   data-bs-toggle="dropdown"
-                                                                                   aria-haspopup="true"
-                                                                                   aria-expanded="false"></i>
+                                                <div class="ps-4">
+                                                    <strong>Thẻ tên dự án</strong>
+                                                    <div class="d-flex flex-wrap row mt-2" style="align-items: start">
+                                                        <!-- start card -->
+                                                        <div class="col-6">
+                                                            <div class="card card-height-100">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex flex-column h-100">
+                                                                        <div class="d-flex">
+                                                                            <div class="flex-grow-1">
+                                                                                <p class="text-muted"></p>
+                                                                            </div>
+                                                                            <!--   cài đặt thẻ link-->
+                                                                            <div class="flex-shrink-0">
                                                                                 <div
-                                                                                    class="dropdown-menu dropdown-menu-md"
-                                                                                    style="padding: 15px 15px 0 15px">
-                                                                                    <h5 class="text-center">Thao tác
-                                                                                        mục</h5>
-                                                                                    <p class="mt-2">liên kết thẻ</p>
-                                                                                    <p>Xóa</p>
+                                                                                    class="d-flex gap-1 align-items-center">
+                                                                                    <i class="ri-more-fill fs-20 cursor-pointer"
+                                                                                       data-bs-toggle="dropdown"
+                                                                                       aria-haspopup="true"
+                                                                                       aria-expanded="false"></i>
+                                                                                    <div
+                                                                                        class="dropdown-menu dropdown-menu-md"
+                                                                                        style="padding: 15px 15px 0 15px">
+                                                                                        <h5 class="text-center">Thao tác
+                                                                                            mục</h5>
+                                                                                        <p class="mt-2">liên kết thẻ</p>
+                                                                                        <p>Xóa</p>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
 
-                                                                    <div class="d-flex mb-2 rounded bg-info-subtle p-2">
-                                                                        <div class="flex-grow-1">
-                                                                            <h5>Tên thẻ</h5>
-                                                                            <div class="d-flex">
+                                                                        <div
+                                                                            class="d-flex mb-2 rounded bg-info-subtle p-2">
+                                                                            <div class="flex-grow-1">
+                                                                                <h5>Tên thẻ</h5>
+                                                                                <div class="d-flex">
                                                                     <span class="badge bg-success me-1">giao
                                                                         diện</span>
-                                                                                <span
-                                                                                    class="badge bg-danger">code khó</span>
-                                                                            </div>
-                                                                            <div
-                                                                                class="mt-3 d-flex justify-content-between">
-                                                                                <div class="avatar-group">
-                                                                                    <a href="javascript: void(0);"
-                                                                                       class="avatar-group-item border-0"
-                                                                                       data-bs-toggle="tooltip"
-                                                                                       data-bs-trigger="hover"
-                                                                                       data-bs-placement="top"
-                                                                                       title="Darline Williams">
-                                                                                        <div class="avatar-xxs">
-                                                                                            <img
-                                                                                                src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                                                alt=""
-                                                                                                class="rounded-circle img-fluid"/>
-                                                                                        </div>
-                                                                                    </a>
-
+                                                                                    <span
+                                                                                        class="badge bg-danger">code khó</span>
                                                                                 </div>
-                                                                                <ul class="link-inline mb-0">
-                                                                                    <!-- theo dõi -->
-                                                                                    <li class="list-inline-item">
-                                                                                        <a href="javascript:void(0)"
-                                                                                           class="text-muted"><i
-                                                                                                class="ri-eye-line align-bottom"></i>
-                                                                                            04</a>
-                                                                                    </li>
-                                                                                    <!-- bình luận -->
-                                                                                    <li class="list-inline-item">
-                                                                                        <a href="javascript:void(0)"
-                                                                                           class="text-muted"><i
-                                                                                                class="ri-question-answer-line align-bottom"></i>
-                                                                                            19</a>
-                                                                                    </li>
-                                                                                    <!-- tệp đính kèm -->
-                                                                                    <li class="list-inline-item">
-                                                                                        <a href="javascript:void(0)"
-                                                                                           class="text-muted"><i
-                                                                                                class="ri-attachment-2 align-bottom"></i>
-                                                                                            02</a>
-                                                                                    </li>
-                                                                                    <!-- checklist -->
-                                                                                    <li class="list-inline-item">
-                                                                                        <a href="javascript:void(0)"
-                                                                                           class="text-muted"><i
-                                                                                                class="ri-checkbox-line align-bottom"></i>
-                                                                                            2/4</a>
-                                                                                    </li>
-                                                                                </ul>
+                                                                                <div
+                                                                                    class="mt-3 d-flex justify-content-between">
+                                                                                    <div class="avatar-group">
+                                                                                        <a href="javascript: void(0);"
+                                                                                           class="avatar-group-item border-0"
+                                                                                           data-bs-toggle="tooltip"
+                                                                                           data-bs-trigger="hover"
+                                                                                           data-bs-placement="top"
+                                                                                           title="Darline Williams">
+                                                                                            <div class="avatar-xxs">
+                                                                                                <img
+                                                                                                    src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                                                                    alt=""
+                                                                                                    class="rounded-circle img-fluid"/>
+                                                                                            </div>
+                                                                                        </a>
+
+                                                                                    </div>
+                                                                                    <ul class="link-inline mb-0">
+                                                                                        <!-- theo dõi -->
+                                                                                        <li class="list-inline-item">
+                                                                                            <a href="javascript:void(0)"
+                                                                                               class="text-muted"><i
+                                                                                                    class="ri-eye-line align-bottom"></i>
+                                                                                                04</a>
+                                                                                        </li>
+                                                                                        <!-- bình luận -->
+                                                                                        <li class="list-inline-item">
+                                                                                            <a href="javascript:void(0)"
+                                                                                               class="text-muted"><i
+                                                                                                    class="ri-question-answer-line align-bottom"></i>
+                                                                                                19</a>
+                                                                                        </li>
+                                                                                        <!-- tệp đính kèm -->
+                                                                                        <li class="list-inline-item">
+                                                                                            <a href="javascript:void(0)"
+                                                                                               class="text-muted"><i
+                                                                                                    class="ri-attachment-2 align-bottom"></i>
+                                                                                                02</a>
+                                                                                        </li>
+                                                                                        <!-- checklist -->
+                                                                                        <li class="list-inline-item">
+                                                                                            <a href="javascript:void(0)"
+                                                                                               class="text-muted"><i
+                                                                                                    class="ri-checkbox-line align-bottom"></i>
+                                                                                                2/4</a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <!-- end card body -->
+                                                                <div
+                                                                    class="card-footer bg-transparent border-top-dashed py-2">
+                                                                    <div class="flex-grow-1">Tên bảng : Tên list</div>
+                                                                </div>
+                                                                <!-- end card footer -->
                                                             </div>
-                                                            <!-- end card body -->
-                                                            <div
-                                                                class="card-footer bg-transparent border-top-dashed py-2">
-                                                                <div class="flex-grow-1">Tên bảng : Tên list</div>
-                                                            </div>
-                                                            <!-- end card footer -->
+                                                            <!-- end card -->
                                                         </div>
-                                                        <!-- end card -->
+
                                                     </div>
 
                                                 </div>
-
-                                            </div>
                                             @endif
                                             @if(!empty($task->attachments)) @endif
                                             <div class="ps-4">
                                                 <strong>Tệp </strong>
-                                                <div class="table-responsive table-hover table-card attachments-container" style="max-height: 400px; overflow-y: auto;">
+                                                <div
+                                                    class="table-responsive table-hover table-card attachments-container"
+                                                    style="max-height: 400px; overflow-y: auto;">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
                                                         @foreach($task->attachments as $attachment)
-                                                        <tr class="cursor-pointer attachment_{{$attachment->id}}">
-                                                            <td class="col-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                                <img src="{{ asset('storage/' . $attachment->file_name) }}"
-                                                                     alt="Attachment Image"
-                                                                     style="
+                                                            <tr class="cursor-pointer attachment_{{$attachment->id}}">
+                                                                <td class="col-1" data-bs-toggle="modal"
+                                                                    data-bs-target="#exampleModal">
+                                                                    <img
+                                                                        src="{{ asset('storage/' . $attachment->file_name) }}"
+                                                                        alt="Attachment Image"
+                                                                        style="
                                                                      width: 100px;
                                                                      height: auto;
                                                                      object-fit: cover;
@@ -368,29 +374,33 @@
                                                                  ">
 
 
-                                                            </td>
-                                                            <td class="text-start name_attachment" id="name_display_{{ $attachment->id }}">
-                                                                {{ $attachment->name }}
-                                                            </td>
-                                                            <td class="text-end">
-                                                                <i class="ri-more-fill fs-20 cursor-pointer"
-                                                                   data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                   aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-md"
-                                                                     style="padding: 15px 15px 0 15px">
-                                                                    <input type="text" name="name" class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                                           id="name_attachment_{{ $attachment->id }}"
-                                                                           value="{{ $attachment->name }}"
-                                                                           onchange="updateTaskAttachment({{ $attachment->id }})" />
-                                                                    <p class="mt-2">Chỉnh sửa</p>
-                                                                    <p class="mt-2">Nhận xét</p>
-                                                                    <p id="attachment_id_{{ $attachment->id }}" class="cursor-pointer text-danger"
-                                                                       onclick="deleteTaskAttachment({{ $attachment->id }})">Xóa</p>
+                                                                </td>
+                                                                <td class="text-start name_attachment"
+                                                                    id="name_display_{{ $attachment->id }}">
+                                                                    {{ $attachment->name }}
+                                                                </td>
+                                                                <td class="text-end">
+                                                                    <i class="ri-more-fill fs-20 cursor-pointer"
+                                                                       data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                       aria-expanded="false"></i>
+                                                                    <div class="dropdown-menu dropdown-menu-md"
+                                                                         style="padding: 15px 15px 0 15px">
+                                                                        <input type="text" name="name"
+                                                                               class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                                               id="name_attachment_{{ $attachment->id }}"
+                                                                               value="{{ $attachment->name }}"
+                                                                               onchange="updateTaskAttachment({{ $attachment->id }})"/>
+                                                                        <p class="mt-2">Chỉnh sửa</p>
+                                                                        <p class="mt-2">Nhận xét</p>
+                                                                        <p id="attachment_id_{{ $attachment->id }}"
+                                                                           class="cursor-pointer text-danger"
+                                                                           onclick="deleteTaskAttachment({{ $attachment->id }})">
+                                                                            Xóa</p>
 
-                                                                </div>
-                                                            </td>
+                                                                    </div>
+                                                                </td>
 
-                                                        </tr>
+                                                            </tr>
                                                         @endforeach
                                                         </tbody>
                                                     </table>
@@ -623,11 +633,11 @@
                                                 @endif
                                                 <div class="ms-2">
                                                     <form class=" flex-column">
-                                                    <textarea name="content" class="form-control editor"
-                                                              id="comment_{{$task->id}}"
-                                                              placeholder="Viết bình luận"></textarea>
+                                                        <textarea name="content" class="form-control editor"
+                                                                  id="comment_task_{{$task->id}}"
+                                                                  placeholder="Viết bình luận"></textarea>
                                                         <button type="button" class="btn btn-primary mt-2"
-                                                                onclick=" addTaskComment({{$task->id}})">Lưu
+                                                                onclick="addTaskComment({{$task->id}},{{Auth::id()}})">Lưu
                                                         </button>
                                                     </form>
                                                 </div>
@@ -985,282 +995,11 @@
 
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const notificationElements = document.querySelectorAll('[id^="notification_"]');
 
-        // Duyệt qua từng phần tử để thêm sự kiện click
-        notificationElements.forEach(notification => {
-            notification.addEventListener('click', function () {
-                // Lấy taskId từ id của phần tử
-                const taskId = this.id.split('_')[1];
-
-                // Lấy các phần tử liên quan
-                const followElement = document.getElementById(`notification_follow_${taskId}`);
-                const contentElement = document.getElementById(`notification_content_${taskId}`);
-                const iconElement = document.getElementById(`notification_icon_${taskId}`);
-
-                // Kiểm tra trạng thái hiện tại
-                if (followElement.classList.contains('d-none')) {
-                    // Nếu đang ẩn (chưa theo dõi), bật theo dõi
-                    followElement.classList.remove('d-none'); // Hiện icon dấu check
-                    contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
-                    iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line');// Thay đổi icon
-                } else {
-                    // Nếu đang hiển thị (đang theo dõi), bỏ theo dõi
-                    followElement.classList.add('d-none'); // Ẩn icon dấu check
-                    contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
-
-                    iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line');// Thay đổi icon về cũ
-                }
-
-                // In ra taskId để kiểm tra
-                console.log('Bạn đã click vào thông báo của task với ID:', taskId);
-            });
-        });
-
-
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                const taskId = this.id.split('due_date_checkbox_')[1];  // Lấy taskId từ id của checkbox
-
-                const successBadge = document.getElementById(`due_date_success_${taskId}`);
-                const dueBadge = document.getElementById(`due_date_due_${taskId}`);
-
-                if (!successBadge || !dueBadge) {
-                    console.error('Không tìm thấy badge với id tương ứng:', taskId);
-                    return;
-                }
-
-                if (this.checked) {
-                    console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
-                    successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
-                    dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
-                } else {
-                    console.log('Chuyển sang "Quá hạn" cho task:', taskId);
-                    successBadge.classList.add('d-none'); // Ẩn "Hoàn tất"
-                    dueBadge.classList.remove('d-none'); // Hiện "Quá hạn"
-                }
-            });
-        });
-    });
-
-    function updateTask2(taskId) {
-        var description = editors['description_' + taskId].getData();
-        var checkbox = document.getElementById('due_date_checkbox_' + taskId);
-        var image = document.getElementById('image_task_' + taskId);
-
-        var formData = new FormData();
-        formData.append('description', description);
-        formData.append('text', $('#text_' + taskId).val());
-        formData.append('progress', checkbox.checked ? 100 : 0);
-
-        // Kiểm tra và thêm file ảnh nếu có
-        if (image.files.length > 0) {
-            console.log('xxxx'),
-                formData.append('image', image.files[0]);
-        }
-        formData.append('_method', 'PUT');
-        console.log([...formData]);
-        console.log(image);
-        $.ajax({
-            url: `/tasks/` + taskId,
-            method: "POST",  // Sử dụng POST nhưng với method PUT
-            dataType: 'json',
-            data: formData,
-            processData: false,  // Bắt buộc phải false để không xử lý FormData thành chuỗi
-            contentType: false,  // Bắt buộc phải false để đặt đúng 'multipart/form-data'
-            success: function (response) {
-                console.log('Task updated successfully:', response);
-            },
-            error: function (xhr) {
-                console.error('An error occurred:', xhr.responseText);
-            }
-        });
-    }
-
-    function updateTaskMember(taskId, userId) {
-
-        $.ajax({
-            url: `/tasks/${taskId}/updateFolow`,
-            method: "PUT",
-            data: {
-                task_id: taskId,
-                user_id: userId,
-            },
-            success: function (response) {
-                console.log('Người dùng đã folow Task:', response);
-
-            },
-            error: function (xhr) {
-                console.error('An error occurred:', xhr.responseText);
-            }
-        });
-    }
-
-    function FormCheckListItem(checkListId) {
-        var formData = {
-            check_list_id: $('#check_list_id_' + checkListId).val(),
-            name: $('#name_check_list_item_' + checkListId).val()
-        };
-        console.log(formData)
-        if (!formData.name.trim()) {
-            alert('Tiêu đề không được để trống!');
-            return false;
-        }
-
-        $.ajax({
-            url: `/tasks/checklist/checklistItem/create`,
-            type: 'POST',
-            data: formData,
-            success: function (response) {
-                console.log('CheckListItem đã được thêm thành công!', response);
-                $(this).find('button[type="submit"]').prop('disabled', false);
-            },
-            error: function (xhr) {
-                alert('Đã xảy ra lỗi!');
-                console.log(xhr.responseText);
-                $(this).find('button[type="submit"]').prop('disabled', false);
-            }
-        });
-
-        return false;
-    }
-
-    $(document).ready(function () {
-        $('.form-check-input-checkList').on('change', function () {
-            let checkListItemId = $(this).data('checklist-id');
-            console.log(checkListItemId)
-            let checkbox = $(this);
-
-            if (!checkbox.length) {
-                console.log('Không tìm thấy checkbox với checkListItemId:', checkListItemId);
-                return;
-            }
-            var formData = new FormData();
-            formData.append('is_complete', checkbox.is(':checked') ? 1 : 0);
-            formData.append('id', checkListItemId);
-
-
-            $.ajax({
-                url: `/tasks/checklist/checklistItem/update`,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    console.log('ChecklistItem đã được cập nhật thành công!', response);
-                },
-                error: function (xhr) {
-                    alert('Đã xảy ra lỗi!');
-                    console.log(xhr.responseText);
-                }
-            });
-        });
-    });
-    function updateTaskAttachment(attachmentId) {
-        var formData = {
-            name: $('#name_attachment_' + attachmentId).val(),
-        };
-        var nameDisplay = document.getElementById('name_display_' + attachmentId);
-        if (nameDisplay) {
-            nameDisplay.textContent = formData.name;
-        }
-        $.ajax({
-            url: `/tasks/attachments/${attachmentId}/update`, // Lấy URL từ thuộc tính action của form
-            method: 'PUT', // Lấy method (POST) từ thuộc tính method của form
-            data: formData, // Lấy toàn bộ dữ liệu của form
-            success: function(response) {
-                // Xử lý khi gửi thành công
-                console.log('Form submitted successfully');
-                console.log(response); // Dữ liệu phản hồi từ server
-            },
-            error: function(xhr) {
-                // Xử lý khi gửi thất bại
-                console.log('Error occurred:', xhr);
-            }
-        });
-    }
-    function deleteTaskAttachment(attachmentId) {
-            $.ajax({
-                url: `/tasks/attachments/${attachmentId}/destroy`,
-                method: 'DELETE',
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Tệp đã được xóa thành công');
-                        document.querySelector(`.attachment_${attachmentId}`).remove();
-                    } else {
-                        console.log('Có lỗi xảy ra khi xóa tệp:', response.msg);
-                    }
-                },
-                error: function(xhr) {
-                    console.log('Có lỗi xảy ra khi gọi API:', xhr.responseText);
-                }
-            });
-    }
-    function addTaskComment(taskId) {
-        var content = editors['comment_' + taskId].getData();
-        var user_id =Auth::id();
-        var formData = {
-            content:content,
-            user_id:user_id,
-            task_id:taskId,
-            method: 'POST'
-        };
-        console.log(formData);
-        $.ajax({
-            url: `/tasks/comments/create`,
-            type: 'POST',
-            data: formData,
-            success: function (response) {
-                console.log('taskComment đã được thêm thành công!', response);
-                $(this).find('button[type="submit"]').prop('disabled', false);
-            },
-            error: function (xhr) {
-                alert('Đã xảy ra lỗi!');
-                console.log(xhr.responseText);
-                $(this).find('button[type="submit"]').prop('disabled', false);
-            }
-        });
-
-        return false;
-    }
 
 
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Lấy tất cả các checkbox
-        const checkboxes = document.querySelectorAll('.form-check-input-checkList');
 
-        function updateProgressBar(taskId) {
-            // Lọc các checkbox thuộc về task có taskId cụ thể
-            const taskCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.getAttribute('data-task-id') === taskId);
-            const totalCheckboxes = taskCheckboxes.length;
-            const checkedCheckboxes = taskCheckboxes.filter(checkbox => checkbox.checked).length;
-
-            // Tính phần trăm hoàn thành
-            const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
-
-            // Cập nhật thanh tiến trình cho task tương ứng
-            const progressBar = document.getElementById('progress-bar-' + taskId);
-            progressBar.style.width = percentCompleted + '%';
-            progressBar.setAttribute('aria-valuenow', percentCompleted);
-            progressBar.innerHTML = Math.round(percentCompleted) + '%'; // Làm tròn phần trăm
-        }
-
-        // Lắng nghe sự kiện thay đổi trên từng checkbox
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                const taskId = this.getAttribute('data-task-id');
-                updateProgressBar(taskId);
-            });
-        });
-
-        // Gọi hàm để cập nhật thanh tiến trình ban đầu cho mỗi task
-        const tasks = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-task-id')));
-        tasks.forEach(taskId => updateProgressBar(taskId));
-    });
 </script>
