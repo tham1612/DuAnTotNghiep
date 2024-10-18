@@ -9,7 +9,7 @@
         <!-- thành viên của thẻ -->
     <div class="mt-3">
         <label class="fs-14">Thành viên của thẻ</label>
-        <ul id="cardMembersList-{{$checklistItem->id}}" class="" style="list-style: none; margin-left: -32px">
+        <ul id="cardMembersList" class="" style="list-style: none; margin-left: -32px">
             @if(!empty($checklistItem->checkListItemMembers))
                 @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
                     <li id="card-member-{{$checkListItemMember->user->id}}-{{$checkListItemMember->check_list_item_id}}" class="d-flex justify-content-between align-items-center">

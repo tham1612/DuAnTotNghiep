@@ -155,6 +155,7 @@ function updateTask2(taskId) {
     formData.append('text', $('#text_' + taskId).val());
     formData.append('progress', checkbox.checked ? 100 : 0);
 
+
     // Kiểm tra và thêm file ảnh nếu có
     if (image.files.length > 0) {
         console.log('xxxx'),
@@ -470,8 +471,8 @@ $('.form-check-input-checkList').on('change', function () {
 
 
     $.ajax({
-        url: `/tasks/checklist/checklistItem/update`,
-        type: 'POST',
+        url: `/tasks/checklist/checklistItem/${checkListItemId}/update`,
+        type: 'PUT',
         data: formData,
         contentType: false,
         processData: false,
@@ -600,7 +601,7 @@ function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
             check_list_item_id: checklistItemId,
         },
         success: function (response) {
-            var cardMembersList = document.getElementById('cardMembersList' + checklistiemid);
+            var cardMembersList = document.getElementById('cardMembersList' );
             var listItem = `
                 <li id="card-member-${memberId}-${checklistItemId}" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
@@ -717,6 +718,20 @@ function submitUpdateDateCheckListItem(checklistItemId) {
         data: formData,
         success: function (response) {
             console.log('checklistItem đã được cập nhật thành công!', response);
+            if (formData.end_date) {
+                // Định dạng ngày thành yyyy-mm-dd hh:mm:ss
+                var formattedDate = new Date(formData.end_date).toLocaleString('sv-SE', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                }).replace('T', ' ');
+
+                $('#dropdownToggle_dateChecklistItem_' + checklistItemId).html(formattedDate);
+            }
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
