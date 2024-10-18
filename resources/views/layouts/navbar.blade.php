@@ -6,11 +6,12 @@
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
                 <button type="button"
                         class="btn avatar-xs mt-n1 p-0 favourite-btn
-                    @if( $member_Is_star == 1) active @else  @endif"
+                    @if( $member_Is_star) active @endif"
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
                     <span class="avatar-title bg-transparent fs-15">
                         <i class="ri-star-fill fs-20 mx-2"></i>
+
                     </span>
                 </button>
                 <div class="mx-2 cursor-pointer" id="dropdownToggle" aria-expanded="false" data-bs-offset="10,20">
@@ -292,75 +293,3 @@
     </div>
 
 </div>
-<script>
-    document.getElementById('dropdownToggle').addEventListener('click', function () {
-        var dropdownMenu = document.getElementById('dropdownMenu');
-        dropdownMenu.style.display = (dropdownMenu.style.display === 'none') ? 'block' : 'none';
-    });
-
-    document.getElementById('dropdownMenu').addEventListener('click', function (e) {
-        e.stopPropagation();
-    });
-
-    document.getElementById('closeDropdown').addEventListener('click', function () {
-        document.getElementById('dropdownMenu').style.display = 'none';
-    });
-
-    document.getElementById('saveChanges').addEventListener('click', function () {
-        document.getElementById('dropdownMenu').style.display = 'none';
-    });
-
-    document.addEventListener('click', function (event) {
-        var dropdownMenu = document.getElementById('dropdownMenu');
-        var dropdownToggle = document.getElementById('dropdownToggle');
-        if (!dropdownMenu.contains(event.target) && !dropdownToggle.contains(event.target)) {
-            dropdownMenu.style.display = 'none';
-        }
-    });
-
-    function updateIsStar(boardId, userId,) {
-
-        $.ajax({
-            url: `/b/${boardId}/updateBoardMember`,
-            method: "PUT",
-            data: {
-                board_id: boardId,
-                user_id: userId,
-            },
-            success: function (response) {
-                console.log('Người dùng đã đánh dấu bảng nối bật:', response);
-            },
-            error: function (xhr) {
-                console.error('An error occurred:', xhr.responseText);
-            }
-        });
-    }
-
-    function submitForm(boardId) {
-
-        var formData = {
-            access: $('input[name="access"]:checked').val(),
-        }
-        $.ajax({
-            url: `/b/${boardId}/update`,
-            method: 'PUT',
-            data: formData,
-            success: function (response) {
-                $('#dropdownMenu').hide();
-                if (formData.access === 'private') {
-                    $('#accessIcon_' + boardId).removeClass().addClass('ri-lock-2-line fs-20 text-danger');
-                    $('#accessText_' + boardId).text('Riêng tư');
-                } else if (formData.access === 'public') {
-                    $('#accessIcon_' + boardId).removeClass().addClass('ri-shield-user-fill fs-20 text-primary');
-                    $('#accessText_' + boardId).text('Công khai');
-                }
-            },
-            error: function (xhr) {
-                console.error('Lỗi xảy ra:', xhr.responseText);
-            }
-        });
-
-        return false;
-    }
-</script>
-
