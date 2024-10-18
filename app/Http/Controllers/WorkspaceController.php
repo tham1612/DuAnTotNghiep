@@ -92,8 +92,6 @@ class WorkspaceController extends Controller
                 ->whereNot('id', $workspaceMember->id)
                 ->update(['is_active' => 0]);
 
-
-
             // lưu lại hoạt động
             activity('Board Create')
                 ->causedBy(Auth::user())
@@ -102,7 +100,6 @@ class WorkspaceController extends Controller
                     $activity->Workspace_id = $workspace->id;
                 })
                 ->log('người dùng đã tạo bảng mới trong ws');
-
 
             //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời email vào workspace
             if (Session::get('invited') == "case2") {
@@ -449,7 +446,7 @@ class WorkspaceController extends Controller
                 ->where('workspace_id', $request->workspace_id)
                 ->update([
                     'is_accept_invite' => 0,
-                    'authorize'=>"Member"
+                    'authorize' => "Member"
                 ]);
             return redirect()->route('showFormEditWorkspace')->with([
                 'msg' => 'Đã thêm thành viên vào không gian làm việc',

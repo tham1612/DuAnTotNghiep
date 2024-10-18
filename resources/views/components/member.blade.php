@@ -411,16 +411,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <select name="members" class="form-select invite-member-select">
-                    <option value="">Thành viên trong không gian làm việc</option>
-                    @foreach ($wspMember as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                    @endforeach
-                </select>
+                @if ($wspMember->count() > 0)
+                    <select name="members" class="form-select invite-member-select">
+                        <option value="">Thành viên trong không gian làm việc</option>
+                        @foreach ($wspMember as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                @else
+                    <div class="btn btn-danger">Tất cả thành viên trong không gian làm việc đã tham gia vào bảng</div>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" id="inviteButton">Mời thành viên</button>
+                @if ($wspMember->count() > 0)
+                    <button type="button" class="btn btn-primary" id="inviteButton">Mời thành viên</button>
+                @endif
             </div>
         </div>
     </div>
@@ -484,7 +490,7 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        alert(`Đã thêm thành viên ${memberName} thành công`);
+                        console.log(`Đã thêm thành viên ${memberName} thành công`);
                         window.location
                             .reload(); // Tải lại trang sau khi mời thành viên thành công
                     } else {
