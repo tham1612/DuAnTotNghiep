@@ -233,13 +233,14 @@
                                                                     onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
                                         </div>
                                     </div>
-                                    @if(false)
+                                    @if(!empty($task->attachments))
                                         <!-- tệp -->
                                         <div class="row mt-3">
                                             <section class="d-flex">
                                                 <i class="ri-link-m fs-22"></i>
                                                 <p class="fs-18 ms-2 mt-1">Tệp đính kèm</p>
                                             </section>
+                                            @if(false)
                                             <div class="ps-4">
                                                 <strong>Thẻ tên dự án</strong>
                                                 <div class="d-flex flex-wrap row mt-2" style="align-items: start">
@@ -347,29 +348,50 @@
                                                 </div>
 
                                             </div>
+                                            @endif
+                                            @if(!empty($task->attachments)) @endif
                                             <div class="ps-4">
-                                                <strong>Tệp & liên kết</strong>
-                                                <div class="table-responsive table-hover table-card">
+                                                <strong>Tệp </strong>
+                                                <div class="table-responsive table-hover table-card attachments-container" style="max-height: 400px; overflow-y: auto;">
                                                     <table class="table table-nowrap mt-4">
                                                         <tbody>
-                                                        <tr class="cursor-pointer">
-                                                            <td class="col-1">
-                                                                <i class="ri-table-line fs-20 text-primary"></i>
+                                                        @foreach($task->attachments as $attachment)
+                                                        <tr class="cursor-pointer attachment_{{$attachment->id}}">
+                                                            <td class="col-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                                <img src="{{ asset('storage/' . $attachment->file_name) }}"
+                                                                     alt="Attachment Image"
+                                                                     style="
+                                                                     width: 100px;
+                                                                     height: auto;
+                                                                     object-fit: cover;
+                                                                     border-radius: 8px;
+                                                                 ">
+
+
                                                             </td>
-                                                            <td class="text-start">FPT Polytecnic</td>
+                                                            <td class="text-start name_attachment" id="name_display_{{ $attachment->id }}">
+                                                                {{ $attachment->name }}
+                                                            </td>
                                                             <td class="text-end">
                                                                 <i class="ri-more-fill fs-20 cursor-pointer"
                                                                    data-bs-toggle="dropdown" aria-haspopup="true"
                                                                    aria-expanded="false"></i>
                                                                 <div class="dropdown-menu dropdown-menu-md"
                                                                      style="padding: 15px 15px 0 15px">
-                                                                    <h5 class="text-center">Thao tác mục</h5>
+                                                                    <input type="text" name="name" class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                                           id="name_attachment_{{ $attachment->id }}"
+                                                                           value="{{ $attachment->name }}"
+                                                                           onchange="updateTaskAttachment({{ $attachment->id }})" />
                                                                     <p class="mt-2">Chỉnh sửa</p>
                                                                     <p class="mt-2">Nhận xét</p>
-                                                                    <p>Xóa</p>
+                                                                    <p id="attachment_id_{{ $attachment->id }}" class="cursor-pointer text-danger"
+                                                                       onclick="deleteTaskAttachment({{ $attachment->id }})">Xóa</p>
+
                                                                 </div>
                                                             </td>
+
                                                         </tr>
+                                                        @endforeach
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -600,11 +622,12 @@
                                                     </div>
                                                 @endif
                                                 <div class="ms-2">
-                                                    <form action="#" method="post" class=" flex-column">
+                                                    <form class=" flex-column">
                                                     <textarea name="content" class="form-control editor"
                                                               id="comment_{{$task->id}}"
                                                               placeholder="Viết bình luận"></textarea>
-                                                        <button type="submit" class="btn btn-primary mt-2">Lưu
+                                                        <button type="button" class="btn btn-primary mt-2"
+                                                                onclick=" addTaskComment({{$task->id}})">Lưu
                                                         </button>
                                                     </form>
                                                 </div>
@@ -1136,6 +1159,73 @@
             });
         });
     });
+    function updateTaskAttachment(attachmentId) {
+        var formData = {
+            name: $('#name_attachment_' + attachmentId).val(),
+        };
+        var nameDisplay = document.getElementById('name_display_' + attachmentId);
+        if (nameDisplay) {
+            nameDisplay.textContent = formData.name;
+        }
+        $.ajax({
+            url: `/tasks/attachments/${attachmentId}/update`, // Lấy URL từ thuộc tính action của form
+            method: 'PUT', // Lấy method (POST) từ thuộc tính method của form
+            data: formData, // Lấy toàn bộ dữ liệu của form
+            success: function(response) {
+                // Xử lý khi gửi thành công
+                console.log('Form submitted successfully');
+                console.log(response); // Dữ liệu phản hồi từ server
+            },
+            error: function(xhr) {
+                // Xử lý khi gửi thất bại
+                console.log('Error occurred:', xhr);
+            }
+        });
+    }
+    function deleteTaskAttachment(attachmentId) {
+            $.ajax({
+                url: `/tasks/attachments/${attachmentId}/destroy`,
+                method: 'DELETE',
+                success: function(response) {
+                    if (response.success) {
+                        console.log('Tệp đã được xóa thành công');
+                        document.querySelector(`.attachment_${attachmentId}`).remove();
+                    } else {
+                        console.log('Có lỗi xảy ra khi xóa tệp:', response.msg);
+                    }
+                },
+                error: function(xhr) {
+                    console.log('Có lỗi xảy ra khi gọi API:', xhr.responseText);
+                }
+            });
+    }
+    function addTaskComment(taskId) {
+        var content = editors['comment_' + taskId].getData();
+        var user_id =Auth::id();
+        var formData = {
+            content:content,
+            user_id:user_id,
+            task_id:taskId,
+            method: 'POST'
+        };
+        console.log(formData);
+        $.ajax({
+            url: `/tasks/comments/create`,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                console.log('taskComment đã được thêm thành công!', response);
+                $(this).find('button[type="submit"]').prop('disabled', false);
+            },
+            error: function (xhr) {
+                alert('Đã xảy ra lỗi!');
+                console.log(xhr.responseText);
+                $(this).find('button[type="submit"]').prop('disabled', false);
+            }
+        });
+
+        return false;
+    }
 
 
 </script>

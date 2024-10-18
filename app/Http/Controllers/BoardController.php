@@ -200,6 +200,7 @@ class BoardController extends Controller
                             });
                         }
 
+
                         // Điều kiện 2: Ngày hết hạn
                         if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
                             $subQuery->where(function ($dateQuery) use ($request) {
@@ -234,7 +235,7 @@ class BoardController extends Controller
                             });
                         }
                     })
-                        ->with(['members', 'checkList', 'checkList.checkListItems', 'checkList.checkListItems.checkListItemMembers', 'tags', 'followMembers']);
+                        ->with(['members', 'checkList', 'checkList.checkListItems', 'checkList.checkListItems.checkListItemMembers', 'tags', 'followMembers','attachments']);
                 }]);
             }
         ]);

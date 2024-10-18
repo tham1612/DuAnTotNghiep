@@ -140,6 +140,14 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('tags.create');
         Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
             ->name('tags.update');
+        Route::post('/tasks/attachments/create', [\App\Http\Controllers\AttachmentController::class, 'store'])
+            ->name('attachments.create');
+        Route::put('/tasks/attachments/{id}/update', [\App\Http\Controllers\AttachmentController::class, 'update'])
+            ->name('attachments.update');
+        Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
+            ->name('attachments.destroy');
+        Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
+            ->name('comments.create');
     });
 
 
