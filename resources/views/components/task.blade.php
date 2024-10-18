@@ -477,7 +477,7 @@
                                                                             <span data-bs-toggle="dropdown"
                                                                                   aria-haspopup="true"
                                                                                   aria-expanded="false"
-                                                                                  id="dropdownToggle_{{$checklistItem->id}}">
+                                                                                  id="dropdownToggle_dateChecklistItem_{{$checklistItem->id}}">
                                                                                     {{$checklistItem->end_date}}
                                                                                 </span>
 
@@ -486,11 +486,11 @@
                                                                                data-bs-toggle="dropdown"
                                                                                aria-haspopup="true"
                                                                                aria-expanded="false"
-                                                                               id="dropdownToggle_{{$checklistItem->id}}"></i>
+                                                                               id="dropdownToggle_dateChecklistItem_{{$checklistItem->id}}"></i>
                                                                         @endif
                                                                         <div
                                                                             class="dropdown-menu dropdown-menu-md p-3 w-50"
-                                                                            aria-labelledby="dropdownToggle_{{$checklistItem->id}}">
+                                                                            aria-labelledby="dropdownToggle_dateChecklistItem_{{$checklistItem->id}}">
                                                                             @include('dropdowns.dateCheckList', ['checklistItem' => $checklistItem])
                                                                         </div>
                                                                     </div>
