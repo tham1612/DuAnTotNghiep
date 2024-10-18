@@ -1201,7 +1201,7 @@
     }
     function addTaskComment(taskId) {
         var content = editors['comment_' + taskId].getData();
-        var user_id =Auth::id();
+        // var user_id =Auth::id();
         var formData = {
             content:content,
             user_id:user_id,
