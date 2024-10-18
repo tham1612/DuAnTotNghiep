@@ -77,17 +77,26 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Task::class, 'task_members')->withPivot('follow');
     }
+    public function checklistItems()
+    {
+        return $this->belongsToMany(ChecklistItem::class, 'check_list_item_members', 'user_id', 'check_list_item_id');
+    }
 
     //    kieemr tra xem nguoiwf dung dax cso workspace chuaw
+    protected $hasWorkspaceCache = null;
+
     public function hasWorkspace()
     {
-        $userId = Auth::id();
+        if ($this->hasWorkspaceCache === null) {
+            $userId = Auth::id();
+            $this->hasWorkspaceCache = WorkspaceMember::where('user_id', $userId)->exists();
+        }
 
-
-        $isWorkspace = WorkspaceMember::query()
-            ->where('user_id', $userId)
-            ->exists();
-        return $isWorkspace;
+        return $this->hasWorkspaceCache;
+    }
+    public function followMembers()
+    {
+        return $this->hasMany(Follow_member::class);
     }
 
     //    public function getWorkspace()

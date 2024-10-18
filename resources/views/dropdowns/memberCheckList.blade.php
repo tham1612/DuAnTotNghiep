@@ -6,41 +6,38 @@
         $boardMembers = session('boardMembers');
 
     @endphp
-
         <!-- thành viên của thẻ -->
     <div class="mt-3">
-        <label class="fs-14">Thành viên của Task</label>
-        <ul id="cardMembersList-{{$task->id}}" class="" style="list-style: none; margin-left: -32px">
-            @if(!empty($task->members))
-                @foreach ($task->members as $taskMember)
-                    <li id="card-member-task-{{$taskMember->id}}-{{$task->id}}"
-                        class="d-flex justify-content-between align-items-center">
+        <label class="fs-14">Thành viên của thẻ</label>
+        <ul id="cardMembersList-{{$checklistItem->id}}" class="" style="list-style: none; margin-left: -32px">
+            @if(!empty($checklistItem->checkListItemMembers))
+                @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
+                    <li id="card-member-{{$checkListItemMember->user->id}}-{{$checkListItemMember->check_list_item_id}}" class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <a href="javascript: void(0);" class="avatar-group-item"
                                data-bs-toggle="tooltip" data-bs-placement="top"
-                               title="{{$taskMember->name}}">
-                                @if ($taskMember->image)
-                                    <img src="{{ asset('storage/' . $taskMember->image) }}"
+                               title="{{$checkListItemMember->user->name}}">
+                                @if ($checkListItemMember->user->image)
+                                    <img src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
                                          alt="" class="rounded-circle avatar-sm object-fit-cover"
                                          style="width: 40px;height: 40px">
                                 @else
                                     <div class="avatar-sm">
                                         <div class="avatar-title rounded-circle bg-light text-primary">
-                                            {{ strtoupper(substr($taskMember->name, 0, 1)) }}
+                                            {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
                                         </div>
                                     </div>
                                 @endif
-
                             </a>
-                            <p class="ms-3 mt-3">{{$taskMember->name}}</p>
+                            <p class="ms-3 mt-3">{{$checkListItemMember->user->name}}</p>
                         </div>
-                        <i class="ri-close-line fs-20"
-                           onclick="removeMemberFromTask({{$taskMember->id}}, {{$task->id}})"></i>
+                        <i class="ri-close-line fs-20" onclick="removeMemberFromCard({{$checkListItemMember->user->id}}, {{$checkListItemMember->check_list_item_id}})"></i>
                     </li>
                 @endforeach
             @endif
             <!-- Thành viên của thẻ sẽ được thêm vào đây bằng JavaScript -->
         </ul>
+
     </div>
 
     <!-- thành viên của bảng -->
@@ -49,9 +46,9 @@
         <ul class="" style="list-style: none; margin-left: -32px">
             @php $boardMembers=  session('boardMembers');@endphp
             @foreach ($boardMembers as $boardMember)
-                <li class="d-flex justify-content-between align-items-center task-member-item"
-                    data-user-id="{{ $boardMember['id'] }}" data-task-id="{{$task->id}}"
-                    data-user-name="{{ $boardMember['name'] }}">
+                <li class="d-flex justify-content-between align-items-center checklist-member-item"
+                    data-member-id="{{ $boardMember['id'] }}" data-check-list-item="{{$checklistItem->id}}"
+                    data-member-name="{{ $boardMember['name'] }}">
                     <div class="d-flex align-items-center">
                         <a href="javascript: void(0);" class="avatar-group-item"
                            data-bs-toggle="tooltip" data-bs-placement="top"
@@ -96,4 +93,3 @@
         </div>
     @endif
 </form>
-

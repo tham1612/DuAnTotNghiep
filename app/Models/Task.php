@@ -24,6 +24,7 @@ class Task extends Model
         'progress',
         'start_date',
         'end_date',
+        'reminder_date',
         'parent',
         'sortorder',
         'id_google_calendar',
@@ -51,9 +52,28 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'task_members');
     }
+
     public function membersFl()
     {
         return $this->belongsToMany(User::class, 'follow_members')->withPivot('follow');
     }
 
+    public function followMembers()
+    {
+        return $this->hasMany(Follow_member::class);
+    }
+
+    public function checkList()
+    {
+        return $this->hasOne(CheckList::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'task_tags', 'task_id', 'tag_id');
+    }
+    public function attachments()
+    {
+        return $this->hasMany(TaskAttachment::class);
+    }
 }

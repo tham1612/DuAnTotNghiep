@@ -78,7 +78,7 @@
     </div>
 
 </div>
-{{--chi tiet bang--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="detailBoard" aria-labelledby="detailBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -134,7 +134,7 @@
     </div>
 
 </div>
-{{--hoat dong--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="activityBoard" aria-labelledby="activityCanvasLabel"
      style="width: 350px;">
     <div class="offcanvas-header">
@@ -179,7 +179,7 @@
     </div>
 </div>
 
-{{--muc da luu tru--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="storageBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -195,19 +195,19 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#storageCatalog" role="tab">
                         Danh sách lưu trữ
                     </a>
-                    {{--                    <span class="badge bg-dark align-items-center justify-content-center d-flex"--}}
-                    {{--                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))--}}
-                    {{--                            {{ $board_m_invite->count() }}--}}
-                    {{--                        @endif</span>--}}
+                    <span class="badge bg-dark align-items-center justify-content-center d-flex"
+                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
+                            {{ $board_m_invite->count() }}
+                        @endif</span>
                 </li>
                 <li class="nav-item d-flex align-items-center justify-content-between">
                     <a class="nav-link" data-bs-toggle="tab" href="#storageTask" role="tab">
                         Thẻ đã lưu trữ
                     </a>
-                    {{--                    <span class="badge bg-dark align-items-center justify-content-center d-flex"--}}
-                    {{--                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))--}}
-                    {{--                            {{ $board_m_invite->count() }}--}}
-                    {{--                        @endif</span>--}}
+                    <span class="badge bg-dark align-items-center justify-content-center d-flex"
+                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
+                            {{ $board_m_invite->count() }}
+                        @endif</span>
                 </li>
             </ul>
 
@@ -279,7 +279,7 @@
 
 </div>
 
-{{--cai dat--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="generalSettingBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -321,7 +321,7 @@
 
 </div>
 
-{{--nhãn--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="tagBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -331,61 +331,63 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
-        <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
+        <div data-simplebar style="height: calc(100vh)" class="p-2">
             <form action="">
                 <input type="text" name="" id=""
                        class="form-control border-1" placeholder="Tìm nhãn..."/>
                 <div class="mt-3">
-                    <strong class="fs-14">Nhãn</strong>
                     <ul class="" style="list-style: none; margin-left: -32px">
-                        <li class="mt-1 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center w-100">
-                                <input type="checkbox" name="" id="danger_tags"
-                                       class="form-check-input"/>
-                                <span class="bg bg-danger mx-2 rounded p-3 col-10"> </span>
-                            </div>
-                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                                @include('dropdowns.createTag')
-                            </div>
-                        </li>
-                        <li class="mt-1 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center w-100">
-                                <input type="checkbox" name="" id="danger_tags"
-                                       class="form-check-input"/>
-                                <span class="bg bg-info mx-2 rounded p-3 col-10"> </span>
-                            </div>
-                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                                @include('dropdowns.createTag')
-                            </div>
-                        </li>
-                        <li class="mt-1 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center w-100">
-                                <input type="checkbox" name="" id="danger_tags"
-                                       class="form-check-input"/>
-                                <span class="bg bg-success mx-2 rounded p-3 col-10">
-                                                            </span>
-                            </div>
-                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                                @include('dropdowns.createTag')
-                            </div>
-                        </li>
+                        @foreach($board->tags as $tag)
+                            <li class="mt-1 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center w-100">
+{{--                                    <input type="checkbox" name="" id="danger_tags"--}}
+{{--                                           class="form-check-input"/>--}}
+                                    <span class=" mx-2 rounded p-2 col-11 text-white"
+                                          style="background-color: {{$tag->color_code}}">{{$tag->name}}  </span>
+                                </div>
+                                <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false"></i>
+                                <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
+                                    <h5 class="text-center">Cập nhật</h5>
+                                    <form>
+                                        <input type="hidden" name="board_id" value="{{$tag->board_id}}">
+                                        <div class="mt-3">
+                                            <label for="">Tiêu đề</label>
+                                            <input type="text" name="name" class="form-control border-1"
+                                                   placeholder="Nhập tên nhãn" value="{{$tag->name}}"/>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label class="fs-14">Chọn màu</label>
+                                            <div class="d-flex flex-wrap gap-2 select-color">
+                                                @foreach($colors as $color)
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                                         title="{{$color->name}}">
+                                                        <div
+                                                            class="color-box border rounded @if($color->code == $tag->color_code) selected-tag @endif"
+                                                            style="width: 50px;height: 30px; background-color: {{$color->code}}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-primary" id="update-tag-form">
+                                                Cập nhật
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="card">
                     <div
-                        class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100 cursor-pointer"
-                        style=" height: 30px; background-color: #c7c7c7">
+                        class="d-flex align-items-center justify-content-center rounded p-3 w-100 cursor-pointer"
+                        style=" height: 30px; background-color: #e4e6ea">
                         <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-bs-offset="110,10">
+                           aria-expanded="false" data-bs-offset="50,-250">
                             Tạo nhãn mới
                         </p>
                         <!--dropdown nhãn-->

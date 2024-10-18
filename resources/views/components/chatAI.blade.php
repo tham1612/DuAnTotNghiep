@@ -1,5 +1,6 @@
 @php
-    $chats = \App\Models\ChatAI::where('user_id', Auth::id())->get();
+    $chats = \App\Models\ChatAI::where('user_id', Auth::id())->get()
+
 @endphp
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="chatAi" aria-labelledby="offcanvasRightLabel">
@@ -9,28 +10,36 @@
     </div>
     <div class="offcanvas-body">
         <div class="chat-conversation p-3" id="chat-conversation">
-            <div id="responseBox">
-                <!-- Tin nhắn của người dùng và phản hồi từ hệ thống sẽ được chèn vào đây -->
+            <div id="responseBox" class="pb-3">
+                <!-- Hiển thị thông điệp mặc định nếu không có tin nhắn -->
                 @if ($chats->isEmpty())
                     <p class="default-message"
                         style="text-align: center; color: #999; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif;">
                         Tôi có thể giúp gì được cho bạn?</p>
                 @endif
 
+                <!-- Vòng lặp tin nhắn người dùng và phản hồi từ hệ thống -->
                 @foreach ($chats as $chat)
-                    <div class="user-message" style="text-align: right; margin-bottom: 10px;">
+                    <div class="user-message mb-3" style="text-align: right; margin-bottom: 10px;">
                         <span
                             style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 300px;">
                             {!! nl2br(preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', e($chat->prompt))) !!}
                         </span>
                     </div>
-                    <div class="ai-response" style="margin-bottom: 10px;">
+
+                    <div class="ai-response mb-3" style="margin-bottom: 10px;">
                         <span
                             style="background-color: #f1f1f1; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 300px;">
                             {!! nl2br(preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', e($chat->response))) !!}
                         </span>
                     </div>
                 @endforeach
+            </div>
+            <!-- Thanh tải sẽ xuất hiện ở đây khi chờ câu trả lời -->
+            <div id="loadingSpinner" style="display: none; text-align: center; margin: 10px;" class="pb-3">
+                <div class="spinner-border text-dark" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -73,13 +82,34 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Listen for the offcanvas open event
+    const chatOffcanvas = document.getElementById('chatAi');
+    chatOffcanvas.addEventListener('shown.bs.offcanvas', function() {
+        // Scroll to the bottom of the chat conversation on open
+        const chatConversation = document.getElementById('chat-conversation');
+        chatConversation.scrollTop = chatConversation.scrollHeight;
+    });
+
+});
+
+</script>
+<style>
+#chat-conversation {
+    height: 550px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+</style>
+
 <!-- Modal xác nhận xóa -->
 <div class="modal fade" id="confirmDeleteModal" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center p-5">
-                <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" trigger="loop"
-                    colors="primary:#f7b84b,secondary:#405189" style="width:130px;height:130px">
+                <lord-icon src="https://cdn.lordicon.com/zpxybbhl.json" trigger="loop"
+                    colors="primary:#405189,secondary:#0ab39c" style="width:150px;height:150px">
                 </lord-icon>
                 <div class="mt-3">
                     <h4>Bạn có chắc chắn muốn xóa toàn bộ lịch sử chat không?</h4>
@@ -98,9 +128,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center p-5">
-                <lord-icon src="https://cdn.lordicon.com/zpxybbhl.json" trigger="loop"
-                    colors="primary:#405189,secondary:#0ab39c" style="width:150px;height:150px">
-                </lord-icon>
+                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+                    colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+
                 <div class="mt-4 pt-3">
                     <h4>Đã xóa thành công lịch sử chat!</h4>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>

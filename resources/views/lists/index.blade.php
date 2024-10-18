@@ -12,8 +12,8 @@
                 </div>
                 <!-- Menu sẽ ẩn ban đầu -->
                 <div id="verticalMenu" class="list-group d-none" data-simplebar style="max-height: 400px; width:300px">
-                    @if (!empty($catalogs))
-                        @foreach ($catalogs as $catalog)
+                    @if (!empty($board))
+                        @foreach ($board->catalogs as $catalog)
                             <a class="list-group-item list-group-item-action"
                                href="#{{ $catalog->id }}">{{ $catalog->name }} </a>
                         @endforeach
@@ -28,7 +28,8 @@
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
                     <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                        <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                        <form action="{{ route('catalogs.store') }}" method="post" 
+                            class="formItem" onsubmit="return disableButtonOnSubmit()">
                             @csrf
                             <div class="mb-2">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
@@ -53,8 +54,8 @@
     </div>
     <div class="col-lg-12" id="example" class="display">
         <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh; margin-top: -70px;" class=" me-3 ms-3">
-            @if (!empty($catalogs))
-                @foreach ($catalogs as $catalog)
+            @if (!empty($board))
+                @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
                         <div class="card-header border-0">
                             <div class="d-flex align-items-center">
@@ -110,7 +111,8 @@
                                     </button>
                                     <div class="dropdown-menu p-3" style="width: 285px"
                                          aria-labelledby="dropdownMenuOffset3">
-                                        <form action="{{ route('tasks.store') }}" method="post" onsubmit="return disableButtonOnSubmitTask(this)">
+                                        <form action="{{ route('tasks.store') }}" method="post"
+                                        class="formItem" onsubmit="return disableButtonOnSubmit()">
                                             @csrf
                                             <div class="mb-2">
                                                 <input type="text" class="form-control taskNameInput" name="text"
@@ -278,7 +280,7 @@
                                                     <select name="catalog_id" id="catalog_id_{{ $task->id }}"
                                                             class="form-select no-arrow"
                                                             onchange="updateTaskList({{ $task->id }});">
-                                                        @foreach ($catalogs as $catalog)
+                                                        @foreach ($board->catalogs as $catalog)
                                                             <option @selected($catalog->id == $task->catalog_id)
                                                                     value="{{ $catalog->id }}">
                                                                 {{ $catalog->name }}

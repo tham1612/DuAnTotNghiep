@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('labels', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Color::class)->constrained();
+            $table->foreignIdFor(\App\Models\Board::class)->constrained();
+            $table->string('color_code');
             $table->string('name');
             $table->timestamps();
         });
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('labels');
+        Schema::dropIfExists('tags');
     }
 };

@@ -49,7 +49,7 @@
             <div class="my-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                    <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
                         @csrf
                         <div class="mb-2">
                             <input type="text" class="form-control" name="name" id="nameCatalog"
@@ -70,7 +70,7 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()">
+                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
 
@@ -79,14 +79,17 @@
                                 required />
                         </div>
 
-                        <div class="mb-2">
-                            <select class="form-select">
-                                <option value="">---Lựa chọn---</option>
-                                @foreach ($tasks as $task)
-                                    <option value="{{ $task->id }}">{{ $task->text }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+{{--                        <div class="mb-2">--}}
+{{--                            <select class="form-select">--}}
+{{--                                <option value="">---Lựa chọn---</option>--}}
+{{--                                @foreach ($catalogs as $catalog)--}}
+{{--                                    @foreach ($catalog->tasks as $task)--}}
+{{--                                        <option value="{{ $task->id }}">{{ $task->text }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                @endforeach--}}
+{{--                               --}}
+{{--                            </select>--}}
+{{--                        </div>--}}
 
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>
@@ -101,7 +104,7 @@
                         <div class="mb-2">
                             <select name="catalog_id" id="" class="form-select">
                                 <option value="">---Lựa chọn---</option>
-                                @foreach ($catalogs as $catalog)
+                                @foreach ($board->catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
@@ -160,7 +163,7 @@
             ];
 
             // Giả sử bạn đã có dữ liệu catalogs từ server
-            var catalogs = @json($catalogs);
+            var catalogs = @json($board->catalogs);
 
             // Hàm để lấy catalog theo ID
             function getCatalogById(catalog_id) {

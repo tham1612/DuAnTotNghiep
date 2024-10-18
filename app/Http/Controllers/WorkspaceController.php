@@ -444,12 +444,12 @@ class WorkspaceController extends Controller
     public function accept_member(Request $request)
     {
         try {
-
             WorkspaceMember::query()
                 ->where('user_id', $request->user_id)
                 ->where('workspace_id', $request->workspace_id)
                 ->update([
                     'is_accept_invite' => 0,
+                    'authorize'=>"Member"
                 ]);
             return redirect()->route('showFormEditWorkspace')->with([
                 'msg' => 'Đã thêm thành viên vào không gian làm việc',

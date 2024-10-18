@@ -4,16 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('task_labels', function (Blueprint $table) {
+        Schema::create('task_tags', function (Blueprint $table) {
             $table->foreignIdFor(\App\Models\Task::class)->constrained();
-            $table->foreignIdFor(\App\Models\Label::class)->constrained();
+            $table->foreignIdFor(\App\Models\Tag::class)->constrained();
         });
     }
 
@@ -22,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task_labels');
+        Schema::dropIfExists('task_tags');
     }
 };

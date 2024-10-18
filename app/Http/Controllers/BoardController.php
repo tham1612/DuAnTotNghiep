@@ -8,10 +8,12 @@ use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Task;
+use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Models\WorkspaceMember;
 
@@ -24,9 +26,10 @@ use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
 
 // use function Laravel\Prompts\select;
-
+//const PATH_UPLOAD = 'board';
 class BoardController extends Controller
 {
+    const PATH_UPLOAD = 'boards';
     protected $googleApiClient;
 
     public function __construct(GoogleApiClientController $googleApiClient)
@@ -37,7 +40,7 @@ class BoardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    const PATH_UPLOAD = 'board.';
+
 
     public function index($workspaceId)
     {
@@ -51,7 +54,6 @@ class BoardController extends Controller
                         $query->where('user_id', $userId);
                     });
             })
-
             ->with(['workspace', 'boardMembers'])
             ->get()
             ->map(function ($board) use ($userId) {
@@ -81,7 +83,6 @@ class BoardController extends Controller
 
         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
         return view('homes.dashboard', compact('boards', 'board_star'));
-
     }
 
     /**
@@ -121,6 +122,8 @@ class BoardController extends Controller
                 ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
             DB::commit();
+            session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
+            session(['action' => 'success']);
             return redirect()->route('home');
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -142,84 +145,128 @@ class BoardController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Request $request, string $id)
     {
-        $board = Board::query()->with('boardMembers')->findOrFail($id);
-        session(['board' => $board]);
+
+
+        $board = Board::query()->findOrFail($id);
+        $colors = \App\Models\Color::query()->get();
+        session([
+            'board' => $board,
+            'colors' => \App\Models\Color::query()->get(),
+        ]);
 
         $viewType = \request('viewType', 'board');
 
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
-        $board->load([
-            'users',
-            // 'members',
-            'catalogs',
-            'catalogs.tasks',
-            'catalogs.tasks.catalog:id,name',
-            'catalogs.tasks' => function ($query) {
-                $query->orderBy('position', 'asc');
-            },
+//        $board->load([
+//            'tags',
+//            'users',
+//            'catalogs',
+//            'catalogs.tasks' => function ($query) {
+//                $query->orderBy('position', 'asc');
+//            },
+//            'catalogs.tasks.catalog:id,name',
+//            'catalogs.tasks.members',
+//            'catalogs.tasks.checkList',
+//            'catalogs.tasks.checkList.checkListItems',
+//            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
+//            'catalogs.tasks.tags',
+//            'catalogs.tasks.followMembers'
+//        ]);
 
-            'catalogs.tasks.members'
+        $board->load([
+            'tags',
+            'users',
+            'catalogs' => function ($query) use ($request) {
+                $query->with(['tasks' => function ($taskQuery) use ($request) {
+                    $taskQuery->where(function ($subQuery) use ($request) {
+
+                        // Điều kiện 1: Lọc thành viên
+                        if ($request->has('no_member') || $request->has('it_me')) {
+                            $subQuery->where(function ($query) use ($request) {
+                                // Điều kiện 1: Lọc thành viên
+                                if ($request->no_member) {
+                                    // Không có thành viên
+                                    $query->whereDoesntHave('members');
+                                }
+                                if ($request->it_me) {
+                                    // Giao cho tôi (có thành viên là chính tôi)
+                                    $query->orWhereHas('members', function ($memberQuery) {
+                                        $memberQuery->where('user_id', auth()->id());
+                                    });
+                                }
+                            });
+                        }
+
+                        // Điều kiện 2: Ngày hết hạn
+                        if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
+                            $subQuery->where(function ($dateQuery) use ($request) {
+                                if ($request->has('no_date')) {
+                                    // Không có ngày hết hạn
+                                    $dateQuery->whereNull('end_date');
+                                }
+                                if ($request->has('no_overdue')) {
+                                    // Quá hạn
+                                    $dateQuery->orWhere('end_date', '<', now());
+                                }
+                                if ($request->has('due_tomorrow')) {
+                                    // Hết hạn vào ngày mai
+                                    $dateQuery->orWhere('end_date', '=', now()->addDay());
+                                }
+                            });
+                        }
+
+                        // Điều kiện 3: Lọc nhãn
+                        if ($request->has('no_tags') || $request->has('tags')) {
+                            $subQuery->where(function ($tagQuery) use ($request) {
+                                if ($request->has('no_tags')) {
+                                    // Không có nhãn
+                                    $tagQuery->doesntHave('tags');
+                                }
+                                if ($request->has('tags')) {
+                                    // Lọc theo nhãn đã chọn
+                                    $tagQuery->whereHas('tags', function ($tagSubQuery) use ($request) {
+                                        $tagSubQuery->whereIn('tags.id', $request->input('tags'));
+                                    });
+                                }
+                            });
+                        }
+                    })
+                        ->orderBy('position', 'asc')
+                        ->with([
+                            'members',
+                            'checkList',
+                            'checkList.checkListItems',
+                            'checkList.checkListItems.checkListItemMembers',
+                            'tags',
+                            'followMembers',
+                            'attachments'
+                        ]);
+                }]);
+            }
         ]);
 
-
+        if ($request->ajax()) {
+            $viewType = $request->viewType;
+//            $this->middleware('csrf', ['except' => ['edit']]);
+        }
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
             ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
             ->where('board_members.board_id', $board->id)
             ->get();
 
-        // Lấy danh sách catalogs
-        $catalogs = $board->catalogs;
         /*
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
-
-
-        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
-        $activities = Activity::where('properties->board_id', $boardId)->orderBy('created_at', 'desc')->get();
-
-        //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
-        $boardName = $board->name; // Lấy tên của board
-        $tasks = $catalogs->pluck('tasks')->flatten()->sortBy('position');
-
-
-        $listEvent = array();
-
-        $taskCalendar = Task::query()
-            ->whereHas('catalog', function ($query) use ($id) {
-                $query->where('board_id', $id);
-            })
-            ->get()
-            ->filter(function ($task) {
-                // Nếu cả hai đều không tồn tại, ẩn
-                if (is_null($task->start_date) && is_null($task->end_date)) {
-                    return false;
-                }
-
-                // Nếu chỉ tồn tại một trong hai, gán giá trị của cái còn lại
-                if (is_null($task->start_date)) {
-                    $task->start_date = $task->end_date;
-                } elseif (is_null($task->end_date)) {
-                    $task->end_date = $task->start_date;
-                }
-                // Hiển thị task nếu đã xử lý xong
-                return true;
-            });
-        //        dd($taskCalendar);
-        foreach ($taskCalendar as $event) {
-            $listEvent[] = [
-                'id' => $event->id,
-                'id_google_calendar' => $event->id_google_calendar,
-                'title' => $event->text,
-                'email' => $event->creator_email,
-                'start' => Carbon::parse($event->start_date)->toIso8601String(),
-                'end' => Carbon::parse($event->end_date)->toIso8601String(),
-            ];
-        }
+//        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+        $activities = Activity::with('causer')
+            ->where('properties->board_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
 
         $boardMembers = $boardMemberMain->filter(function ($member) {
@@ -267,17 +314,85 @@ class BoardController extends Controller
             ->where('workspace_members.workspace_id', $board->workspace_id)
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
-        return match ($viewType) {
 
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
+        switch ($viewType) {
+            case 'dashboard':
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked'));
+
+            case 'list':
+                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked'));
+
+            case 'gantt':
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked'));
+
+            case 'table':
+                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked'));
+
+            case 'calendar':
+                $listEvent = array();
+
+                $taskCalendar = Task::query()
+                    ->whereHas('catalog', function ($query) use ($id) {
+                        $query->where('board_id', $id);
+                    })
+                    ->get()
+                    ->filter(function ($task) {
+                        // Nếu cả hai đều không tồn tại, ẩn
+                        if (is_null($task->start_date) && is_null($task->end_date)) {
+                            return false;
+                        }
+
+                        // Nếu chỉ tồn tại một trong hai, gán giá trị của cái còn lại
+                        if (is_null($task->start_date)) {
+                            $task->start_date = $task->end_date;
+                        } elseif (is_null($task->end_date)) {
+                            $task->end_date = $task->start_date;
+                        }
+                        // Hiển thị task nếu đã xử lý xong
+                        return true;
+                    });
+                //        dd($taskCalendar);
+                foreach ($taskCalendar as $event) {
+                    $listEvent[] = [
+                        'id' => $event->id,
+                        'id_google_calendar' => $event->id_google_calendar,
+                        'title' => $event->text,
+                        'email' => $event->creator_email,
+                        'start' => Carbon::parse($event->start_date)->toIso8601String(),
+                        'end' => Carbon::parse($event->end_date)->toIso8601String(),
+                    ];
+                }
+                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked'));
+
+            default:
+                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked'));
+        }
+
+    }
 
 
-        };
+    public function filter(Request $request, string $boardId)
+    {
+        $filters = $request->all(); // Lấy tất cả dữ liệu từ form
+
+        // Thực hiện lọc các task hoặc dữ liệu theo yêu cầu
+        $filteredTasks = Task::query()
+            ->when(isset($filters['search']), function ($query) use ($filters) {
+                return $query->where('text', 'like', '%' . $filters['search'] . '%');
+            })
+            ->when(isset($filters['no_member']), function ($query) {
+                return $query->doesntHave('members');
+            })
+            ->when(isset($filters['due_tomorrow']), function ($query) {
+                return $query->whereDate('due_date', '=', now()->addDay());
+            })
+            // Add thêm các điều kiện lọc khác
+            ->get();
+        dd($filteredTasks);
+        return response()->json([
+            'success' => true,
+            'filteredTasks' => $filteredTasks
+        ]);
     }
 
     /**
@@ -285,16 +400,22 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->except(['_token', '_method']);
-        Board::query()
-            ->where('id', $id)
-            ->update($data);
+        $board = Board::query()->findOrFail($id);
+        $data = $request->except(['_token', '_method', 'image']);
+        if ($request->hasFile('image')) {
+            $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
+            $data['image'] = $imagePath;
+            if ($board->image && Storage::exists($board->image)) {
+                Storage::delete($board->image);
+            }
+        }
+        $board->update($data);
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
             'msg' => true
         ]);
-
     }
+
 
     public function updateBoardMember(Request $request, string $id)
     {
@@ -361,10 +482,9 @@ class BoardController extends Controller
         $boardName = $board->name;
         $authorize = $request->input('authorize');
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
-        return back()->with([
-            'action' => 'success',
-            'msg' => 'Đã gửi email thêm thành viên !!!'
-        ]);
+        session(['msg' => 'Đã gửi email thêm thành viên !!!']);
+        session(['action' => 'success']);
+        return back();
     }
 
 
@@ -415,16 +535,13 @@ class BoardController extends Controller
                                         ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
                                         ->log('Người dùng đã được thêm vào Bảng.');
 
-                                    return redirect()->route('b.edit', $board->id)->with([
-                                        'msg' => "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!",
-                                        'action' => 'success'
-                                    ]);
+                                    session(['msg' => 'Bạn đã được thêm vào bảng. \"{$board->name}\" !!!']);
+                                    session(['action' => 'success']);
+                                    return redirect()->route('b.edit', $board->id);
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
-                            }
-
-                            // Người dùng đã đăng nhập nhưng email khác
+                            } // Người dùng đã đăng nhập nhưng email khác
                             else {
                                 Auth::logout();
                                 Session::put('invited_board', "case1");
@@ -434,9 +551,7 @@ class BoardController extends Controller
                                 Session::put('authorize', $request->authorize);
                                 return redirect()->route('login');
                             }
-                        }
-
-                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
+                        } //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập
                         else {
                             Session::put('invited_board', "case1");
                             Session::put('board_id', $board->id);
@@ -450,15 +565,13 @@ class BoardController extends Controller
 
                     //xử lý khi người dùng đã có trong bảng đó rồi
                     else {
-                        return redirect()->route('b.edit', $board->id)->with([
-                            'msg' => 'Bạn đã ở trong bảng rồi!!',
-                            'action' => 'danger'
-                        ]);
+
+                        session(['msg' => 'Bạn đã ở trong bảng rồi!!']);
+                        session(['action' => 'error']);
+                        return redirect()->route('b.edit', $board->id);
                     }
 
-                }
-
-                //check xử lý nếu người dùng chưa ở trong wsp
+                } //check xử lý nếu người dùng chưa ở trong wsp
                 else {
 
                     //xử lý khi người dùng chưa có trong bảng đó
@@ -512,16 +625,13 @@ class BoardController extends Controller
                                         ->withProperties(['member_name' => $user_check->name]) // Thông tin bổ sung
                                         ->log('Người dùng đã được thêm vào Bảng.');
 
-                                    return redirect()->route('b.edit', $board->id)->with([
-                                        'msg' => "Bạn đã được thêm vào bảng. \"{$board->name}\" !!!",
-                                        'action' => 'success'
-                                    ]);
+                                    session(['msg' => 'Bạn đã được thêm vào bảng. \"{$board->name}\" !!!']);
+                                    session(['action' => 'success']);
+                                    return redirect()->route('b.edit', $board->id);
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }
-                            }
-
-                            // Người dùng đã đăng nhập nhưng email khác
+                            } // Người dùng đã đăng nhập nhưng email khác
                             else {
                                 Auth::logout();
                                 Session::put('invited_board', "case4");
@@ -532,9 +642,7 @@ class BoardController extends Controller
                                 Session::put('authorize', $request->authorize);
                                 return redirect()->route('login');
                             }
-                        }
-
-                        //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
+                        } //xử lý khi người dùng có tài khoản rồi mà chưa đăng nhập đó
                         else {
                             Session::put('invited_board', "case4");
                             Session::put('board_id', $board->id);
@@ -547,9 +655,7 @@ class BoardController extends Controller
                     }
 
                 }
-            }
-
-            //xử lý khi người dùng không có tài khoản
+            } //xử lý khi người dùng không có tài khoản
             else {
                 //xử lý khi người dùng không có tài khoản
                 Auth::logout();
@@ -560,9 +666,7 @@ class BoardController extends Controller
                 Session::put('authorize', $request->authorize);
                 return redirect()->route('register');
             }
-        }
-
-        //xử lý khi người dùng có link invite và kick vô
+        } //xử lý khi người dùng có link invite và kick vô
         else {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             Auth::logout();
@@ -584,10 +688,9 @@ class BoardController extends Controller
             'is_accept_invite' => 1,
         ]);
 
-        return redirect()->route('home')->with([
-            'msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc',
-            'action' => 'success'
-        ]);
+        session(['msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc']);
+        session(['action' => 'success']);
+        return redirect()->route('home');
     }
 
     public function inviteMemberWorkspace($userId, $boardId)
