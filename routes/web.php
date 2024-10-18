@@ -63,9 +63,12 @@ Route::middleware(['auth', 'isWorkspace'])
         //thằng này thì sử lý logic khi người dùng kick và link được mời hoặc kick vào link_Pinvite của wsp
         Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite'])
             ->withoutMiddleware('auth');
-
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
+        Route::get('activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
+        Route::get('upgrade-member-ship/{id}', [WorkspaceController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
+        Route::get('management-franchise/{owner_id}/{user_id}', [WorkspaceController::class, 'managementfranchise'])->name('managementfranchise');
+
 
         Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -94,7 +97,12 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
                 Route::get('request-to-join-workspace', [BoardController::class, 'requestToJoinWorkspace'])->name('requestToJoinWorkspace');
                 Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
+                Route::put('accept-member', [BoardController::class, 'acceptMember'])->name('acceptMember');
+                Route::delete('refuse-member/{id}', [BoardController::class, 'refuseMember'])->name('refuseMember');
                 Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
+                Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
+                Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
+                Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
             });
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');

@@ -127,7 +127,7 @@ class BoardController extends Controller
             dd($exception->getMessage());
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
-                'action' => 'error'
+                'action' => 'danger'
             ]);
         }
     }
@@ -144,7 +144,7 @@ class BoardController extends Controller
      */
     public function edit($id)
     {
-        $board = Board::query()->findOrFail($id);
+        $board = Board::query()->with('boardMembers')->findOrFail($id);
         session(['board' => $board]);
 
         $viewType = \request('viewType', 'board');
@@ -167,7 +167,7 @@ class BoardController extends Controller
 
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
-            ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id')
+            ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
             ->where('board_members.board_id', $board->id)
             ->get();
 
@@ -222,13 +222,15 @@ class BoardController extends Controller
         }
 
 
-        // Tách danh sách các thành viên chờ lời mời và các thành viên đã được mời vào
         $boardMembers = $boardMemberMain->filter(function ($member) {
-            return $member->authorize !== AuthorizeEnum::Owner()->value &&
-                $member->authorize !== AuthorizeEnum::Sub_Owner()->value &&
+            return $member->authorize->value !== AuthorizeEnum::Owner()->value &&
+                $member->authorize->value !== AuthorizeEnum::Sub_Owner()->value &&
                 $member->is_accept_invite === 0;
         });
-
+        $boardSubOwner = $boardMemberMain->filter(function ($member) {
+            return $member->authorize->value == AuthorizeEnum::Sub_Owner()->value &&
+                $member->is_accept_invite === 0;
+        });
         $boardMemberInvites = $boardMemberMain->filter(function ($member) {
             return $member->is_accept_invite === 1;
         });
@@ -239,14 +241,20 @@ class BoardController extends Controller
             ->where('workspace_id', $board->workspace_id)
             ->get();
 
-        // Cập nhật `is_accept_invite` cho tất cả những người đã được mời vào workspace
+
         BoardMember::whereIn('user_id', $invitedWorkspaceMembers->pluck('user_id'))
             ->where('board_id', $board->id)
             ->update(['is_accept_invite' => 0]);
 
         // Lấy ra chủ sở hữu của bảng
         $boardOwner = $boardMemberMain->firstWhere('authorize', AuthorizeEnum::Owner()->value);
-
+        //check mình có phải phó nhóm không
+        $boardSubOwnerChecked = $boardMemberMain->filter(function ($member) {
+            return $member->authorize == AuthorizeEnum::Sub_Owner()->value && $member->user_id == Auth::id();
+        })->first();
+        $boardMemberChecked = $boardMemberMain->filter(function ($member) {
+            return$member->user_id == Auth::id();
+        })->first();
         // Lấy danh sách thành viên của workspace mà chưa phải là thành viên của bảng
         $wspMember = WorkspaceMember::query()
             ->join('users', 'users.id', '=', 'workspace_members.user_id')
@@ -261,12 +269,12 @@ class BoardController extends Controller
             ->get();
         return match ($viewType) {
 
-            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
-            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember')),
+            'dashboard' => view('homes.dashboard_board', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
+            'list' => view('lists.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
+            'gantt' => view('ganttCharts.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
+            'table' => view('tables.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
+            'calendar' => view('calendars.index', compact('listEvent', 'board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
+            default => view('boards.index', compact('board', 'catalogs', 'tasks', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked','boardMemberChecked')),
 
 
         };
@@ -328,7 +336,6 @@ class BoardController extends Controller
         }
 
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -445,7 +452,7 @@ class BoardController extends Controller
                     else {
                         return redirect()->route('b.edit', $board->id)->with([
                             'msg' => 'Bạn đã ở trong bảng rồi!!',
-                            'action' => 'error'
+                            'action' => 'danger'
                         ]);
                     }
 
@@ -579,7 +586,7 @@ class BoardController extends Controller
 
         return redirect()->route('home')->with([
             'msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc',
-            'action' => 'error'
+            'action' => 'success'
         ]);
     }
 
@@ -592,5 +599,94 @@ class BoardController extends Controller
             'invite' => now(),
         ]);
         return response()->json(['success' => true]);
+    }
+
+    //Duyệt người dùng gửi lời mời vào board
+    public function acceptMember(Request $request)
+    {
+        try {
+            BoardMember::query()
+                ->where('user_id', $request->user_id)
+                ->where('board_id', $request->board_id)
+                ->update([
+                    'is_accept_invite' => 0,
+                ]);
+            return redirect()->route('b.edit', $request->board_id)->with([
+                'msg' => 'bạn đã chấp nhận người dùng vào bảng',
+                'action' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    //Từ chối người dùng gửi lời mời vào board
+    public function refuseMember($bm_id)
+    {
+        try {
+            BoardMember::find($bm_id)->delete();
+            return back()->with([
+                'msg' => 'bạn đã từ chối người dùng vào bảng',
+                'action' => 'danger'
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    //Kích thành viên || Rời khỏi không gian làm việc
+    public function activateMember($boardMemberId)
+    {
+        $userId = Auth::id();
+        //lấy được thằng boardmember đang bị xóa || lấy được cả thằng boardID || lấy được cả wspID
+        $boardMember = BoardMember::where('id', $boardMemberId)->with('board')->first();
+        $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
+        $wspChecked = WorkspaceMember::where('user_id', $userId)
+            ->where('workspace_id', $boardMember->board->workspace_id)->first();
+        try {
+            if ($wspChecked->authorize !== "Viewer" || $boardOneMemberChecked->count() == 1) {
+                $boardMember->delete();
+            } else if ($wspChecked->authorize == "Viewer") {
+                $wspChecked->delete();
+                $boardMember->delete();
+            }
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+
+        return redirect()->route('b.edit', $boardMember->board_id)->with([
+            'msg' => 'Bạn đã kích thành viên ra khỏi không gian làm việc',
+            'action' => 'warning'
+        ]);
+
+    }
+    //Thăng cấp thành viên
+    public function upgradeMemberShip($boardMemberId)
+    {
+        BoardMember::find($boardMemberId)->update([
+            'authorize' => AuthorizeEnum::Sub_Owner()
+        ]);
+        return back()->with([
+            'msg' => 'Bạn đã thăng cấp thành viên thành công',
+            'action' => 'success'
+        ]);
+    }
+    //Nhượng quyền
+    public function managementfranchise($boardOwnerId, $boardUserId)
+    {
+        try {
+            BoardMember::find($boardUserId)->update([
+                'authorize' => AuthorizeEnum::Owner()
+            ]);
+
+            BoardMember::find($boardOwnerId)->update([
+                'authorize' => AuthorizeEnum::Member()
+            ]);
+            return back()->with([
+                'msg' => 'Bạn đã nhượng quyền quản trị viên',
+                'action' => 'warning'
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+
     }
 }

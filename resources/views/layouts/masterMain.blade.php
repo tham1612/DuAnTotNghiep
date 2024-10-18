@@ -109,14 +109,11 @@
         <div class="main-content" style="margin-top: -10px">
             <div class="page-content">
                 <div class="container-fluid">
-
-
                     @if (request()->is('b/*'))
                         @php
                             $board = session('board');
 
                         @endphp
-
                         @include('layouts.navbar')
                         @include('components.setting')
                         @include('components.task')
@@ -355,50 +352,50 @@
             nameCatalogInput.addEventListener('input', validateCatalogForm);
 
 
-        // Kiểm tra form khi người dùng submit
-        function disableButtonOnSubmit(event) {
-           // Ngăn gửi biểu mẫu ngay lập tức
-            event.preventDefault();
-            // Kiểm tra xem nút đã bị vô hiệu hóa chưa
-            if (btnSubmitCatalog.disabled) return;
-            // Vô hiệu hóa nút
-            btnSubmitCatalog.disabled = true;
-            // Gửi biểu mẫu ngay lập tức
-            event.target.closest('form').submit();
-        }
-        btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
-    });
-    // validate task
-    document.addEventListener('DOMContentLoaded', function() {
-        const taskNameInputs = document.querySelectorAll('.taskNameInput');
-        const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
-
-        taskNameInputs.forEach((input, index) => {
-            const btnSubmit = btnSubmitTasks[index];
-            
-            input.addEventListener('input', function() {
-                const isTaskNameFilled = input.value.trim() !== '';
-                btnSubmit.disabled = !isTaskNameFilled;
-            });
-
-            btnSubmit.addEventListener('click', function(event) {
-                disableButtonOnSubmitTask(input.closest('form'), event);
-            });
+            // Kiểm tra form khi người dùng submit
+            function disableButtonOnSubmit(event) {
+                // Ngăn gửi biểu mẫu ngay lập tức
+                event.preventDefault();
+                // Kiểm tra xem nút đã bị vô hiệu hóa chưa
+                if (btnSubmitCatalog.disabled) return;
+                // Vô hiệu hóa nút
+                btnSubmitCatalog.disabled = true;
+                // Gửi biểu mẫu ngay lập tức
+                event.target.closest('form').submit();
+            }
+            btnSubmitCatalog.addEventListener('click', disableButtonOnSubmit);
         });
+        // validate task
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskNameInputs = document.querySelectorAll('.taskNameInput');
+            const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
 
-        window.disableButtonOnSubmitTask = function(form, event) {
-            const input = form.querySelector('.taskNameInput');
-            const btnSubmit = form.querySelector('.btnSubmitTask');
-            event.preventDefault();
+            taskNameInputs.forEach((input, index) => {
+                const btnSubmit = btnSubmitTasks[index];
 
-            if (btnSubmit.disabled) return;
+                input.addEventListener('input', function() {
+                    const isTaskNameFilled = input.value.trim() !== '';
+                    btnSubmit.disabled = !isTaskNameFilled;
+                });
 
-            btnSubmit.disabled = true; 
-            form.submit();
-        };
+                btnSubmit.addEventListener('click', function(event) {
+                    disableButtonOnSubmitTask(input.closest('form'), event);
+                });
+            });
 
-    });
-</script>
+            window.disableButtonOnSubmitTask = function(form, event) {
+                const input = form.querySelector('.taskNameInput');
+                const btnSubmit = form.querySelector('.btnSubmitTask');
+                event.preventDefault();
+
+                if (btnSubmit.disabled) return;
+
+                btnSubmit.disabled = true;
+                form.submit();
+            };
+
+        });
+    </script>
 
     @yield('script')
 
