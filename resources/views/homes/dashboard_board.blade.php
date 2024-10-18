@@ -1,3 +1,71 @@
+@php
+    use App\Models\Task;
+    use App\Models\Catalog;
+    use Carbon\Carbon;
+    use App\Models\BoardMember;
+    use App\Models\User;
+
+    // Lấy danh sách thành viên và đếm số nhiệm vụ mà mỗi thành viên được giao
+    $taskCountPerMember = Task::with('members')
+        ->selectRaw('users.name, COUNT(tasks.id) as task_count')
+        ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
+        ->join('users', 'users.id', '=', 'task_members.user_id')
+        ->groupBy('users.name')
+        ->get();
+
+    // Chuyển danh sách thành viên và số nhiệm vụ thành các mảng để truyền vào JavaScript
+    $memberNames = $taskCountPerMember->pluck('name'); // Lấy tên thành viên
+    $taskCounts = $taskCountPerMember->pluck('task_count'); // Lấy số lượng nhiệm vụ
+    // Lấy danh sách thành viên từ session hoặc database
+    $boardMembers = session('boardMembers', []); // Sử dụng session nếu có
+
+    // Đếm số lượng thành viên trong bảng (board) cụ thể
+    $totalMembers = BoardMember::where('board_id', $id)->count(); // Đếm số lượng thành viên của bảng dựa trên board_id
+
+    // Tính tổng số lượng nhiệm vụ của tất cả các catalogs thuộc bảng cụ thể
+    $totalTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
+        $query->where('board_id', $id); // Chỉ lấy tasks thuộc catalogs của bảng (board) cụ thể
+    })->count();
+
+    // Lấy danh sách các task quá hạn từ cơ sở dữ liệu cho các catalog thuộc bảng cụ thể
+    $task_over = Task::with(['members', 'catalog']) // Gọi quan hệ members và catalog
+        ->whereHas('catalog', function ($query) use ($id) {
+            $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
+        })
+        ->where('end_date', '<', Carbon::now()) // So sánh ngày hết hạn với ngày hiện tại
+        ->get();
+
+    // Lấy danh sách các task mà người dùng hiện tại là thành viên và thuộc về bảng cụ thể
+    $my_task = Task::with(['members', 'catalog']) // Gọi quan hệ members và catalog
+        ->whereHas('catalog', function ($query) use ($id) {
+            $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
+        })
+        ->whereHas('members', function ($query) {
+            $query->where('user_id', auth()->id()); // Lọc các task mà người dùng hiện tại là thành viên
+        })
+        ->get();
+
+    // Tính số lượng nhiệm vụ quá hạn cho các catalog thuộc bảng cụ thể
+    $overdueTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
+        $query->where('board_id', $id); // Chỉ tính tasks thuộc catalogs của bảng cụ thể
+    })
+        ->where('end_date', '<', Carbon::now())
+        ->count();
+
+    // Tính số lượng nhiệm vụ hoàn thành (process = 100) và chưa hoàn thành (process = 0)
+    $completedTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
+        $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
+    })
+        ->where('progress', 100) // Lọc nhiệm vụ đã hoàn thành
+        ->count();
+
+    $incompleteTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
+        $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
+    })
+        ->where('progress', 0) // Lọc nhiệm vụ chưa hoàn thành
+        ->count();
+
+@endphp
 @extends('layouts.masterMain')
 @section('title')
     Dashbroad_board
@@ -27,89 +95,111 @@
                     <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
                         <div class="col">
                             <div class="py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Thành viên<i
-                                        class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">Thành viên
+                                    <i class="ri-account-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
                                         <i class="ri-user-line display-6 text-muted"></i>
                                     </div>
                                     <div class="flex-grow-1 ms-3">
-                                        <h2 class="mb-0"><span class="counter-value" data-target="7">0</span></h2>
+
+                                        <h2 class="mb-0">
+                                            <!-- Hiển thị số lượng thành viên -->
+                                            <span>{{ $totalMembers }}</span>
+                                        </h2>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- end col -->
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Hoàn
-                                    thành<i
-                                        class=" ri-checkbox-circle-line
-                                            text-success fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">Hoàn thành
+                                    <i class="ri-checkbox-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
-                                        <i class=" ri-check-line display-6 text-muted"></i>
+                                        <i class="ri-check-line display-6 text-muted"></i>
                                     </div>
                                     <div class="flex-grow-1 ms-3">
-                                        <h2 class="mb-0"><span class="counter-value" data-target="10">0</span></h2>
+                                        <h2 class="mb-0">
+                                            <span class="counter-value"
+                                                data-target="{{ $completedTasksCount }}">{{ $completedTasksCount }}</span>
+                                        </h2>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- end col -->
+
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Chưa
-                                    hoàn thành<i class=" ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">Chưa hoàn thành
+                                    <i class="ri-close-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
                                         <i class="ri-pulse-line display-6 text-muted"></i>
                                     </div>
                                     <div class="flex-grow-1 ms-3">
-                                        <h2 class="mb-0"><span class="counter-value" data-target="10">0</span></h2>
+                                        <h2 class="mb-0">
+                                            <span class="counter-value"
+                                                data-target="{{ $incompleteTasksCount }}">{{ $incompleteTasksCount }}</span>
+                                        </h2>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- end col -->
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Quá
-                                    hạn<i
-                                        class=" ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">Quá hạn
+                                    <i class="ri-indeterminate-circle-line text-danger fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
-                                        <i class=" ri-close-line e display-6 text-muted"></i>
+                                        <i class="ri-close-line display-6 text-muted"></i>
                                     </div>
                                     <div class="flex-grow-1 ms-3">
-                                        <h2 class="mb-0"><span class="counter-value" data-target="15">0</span></h2>
+                                        <!-- Hiển thị số lượng nhiệm vụ quá hạn -->
+                                        <h2 class="mb-0"><span>{{ $overdueTasksCount }}</span></h2>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- end col -->
+
                         <div class="col">
                             <div class="mt-3 mt-lg-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">Tổng<i
-                                        class=" ri-add-circle-line text-success fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">Tổng
+                                    <i class="ri-add-circle-line text-success fs-18 float-end align-middle"></i>
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0">
                                         <i class="ri-checkbox-multiple-fill display-6 text-muted"></i>
                                     </div>
                                     <div class="flex-grow-1 ms-3">
-                                        <h2 class="mb-0"><span class="counter-value" data-target="50">0</span></h2>
+                                        <!-- Hiển thị tổng số lượng nhiệm vụ -->
+                                        <h2 class="mb-0"><span>{{ $totalTasksCount }}</span></h2>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- end col -->
-
                     </div><!-- end row -->
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div><!-- end col -->
     </div><!-- end row -->
     <div class="row">
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Tiến độ hoàn thành dự án</h4>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
+        </div>
         <div class="col-xl-4">
             <div class="card">
                 <div class="card-header">
@@ -124,18 +214,6 @@
 
         </div>
         <div class="col-xl-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0">Tiến độ hoàn thành dự án</h4>
-                </div><!-- end card header -->
-                <div class="card-body">
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
-                        <canvas id="doughnutChart"></canvas>
-                    </div>
-                </div><!-- end card-body -->
-            </div><!-- end card -->
-        </div>
-        <div class="col-xl-4">
             <div class="card card-height-100">
                 <div class="card-header border-bottom-dashed align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Hoạt động gần đây</h4>
@@ -146,33 +224,33 @@
                     <div data-simplebar style="max-height: 400px;" class="p-3">
                         <div class="acitivity-timeline acitivity-main">
                             @if (!empty($activities))
-                            @foreach ($activities as $activity)
-                                <li class="d-flex align-items-start mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-3">
-                                            @if (!empty($activity->causer) && !empty($activity->causer->avatar))
-                                                <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
-                                                     alt="avatar" class="rounded-circle" width="40" height="40">
-                                            @else
-                                                <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                     style="width: 40px; height: 40px;">
-                                                    {{ strtoupper(substr($activity->causer->name ?? 'Hệ thống', 0, 1)) }}
-                                                </div>
-                                            @endif
+                                @foreach ($activities as $activity)
+                                    <li class="d-flex align-items-start mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3">
+                                                @if (!empty($activity->causer) && !empty($activity->causer->avatar))
+                                                    <img src="{{ asset('path_to_avatar/' . $activity->causer->avatar) }}"
+                                                        alt="avatar" class="rounded-circle" width="40" height="40">
+                                                @else
+                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                        style="width: 40px; height: 40px;">
+                                                        {{ strtoupper(substr($activity->causer->name ?? 'Hệ thống', 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1">
-                                            <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
-                                            {{ $activity->description ?? 'Không có mô tả' }}
-                                        </p>
-                                        <small class="text-muted">
-                                            {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
-                                        </small>
-                                    </div>
-                                </li>
-                            @endforeach
-                        @endif
+                                        <div>
+                                            <p class="mb-1">
+                                                <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
+                                                {{ $activity->description ?? 'Không có mô tả' }}
+                                            </p>
+                                            <small class="text-muted">
+                                                {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                                            </small>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div><!-- end card body -->
@@ -192,10 +270,11 @@
                 </div><!-- end card-body -->
             </div><!-- end card -->
         </div>
+        <!-- Hiển thị danh sách các task -->
         <div class="col-6">
             <div class="card card-height-100">
                 <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1 py-1">My Tasks</h4>
+                    <h4 class="card-title mb-0 flex-grow-1 py-1">Nhiệm vụ của bạn</h4>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
                             <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
@@ -203,186 +282,77 @@
                                 <span class="text-muted">Thành viên<i class="mdi mdi-chevron-down ms-1"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#">Thanh Thanh</a>
-                                <a class="dropdown-item" href="#">Thị Thắm </a>
-                                <a class="dropdown-item" href="#">Minh Nguyệt</a>
-                                <a class="dropdown-item" href="#">Quang Vinh</a>
-                                <a class="dropdown-item" href="#">Giang Tuấn</a>
-                                <a class="dropdown-item" href="#">Thành Đạt</a>
-                                <a class="dropdown-item" href="#">Trọng Nam</a>
+                                <!-- Danh sách thành viên khác có thể lọc -->
+                                @foreach ($boardMembers as $member)
+                                    <a class="dropdown-item" href="#">{{ $member->name }}</a>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div><!-- end card header -->
-                <div class="card-body" data-simplebar style="max-height: 300px;">
+
+                <div class="card-body" data-simplebar style="max-height: 300px; max-width: 100%;">
                     <div class="table-responsive table-card">
                         <table class="table table-borderless table-nowrap table-centered align-middle mb-0">
                             <thead class="table-light text-muted">
                                 <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Dedline</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Assignee</th>
+                                    <th>Thẻ</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Độ ưu tiên</th>
+                                    <th>Danh sách</th>
                                 </tr>
                             </thead><!-- end thead -->
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" value=""
-                                                id="checkTask1">
-                                            <label class="form-check-label ms-1" for="checkTask1">
-                                                Create new Admin Template
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">03 Nov 2021</td>
-                                    <td><span class="badge bg-success-subtle text-success">Completed</span>
-                                    </td>
-                                    <td>
-                                        <div class="avatar-group flex-nowrap">
-                                            <div class="avatar-group-item">
-                                                <a href="javascript: void(0);" class="d-inline-block">
-                                                    <img src="assets/images/users/avatar-1.jpg" alt=""
-                                                        class="rounded-circle avatar-xxs">
-                                                </a>
+                                @foreach ($my_task as $task)
+                                    <tr>
+                                        <!-- Thẻ (tên nhiệm vụ) -->
+                                        <td>
+                                            <div class="form-check">
+                                                <label class="form-check-label ms-1" for="checkTask{{ $task->id }}">
+                                                    {{ $task->text }}
+                                                </label>
                                             </div>
-                                            <div class="avatar-group-item">
-                                                <a href="javascript: void(0);" class="d-inline-block">
-                                                    <img src="assets/images/users/avatar-2.jpg" alt=""
-                                                        class="rounded-circle avatar-xxs">
-                                                </a>
-                                            </div>
-                                            <div class="avatar-group-item">
-                                                <a href="javascript: void(0);" class="d-inline-block">
-                                                    <img src="assets/images/users/avatar-3.jpg" alt=""
-                                                        class="rounded-circle avatar-xxs">
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" value=""
-                                                id="checkTask2">
-                                            <label class="form-check-label ms-1" for="checkTask2">
-                                                Marketing Coordinator
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">17 Nov 2021</td>
-                                    <td><span class="badge bg-warning-subtle text-warning">Progress</span>
-                                    </td>
-                                    <td>
-                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="" data-bs-original-title="Den Davis">
-                                            <img src="assets/images/users/avatar-7.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" value=""
-                                                id="checkTask3">
-                                            <label class="form-check-label ms-1" for="checkTask3">
-                                                Administrative Analyst
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">26 Nov 2021</td>
-                                    <td><span class="badge bg-success-subtle text-success">Completed</span>
-                                    </td>
-                                    <td>
-                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="" data-bs-original-title="Alex Brown">
-                                            <img src="assets/images/users/avatar-6.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" value=""
-                                                id="checkTask4">
-                                            <label class="form-check-label ms-1" for="checkTask4">
-                                                E-commerce Landing Page
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">10 Dec 2021</td>
-                                    <td><span class="badge bg-danger-subtle text-danger">Pending</span>
-                                    </td>
-                                    <td>
-                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="" data-bs-original-title="Prezy Morin">
-                                            <img src="assets/images/users/avatar-5.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" value=""
-                                                id="checkTask5">
-                                            <label class="form-check-label ms-1" for="checkTask5">
-                                                UI/UX Design
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">22 Dec 2021</td>
-                                    <td><span class="badge bg-warning-subtle text-warning">Progress</span>
-                                    </td>
-                                    <td>
-                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title=""
-                                            data-bs-original-title="Stine Nielsen">
-                                            <img src="assets/images/users/avatar-1.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </td>
-                                </tr><!-- end -->
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input class="form-check-input fs-15" type="checkbox" value=""
-                                                id="checkTask6">
-                                            <label class="form-check-label ms-1" for="checkTask6">
-                                                Projects Design
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">31 Dec 2021</td>
-                                    <td><span class="badge bg-danger-subtle text-danger">Pending</span>
-                                    </td>
-                                    <td>
-                                        <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title=""
-                                            data-bs-original-title="Jansh William">
-                                            <img src="assets/images/users/avatar-4.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </td>
-                                </tr><!-- end -->
+                                        </td>
+                                        <!-- Ngày bắt đầu -->
+                                        <td class="text-muted">
+                                            {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
+                                        </td>
+                                        <!-- Ngày kết thúc -->
+                                        <td class="text-muted">
+                                            {{ \Carbon\Carbon::parse($task->end_date)->format('d M Y') }}
+                                        </td>
+
+                                        <!-- Độ ưu tiên -->
+                                        <td>
+                                            <span
+                                                class="badge fs-14
+                                        @if ($task->priority == 'High') bg-danger
+                                        @elseif ($task->priority == 'Medium') bg-warning
+                                        @elseif ($task->priority == 'Low') bg-success
+                                        @else '' @endif">
+                                                {{ $task->priority }}
+                                            </span>
+                                        </td>
+
+                                        <!-- Danh sách -->
+                                        <td class="text-muted">
+                                            {{ $task->catalog->name ?? 'Không có danh sách' }}
+                                        </td>
+                                    </tr><!-- end -->
+                                @endforeach
                             </tbody><!-- end tbody -->
                         </table><!-- end table -->
                     </div>
-                    <div class="mt-3 text-center">
-                        <a href="javascript:void(0);" class="text-muted text-decoration-underline">Load
-                            More</a>
-                    </div>
                 </div><!-- end cardbody -->
+
             </div><!-- end card -->
-        </div>
+        </div><!-- end col -->
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
+
                 <div class="card-header">
                     <h5 class="card-title mb-0">Nhiệm vụ quá hạn</h5>
                 </div>
@@ -395,111 +365,90 @@
                                 <th>Tên card</th>
                                 <th>Thành viên</th>
                                 <th>Ngày hết hạn</th>
-                                <th></th>
+                                <th>Danh sách</th>
+                                <th>Độ ưu tiên</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>VLZ-452</td>
-                                <td>Symox v1.0.0</td>
-                                <td>
-                                    <div class="avatar-group">
-                                        <a href="javascript: void(0);" class="avatar-group-item" data-img="avatar-3.jpg"
-                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                            title="Username">
-                                            <img src="assets/images/users/avatar-3.jpg" alt=""
-                                                class="rounded-circle avatar-xxs">
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>03 Oct, 2021</td>
-                                <td><span class="badge bg-info-subtle text-info">Re-open</span>
-                                </td>
+                            @foreach ($task_over as $task)
+                                <tr>
+                                    <td>{{ $task->id }}</td>
+                                    <td>{{ $task->text }}</td>
+                                    <td>
+                                        <div class="avatar-group d-flex justify-content-center" id="newMembar">
+                                            @if ($task->members->isNotEmpty())
+                                                @php
+                                                    // Giới hạn số thành viên hiển thị
+                                                    $maxDisplay = 3;
+                                                    $count = 0;
+                                                @endphp
+                                                @foreach ($task->members as $member)
+                                                    @if ($count < $maxDisplay)
+                                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                                            data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                            data-bs-placement="top" title="{{ $member->name }}">
+                                                            @if ($member->image)
+                                                                <img src="{{ asset('storage/' . $member->image) }}"
+                                                                    alt="" class="rounded-circle avatar-xs" />
+                                                            @else
+                                                                <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                    style="width: 40px;height: 40px">
+                                                                    {{ strtoupper(substr($member->name, 0, 1)) }}
+                                                                </div>
+                                                            @endif
+                                                        </a>
+                                                        @php $count++; @endphp
+                                                    @endif
+                                                @endforeach
 
-                            </tr>
-
+                                                @if ($task->members->count() > $maxDisplay)
+                                                    <a href="javascript: void(0);" class="avatar-group-item"
+                                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="{{ $task->members->count() - $maxDisplay }} more">
+                                                        <div class="avatar-xs">
+                                                            <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
+                                                                style="width: 40px; height: 40px;">
+                                                                +{{ $task->members->count() - $maxDisplay }}
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>{{ Carbon::parse($task->end_date)->format('d M, Y') }}</td>
+                                    <td>{{ $task->catalog->name ?? 'Chưa có danh sách' }}</td>
+                                    <!-- Hiển thị tên danh sách -->
+                                    <td>
+                                        <span
+                                            class="badge fs-14
+                                        @if ($task->priority == 'High') bg-danger
+                                        @elseif ($task->priority == 'Medium') bg-warning
+                                        @elseif ($task->priority == 'Low') bg-success
+                                        @else '' @endif">
+                                            {{ $task->priority }}
+                                        </span>
+                                    </td> <!-- Hiển thị độ ưu tiên với màu sắc tương ứng -->
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
+
+
+
             </div>
         </div><!--end col-->
     </div><!--end row-->
-    </div>
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Bar Chart
-        const barCtx = document.getElementById('barChart');
-        new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        '#0ab39c',
-                        '#405189',
-                        '#3577f1',
-                        '#f7b84b',
-                        '#f06548',
-                        '#299cdb'
-                    ],
-                    borderColor: [
-                        '#0ab39c',
-                        '#405189',
-                        '#3577f1',
-                        '#f7b84b',
-                        '#f06548',
-                        '#299cdb'
-                    ],
-                    borderWidth: '#088675',
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        // Truyền dữ liệu từ PHP vào JavaScript
+        const completedTasks = @json($completedTasksCount); // Số nhiệm vụ hoàn thành
+        const incompleteTasks = @json($incompleteTasksCount); // Số nhiệm vụ chưa hoàn thành
 
-        // Pie Chart
-        const pieCtx = document.getElementById('pieChart');
-        new Chart(pieCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Thanh', 'Thắm', 'Vinh', 'Nguyệt', 'Tuấn', 'Đạt'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        '#0ab39c',
-                        '#405189',
-                        '#3577f1',
-                        '#f7b84b',
-                        '#f06548',
-                        '#299cdb'
-                    ],
-                    hoverOffset: 3
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        position: 'right', // Đặt vị trí của legend sang bên trái
-                        labels: {
-                            padding: 20 // Khoảng cách giữa legend và biểu đồ
-                        }
-                    }
-                }
-            }
-
-        });
-
-        // Donut Chart
+        // Tạo biểu đồ Donut
         const donutCtx = document.getElementById('doughnutChart');
         new Chart(donutCtx, {
             type: 'doughnut',
@@ -507,17 +456,17 @@
                 labels: ['Hoàn thành', 'Chưa hoàn thành'],
                 datasets: [{
                     label: 'Tiến độ dự án',
-                    data: [70, 30],
+                    data: [completedTasks, incompleteTasks], // Dữ liệu từ PHP
                     backgroundColor: [
-                        '#405189',
-                        '#F5F5F5'
+                        '#405189', // Màu cho nhiệm vụ hoàn thành
+                        '#F5F5F5' // Màu cho nhiệm vụ chưa hoàn thành
                     ],
                 }]
             },
             options: {
                 plugins: {
                     legend: {
-                        position: 'right', // Đặt vị trí của legend sang bên trái
+                        position: 'right', // Đặt vị trí của legend sang bên phải
                         labels: {
                             padding: 20 // Khoảng cách giữa legend và biểu đồ
                         }
@@ -525,7 +474,83 @@
                 }
             }
         });
+        // Hàm tạo màu ngẫu nhiên với tông màu nhạt hơn
+        function getRandomLightColor() {
+            const letters = 'BCDEF'; // Giới hạn các chữ số từ B đến F để tạo màu nhạt hơn
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * letters.length)];
+            }
+            return color;
+        }
+
+        // Hàm tạo mảng màu ngẫu nhiên với số lượng màu cụ thể
+        function getRandomColors(count) {
+            let colors = [];
+            for (let i = 0; i < count; i++) {
+                colors.push(getRandomLightColor()); // Gọi hàm tạo màu nhạt
+            }
+            return colors;
+        }
+
+
+        // Truyền dữ liệu từ PHP vào JavaScript
+        const memberNames = @json($memberNames); // Tên của các thành viên
+        const taskCounts = @json($taskCounts); // Số lượng nhiệm vụ giao cho từng thành viên
+
+        // Tạo màu ngẫu nhiên cho mỗi thành viên
+        const randomColors = getRandomColors(memberNames.length); // Tạo mảng màu ngẫu nhiên cho số lượng thành viên
+
+        // Tạo biểu đồ Pie
+        const pieCtx = document.getElementById('pieChart');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: memberNames, // Tên các thành viên
+                datasets: [{
+                    label: 'Số nhiệm vụ',
+                    data: taskCounts, // Số lượng nhiệm vụ
+                    backgroundColor: randomColors, // Màu sắc ngẫu nhiên
+                    hoverOffset: 3
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'right', // Đặt vị trí của legend sang bên phải
+                        labels: {
+                            padding: 20 // Khoảng cách giữa legend và biểu đồ
+                        }
+                    }
+                }
+            }
+        });
+
+        // Tạo biểu đồ Bar Chart
+        const barCtx = document.getElementById('barChart');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: memberNames, // Sử dụng tên thành viên cho trục x
+                datasets: [{
+                    label: 'Số nhiệm vụ',
+                    data: taskCounts, // Số lượng nhiệm vụ tương ứng
+                    backgroundColor: randomColors, // Sử dụng màu ngẫu nhiên
+                    borderColor: randomColors, // Sử dụng màu ngẫu nhiên cho viền
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true // Đảm bảo trục y bắt đầu từ 0
+                    }
+                }
+            }
+        });
     </script>
+
+
     <!-- apexcharts -->
     <script src="{{ asset('theme/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <!-- Swiper Js -->
