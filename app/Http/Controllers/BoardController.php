@@ -49,12 +49,13 @@ class BoardController extends Controller
         // Lấy tất cả các bảng trong workspace mà người dùng là người tạo hoặc là thành viên
         $boards = Board::where('workspace_id', $workspaceId)
             ->where(function ($query) use ($userId) {
+                // Sửa điều kiện này để so sánh với trường lưu thông tin người tạo, ví dụ: 'created_by'
                 $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
                         $query->where('user_id', $userId);
                     });
             })
-            ->with(['workspace', 'boardMembers'])
+            ->with(['workspace', 'boardMembers', 'catalogs.tasks']) // Tải các tasks liên quan
             ->get()
             ->map(function ($board) use ($userId) {
                 // Tính tổng số thành viên trong bảng
@@ -70,6 +71,13 @@ class BoardController extends Controller
                     return $member->user_id == $userId && $member->follow == 1;
                 });
 
+                // Tính tổng số nhiệm vụ và tổng progress của các task trong bảng
+                $totalTasks = $board->catalogs->pluck('tasks')->flatten()->count();
+                $totalProgress = $board->catalogs->pluck('tasks')->flatten()->sum('progress');
+
+                // Tính phần trăm tiến độ (progress)
+                $board->complete = $totalTasks > 0 ? round($totalProgress / $totalTasks, 2) : 0;
+
                 return $board;
             });
 
@@ -79,10 +87,9 @@ class BoardController extends Controller
                 return $member->user_id == $userId && $member->is_star == 1;
             });
         });
-        // dd($workspaceId);
 
         // Trả về view với danh sách bảng, bảng đã đánh dấu sao và workspaceId
-        return view('homes.dashboard', compact('boards', 'board_star'));
+        return view('homes.dashboard', compact('boards', 'board_star', 'workspaceId'));
     }
 
     /**
@@ -138,9 +145,7 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -159,21 +164,21 @@ class BoardController extends Controller
 
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
-//        $board->load([
-//            'tags',
-//            'users',
-//            'catalogs',
-//            'catalogs.tasks' => function ($query) {
-//                $query->orderBy('position', 'asc');
-//            },
-//            'catalogs.tasks.catalog:id,name',
-//            'catalogs.tasks.members',
-//            'catalogs.tasks.checkList',
-//            'catalogs.tasks.checkList.checkListItems',
-//            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
-//            'catalogs.tasks.tags',
-//            'catalogs.tasks.followMembers'
-//        ]);
+        //        $board->load([
+        //            'tags',
+        //            'users',
+        //            'catalogs',
+        //            'catalogs.tasks' => function ($query) {
+        //                $query->orderBy('position', 'asc');
+        //            },
+        //            'catalogs.tasks.catalog:id,name',
+        //            'catalogs.tasks.members',
+        //            'catalogs.tasks.checkList',
+        //            'catalogs.tasks.checkList.checkListItems',
+        //            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
+        //            'catalogs.tasks.tags',
+        //            'catalogs.tasks.followMembers'
+        //        ]);
 
         $board->load([
             'tags',
@@ -249,7 +254,7 @@ class BoardController extends Controller
 
         if ($request->ajax()) {
             $viewType = $request->viewType;
-//            $this->middleware('csrf', ['except' => ['edit']]);
+            //            $this->middleware('csrf', ['except' => ['edit']]);
         }
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
@@ -261,7 +266,7 @@ class BoardController extends Controller
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
          * */
-//        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
+        //        $boardId = $board->id; // ID của bảng mà bạn muốn xem hoạt động
         $activities = Activity::with('causer')
             ->where('properties->board_id', $id)
             ->orderBy('created_at', 'desc')
@@ -308,7 +313,7 @@ class BoardController extends Controller
 
         switch ($viewType) {
             case 'dashboard':
-                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'id'));
 
             case 'list':
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
@@ -358,7 +363,6 @@ class BoardController extends Controller
             default:
                 return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
         }
-
     }
 
 
@@ -426,7 +430,6 @@ class BoardController extends Controller
                 'msg' => true
             ]);
         }
-
     }
 
     public function updateBoardMember2(Request $request, string $id)
@@ -446,7 +449,6 @@ class BoardController extends Controller
                 'follow' => $boardMember->follow, // Trả về trạng thái follow mới
             ]);
         }
-
     }
 
 
@@ -552,7 +554,6 @@ class BoardController extends Controller
                             Session::put('authorize', $request->authorize);
                             return redirect()->route('login');
                         }
-
                     } //DONE
 
                     //xử lý khi người dùng đã có trong bảng đó rồi
@@ -561,7 +562,6 @@ class BoardController extends Controller
                         session(['action' => 'error']);
                         return redirect()->route('b.edit', $board->id);
                     }
-
                 } //check xử lý nếu người dùng chưa ở trong wsp
                 else {
 
@@ -644,7 +644,6 @@ class BoardController extends Controller
                             return redirect()->route('login');
                         }
                     }
-
                 }
             } //xử lý khi người dùng không có tài khoản
             else {
