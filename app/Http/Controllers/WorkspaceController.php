@@ -362,6 +362,8 @@ class WorkspaceController extends Controller
             ->where('workspace_members.user_id', $userId)
             ->where('workspace_members.is_active', 1)
             ->first();
+
+
         $workspaceMembers = WorkspaceMember::query()
             ->select('workspace_members.*', 'workspace_members.id as wm_id', 'users.id as user_id', 'users.name as name', 'workspaces.name as wsp_name')
             ->join('users', 'users.id', 'workspace_members.user_id')

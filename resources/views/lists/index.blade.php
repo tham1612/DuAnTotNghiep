@@ -28,7 +28,7 @@
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
                     <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                        <form action="{{ route('catalogs.store') }}" method="post" 
+                        <form action="{{ route('catalogs.store') }}" method="post"
                             class="formItem" onsubmit="return disableButtonOnSubmit()">
                             @csrf
                             <div class="mb-2">
@@ -252,18 +252,16 @@
                                                            onchange="updateTaskList({{ $task->id }})">
                                                 </td>
                                                 <td class="">
-                                                        <span
-                                                            class="badge fs-14
-                                                        @if ($task->priority == 'High') bg-danger   <!-- Đỏ cho ưu tiên cao -->
-                                                        @elseif ($task->priority == 'Medium')
-                                                            bg-warning  <!-- Vàng cho ưu tiên trung bình -->
-                                                        @elseif ($task->priority == 'Low')
-                                                            bg-success  <!-- Xanh lá cho ưu tiên thấp -->
-                                                        @else
-                                                            ''          <!-- Không có màu nếu không khớp --> @endif"
-                                                            onclick="toggleSelect({{ $task->id }});">
-                                                            {{ $task->priority }}
-                                                        </span>
+                                                    <span
+                                                    class="badge
+                                                        @if ($task->priority == 'High') bg-danger-subtle text-danger
+                                                        @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
+                                                        @elseif ($task->priority == 'Low') bg-success-subtle text-success
+                                                        @else bg-info-subtle text-info @endif"
+                                                    onclick="toggleSelect({{ $task->id }});">
+                                                    {{ $task->priority }}
+                                                </span>
+
 
                                                     <select name="priority" id="priority_{{ $task->id }}"
                                                             class="form-select no-arrow" style="display: none;"

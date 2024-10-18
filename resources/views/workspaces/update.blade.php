@@ -531,6 +531,7 @@
                                                                 </ul>
                                                             </div>
                                                         @endif
+
                                                         <div class="tab-pane" id="profile2" role="tabpanel">
                                                             <ul style="margin-left: -32px;">
                                                                 @foreach ($wspViewer as $item)

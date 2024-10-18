@@ -134,7 +134,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.update');
         Route::post('/tasks/checklist/checklistItem/create', [ChecklistController::class, 'createChecklistItem'])
             ->name('checklist.createChecklistItem');
-        Route::post('/tasks/checklist/checklistItem/update', [ChecklistController::class, 'updateChecklistItem'])
+        Route::put('/tasks/checklist/checklistItem/{id}/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
         Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
             ->name('checklist.addMemberChecklist');
