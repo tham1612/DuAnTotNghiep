@@ -781,7 +781,7 @@
                                 </div>
                                 <div class="card-body border-top border-top-dashed">
                                     <div class="d-flex">
-                                        
+
                                         <h6 class="flex-shrink-0 text-danger mb-0"><i
                                                 class="ri-time-line align-bottom"></i>
                                             05

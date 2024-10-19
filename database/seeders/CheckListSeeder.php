@@ -10,8 +10,9 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskLabel;
 use App\Models\User;
-use DB;
+
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CheckListSeeder extends Seeder
 {

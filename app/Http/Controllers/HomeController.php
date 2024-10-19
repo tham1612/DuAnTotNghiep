@@ -60,7 +60,7 @@ class HomeController extends Controller
             ->get();
 
         // Kiểm tra kết quả bằng cách in ra các hoạt động
-        // dd($activities); 
+        // dd($activities);
         return view('homes.home', compact('boards', 'board_star','activities'));
     }
 
