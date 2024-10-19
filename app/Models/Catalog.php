@@ -27,4 +27,9 @@ class Catalog extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function board()
+    {
+        return $this->belongsTo(Board::class);
+    }
+
 }
