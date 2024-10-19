@@ -3,7 +3,7 @@
     Board - TaskFlow
 @endsection
 @section('main')
-    {{--    @dd($board->catalogs->first()->tasks) --}}
+{{--        @dd($board->catalogs->first()->tasks)--}}
     <div class="tasks-board mb-3" id="kanbanboard">
 
         @foreach ($board->catalogs as $data)
@@ -42,7 +42,7 @@
                             <div class="card tasks-box cursor-pointer" data-value="{{ $task->id }}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
-                                        <h6 class="fs-15 mb-0 flex-grow-1 text-truncate task-title"
+                                        <h6 class="fs-15 mb-0 flex-grow-1  task-title"
                                             data-bs-toggle="modal"
                                             data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{$task->text}}
@@ -102,7 +102,7 @@
                                         @endif
                                         <!-- giao việc cho thành viên-->
                                         @if ($task->members->count() >= 1)
-                                            <div class="flex-grow-1 d-flex align-items-center">
+                                            <div class="flex-grow-1 d-flex align-items-center" style="height: 30px">
                                                 <i class="ri-account-circle-line fs-20 me-2"></i>
                                                 <div class="avatar-group mt-3">
                                                     @if ($task->members->isNotEmpty())
@@ -114,7 +114,7 @@
                                                         @foreach ($task->members as $taskMember)
                                                             @if ($count < $maxDisplay)
                                                                 <a href="javascript: void(0);"
-                                                                   class="avatar-group-item"
+                                                                   class="avatar-group-item border-0"
                                                                    data-bs-toggle="tooltip"
                                                                    data-bs-placement="top"
                                                                    title="{{ $taskMember['name'] }}">
@@ -126,7 +126,7 @@
                                                                     @else
                                                                         <div class="avatar-sm">
                                                                             <div
-                                                                                class="avatar-title rounded-circle bg-light text-primary"
+                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                             </div>

@@ -409,7 +409,7 @@
                                                                                     type="submit">Duyệt</button>
                                                                             </form>
                                                                             <form
-                                                                                action="{{ route('refuse_member', $item->wm_id) }}"
+                                                                                action="{{ route('refuse_member', $item->id) }}"
                                                                                 onsubmit="disableButtonOnSubmit()"
                                                                                 method="post">
                                                                                 @method('DELETE')

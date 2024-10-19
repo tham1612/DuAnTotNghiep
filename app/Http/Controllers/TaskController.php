@@ -311,7 +311,7 @@ class TaskController extends Controller
         }
 
         $data = $request->except(['_token', '_method']);
-        TaskMember::create($data);
+        TaskMember::query()->insert($data);
 
         return response()->json([
             'success' => true,
@@ -334,8 +334,11 @@ class TaskController extends Controller
             ], 404);
         }
         try {
-            $check = $taskMember->delete();
-//            dd($check);
+            TaskMember::query()
+                ->where('task_id', $request->task_id)
+                ->where('user_id', $request->user_id)
+                ->delete();
+
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }

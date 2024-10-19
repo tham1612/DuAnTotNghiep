@@ -31,16 +31,17 @@ class ChecklistController extends Controller
         CheckList::create($data);
         return response()->json([
             'success' => "them thao tác thành công",
-             'msg' => true
+            'msg' => true
         ]);
     }
+
     public function createChecklistItem(Request $request)
     {
         $data = $request->except(['_token', '_method']);
         CheckListItem::create($data);
         return response()->json([
             'success' => "them ChecklistItem thành công",
-             'msg' => true
+            'msg' => true
         ]);
     }
 
@@ -50,41 +51,44 @@ class ChecklistController extends Controller
     public function update(Request $request, string $id)
     {
         $checkList = CheckList::query()->findOrFail($id);
-        $data=$request->only(['name','task_id']);
+        $data = $request->only(['name', 'task_id']);
         $checkList->update($data);
         return response()->json([
             'success' => "update checkList thành công",
-             'msg' => true
+            'msg' => true
         ]);
     }
-    public function updateChecklistItem(Request $request, string $id)
+
+    public function updateChecklistItem(Request $request)
     {
-        $checkListItem = CheckListItem::query()->findOrFail($id);
-        $data=$request->only(['reminder_date','end_date','start_date','is_complete']);
+        $checkListItem = CheckListItem::query()->findOrFail($request->id);
+        $data = $request->only(['reminder_date', 'end_date', 'start_date', 'is_complete']);
         $checkListItem->update($data);
         return response()->json([
             'success' => "update checkListItem thành công",
-             'msg' => true
+            'msg' => true
         ]);
     }
+
     public function addMemberChecklist(Request $request)
     {
         $data = $request->except(['_token', '_method']);
         CheckListItemMember::create($data);
         return response()->json([
             'success' => "them CheckListItemMember thành công",
-             'msg' => true
+            'msg' => true
         ]);
     }
-    public function deleteMemberChecklist( Request $request )
+
+    public function deleteMemberChecklist(Request $request)
     {
-        $checklistItem = CheckListItemMember::where('check_list_item_id',$request->check_list_item_id)
-            ->where('user_id',$request->user_id)
+        $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
+            ->where('user_id', $request->user_id)
             ->first();
         $checklistItem->delete();
         return response()->json([
             'success' => "xoas CheckListItemMember thành công",
-             'msg' => true
+            'msg' => true
         ]);
     }
 ////    public function getProgress( Request $request )
@@ -98,7 +102,6 @@ class ChecklistController extends Controller
 ////            'msg' => true
 ////        ]);
 //    }
-
 
 
     /**

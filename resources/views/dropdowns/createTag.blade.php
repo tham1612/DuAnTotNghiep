@@ -9,14 +9,17 @@
         <label class="fs-14">Chọn màu</label>
         {{--        <input type="color" name="color_code" class="form-control" style="height: 40px">--}}
         <div class="d-flex flex-wrap gap-2 select-color">
-            @foreach($colors as $color)
-                <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                     title="{{$color->name}}">
-                    <div
-                        class=" border rounded" style="width: 50px;height: 30px; background-color: {{$color->code}}">
+            @if(isset($colors))
+                @foreach($colors as $color)
+                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                         title="{{$color->name}}">
+                        <div
+                            class="color-box border rounded"
+                            style="width: 50px;height: 30px; background-color: {{$color->code}}">
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
     <div class="mt-3">
@@ -25,4 +28,5 @@
         </button>
     </div>
 </form>
+
 
