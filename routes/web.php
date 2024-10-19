@@ -64,9 +64,12 @@ Route::middleware(['auth', 'isWorkspace'])
         //thằng này thì sử lý logic khi người dùng kick và link được mời hoặc kick vào link_Pinvite của wsp
         Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite'])
             ->withoutMiddleware('auth');
-
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
+        Route::get('activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
+        Route::get('upgrade-member-ship/{id}', [WorkspaceController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
+        Route::get('management-franchise/{owner_id}/{user_id}', [WorkspaceController::class, 'managementfranchise'])->name('managementfranchise');
+
 
         Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -90,13 +93,19 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('create', [BoardController::class, 'create'])->name('create');
                 Route::post('store', [BoardController::class, 'store'])->name('store');
                 Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
+                Route::post('{id}/filter', [BoardController::class, 'filter']);
                 Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
                 Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
                 Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
                 Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
                 Route::get('request-to-join-workspace', [BoardController::class, 'requestToJoinWorkspace'])->name('requestToJoinWorkspace');
                 Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
+                Route::put('accept-member', [BoardController::class, 'acceptMember'])->name('acceptMember');
+                Route::delete('refuse-member/{id}', [BoardController::class, 'refuseMember'])->name('refuseMember');
                 Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
+                Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
+                Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
+                Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
             });
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');
@@ -125,7 +134,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.update');
         Route::post('/tasks/checklist/checklistItem/create', [ChecklistController::class, 'createChecklistItem'])
             ->name('checklist.createChecklistItem');
-        Route::put('/tasks/checklist/checklistItem/{checklistItem}/update', [ChecklistController::class, 'updateChecklistItem'])
+        Route::put('/tasks/checklist/checklistItem/{id}/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
         Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
             ->name('checklist.addMemberChecklist');
@@ -139,6 +148,14 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('tags.create');
         Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
             ->name('tags.update');
+        Route::post('/tasks/attachments/create', [\App\Http\Controllers\AttachmentController::class, 'store'])
+            ->name('attachments.create');
+        Route::put('/tasks/attachments/{id}/update', [\App\Http\Controllers\AttachmentController::class, 'update'])
+            ->name('attachments.update');
+        Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
+            ->name('attachments.destroy');
+        Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
+            ->name('comments.create');
     });
 
 
@@ -150,7 +167,6 @@ Auth::routes();
 
 Route::post('/forget-session', function () {
     session()->forget(['msg', 'action']);
-    return response()->json(['success' => true]);
 })->name('forget.session');
 
 Route::controller(LoginGoogleController::class)->group(function () {

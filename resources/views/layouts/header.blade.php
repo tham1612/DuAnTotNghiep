@@ -1,21 +1,21 @@
 @php
-//    $boardIsStars = \App\Models\Board::query()
-//        ->distinct()
-//        ->select(
-//            'boards.name AS board_name',
-//            'workspaces.name AS workspace_name',
-//            'boards.id AS board_id',
-//            'boards.image AS board_image',
-//        )
-//        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-//        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
-//        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-//        ->where('workspace_members.is_active', 1)
-//        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
-//        ->where('board_members.is_star', 1)
-//        ->get();
-      $boardIsStars = session('boardIsStars');
-    //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
+    //    $boardIsStars = \App\Models\Board::query()
+    //        ->distinct()
+    //        ->select(
+    //            'boards.name AS board_name',
+    //            'workspaces.name AS workspace_name',
+    //            'boards.id AS board_id',
+    //            'boards.image AS board_image',
+    //        )
+    //        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
+    //        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
+    //        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
+    //        ->where('workspace_members.is_active', 1)
+    //        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
+    //        ->where('board_members.is_star', 1)
+    //        ->get();
+          $boardIsStars = session('boardIsStars');
+        //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
 @endphp
 <header id="page-topbar">
     <div class="layout-width">
@@ -237,38 +237,38 @@
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
                                 @if(!empty($boardIsStars))
-                                @foreach ($boardIsStars as $boardIsStar)
-                                    <div
-                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
-                                        <div class="d-flex align-items-center">
+                                    @foreach ($boardIsStars as $boardIsStar)
+                                        <div
+                                            class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                            <div class="d-flex align-items-center">
 
-                                            <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                                 class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                                <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
+                                                     class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
 
-                                            <div class="flex-grow-1">
-                                                <h6 class="mt-0 mb-1 fs-14">
-                                                    {{--    Liên kết đến bảng                                            --}}
-                                                    <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardIsStar['board_id']]) }}"
-                                                       class="text-reset">
-                                                        {{ $boardIsStar['board_name'] }}
-                                                    </a>
-                                                </h6>
-                                                <p class="mb-0 fs-12 w-100 text-muted">
-                                                    {{ $boardIsStar['workspace_name'] }}
-                                                </p>
-                                            </div>
-                                            <div class="ps-2">
-                                                <button type="button" data-value="{{ $boardIsStar['board_id'] }}"
-                                                        id="board_star_{{ $boardIsStar['board_id'] }}"
-                                                        class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
-                                                    <i class="ri-star-fill fs-16"></i>
-                                                </button>
-                                                <input type="hidden" id="user_id"
-                                                       value="{{ \Illuminate\Support\Facades\Auth::id() }}">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mt-0 mb-1 fs-14">
+                                                        {{--    Liên kết đến bảng                                            --}}
+                                                        <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardIsStar['board_id']]) }}"
+                                                           class="text-reset">
+                                                            {{ $boardIsStar['board_name'] }}
+                                                        </a>
+                                                    </h6>
+                                                    <p class="mb-0 fs-12 w-100 text-muted">
+                                                        {{ $boardIsStar['workspace_name'] }}
+                                                    </p>
+                                                </div>
+                                                <div class="ps-2">
+                                                    <button type="button" data-value="{{ $boardIsStar['board_id'] }}"
+                                                            id="board_star_{{ $boardIsStar['board_id'] }}"
+                                                            class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                        <i class="ri-star-fill fs-16"></i>
+                                                    </button>
+                                                    <input type="hidden" id="user_id"
+                                                           value="{{ \Illuminate\Support\Facades\Auth::id() }}">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
                                 @endif
                             </div>
                         </div>
@@ -492,31 +492,7 @@
     </div>
 
 @endif
-@if(!empty($boardIsStars))
-@foreach ($boardIsStars as $boardIsStar)
-    <script>
-        var user_id = document.getElementById('user_id');
-        var board_star = document.getElementById("board_star_{{ $boardIsStar['board_id'] }}");
-        board_star.addEventListener('click', function () {
-            var board_id = this.getAttribute('data-value');
-            $.ajax({
-                url: `/b/${board_id}/updateBoardMember`,
-                method: "PUT",
-                data: {
-                    board_id: board_id,
-                    user_id: user_id.value,
-                },
-                success: function (response) {
 
-                },
-                error: function (xhr) {
-
-                }
-            });
-        })
-    </script>
-@endforeach
-@endif
 
 <div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
@@ -540,3 +516,28 @@
 </div><!-- /.modal -->
 
 
+@if(!empty($boardIsStars))
+    @foreach ($boardIsStars as $boardIsStar)
+        <script>
+            var user_id = document.getElementById('user_id');
+            var board_star = document.getElementById("board_star_{{ $boardIsStar['board_id'] }}");
+            board_star.addEventListener('click', function () {
+                var board_id = this.getAttribute('data-value');
+                $.ajax({
+                    url: `/b/${board_id}/updateBoardMember`,
+                    method: "PUT",
+                    data: {
+                        board_id: board_id,
+                        user_id: user_id.value,
+                    },
+                    success: function (response) {
+
+                    },
+                    error: function (xhr) {
+
+                    }
+                });
+            })
+        </script>
+    @endforeach
+@endif

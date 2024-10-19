@@ -2,16 +2,6 @@
 @section('main')
     <div class="row justify-content-center">
         <div class="col-xxl-9">
-            @if (session('msg'))
-                <div class="alert alert-success">
-                    {{ session('msg') }}
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
             <div class="card">
                 <div class="card-body border-bottom border-bottom-dashed p-4">
                     <div class="row">
@@ -132,11 +122,11 @@
                                                                     name="email" />
                                                             </div>
                                                             <div class="col-4 ms-2">
-                                                                <select name="authorize" id=""
-                                                                    class="form-select">
+                                                                <select name="authorize" id="" class="form-select">
                                                                     <option value="Member">Thành Viên</option>
-                                                                    <option value="Sub_Owner">Phó nhóm</option>
-                                                                    <option value="Viewer">Người Xem</option>
+                                                                    @if ($workspaceChecked->authorize !== 'Member' && $workspaceChecked->authorize !== 'Viewer')
+                                                                        <option value="Sub_Owner">Phó nhóm</option>
+                                                                    @endif
                                                                 </select>
                                                             </div>
                                                             <div class="col-2 d-flex justify-content-center">
@@ -178,16 +168,18 @@
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
                                                                 style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 1 }}</span>
                                                         </li>
-                                                        <li
-                                                            class="nav-item d-flex align-items-center justify-content-between">
-                                                            <a class="nav-link" data-bs-toggle="tab" href="#profile1"
-                                                                role="tab">
-                                                                Yêu cầu tham gia
-                                                            </a>
-                                                            <span
-                                                                class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspInviteCount }}</span>
-                                                        </li>
+                                                        @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
+                                                            <li
+                                                                class="nav-item d-flex align-items-center justify-content-between">
+                                                                <a class="nav-link" data-bs-toggle="tab" href="#profile1"
+                                                                    role="tab">
+                                                                    Yêu cầu tham gia
+                                                                </a>
+                                                                <span
+                                                                    class="badge bg-dark align-items-center justify-content-center d-flex"
+                                                                    style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspInviteCount }}</span>
+                                                            </li>
+                                                        @endif
                                                         <li
                                                             class="nav-item d-flex align-items-center justify-content-between">
                                                             <a class="nav-link" data-bs-toggle="tab" href="#profile2"
@@ -253,23 +245,115 @@
                                                                         <button class="btn btn-outline-danger">Quản trị
                                                                             viên</button>
                                                                         <!-- Nút ba chấm -->
+
                                                                         <div class="dropdown ms-2">
+
                                                                             <button class="btn btn-link dropdown-toggle"
                                                                                 type="button" id="dropdownMenuButton"
                                                                                 data-bs-toggle="dropdown"
                                                                                 aria-expanded="false">
                                                                                 <i class="ri-more-2-fill"></i>
                                                                             </button>
-                                                                            <!-- Popup xuất hiện khi nhấn nút ba chấm -->
-                                                                            <ul class="dropdown-menu"
-                                                                                aria-labelledby="dropdownMenuButton">
-                                                                                <li><a class="dropdown-item text-danger"
-                                                                                        href="#">Rời khỏi</a></li>
-                                                                            </ul>
+                                                                            @if ($wspOwner->user_id == $userId)
+                                                                                <!-- Popup xuất hiện khi nhấn nút ba chấm -->
+                                                                                <ul class="dropdown-menu"
+                                                                                    aria-labelledby="dropdownMenuButton">
+                                                                                    <li><a class="dropdown-item text-danger"
+                                                                                            href="{{ route('activateMember', $wspOwner->wm_id) }}">Rời
+                                                                                            khỏi</a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </li>
-
+                                                                {{-- Lặp lại các sub owner --}}
+                                                                @foreach ($wspSubOwner as $item)
+                                                                    <li class="d-flex mt-1 mb-1">
+                                                                        <div class="col-1">
+                                                                            <a href="javascript: void(0);"
+                                                                                class="avatar-group-item"
+                                                                                data-bs-toggle="tooltip"
+                                                                                data-bs-trigger="hover" data-bs-item="top"
+                                                                                title="Nancy">
+                                                                                @if ($item->image)
+                                                                                    <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                                                        alt=""
+                                                                                        class="rounded-circle avatar-xs" />
+                                                                                @else
+                                                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                                        style="width: 25px;height: 25px">
+                                                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
+                                                                                    </div>
+                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                        id="swicthWs">
+                                                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
+                                                                                        <i
+                                                                                            class=" ri-arrow-drop-down-line fs-20"></i>
+                                                                                    </span>
+                                                                                @endif
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col-6 d-flex flex-column">
+                                                                            <section class="fs-12">
+                                                                                <p style="margin-bottom: 0px;"
+                                                                                    class="text-black">
+                                                                                    {{ $item->name }}
+                                                                                    @if ($item->user_id == $userId)
+                                                                                        <span
+                                                                                            class="text-success">(Bạn)</span>
+                                                                                    @else
+                                                                                        <span class="text-success">(Phó
+                                                                                            nhóm)</span>
+                                                                                    @endif
+                                                                                </p>
+                                                                                <span>@ {{ $item->name }}</span>
+                                                                                <span><i
+                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
+                                                                                <span>Thành viên của không gian làm
+                                                                                    việc</span>
+                                                                            </section>
+                                                                        </div>
+                                                                        <div
+                                                                            class="col-5 d-flex align-items-center justify-content-end">
+                                                                            <button class="btn btn-outline-success">Phó
+                                                                                nhóm</button>
+                                                                            <!-- Nút ba chấm -->
+                                                                            <div class="dropdown ms-2">
+                                                                                <button
+                                                                                    class="btn btn-link dropdown-toggle"
+                                                                                    type="button" id="dropdownMenuButton"
+                                                                                    data-bs-toggle="dropdown"
+                                                                                    aria-expanded="false">
+                                                                                    <i class="ri-more-2-fill"></i>
+                                                                                </button>
+                                                                                @if ($item->user_id === $userId)
+                                                                                    <ul class="dropdown-menu"
+                                                                                        aria-labelledby="dropdownMenuButton">
+                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Rời
+                                                                                                khỏi</a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                @elseif($workspaceChecked->authorize == 'Owner')
+                                                                                    <ul class="dropdown-menu"
+                                                                                        aria-labelledby="dropdownMenuButton">
+                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Kích
+                                                                                                phó
+                                                                                                nhóm</a>
+                                                                                        </li>
+                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                                href="{{ route('managementfranchise',['owner_id'=> $wspOwner, 'user_id'=>$item->user_id]) }}">Nhượng
+                                                                                                quyền</a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                @endif
+                                                                                <!-- Popup xuất hiện khi nhấn nút ba chấm -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
                                                                 <!-- Lặp lại với các thành viên -->
                                                                 @foreach ($wspMember as $item)
                                                                     <li class="d-flex mt-1 mb-1">
@@ -334,95 +418,120 @@
                                                                                     <i class="ri-more-2-fill"></i>
                                                                                 </button>
                                                                                 <!-- Popup xuất hiện khi nhấn nút ba chấm -->
-                                                                                <ul class="dropdown-menu"
-                                                                                    aria-labelledby="dropdownMenuButton">
-                                                                                    <li><a class="dropdown-item"
-                                                                                            href="#">Kích thành
-                                                                                            viên</a></li>
-                                                                                    <li><a class="dropdown-item"
-                                                                                            href="#">Thăng cấp thành
-                                                                                            viên</a></li>
-                                                                                </ul>
+                                                                                @if ($item->user_id === $userId)
+                                                                                    <ul class="dropdown-menu"
+                                                                                        aria-labelledby="dropdownMenuButton">
+                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Rời
+                                                                                                khỏi</a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                @elseif($workspaceChecked->authorize == 'Owner')
+                                                                                    <ul class="dropdown-menu"
+                                                                                        aria-labelledby="dropdownMenuButton">
+                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Kích
+                                                                                                thành
+                                                                                                viên</a></li>
+                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                                href="{{ route('upgradeMemberShip', $item->wm_id) }}">Thăng
+                                                                                                cấp
+                                                                                                thành
+                                                                                                viên</a></li>
+                                                                                    </ul>
+                                                                                @elseif ($workspaceChecked->authorize == 'Sub_Owner')
+                                                                                    <ul class="dropdown-menu"
+                                                                                        aria-labelledby="dropdownMenuButton">
+                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Kích
+                                                                                                thành
+                                                                                                viên</a></li>
+                                                                                    </ul>
+                                                                                @endif
+
                                                                             </div>
                                                                         </div>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
                                                         </div>
+                                                        @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
+                                                            <div class="tab-pane" id="profile1" role="tabpanel">
+                                                                <ul style="margin-left: -32px;">
+                                                                    @foreach ($wspInvite as $item)
+                                                                        <li class="d-flex justify-content-between">
+                                                                            <div class="col-1">
+                                                                                <a href="javascript: void(0);"
+                                                                                    class="avatar-group-item"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    data-bs-trigger="hover"
+                                                                                    data-bs-placement="top"
+                                                                                    title="Nancy">
+                                                                                    @if ($item->image)
+                                                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                                                            alt=""
+                                                                                            class="rounded-circle avatar-xs" />
+                                                                                    @else
+                                                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                                            style="width: 25px;height: 25px">
+                                                                                            {{ strtoupper(substr($item->name, 0, 1)) }}
+                                                                                        </div>
+                                                                                        <span class="fs-15 ms-2 text-white"
+                                                                                            id="swicthWs">
+                                                                                            {{ \Illuminate\Support\Str::limit($item->name, 16) }}
+                                                                                            <i
+                                                                                                class=" ri-arrow-drop-down-line fs-20"></i>
+                                                                                        </span>
+                                                                                    @endif
+                                                                                </a>
+                                                                            </div>
+                                                                            <div class="col-7 d-flex flex-column">
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                        class="text-black">
+                                                                                        {{ $item->name }}
+                                                                                        <span class="text-black">(Người
+                                                                                            mới)</span>
+                                                                                    </p>
+                                                                                    <span>@ {{ $item->name }}</span>
+                                                                                    <span><i
+                                                                                            class="ri-checkbox-blank-circle-fill"></i></span>
+                                                                                    <span>Đã gửi lời mời vao không gian làm
+                                                                                        việc</span>
+                                                                                </section>
+                                                                            </div>
+                                                                            <div class="col-4 d-flex justify-content-end">
+                                                                                <form onsubmit="disableButtonOnSubmit()"
+                                                                                    action="{{ route('accept_member') }}"
+                                                                                    method="post">
+                                                                                    @method('PUT')
+                                                                                    @csrf
+                                                                                    <input type="hidden"
+                                                                                        value="{{ $item->user_id }}"
+                                                                                        name="user_id">
+                                                                                    <input type="hidden"
+                                                                                        value="{{ $item->workspace_id }}"
+                                                                                        name="workspace_id">
+                                                                                    <button class="btn btn-primary me-2"
+                                                                                        type="submit">Duyệt</button>
+                                                                                </form>
+                                                                                <form
+                                                                                    action="{{ route('refuse_member', $item->wm_id) }}"
+                                                                                    onsubmit="disableButtonOnSubmit()"
+                                                                                    method="post">
+                                                                                    @method('DELETE')
+                                                                                    @csrf
+                                                                                    <button class="btn btn-danger"
+                                                                                        type="submit">Từ chối</button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </li>
+                                                                        <br>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        @endif
 
-                                                        <div class="tab-pane" id="profile1" role="tabpanel">
-                                                            <ul style="margin-left: -32px;">
-                                                                @foreach ($wspInvite as $item)
-                                                                    <li class="d-flex justify-content-between">
-                                                                        <div class="col-1">
-                                                                            <a href="javascript: void(0);"
-                                                                                class="avatar-group-item"
-                                                                                data-bs-toggle="tooltip"
-                                                                                data-bs-trigger="hover"
-                                                                                data-bs-placement="top" title="Nancy">
-                                                                                @if ($item->image)
-                                                                                    <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                                                        alt=""
-                                                                                        class="rounded-circle avatar-xs" />
-                                                                                @else
-                                                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                                                        style="width: 25px;height: 25px">
-                                                                                        {{ strtoupper(substr($item->name, 0, 1)) }}
-                                                                                    </div>
-                                                                                    <span class="fs-15 ms-2 text-white"
-                                                                                        id="swicthWs">
-                                                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
-                                                                                        <i
-                                                                                            class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                    </span>
-                                                                                @endif
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="col-7 d-flex flex-column">
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                    class="text-black">
-                                                                                    {{ $item->name }}
-                                                                                    <span class="text-black">(Người
-                                                                                        mới)</span>
-                                                                                </p>
-                                                                                <span>@ {{ $item->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Đã gửi lời mời vao không gian làm
-                                                                                    việc</span>
-                                                                            </section>
-                                                                        </div>
-                                                                        <div class="col-4 d-flex justify-content-end">
-                                                                            <form onsubmit="disableButtonOnSubmit()"
-                                                                                action="{{ route('accept_member') }}"
-                                                                                method="post">
-                                                                                @method('PUT')
-                                                                                @csrf
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->user_id }}"
-                                                                                    name="user_id">
-                                                                                <input type="hidden"
-                                                                                    value="{{ $item->workspace_id }}"
-                                                                                    name="workspace_id">
-                                                                                <button class="btn btn-primary me-2"
-                                                                                    type="submit">Duyệt</button>
-                                                                            </form>
-                                                                            <form
-                                                                                action="{{ route('refuse_member', $item->wm_id) }}"
-                                                                                onsubmit="disableButtonOnSubmit()"
-                                                                                method="post">
-                                                                                @method('DELETE')
-                                                                                @csrf
-                                                                                <button class="btn btn-danger"
-                                                                                    type="submit">Từ chối</button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </li>
-                                                                    <br>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
                                                         <div class="tab-pane" id="profile2" role="tabpanel">
                                                             <ul style="margin-left: -32px;">
                                                                 @foreach ($wspViewer as $item)
@@ -471,7 +580,6 @@
                                                                 @endforeach
                                                             </ul>
                                                         </div>
-
                                                     </div>
                                                 </div>
 

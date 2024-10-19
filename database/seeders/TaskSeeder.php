@@ -81,13 +81,10 @@ class TaskSeeder extends Seeder
             }
         }
         for ($TaskID = 1; $TaskID < 5; $TaskID++) {
-            for ($UserID = 1; $UserID < 5; $UserID++) {
                 TaskAttachment::query()->create([
                     'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
                     'file_name' => fake()->word() . '.pdf',
                 ]);
-            }
         }
         for ($TaskID = 01; $TaskID < 5; $TaskID++){
             if (fake()->boolean()){

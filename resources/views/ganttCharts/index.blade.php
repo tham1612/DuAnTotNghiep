@@ -160,7 +160,7 @@
             ];
 
             // Giả sử bạn đã có dữ liệu catalogs từ server
-            var catalogs = @json($catalogs);
+            var catalogs = @json($board->catalogs);
 
             // Hàm để lấy catalog theo ID
             function getCatalogById(catalog_id) {

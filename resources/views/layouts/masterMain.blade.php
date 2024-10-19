@@ -38,6 +38,8 @@
             min-height: 100px !important;
             /* Đảm bảo chiều cao giới hạn 150px */
         }
+
+
     </style>
 
     @if (request()->is('b/*'))
@@ -49,6 +51,20 @@
                 /* Cho phép nội dung xuống dòng */
                 width: 200%;
                 /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
+
+            }
+
+            .attachments-container {
+                max-height: 400px; /* Đặt chiều cao tối đa để tạo scroll khi cần */
+                overflow-y: auto; /* Cho phép cuộn dọc khi vượt quá chiều cao */
+            }
+
+            .attachments-container::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+
+            .selected-tag {
+                box-shadow: 0 0 15px #000000; /* Hiệu ứng bóng */
             }
         </style>
     @endif
@@ -96,6 +112,7 @@
             <!-- /.modal-content -->
         </div>
 
+
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
@@ -115,13 +132,15 @@
                 @if (request()->is('b/*'))
                     @php
                         $board = session('board');
-
+                        $member_Is_star = session('member_Is_star');
+                        $colors = session('colors');
                     @endphp
 
                     @include('layouts.navbar')
                     @include('components.setting')
                     @include('components.task')
                     @include('components.member')
+
                 @endif
 
                 {{-- các màn hình hiển thị --}}
@@ -130,6 +149,7 @@
                 @include('components.createBoard')
                 @include('components.createTemplateBoard')
                 @include('components.workspace')
+
             </div>
             <!-- container-fluid -->
         </div>
@@ -165,6 +185,7 @@
                 this.value = this.defaultValue;
             }
         });
+
     });
 </script>
 <!-- JAVASCRIPT -->
@@ -177,17 +198,17 @@
 <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
 <!-- glightbox js -->
-<script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>
+{{--<script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>--}}
 
 <!-- fgEmojiPicker js -->
-<script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
+{{--<script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>--}}
 
 
 <!-- notifications init -->
 <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
 
 <!-- prismjs plugin -->
-<script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
+{{--<script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>--}}
 
 <!-- App js -->
 <script src="{{ asset('theme/assets/js/app.js') }}"></script>
@@ -208,344 +229,11 @@
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
-    {{-- xử lý tag   --}}
-    <script>
-        // Hàm tạo ra ID ngẫu nhiên với độ dài tùy chỉnh
-        function generateRandomId(length) {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        }
 
-        // Gán ID ngẫu nhiên cho mỗi form và thêm thuộc tính data-form-id cho các button
-        $('form').each(function () {
-            const randomId = generateRandomId(10);
-            $(this).attr('id', randomId); // Gán ID cho form
-            $(this).find('button').attr('data-form-id', randomId); // Gán data-form-id cho button
-        });
-
-        // Hàm chuyển đổi từ RGB sang HEX
-        function rgbToHex(rgb) {
-            const rgbValues = rgb.match(/\d+/g); // Tách chuỗi RGB thành r, g, b
-            const r = parseInt(rgbValues[0]).toString(16).padStart(2, '0');
-            const g = parseInt(rgbValues[1]).toString(16).padStart(2, '0');
-            const b = parseInt(rgbValues[2]).toString(16).padStart(2, '0');
-            return `#${r}${g}${b}`.toUpperCase(); // Trả về mã màu HEX
-        }
-
-        // Biến lưu trữ mã màu được chọn, khởi tạo là null
-        let selectedColor = null;
-
-        // Gán sự kiện cho phần tử cha
-        $('.select-color').on('click', 'div', function (e) {
-            e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
-            console.log("Đã click vào ô màu."); // Log để kiểm tra
-            // Đảm bảo lấy đúng element chứa màu
-            const rgb = $(this).css('background-color'); // Lấy giá trị background-color của div được click
-
-            // Kiểm tra nếu giá trị thực sự là dạng rgb trước khi chuyển sang hex
-            if (rgb && rgb.startsWith('rgb')) {
-                selectedColor = rgbToHex(rgb); // Chuyển đổi sang mã màu HEX
-                console.log('Màu đã chọn (HEX):', selectedColor); // Hiển thị mã màu đã chọn
-            } else {
-                console.log('Không có màu hợp lệ được chọn.');
-            }
-        });
-
-        // Sự kiện click cho button tạo thẻ tag
-        $('button.create-tag-form').off('click').on('click', function (e) {
-            e.preventDefault(); // Ngăn chặn hành động mặc định của button
-
-            // Kiểm tra xem người dùng đã chọn màu chưa
-            if (!selectedColor) {
-                alert('Vui lòng chọn một màu trước khi tạo tag.');
-                return; // Ngừng nếu chưa chọn màu
-            }
-
-            const formId = $(this).data('form-id'); // Lấy ID của form từ button
-            const form = $('#' + formId); // Lấy form theo ID
-
-            // Lấy dữ liệu từ form cụ thể
-            const formData = {
-                board_id: form.find('input[name="board_id"]').val(),
-                name: form.find('input[name="name"]').val(),
-                color_code: selectedColor // Sử dụng mã màu đã chọn trước đó
-            };
-
-            // Gửi dữ liệu qua AJAX
-            $.ajax({
-                type: 'POST',
-                url: '/tasks/tag/create',
-                data: formData,
-                success: function (response) {
-                    // Đóng dropdown khi AJAX thành công
-                    // $('.dropdown-menu').hide();
-                    console.log('Tạo tag thành công:', response);
-                },
-                error: function (error) {
-                    console.error('Lỗi:', error);
-                }
-            });
-        });
-
-        // Xử lý sự kiện khi checkbox được chọn
-        $('.form-check-input').on('change', function () {
-            var data = $(this).val(); // Lấy giá trị tag ID
-
-            $.ajax({
-                url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
-                type: 'POST',
-                data: {
-                    data: data,
-                },
-                success: function (response) {
-                    console.log('Checkbox đã được cập nhật:', response);
-                    // Xử lý thêm nếu cần
-                },
-                error: function (xhr, status, error) {
-                    console.error('Có lỗi xảy ra:', error);
-                }
-            });
-        });
-
-    </script>
-
-    <script>
-        function submitAddCheckList(taskId) {
-            var formData = {
-                task_id: $('#task_id_' + taskId).val(),
-                name: $('#name_' + taskId).val(),
-                method: 'POST'
-            };
-            if (!formData.name.trim()) {
-                alert('Tiêu đề không được để trống!');
-                return false;
-            }
-            $.ajax({
-                url: `/tasks/checklist/create`,
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    console.log('Task đã được thêm thành công!', response);
-                },
-                error: function (xhr) {
-                    alert('Đã xảy ra lỗi!');
-                    console.log(xhr.responseText);
-                }
-            });
-
-            return false;
-        }
-
-        function submitFormCheckList(checklistId) {
-            var formData = {
-                task_id: $('#task_id_' + checklistId).val(),
-                name: $('#name_' + checklistId).val()
-            };
-
-
-            if (!formData.name.trim()) {
-                alert('Tiêu đề không được để trống!');
-                return false;
-            }
-
-            $.ajax({
-                url: `/tasks/${checklistId}/checklist`,
-                type: 'PUT',
-                data: formData,
-                success: function (response) {
-                    console.log('Task đã được cập nhật thành công!', response);
-                },
-                error: function (xhr) {
-                    alert('Đã xảy ra lỗi!');
-                    console.log(xhr.responseText);
-                }
-            });
-
-            return false;
-        }
-    </script>
-
+    <script src="{{asset('js/ajax-board.js')}}"></script>
 @endif
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            menu.addEventListener('click', event => {
-                event.stopPropagation();
-            });
-        });
-    });
-    $(document).ready(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-    })
-
-    function disableButtonOnSubmit() {
-        continueButton.disabled = true;
-        return true; // Vẫn cho phép submit form
-    }
-
-    // xóa thông báo sau 5s
-    setTimeout(function () {
-        var alertElement = document.getElementById('notification-messenger');
-        if (alertElement) {
-            alertElement.style.display = 'none';
-            fetch("/forget-session", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
-
-    }, 5000);
-
-    $(document).ready(function () {
-        // Vô hiệu hóa nút gửi
-        $('#sendBtn').prop('disabled', true);
-
-        // Lắng nghe sự thay đổi trong ô nhập liệu
-        $('#prompt').on('input', function () {
-            $('#sendBtn').prop('disabled', $(this).val().trim() === '');
-        });
-
-        $('#chatinput-form').on('submit', function (event) {
-            event.preventDefault(); // Ngăn chặn hành động gửi biểu mẫu mặc định
-
-            // Lấy giá trị từ ô nhập liệu
-            let prompt = $('#prompt').val();
-            // Disable nút "Gửi" và ô nhập
-            $('#sendBtn').prop('disabled', true);
-            $('#prompt').prop('disabled', true);
-            $('#loadingSpinner').show(); // Hiển thị thanh tải
-
-            // Hiển thị tin nhắn của người dùng
-            $('#responseBox').append(
-                '<div class="user-message" style="text-align: right; margin-bottom: 10px;"><span style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
-                prompt + '</span></div>'
-            );
-
-            // Xóa nội dung trong ô nhập liệu
-            $('#prompt').val('');
-
-            // Gửi yêu cầu AJAX đến server
-            $.ajax({
-                url: $(this).attr('action'), // URL từ thuộc tính action của form
-                type: 'POST',
-                data: {
-                    prompt: prompt,
-                    _token: $('input[name="_token"]').val() // Gửi token CSRF
-                },
-                success: function (response) {
-                    const responseText = response.chat.response; // Lấy phản hồi từ JSON
-
-                    // Thay thế các dấu ** bằng chữ in đậm và các ký tự xuống dòng bằng <br>
-                    let formattedResponse = responseText.replace(/\*\*(.*?)\*\*/g,
-                        '<strong>$1</strong>');
-                    formattedResponse = formattedResponse.replace(/\n/g, '<br>');
-                    $('#loadingSpinner').hide();
-
-                    // Hiển thị phản hồi từ hệ thống
-                    $('#responseBox').append(
-                        `<div class="ai-response" style="margin: 10px 0; padding: 10px; background: #f1f1f1; border-radius: 8px;">${formattedResponse}</div>`
-                    );
-
-                    // Kiểm tra nếu có tin nhắn người dùng thì ẩn thông điệp mặc định
-                    if ($('#responseBox').children('.user-message').length > 0 || $(
-                        '#responseBox').children('.ai-response').length > 0) {
-                        $('.default-message').hide(); // Ẩn thông điệp
-                    }
-
-                    // Cuộn xuống dưới khi có tin nhắn mới
-                    $('#chat-conversation').scrollTop($('#chat-conversation')[0]
-                        .scrollHeight);
-
-                    // Xóa giá trị input sau khi gửi
-                    $('#prompt').val('');
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                },
-                complete: function () {
-                    // Re-enable nút "Gửi" và ô nhập sau khi yêu cầu hoàn tất
-                    $('#sendBtn').prop('disabled', false);
-                    $('#prompt').prop('disabled', false);
-                }
-            });
-        });
-        // Thêm sự kiện cho nút xác nhận xóa
-        $('#confirmDelete').on('click', function () {
-            $.ajax({
-                url: '{{ route('chat.history.destroy') }}', // Đường dẫn tới route xóa
-                type: 'DELETE',
-                success: function (response) {
-                    $('#successModal').modal('show'); // Hiển thị modal thành công
-                    $('#responseBox').empty(); // Xóa nội dung hiển thị chat
-                    $('.default-message').show(); // Hiển thị lại thông điệp mặc định
-                    $('#confirmDeleteModal').modal('hide'); // Ẩn modal xác nhận
-                },
-                error: function (xhr) {
-                    const errorMessage = xhr.responseJSON && xhr.responseJSON.error ?
-                        xhr.responseJSON.error :
-                        'Có lỗi xảy ra, vui lòng thử lại.';
-                    $('#errorMessage').text(errorMessage); // Cập nhật thông báo lỗi
-                    $('#errorModal').modal('show'); // Hiển thị modal lỗi
-                }
-            });
-        });
-    });
-
-    // // validate form
-    document.addEventListener('DOMContentLoaded', function () {
-        const forms = document.querySelectorAll('.formItem');
-
-        forms.forEach((form) => {
-            const textInput = form.querySelector('input[type="text"]');
-            const submitButton = form.querySelector('button[type="submit"]');
-
-            if (textInput && submitButton) {
-                // Kiểm tra trạng thái của input để enable/disable button
-                textInput.addEventListener('input', function () {
-                    const isFilled = textInput.value.trim() !== '';
-                    // console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
-                    submitButton.disabled = !isFilled;
-                });
-
-                // Xử lý khi button được nhấn
-                submitButton.addEventListener('click', function (event) {
-                    disableButtonOnSubmit(event, textInput, submitButton);
-                });
-            }
-        });
-
-        function disableButtonOnSubmit(event, input, button) {
-            event.preventDefault();
-            if (button.disabled) return;
-
-            button.disabled = true;
-            event.target.closest('form').submit();
-            input.value = '';
-
-            setTimeout(() => {
-                button.disabled = false;
-            }, 3000);
-        }
-    });
-
-
-</script>
-
-
+<script src="{{asset('js/home.js')}}"></script>
 @yield('script')
 
 </body>

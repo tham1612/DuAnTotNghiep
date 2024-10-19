@@ -94,11 +94,11 @@
                                 <div class="card-body">
                                     <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
                                         @if ($board && $board->image && \Storage::exists($board->image))
-                                            <div class="image-container"
-                                                style="width:280px; height: 100px; overflow: hidden;">
-                                                <img src="{{ \Storage::url($board->image) }}"
+                                            <div class="image-container position-relative"
+                                                style="width: 100%; height: 100px; overflow: hidden;">
+                                                <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
-                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                    style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                                                 <div class="position-absolute top-0 end-0 p-1">
                                                     <button type="button"
                                                         class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
@@ -261,11 +261,14 @@
                                                 <div>Tiến độ</div>
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <div><i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                                    {{ $board->complete }}/100 <!-- Hiển thị phần trăm hoàn thành -->
+                                                <div>
+                                                    <i class="ri-list-check align-bottom me-1 text-muted"></i>
+                                                    {{ $board->complete }}% / 100% <!-- Hiển thị phần trăm hoàn thành -->
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         <div class="progress progress-sm animated-progress">
                                             <div class="progress-bar bg-success" role="progressbar"
                                                 aria-valuenow="{{ $board->complete }}" aria-valuemin="0"
@@ -301,11 +304,12 @@
                                 <div class="card-body">
                                     <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
                                         @if ($board && $board->image && \Storage::exists($board->image))
-                                            <div class="image-container"
-                                                style="width:280px; height: 100px; overflow: hidden;">
-                                                <img src="{{ \Storage::url($board->image) }}"
+                                            <div class="image-container position-relative"
+                                                style="width: 100%; height: 100px; overflow: hidden;">
+                                                <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
-                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                    style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                                                <!-- Các nút tương tác với ảnh -->
                                                 <div class="position-absolute top-0 end-0 p-1">
                                                     <button type="button"
                                                         class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
@@ -329,16 +333,21 @@
                                                                 role="tab"
                                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
                                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                                class="dropdown-item"><i
-                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
-
-                                                            <a class="dropdown-item" href=""><i
-                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
+                                                                class="dropdown-item">
+                                                                <i
+                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View
+                                                            </a>
+                                                            <a class="dropdown-item" href="">
+                                                                <i
+                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit
+                                                            </a>
                                                             <div class="dropdown-divider"></div>
                                                             <a class="dropdown-item" href="#"
                                                                 data-bs-toggle="modal"
-                                                                data-bs-target="#removeProjectModal"><i
-                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
+                                                                data-bs-target="#removeProjectModal">
+                                                                <i
+                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -469,11 +478,14 @@
                                                 <div>Tiến độ</div>
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <div><i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                                    {{ $board->complete }}/100 <!-- Hiển thị phần trăm hoàn thành -->
+                                                <div>
+                                                    <i class="ri-list-check align-bottom me-1 text-muted"></i>
+                                                    {{ $board->complete }}% / 100% <!-- Hiển thị phần trăm hoàn thành -->
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         <div class="progress progress-sm animated-progress">
                                             <div class="progress-bar bg-success" role="progressbar"
                                                 aria-valuenow="{{ $board->complete }}" aria-valuemin="0"
