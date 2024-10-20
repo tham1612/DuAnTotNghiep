@@ -17,7 +17,7 @@
     $memberNames = $taskCountPerMember->pluck('name'); // Lấy tên thành viên
     $taskCounts = $taskCountPerMember->pluck('task_count'); // Lấy số lượng nhiệm vụ
     // Lấy danh sách thành viên từ session hoặc database
-    $boardMembers = session('boardMembers', []); // Sử dụng session nếu có
+    // $boardMembers = session('boardMembers', []); // Sử dụng session nếu có
 
     // Đếm số lượng thành viên trong bảng (board) cụ thể
     $totalMembers = BoardMember::where('board_id', $id)->count(); // Đếm số lượng thành viên của bảng dựa trên board_id

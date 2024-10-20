@@ -321,10 +321,9 @@ class BoardController extends Controller
             ->where('workspace_members.workspace_id', $board->workspace_id)
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
-
         switch ($viewType) {
             case 'dashboard':
-                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors','id', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
 
             case 'list':
@@ -395,8 +394,8 @@ class BoardController extends Controller
             })
             // Add thêm các điều kiện lọc khác
             ->get();
-        dd($filteredTasks);
-        return response()->json([
+
+            return response()->json([
             'success' => true,
             'filteredTasks' => $filteredTasks
         ]);
@@ -756,8 +755,7 @@ class BoardController extends Controller
         $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
         $wspChecked = WorkspaceMember::where('user_id', $boardMember->user_id)
             ->where('workspace_id', $boardMember->board->workspace_id)->first();
-        // dd($wspChecked->authorize, $boardOneMemberChecked, $boardMember);
-        // try {
+        try {
             if ($wspChecked->authorize->value !== "Viewer") {
                 $boardMember->delete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
@@ -773,9 +771,9 @@ class BoardController extends Controller
                     'is_active'=>1
                 ]);
             }
-        // } catch (\Throwable $th) {
-        //     dd(vars: $th);
-        // }
+        } catch (\Throwable $th) {
+            dd(vars: $th);
+        }
 
         return redirect()->route('b.edit', $boardMember->board_id)->with([
             'msg' => 'Bạn đã kích thành viên ra khỏi không gian làm việc',
