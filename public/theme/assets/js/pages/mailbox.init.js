@@ -57,7 +57,6 @@ function loadMailData(e) {
                     </div>
                     <input type="hidden" value="${email.userImg}" class="mail-userimg" />
                     <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starredClass}">
-                        <i class="ri-star-fill"></i>
                     </button>
                     <a href="javascript: void(0);" class="title">
                         <span class="title-name">${email.name} ${countInfo}</span>

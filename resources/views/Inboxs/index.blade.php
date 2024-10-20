@@ -158,7 +158,7 @@
         </div>
         <!-- end email-content -->
 
-        <div class="email-detail-content">
+        {{-- <div class="email-detail-content">
             <div class="p-4 d-flex flex-column h-100">
                 <div class="pb-4 border-bottom border-bottom-dashed">
                     <div class="row">
@@ -344,7 +344,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- end email-detail-content -->
     </div>
     <!-- end email wrapper -->
