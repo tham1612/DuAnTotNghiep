@@ -515,6 +515,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+
 @if(!empty($boardIsStars))
     @foreach ($boardIsStars as $boardIsStar)
         <script>

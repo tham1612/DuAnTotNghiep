@@ -271,14 +271,29 @@
                                                     <form class=" flex-column">
                                                         <textarea name="content" class="form-control editor"
                                                                   placeholder="Viết bình luận"></textarea>
-                                                        <button type="button" class="btn btn-primary mt-2">
-                                                                Lưu
+
+                                                        <button type="button" class="btn btn-primary mt-2"
+                                                                onclick="addTaskComment({{$task->id}},{{Auth::id()}})">
+                                                            Lưu
+
                                                         </button>
                                                     </form>
                                                 </div>
 
                                             </div>
-
+                                            <div class="d-flex">
+                                                @if (auth()->user()->image)
+                                                    <img class="rounded header-profile-user object-fit-cover"
+                                                         src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                                         alt="Avatar"/>
+                                                @else
+                                                    <div
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        style="width: 40px;height: 40px">
+                                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                            </div>
                                             {{-- <textarea name="" cols="25" rows="5" class="form-control bg-light"
                                                       placeholder="Viết bình luận...">
                                                     </textarea> --}}
@@ -478,6 +493,16 @@
                 </div>
             </div>
 
+            <!-- Modal ảnh (phóng to ảnh) -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true"
+                 style="z-index: 1060">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content d-flex justify-content-center align-items-center bg-warning">
+                        <img id="modalImage" style="width: 180vh; height: 90vh" src="" alt="Phóng to ảnh">
+                    </div>
+                </div>
+            </div>
+
         @endforeach
     @endforeach
 @endif
@@ -501,7 +526,17 @@
     // Khởi tạo ClassicEditor cho mỗi phần tử có class 'editor'
     document.querySelectorAll('.editor').forEach((editorElement, index) => {
         ClassicEditor
-            .create(editorElement)
+            .create(editorElement
+                , {
+                    toolbar: [
+                        'heading', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'undo', 'redo'
+                    ],
+                    removePlugins: [
+                        'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload',
+                        'MediaEmbed', 'MediaEmbedToolbar'
+                    ]
+                }
+            )
             .then(editor => {
                 // Lưu trữ instance của từng editor với id của phần tử hoặc chỉ mục
                 editors[editorElement.id] = editor;
@@ -595,11 +630,36 @@
     // });
 </script>
 
+{{--xử lý hiện ảnh ở tệp đính kèm--}}
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tất cả các ảnh có class thumbnail
+        var thumbnails = document.querySelectorAll('.thumbnail');
+        var modalImage = document.getElementById('modalImage');
+        var imageModal = document.getElementById('imageModal');
+
+        // Lặp qua tất cả các ảnh thu nhỏ
+        thumbnails.forEach(function (thumbnail) {
+            thumbnail.addEventListener('click', function () {
+                // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
+                modalImage.src = thumbnail.src;
 
 
-</script>
+                // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
+                var taskModalId = thumbnail.getAttribute('data-modal-id');
+                var taskModal = new bootstrap.Modal(document.getElementById(taskModalId), {});
 
-<script>
+                // Hàm xử lý khi modal ảnh đóng
+                function handleModalClose() {
+                    taskModal.show();
+                    // Gỡ bỏ sự kiện này để nó không bị gọi lại khi đóng modal ảnh
+                    imageModal.removeEventListener('hidden.bs.modal', handleModalClose);
+                }
+
+                // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
+                imageModal.addEventListener('hidden.bs.modal', handleModalClose);
+            });
+        });
+    });
 
 </script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChatAI;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,12 @@ class ChatAIController extends Controller
     {
         // Retrieve the authenticated user
         $user = auth()->user();
+
+        // Xóa các bản ghi chat quá 7 ngày
+        $sevenDaysAgo = Carbon::now()->subDays(7);
+        ChatAI::where('user_id', $user->id)
+            ->where('created_at', '<', $sevenDaysAgo)
+            ->delete();
 
         // Define pagination variables
         $perPage = 3; // Number of messages to load per request
@@ -30,8 +37,6 @@ class ChatAIController extends Controller
 
         return view('chatAI', compact('chats', 'totalChats', 'page'));
     }
-
-
     public function chat(Request $request)
     {
         $prompt = $request->query('prompt');
@@ -65,7 +70,6 @@ class ChatAIController extends Controller
             return response()->json(['error' => 'Request failed: ' . $e->getMessage()], 500);
         }
     }
-
     public function store(Request $request)
     {
         $request->validate(['prompt' => 'required|string']);
@@ -117,6 +121,4 @@ class ChatAIController extends Controller
             return response()->json(['error' => 'Failed to delete chat history'], 500);
         }
     }
-
-    
 }

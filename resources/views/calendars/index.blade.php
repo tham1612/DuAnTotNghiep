@@ -143,7 +143,9 @@
                 if (!isAllowedToDrag(event)) {
                     revertFunc();
                 }
+                console.log(event)
                 var changeDate = 'true';
+                var text = event.title;
                 var id_gg_calendar = event.id_google_calendar;
                 var id = event.id;
                 var start = moment(event.start).format('YYYY-MM-DD HH:mm:00');
@@ -153,6 +155,7 @@
                     type: "PUT",
                     dataType: "json",
                     data: {
+                        text,
                         changeDate,
                         id,
                         id_gg_calendar,
