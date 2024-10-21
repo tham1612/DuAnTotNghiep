@@ -6,10 +6,11 @@
         <strong class="fs-14">Nhãn</strong>
         <ul class="" style="list-style: none; margin-left: -32px">
             @foreach($board->tags as $tag)
+                @php  $tag = json_decode(json_encode($tag)); @endphp
                 <li class="mt-1 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center w-100">
-                        <input type="checkbox" @checked($task->tags->pluck('id')->contains($tag->id))
-                        class="form-check-input" value="{{$task->id}}-{{$tag->id}}"/>
+                        <input type="checkbox" @checked(collect($task->tags)->pluck('id')->contains($tag->id))
+                        class="form-check-input-tag" value="{{$task->id}}-{{$tag->id}}"/>
                         <span class=" mx-2 rounded p-2 col-10 text-white"
                               style="background-color: {{$tag->color_code}}">{{$tag->name}} </span>
                     </div>
