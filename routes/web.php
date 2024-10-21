@@ -49,26 +49,24 @@ Route::middleware(['auth', 'isWorkspace'])
                     ->name('delete');
             });
 
-        //Xử lý chỉnh sửa workspace
-        Route::get('edit_workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
+        //edit workspace
+        Route::get('workspace/edit-workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
             ->name('showFormEditWorkspace');
-        Route::post('update_workspaces', [WorkspaceController::class, 'editWorkspace'])
+        Route::post('workspace/update-workspaces', [WorkspaceController::class, 'editWorkspace'])
             ->name('editWorkspace');
-        Route::post('update_ws_access', [WorkspaceController::class, 'update_ws_access'])
+        Route::post('workspace/update-ws-access', [WorkspaceController::class, 'update_ws_access'])
             ->name('update_ws_access');
-        //dùng cho modal duyệt thành viên trong chỉnh sửa wsp
-        Route::put('accept_member', [WorkspaceController::class, 'accept_member'])
+        Route::put('workspace/accept-member', [WorkspaceController::class, 'accept_member'])
             ->name('accept_member');
-        Route::delete('refuse_member/{id}', [WorkspaceController::class, 'refuse_member'])
+        Route::delete('workspace/refuse-member/{id}', [WorkspaceController::class, 'refuse_member'])
             ->name('refuse_member');
-        //thằng này thì sử lý logic khi người dùng kick và link được mời hoặc kick vào link_Pinvite của wsp
         Route::get('/taskflow/invite/{uuid}/{token}', [WorkspaceController::class, 'acceptInvite'])
             ->withoutMiddleware('auth');
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
-        Route::get('activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
-        Route::get('upgrade-member-ship/{id}', [WorkspaceController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
-        Route::get('management-franchise/{owner_id}/{user_id}', [WorkspaceController::class, 'managementfranchise'])->name('managementfranchise');
+        Route::get('workspace/activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
+        Route::get('workspace/upgrade-member-ship/{id}', [WorkspaceController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
+        Route::get('workspace/management-franchise/{owner_id}/{user_id}', [WorkspaceController::class, 'managementfranchise'])->name('managementfranchise');
 
 
         Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');

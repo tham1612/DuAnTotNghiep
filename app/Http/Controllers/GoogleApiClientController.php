@@ -52,9 +52,14 @@ class GoogleApiClientController extends Controller
 
     public function createEvent($data)
     {
-//        dd($data);
-        $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
-        $endDate = $data['end_date'];
+        if (isset($data['start']) || isset($data['end'])) {
+            $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $endDate = $data['end'];
+        } else {
+            $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+            $endDate = $data['end_date'];
+        }
+
         $description = isset($data['description']) ? $data['description'] : '';
 
 //        $accessToken = session('google_access_token');
@@ -105,18 +110,18 @@ class GoogleApiClientController extends Controller
             ->where('id', auth()->id())
             ->value('access_token');
         $eventId = $data['id_gg_calendar'];
-        if ($data['changeDate']) {
-            $eventData = [
-                'start' => [
-                    'dateTime' => Carbon::parse($data['start_date'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
-                    'timeZone' => 'Asia/Ho_Chi_Minh',
-                ],
-                'end' => [
-                    'dateTime' => Carbon::parse($data['end_date'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
-                    'timeZone' => 'Asia/Ho_Chi_Minh',
-                ],
-            ];
-        } else {
+//        if ($data['changeDate']) {
+//            $eventData = [
+//                'start' => [
+//                    'dateTime' => Carbon::parse($data['start'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
+//                    'timeZone' => 'Asia/Ho_Chi_Minh',
+//                ],
+//                'end' => [
+//                    'dateTime' => Carbon::parse($data['end'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
+//                    'timeZone' => 'Asia/Ho_Chi_Minh',
+//                ],
+//            ];
+//        } else {
             $eventData = [
                 'summary' => $data->text,
                 'start' => ['dateTime' => Carbon::parse($data->start, 'Asia/Ho_Chi_Minh')->toIso8601String()],
@@ -133,12 +138,12 @@ class GoogleApiClientController extends Controller
                     }
                 }
             }
-        }
+//        }
         $userOrTaskId = [
             'user_id' => Auth::id(),
             'task_id' => $data['id'],
         ];
-        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken,$userOrTaskId);
+        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 
     }
 
