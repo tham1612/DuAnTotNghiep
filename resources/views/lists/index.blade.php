@@ -221,7 +221,7 @@
 
                                                     <div class="dropdown-menu dropdown-menu-end p-3"
                                                          aria-labelledby="member1">
-                                                        @include('dropdowns.member')
+{{--                                                        @include('dropdowns.member')--}}
                                                     </div>
                                                 </div>
                                             </td>

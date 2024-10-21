@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -351,6 +353,28 @@ class TaskController extends Controller
             'success' => true,
             'message' => 'Xóa thành viên thành công.'
         ], 200);
+    }
+    public function getFormChekList($taskId)
+    {
+        if(!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.checklist', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+    public function getFormAttach($taskId)
+    {
+        if(!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
     }
 
     public function destroy(Request $request)

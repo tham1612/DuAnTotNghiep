@@ -45,7 +45,7 @@
                                                                  title="{{$tag->name}}">
                                                                 <div
                                                                     class="text-white border rounded d-flex align-items-center justify-content-center"
-                                                                    style="width: 40px;height: 20px; background-color: {{$tag->color_code}}">
+                                                                    style="width: 40px;height: 20px; background-color: {{$tag->color_code}}">{{$tag->name}}
                                                                 </div>
                                                             </div>
                                                         @endforeach
@@ -107,7 +107,7 @@
                                                 </div>
                                                 <div class="dropdown-menu dropdown-menu-end p-3"
                                                      aria-labelledby="member1">
-                                                    @include('dropdowns.member')
+{{--                                                    @include('dropdowns.member')--}}
                                                 </div>
                                             </div>
                                         </td>
