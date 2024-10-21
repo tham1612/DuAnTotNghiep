@@ -4,7 +4,7 @@
     use Carbon\Carbon;
     use App\Models\BoardMember;
     use App\Models\User;
-    
+
     // Lấy danh sách thành viên và đếm số nhiệm vụ mà mỗi thành viên được giao
     $taskCountPerMember = Task::with('members')
         ->selectRaw('users.name, COUNT(tasks.id) as task_count')
@@ -20,10 +20,10 @@
     $taskCounts = $taskCountPerMember->pluck('task_count'); // Lấy số lượng nhiệm vụ
 
     // Lấy danh sách thành viên từ session hoặc database nếu không có trong session
-    $boardMembers = session('boardMembers', BoardMember::where('board_id', $id)->get());
+    $boardMember = session('boardMembers', BoardMember::where('board_id', $id)->whereNot('authorize', 'Viewer')->get());
 
     // Đếm số lượng thành viên trong bảng (board) cụ thể
-    $totalMembers = $boardMembers->count(); // Đếm số lượng thành viên của bảng
+    $totalMembers = $boardMember->count(); // Đếm số lượng thành viên của bảng
 
     // Tính tổng số lượng nhiệm vụ của tất cả các catalogs thuộc bảng cụ thể
     $totalTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
