@@ -97,7 +97,6 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
-
         if ($request->hasFile('image')) {
             $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
             $data['image'] = $imagePath;
@@ -105,11 +104,13 @@ class TaskController extends Controller
                 Storage::delete($task->image);
             }
         }
+
+         $task->update($data);
+
 //        dd(file_get_contents('php://input'));
         if (isset($data['start_date']) || isset($data['end_date'])) {
             $this->updateCalendar($request, $id);
         }
-        $task->update($data);
 
 
         activity('Cập nhật task')
@@ -285,7 +286,10 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
         $data = $request->all();
         $data['id_gg_calendar'] = $task->id_google_calendar;
-//        dd($data);
+        $data['start_date'] = $request->start;
+        $data['end_date'] = $request->end;
+        $data['id'] = $id;
+        $task->update($data);
         if ($task->id_google_calendar) {
 //            dd('ton tai');
             $this->googleApiClient->updateEvent($data);
@@ -294,7 +298,7 @@ class TaskController extends Controller
             $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
         }
 
-        $task->update($data);
+
     }
 
     public function addMemberTask(Request $request)

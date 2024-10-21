@@ -10,17 +10,20 @@
         ->selectRaw('users.name, COUNT(tasks.id) as task_count')
         ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
         ->join('users', 'users.id', '=', 'task_members.user_id')
+        ->join('catalogs', 'catalogs.id', '=', 'tasks.catalog_id') // Join với bảng catalogs
+        ->where('catalogs.board_id', $id) // Lọc theo board_id từ bảng catalogs
         ->groupBy('users.name')
         ->get();
 
     // Chuyển danh sách thành viên và số nhiệm vụ thành các mảng để truyền vào JavaScript
     $memberNames = $taskCountPerMember->pluck('name'); // Lấy tên thành viên
     $taskCounts = $taskCountPerMember->pluck('task_count'); // Lấy số lượng nhiệm vụ
-    // Lấy danh sách thành viên từ session hoặc database
-    $boardMembers = session('boardMembers', []); // Sử dụng session nếu có
+
+    // Lấy danh sách thành viên từ session hoặc database nếu không có trong session
+    $boardMember = session('boardMembers', BoardMember::where('board_id', $id)->whereNot('authorize', 'Viewer')->get());
 
     // Đếm số lượng thành viên trong bảng (board) cụ thể
-    $totalMembers = BoardMember::where('board_id', $id)->count(); // Đếm số lượng thành viên của bảng dựa trên board_id
+    $totalMembers = $boardMember->count(); // Đếm số lượng thành viên của bảng
 
     // Tính tổng số lượng nhiệm vụ của tất cả các catalogs thuộc bảng cụ thể
     $totalTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
@@ -49,7 +52,7 @@
     $overdueTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
         $query->where('board_id', $id); // Chỉ tính tasks thuộc catalogs của bảng cụ thể
     })
-        ->where('end_date', '<', Carbon::now())
+        ->where('end_date', '<', Carbon::now()) // Nhiệm vụ quá hạn
         ->count();
 
     // Tính số lượng nhiệm vụ hoàn thành (process = 100) và chưa hoàn thành (process = 0)
@@ -64,8 +67,8 @@
     })
         ->where('progress', 0) // Lọc nhiệm vụ chưa hoàn thành
         ->count();
-
 @endphp
+
 @extends('layouts.masterMain')
 @section('title')
     Dashbroad_board
