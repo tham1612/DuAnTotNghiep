@@ -23,7 +23,9 @@
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
 
-
+    <script !src="">
+        const PATH_ROOT = "/theme/";
+    </script>
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 </head>

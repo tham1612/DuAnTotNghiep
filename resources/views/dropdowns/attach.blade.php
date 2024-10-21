@@ -1,8 +1,8 @@
 <h5 class="text-center">Đính kèm</h5>
 <form action="" class="mt-3" enctype="multipart/form-data">
     <strong class="fs-14">Đính kèm tệp từ máy tính của bạn</strong>
-    <input type="file" name="file_name[]" id="file_name_task_{{$task->id}}"
-           class="form-control mt-2" multiple onchange="uploadTaskAttachments( {{$task->id}} )"/>
+    <input type="file" name="file_name[]" id="file_name_task_{{ $taskId }}"
+           class="form-control mt-2" multiple onchange="uploadTaskAttachments( {{ $taskId }} )"/>
 </form>
 
 <div class="mt-3">

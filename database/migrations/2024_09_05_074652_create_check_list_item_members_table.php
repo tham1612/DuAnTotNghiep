@@ -12,8 +12,9 @@ return new class extends Migration {
     {
         Schema::create('check_list_item_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\CheckListItem::class)->unique()->constrained();
+            $table->foreignIdFor(\App\Models\CheckListItem::class)->constrained();
             $table->foreignIdFor(\App\Models\User::class)->constrained();
+            $table->unique(['check_list_item_id', 'user_id']);
             $table->timestamps();
         });
     }

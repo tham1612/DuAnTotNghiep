@@ -50,7 +50,7 @@
                     {{--                        <textarea name="description" id="description" cols="30" rows="5"--}}
                     {{--                                  class="form-control"></textarea>--}}
                     {{--                    </div>--}}
-                    <button type="submit" class="btn btn-primary" id="createEvent" disabled>Tạo mới</button>
+                    <button type="submit" class="btn btn-primary" id="createEvent" >Tạo mới</button>
                     {{--                    <button class="btn btn-danger" id="deteleEvent">Xóa</button>--}}
                 </form>
             </div>

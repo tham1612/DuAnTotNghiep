@@ -24,6 +24,11 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
+
+    <script !src="">
+        const PATH_ROOT = "/theme/";
+    </script>
+
     <!--jquery cdn-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -131,7 +136,7 @@
                 @if (request()->is('b/*'))
                     @php
                         $board = session('board');
-                        $member_Is_star = session('member_Is_star');
+                        $memberIsStar = session('memberIsStar');
                         $colors = session('colors');
                     @endphp
 
@@ -176,7 +181,6 @@
 </div>
 
 <script>
-    const PATH_ROOT = "/theme/";
     document.querySelectorAll('input[type="datetime-local"]').forEach(function (input) {
         input.addEventListener('input', function (event) {
             // Ngăn chặn nút xóa (clear button) hoạt động
