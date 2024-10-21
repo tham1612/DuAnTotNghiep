@@ -361,9 +361,9 @@
                                                         <tbody>
                                                         @foreach($task->attachments as $attachment)
                                                             <tr class="cursor-pointer attachment_{{$attachment->id}}">
-                                                                <td class="col-1" data-bs-toggle="modal"
-                                                                    data-bs-target="#exampleModal">
+                                                                <td class="col-1">
                                                                     <img
+                                                                        class="thumbnail"
                                                                         src="{{ asset('storage/' . $attachment->file_name) }}"
                                                                         alt="Attachment Image"
                                                                         style="
@@ -371,9 +371,10 @@
                                                                      height: auto;
                                                                      object-fit: cover;
                                                                      border-radius: 8px;
-                                                                 ">
-
-
+                                                                 "
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#imageModal"
+                                                                        data-modal-id="detailCardModal{{ $task->id }}">
                                                                 </td>
                                                                 <td class="text-start name_attachment"
                                                                     id="name_display_{{ $attachment->id }}">
@@ -637,7 +638,8 @@
                                                                   id="comment_task_{{$task->id}}"
                                                                   placeholder="Viết bình luận"></textarea>
                                                         <button type="button" class="btn btn-primary mt-2"
-                                                                onclick="addTaskComment({{$task->id}},{{Auth::id()}})">Lưu
+                                                                onclick="addTaskComment({{$task->id}},{{Auth::id()}})">
+                                                            Lưu
                                                         </button>
                                                     </form>
                                                 </div>
@@ -875,6 +877,17 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal hiện ảnh phóng to -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <img id="modalImage" src="" alt="Phóng to ảnh"
+                                 style="width: 100%; height: auto; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         @endforeach
     @endforeach
@@ -994,12 +1007,27 @@
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tất cả các ảnh có class thumbnail
+        var thumbnails = document.querySelectorAll('.thumbnail');
+        var modalImage = document.getElementById('modalImage');
 
+        // Lặp qua tất cả các ảnh thu nhỏ
+        thumbnails.forEach(function (thumbnail) {
+            thumbnail.addEventListener('click', function () {
+                console.log(123)
+                // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
+                modalImage.src = thumbnail.src;
 
+                // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
+                var taskModalId = thumbnail.getAttribute('data-modal-id');
+                var taskModal = new bootstrap.Modal(document.getElementById(taskModalId), {});
 
-
-</script>
-
-<script>
-
+                // Khi modal ảnh đóng lại, mở lại modal task chính
+                document.getElementById('imageModal').addEventListener('hidden.bs.modal', function () {
+                    taskModal.show();
+                });
+            });
+        });
+    });
 </script>
