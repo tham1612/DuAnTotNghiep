@@ -9,6 +9,7 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Color;
 use App\Models\Task;
+use App\Models\User;
 use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -187,7 +188,8 @@ class BoardController extends Controller
                         'checkLists.checkListItems.checkListItemMembers.user',
                         'tags',
                         'followMembers',
-                        'attachments'
+                        'attachments',
+                        'taskComments'
                     ])->where(function ($subQuery) use ($request) {
 
                         // Điều kiện 1: Lọc thành viên

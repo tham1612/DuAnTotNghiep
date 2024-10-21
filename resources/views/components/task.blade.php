@@ -303,7 +303,8 @@
                                                 </div>
 
                                             </div>
-                                            @foreach($task->taskComments as $comment)
+                                            @foreach($task->task_comments as $comment)
+                                                @php $comment = json_decode(json_encode($comment)) @endphp
                                                 <div class="d-flex mt-2">
                                                     @if (auth()->user()->image)
                                                         <img class="rounded header-profile-user object-fit-cover"

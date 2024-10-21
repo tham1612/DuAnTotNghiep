@@ -127,12 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const dueBadge = document.getElementById(`due_date_due_${taskId}`);
             const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value); // Lấy endDate từ input hidden
             const now = new Date(); // Lấy thời gian hiện tại từ client
-
-            if (!successBadge || !dueBadge) {
-                console.error('Không tìm thấy badge với id tương ứng:', taskId);
-                return;
-            }
-
+            
             if (this.checked) {
                 console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
                 successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
