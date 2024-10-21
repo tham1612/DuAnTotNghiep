@@ -258,6 +258,10 @@ class BoardController extends Controller
             ->where('properties->board_id', $id)
             ->orderBy('created_at', 'desc')
             ->get();
+
+
+            $catalogs = $board->catalogs;
+            $tasks = $catalogs->pluck('tasks')->flatten();
         //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
 //        $boardName = $board->name; // Lấy tên của board
 
@@ -317,7 +321,7 @@ class BoardController extends Controller
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors','tasks','boardMemberChecked'));
 
             case 'table':
                 return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
