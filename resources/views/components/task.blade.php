@@ -226,15 +226,27 @@
                                             <i class="ri-menu-2-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Mô tả</p>
                                         </section>
-                                        <div class="ps-4"><textarea name="description"
-                                                                    id="description_{{ $task->id}}"
-                                                                    cols="25" rows="5"
-                                                                    class="form-control bg-light editor"
-                                                                    placeholder="Thêm mô tả chi tiết"
-                                                                    onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
+                                        <div class="ps-4">
+                                            <div id="textarea_container_{{ $task->id }}" class="d-none">
+                                                 <textarea name="description"
+                                                           id="description_{{ $task->id}}"
+                                                           cols="25" rows="5"
+                                                           class="form-control bg-light editor"
+                                                           placeholder="Thêm mô tả chi tiết"
+                                                           onchange="updateTask2({{ $task->id }})">{{$task->description}}</textarea>
+                                            </div>
+
+                                            <!-- Khối hiển thị mô tả chi tiết hoặc thông báo nếu không có mô tả -->
+                                            <div class="bg-info-subtle rounded pt-2 ps-2 d-flex align-items-start"
+                                                 id="description_display_{{ $task->id }}"
+                                                 style="height: 80px; cursor: pointer;"
+                                                 data-task-id="{{$task->id}}"
+                                                 onclick="toggleDescriptionForm(this)">
+                                                {!! $task->description ? $task->description : 'Thêm mô tả chi tiết hơn' !!}
+                                            </div>
                                         </div>
                                     </div>
-                                    @if(!empty($task->attachments))
+                                    @if($task->attachments->isNotEmpty())
                                         <!-- tệp -->
                                         <div class="row mt-3">
                                             <section class="d-flex">
@@ -351,62 +363,65 @@
 
                                                 </div>
                                             @endif
-                                            @if(!empty($task->attachments)) @endif
-                                            <div class="ps-4">
-                                                <strong>Tệp </strong>
-                                                <div
-                                                    class="table-responsive table-hover table-card attachments-container"
-                                                    style="max-height: 400px; overflow-y: auto;">
-                                                    <table class="table table-nowrap mt-4">
-                                                        <tbody>
-                                                        @foreach($task->attachments as $attachment)
-                                                            <tr class="cursor-pointer attachment_{{$attachment->id}}">
-                                                                <td class="col-1">
-                                                                    <img
-                                                                        class="thumbnail"
-                                                                        src="{{ asset('storage/' . $attachment->file_name) }}"
-                                                                        alt="Attachment Image"
-                                                                        style="
+
+                                            @if($task->attachments->isNotEmpty())
+                                                <div class="ps-4">
+                                                    <strong>Tệp </strong>
+                                                    <div
+                                                        class="table-responsive table-hover table-card attachments-container"
+                                                        style="max-height: 400px; overflow-y: auto;">
+                                                        <table class="table table-nowrap mt-4">
+                                                            <tbody>
+                                                            @foreach($task->attachments as $attachment)
+                                                                <tr class="cursor-pointer attachment_{{$attachment->id}}">
+                                                                    <td class="col-1">
+                                                                        <img
+                                                                            class="thumbnail"
+                                                                            src="{{ asset('storage/' . $attachment->file_name) }}"
+                                                                            alt="Attachment Image"
+                                                                            style="
                                                                      width: 100px;
                                                                      height: auto;
                                                                      object-fit: cover;
                                                                      border-radius: 8px;
                                                                  "
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#imageModal"
-                                                                        data-modal-id="detailCardModal{{ $task->id }}">
-                                                                </td>
-                                                                <td class="text-start name_attachment"
-                                                                    id="name_display_{{ $attachment->id }}">
-                                                                    {{ $attachment->name }}
-                                                                </td>
-                                                                <td class="text-end">
-                                                                    <i class="ri-more-fill fs-20 cursor-pointer"
-                                                                       data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                       aria-expanded="false"></i>
-                                                                    <div class="dropdown-menu dropdown-menu-md"
-                                                                         style="padding: 15px 15px 0 15px">
-                                                                        <input type="text" name="name"
-                                                                               class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                                               id="name_attachment_{{ $attachment->id }}"
-                                                                               value="{{ $attachment->name }}"
-                                                                               onchange="updateTaskAttachment({{ $attachment->id }})"/>
-                                                                        <p class="mt-2">Chỉnh sửa</p>
-                                                                        <p class="mt-2">Nhận xét</p>
-                                                                        <p id="attachment_id_{{ $attachment->id }}"
-                                                                           class="cursor-pointer text-danger"
-                                                                           onclick="deleteTaskAttachment({{ $attachment->id }})">
-                                                                            Xóa</p>
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#imageModal"
+                                                                            data-modal-id="detailCardModal{{ $task->id }}">
+                                                                    </td>
+                                                                    <td class="text-start name_attachment"
+                                                                        id="name_display_{{ $attachment->id }}">
+                                                                        {{ \Illuminate\Support\Str::limit($attachment->name,30) }}
+                                                                    </td>
+                                                                    <td class="text-end">
+                                                                        <i class="ri-more-fill fs-20 cursor-pointer"
+                                                                           data-bs-toggle="dropdown"
+                                                                           aria-haspopup="true"
+                                                                           aria-expanded="false"></i>
+                                                                        <div class="dropdown-menu dropdown-menu-md"
+                                                                             style="padding: 15px 15px 0 15px">
+                                                                            <input type="text" name="name"
+                                                                                   class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                                                   id="name_attachment_{{ $attachment->id }}"
+                                                                                   value="{{ $attachment->name }}"
+                                                                                   onchange="updateTaskAttachment({{ $attachment->id }})"/>
+                                                                            <p class="mt-2">Chỉnh sửa</p>
+                                                                            <p class="mt-2">Nhận xét</p>
+                                                                            <p id="attachment_id_{{ $attachment->id }}"
+                                                                               class="cursor-pointer text-danger"
+                                                                               onclick="deleteTaskAttachment({{ $attachment->id }})">
+                                                                                Xóa</p>
 
-                                                                    </div>
-                                                                </td>
+                                                                        </div>
+                                                                    </td>
 
-                                                            </tr>
-                                                        @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                                </tr>
+                                                            @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         </div>
                                     @endif
 
@@ -619,7 +634,7 @@
                                             <i class="ri-line-chart-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                                         </section>
-                                        <div class="">
+                                        <div class=" w-100">
                                             <div class="d-flex">
                                                 @if (auth()->user()->image)
                                                     <img class="rounded header-profile-user object-fit-cover"
@@ -632,54 +647,62 @@
                                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                                     </div>
                                                 @endif
-                                                <div class="ms-2">
-                                                    <form class=" flex-column">
-                                                        <textarea name="content" class="form-control editor"
-                                                                  id="comment_task_{{$task->id}}"
-                                                                  placeholder="Viết bình luận"></textarea>
+                                                <div class="ms-2 w-100">
+                                                    <form class="flex-column" id="comment_form_{{$task->id}}"
+                                                          style="display: none;" data-task-id="{{$task->id}}">
+                                                              <textarea name="content" class="form-control editor"
+                                                                        id="comment_task_{{$task->id}}"
+                                                                        placeholder="Viết bình luận"></textarea>
                                                         <button type="button" class="btn btn-primary mt-2"
                                                                 onclick="addTaskComment({{$task->id}},{{Auth::id()}})">
                                                             Lưu
                                                         </button>
                                                     </form>
-                                                </div>
 
-                                            </div>
-                                            <div class="d-flex">
-                                                @if (auth()->user()->image)
-                                                    <img class="rounded header-profile-user object-fit-cover"
-                                                         src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
-                                                         alt="Avatar"/>
-                                                @else
-                                                    <div
-                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                        style="width: 40px;height: 40px">
-                                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                                    <div class="bg-info-subtle p-2 rounded ps-2"
+                                                         data-task-id="{{$task->id}}" onclick="toggleCommentForm(this)">
+                                                        Viết bình luận
                                                     </div>
-                                                @endif
+                                                </div>
+
                                             </div>
-                                            {{-- <textarea name="" cols="25" rows="5" class="form-control bg-light"
-                                                      placeholder="Viết bình luận...">
-                                                    </textarea> --}}
-                                            {{-- @foreach ($activities as $activity)
-                                            <li class="d-flex align-items-start mb-3">
-                                                <div class="me-3">
-                                                    <img src="{{ asset('path_to_avatar/' . ($activity->causer->avatar ?? 'default_avatar.png')) }}" alt="avatar" class="rounded-circle" width="40" height="40">
+                                            @foreach($task->taskComments as $comment)
+                                                <div class="d-flex mt-2">
+                                                    @if (auth()->user()->image)
+                                                        <img class="rounded header-profile-user object-fit-cover"
+                                                             src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                                             alt="Avatar"/>
+                                                    @else
+                                                        <div
+                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                            style="width: 40px;height: 40px">
+                                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                                        </div>
+                                                    @endif
+                                                    <section class="ms-2 w-100">
+                                                        <strong>{{auth()->user()->name}}</strong>
+                                                        @php
+                                                            $createdAt = \Carbon\Carbon::parse($comment->created_at);
+                                                            $now = \Carbon\Carbon::now();
+                                                            $diffInHours = $createdAt->diffInHours($now);
+                                                            \Carbon\Carbon::setLocale('vi');
+                                                        @endphp
+
+                                                        @if ($diffInHours < 24)
+                                                            <span class="fs-11">{{ $createdAt->diffForHumans() }}</span>
+                                                        @else
+                                                            <span
+                                                                class="fs-11">{{ $createdAt->format('H:i j \t\h\g m, Y') }}</span>
+                                                        @endif
+                                                        <div
+                                                            class="bg-info-subtle p-1 rounded ps-2">{!! $comment->content !!}
+                                                        </div>
+                                                        <div class="fs-11"><span>Trả lời</span><span
+                                                                class="mx-1">-</span><span>Xóa</span></div>
+                                                    </section>
                                                 </div>
-                                                <div>
-                                                    <p class="mb-1">
-                                                        <strong>{{ $activity->causer->name ?? 'Hệ thống' }}:</strong>
-                                                        {{ $activity->description ?? 'Không có mô tả' }}
-                                                    </p>
-                                                    <small class="text-muted">
-                                                        {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
-                                                    </small>
+                                            @endforeach
 
-
-
-                                                </div>
-                                            </li>
-                                        @endforeach --}}
 
                                         </div>
                                     </div>
@@ -1003,28 +1026,52 @@
         });
     });
 
-    // //     xử lý theo dõi + ngày hết hạn của card
-    // const notification = document.querySelector('#notification');
-    // const notification_follow = document.querySelector('#notification_follow');
-    // const notification_icon = document.querySelector('#notification_icon');
-    // const notification_content = document.querySelector('#notification_content');
-    // notification.addEventListener('click', () => {
-    //     notification_follow.classList.toggle('d-none');
-    //     notification_icon.classList.contains("ri-eye-line") ?
-    //         notification_icon.className = "ri-eye-off-line fs-22" :
-    //         notification_icon.className = "ri-eye-line fs-22";
-    //     notification_content.textContent === "Theo dõi" ?
-    //         notification_content.innerHTML = "Đang theo dõi" :
-    //         notification_content.innerHTML = "Theo dõi";
-    // });
-    //
-    // const due_date_checkbox = document.querySelector('#due_date_checkbox');
-    // const due_date_success = document.querySelector('#due_date_success');
-    // const due_date_due = document.querySelector('#due_date_due');
-    // due_date_checkbox.addEventListener('click', () => {
-    //     due_date_due.classList.toggle('d-none');
-    //     due_date_success.classList.toggle('d-none');
-    // });
+    // Hàm ẩn khối bình luận và hiện textarea khi người dùng nhấp vào
+    function toggleCommentForm(element) {
+        // Lấy taskId từ data-attribute
+        const taskId = element.getAttribute('data-task-id');
+
+        // Tìm khối "Viết bình luận"
+        const commentDiv = element;
+
+        // Tìm form theo taskId
+        const commentForm = document.querySelector(`form[data-task-id="${taskId}"]`);
+
+        if (commentDiv && commentForm) {
+            // Ẩn khối "Viết bình luận"
+            commentDiv.style.display = 'none';
+
+            // Hiện form
+            commentForm.style.display = 'block';
+        } else {
+            console.error('Không tìm thấy phần tử với taskId:', taskId);
+        }
+    }
+
+    // Hàm ẩn khối mô tả và hiện textarea khi người dùng nhấp vào
+    function toggleDescriptionForm(element) {
+        // Lấy taskId từ data-attribute
+        const taskId = element.getAttribute('data-task-id');
+        console.log('Task ID:', taskId);  // Kiểm tra giá trị taskId
+
+        // Lấy khối mô tả đang được hiển thị
+        const descriptionDiv = document.getElementById(`description_display_${taskId}`);
+
+        // Lấy textarea và container của nó theo taskId
+        const descriptionContainer = document.getElementById(`textarea_container_${taskId}`);
+        const descriptionTextarea = document.getElementById(`description_${taskId}`);
+
+        if (descriptionDiv && descriptionContainer && descriptionTextarea) {
+            // Sử dụng class để ẩn thay vì trực tiếp thay đổi style
+            descriptionDiv.classList.add('d-none');  // Thêm class Bootstrap ẩn div
+
+            // Hiển thị textarea bằng cách xóa class d-none
+            descriptionContainer.classList.remove('d-none');
+            descriptionTextarea.focus();  // Đặt con trỏ vào textarea
+        } else {
+            console.error('Không tìm thấy phần tử với taskId:', taskId);
+        }
+    }
 </script>
 
 {{--xử lý hiện ảnh ở tệp đính kèm--}}
