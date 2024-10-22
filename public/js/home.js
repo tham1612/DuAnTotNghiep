@@ -169,8 +169,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============== sidebar =================
 function updateBoard(boardId) {
     var formData = new FormData();
-    formData.append('name', $('#name_' + boardId).val());
-    var image = document.getElementById('image_' + boardId);
+    formData.append('name', $('#name_board_' + boardId).val());
+    var image = document.getElementById('image_board_' + boardId);
     if (image.files.length > 0) {
         formData.append('image', image.files[0]);
     }
@@ -203,6 +203,24 @@ function updateIsStar2(boardId, userId,) {
         },
         success: function (response) {
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
+        },
+        error: function (xhr) {
+            console.error('An error occurred:', xhr.responseText);
+        }
+    });
+}
+function updateIsStar3(boardId, userId) {
+
+    $.ajax({
+        url: `/b/${boardId}/updateBoardMember`,
+        method: "PUT",
+        data: {
+            board_id: boardId,
+            user_id: userId,
+        },
+        success: function (response) {
+            console.log('Người dùng đã đánh dấu bảng nối bật:', response);
+            $(`#board_star_${boardId}`).closest('.board-star-container').remove();
         },
         error: function (xhr) {
             console.error('An error occurred:', xhr.responseText);

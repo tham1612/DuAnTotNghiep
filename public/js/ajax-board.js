@@ -42,43 +42,8 @@ function updateIsStar(boardId, userId,) {
     });
 }
 
-function submitForm(boardId) {
-
-    var formData = {
-        access: $('input[name="access"]:checked').val(),
-    }
-    $.ajax({
-        url: `/b/${boardId}/update`,
-        method: 'PUT',
-        data: formData,
-        success: function (response) {
-            $('#dropdownMenu').hide();
-            if (formData.access === 'private') {
-                $('#accessIcon_' + boardId).removeClass().addClass('ri-lock-2-line fs-20 text-danger');
-                $('#accessText_' + boardId).text('Riêng tư');
-            } else if (formData.access === 'public') {
-                $('#accessIcon_' + boardId).removeClass().addClass('ri-shield-user-fill fs-20 text-primary');
-                $('#accessText_' + boardId).text('Công khai');
-            }
-        },
-        error: function (xhr) {
-            console.error('Lỗi xảy ra:', xhr.responseText);
-        }
-    });
-
-    return false;
-}
 
 //  ============ end navbar ========
-
-
-
-
-
-
-
-
-
 
 
 
@@ -125,11 +90,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const successBadge = document.getElementById(`due_date_success_${taskId}`);
             const dueBadge = document.getElementById(`due_date_due_${taskId}`);
-
-            if (!successBadge || !dueBadge) {
-                console.error('Không tìm thấy badge với id tương ứng:', taskId);
-                return;
-            }
+            const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value); // Lấy endDate từ input hidden
+            const now = new Date(); // Lấy thời gian hiện tại từ client
 
             if (this.checked) {
                 console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
@@ -137,11 +99,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
             } else {
                 console.log('Chuyển sang "Quá hạn" cho task:', taskId);
-                successBadge.classList.add('d-none'); // Ẩn "Hoàn tất"
-                dueBadge.classList.remove('d-none'); // Hiện "Quá hạn"
+
+                // Thêm kiểm tra nếu hiện tại đã quá hạn
+                if (now > endDate) {
+                    dueBadge.classList.remove('d-none'); // Hiện "Quá hạn" nếu đã hết hạn
+                    successBadge.classList.add('d-none'); // Ẩn "Hoàn tất"
+                } else {
+                    dueBadge.classList.add('d-none'); // Ẩn "Quá hạn" nếu chưa quá hạn
+                    successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
+                }
             }
         });
     });
+
 });
 
 // cập nhật mô tả, ảnh, checkbox
@@ -199,22 +169,6 @@ function updateTaskMember(taskId, userId) {
         }
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // ============= tag  ==============
@@ -300,7 +254,7 @@ $('button.create-tag-form').off('click').on('click', function (e) {
         data: formData,
         success: function (response) {
             // Đóng dropdown khi AJAX thành công
-            // $('.dropdown-menu').hide();
+            $('.dropdown-menu-creat-tag').hide();
             console.log('Tạo tag thành công:', response);
         },
         error: function (error) {
@@ -309,15 +263,6 @@ $('button.create-tag-form').off('click').on('click', function (e) {
     });
 });
 //============ end tag ================
-
-
-
-
-
-
-
-
-
 
 
 // ============ date ============
@@ -386,28 +331,9 @@ function submitUpdateDateTask(taskId, event) {
 // ============ end date ============
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //  ========= checklist ==============
 // Xử lý sự kiện khi checkbox được chọn
-$('.form-check-input').on('change', function () {
+$('.form-check-input-tag').on('change', function () {
     var data = $(this).val(); // Lấy giá trị tag ID
 
     $.ajax({
@@ -486,10 +412,28 @@ $('.form-check-input-checkList').on('change', function () {
     });
 });
 
+
+function loadTaskFormAddCheckList(taskId) {
+    $.ajax({
+        url: `/tasks/getFormChekList/${taskId}`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('#dropdown-content-add-checkList-' + taskId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
 function submitAddCheckList(taskId) {
     var formData = {
-        task_id: $('#task_id_' + taskId).val(),
-        name: $('#name_' + taskId).val(),
+        task_id: taskId,
+        name: $('#name_checkList').val(),
         method: 'POST'
     };
     if (!formData.name.trim()) {
@@ -501,7 +445,7 @@ function submitAddCheckList(taskId) {
         type: 'POST',
         data: formData,
         success: function (response) {
-            console.log('Task đã được thêm thành công!', response);
+            console.log('checklist đã được thêm thành công!', response);
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -512,9 +456,9 @@ function submitAddCheckList(taskId) {
     return false;
 }
 
-function submitFormCheckList(checklistId) {
+function submitUpdateCheckList(checklistId, taskId) {
     var formData = {
-        task_id: $('#task_id_' + checklistId).val(),
+        task_id: taskId,
         name: $('#name_' + checklistId).val()
     };
 
@@ -575,22 +519,40 @@ document.addEventListener('DOMContentLoaded', function () {
 // ============= end checklist ======================
 
 
-
-
-
-
-
-
-
-
-
-
-
 // ============= checklist item member ===============
+function loadChecklistItemFormAddMember(checkListItemId, boardId) {
+    $.ajax({
+        url: `/tasks/checklist/checklistItem/getFormAddMember/${checkListItemId}`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        data: {
+            boardId: boardId,
+            task_id: checkListItemId,
+        },
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('#dropdown-content-add-member-check-list-' + checkListItemId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
+function onclickAddMemberCheckListItem(memberId, memberName, check_list_item_id) {
+    addMemberToCheckListItem(memberId, memberName, check_list_item_id);
+}
 
 function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
     if (document.getElementById('card-member-' + memberId + '-' + checklistItemId)) {
-        alert(memberName + " đã có trong danh sách thành viên của thẻ.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: memberName + " đã có trong danh sách thành viên của thẻ.",
+
+        });
         return;
     }
     $.ajax({
@@ -601,7 +563,7 @@ function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
             check_list_item_id: checklistItemId,
         },
         success: function (response) {
-            var cardMembersList = document.getElementById('cardMembersList' );
+            var cardMembersListItem = document.getElementById('cardMembersListItem-' + checklistItemId);
             var listItem = `
                 <li id="card-member-${memberId}-${checklistItemId}" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
@@ -617,8 +579,8 @@ function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
                     <i class="ri-close-line fs-20" onclick="removeMemberFromCard(${memberId}, ${checklistItemId})"></i>
                 </li>
             `;
-            cardMembersList.innerHTML += listItem;
-            console.log('Thành viên đã được thêm vào thẻ thành công.');
+            cardMembersListItem.innerHTML += listItem;
+            console.log('Thành viên đã được thêm vào checkListMember thành công.');
         },
         error: function (xhr) {
             console.log(xhr.responseText);
@@ -648,33 +610,10 @@ function removeMemberFromCard(memberId, checklistItemId) {
     });
 }
 
-// Thêm sự kiện click cho từng thành viên của bảng
-document.querySelectorAll('.checklist-member-item').forEach(item => {
-    item.addEventListener('click', function () {
-        var memberId = this.getAttribute('data-member-id');
-        var memberName = this.getAttribute('data-member-name');
-        var check_list_item_id = this.getAttribute('data-check-list-item');
-        addMemberToCheckListItem(memberId, memberName, check_list_item_id);
-    });
-});
+
 
 
 // ============= end checklist item member ===============
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // ============= date checklist item ===============
@@ -741,31 +680,28 @@ function submitUpdateDateCheckListItem(checklistItemId) {
 
     return false;
 }
+
 // ============= end date checklist item ===============
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ============= liên kết task ===============
+function loadTaskFormAddAttach(taskId) {
+    $.ajax({
+        url: `/tasks/getFormAttach/${taskId}`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('#dropdown-content-add-attach-' + taskId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
 
 function uploadTaskAttachments(taskId) {
     var formData = new FormData();
@@ -840,40 +776,40 @@ function deleteTaskAttachment(attachmentId) {
 // ========== end liên kết task =========
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ============= assign to ===============
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.task-member-item').forEach(item => {
-        item.addEventListener('click', function () {
-            var user_id = this.getAttribute('data-user-id');
-            var name = this.getAttribute('data-user-name');
-            var task_id = this.getAttribute('data-task-id');
-
-            addMemberToTask(user_id, name, task_id);
-
-            // Ẩn thành viên này trong danh sách
-            this.style.display = 'none'; // Ẩn item
-        });
+// ============= add member task ===============
+function loadTaskFormAddMember(taskId, boardId) {
+    $.ajax({
+        url: `/tasks/getFormAddMember/${taskId}`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        data: {
+            boardId: boardId,
+            task_id: taskId,
+        },
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('#dropdown-content-add-member-task-' + taskId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+        }
     });
-});
+}
+function onclickAddMember(user_id, name, task_id) {
+    addMemberToTask(user_id, name, task_id);
+}
 
 function addMemberToTask(user_id, name, task_id) {
     if (document.getElementById('card-member-task-' + user_id + '-' + task_id)) {
-        alert(name + " đã có trong danh sách thành viên của thẻ.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: name + " đã có trong danh sách thành viên của task.",
+
+        });
         return;
     }
     $.ajax({
@@ -937,23 +873,8 @@ function removeMemberFromTask(user_id, task_id) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ============= comment ===============
-function addTaskComment(taskId,user_id) {
+function addTaskComment(taskId, user_id) {
     var content = editors['comment_task_' + taskId].getData();
     var formData = {
         content: content,
@@ -978,10 +899,8 @@ function addTaskComment(taskId,user_id) {
 
     return false;
 }
+
 // ============= end comment ===============
-
-
-
 
 
 // ============= end tasks ===============
@@ -1030,3 +949,8 @@ function addTaskComment(taskId,user_id) {
 //     // Lắng nghe các sự kiện thay đổi trên form (input, checkbox, select,...)
 //     $form.on('input change', debouncedHandleFormChange);
 // });
+
+
+
+
+

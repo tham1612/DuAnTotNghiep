@@ -2,11 +2,11 @@
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
-
+@php $memberIsStar = session('memberIsStar_' . $board->id); @endphp
                 <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
                 <button type="button"
                         class="btn avatar-xs mt-n1 p-0 favourite-btn
-                    @if( $member_Is_star) active @endif"
+                    @if( $memberIsStar) active @endif"
                         onclick="updateIsStar({{ $board->id }},{{ auth()->id() }})"
                         id="is_star_{{ $board->id }}">
                     <span class="avatar-title bg-transparent fs-15">
@@ -228,12 +228,8 @@
                     <div class="d-flex justify-content-center align-items-center cursor-pointer me-2">
                         <div class="col-auto ms-sm-auto">
                             <div class="avatar-group">
-                                @php
-                                    //                                    $boardMembers=$board->users->unique('id');
-                                    //                                     session(['boardMembers' => $boardMembers]);
-                                                                           $boardMembers=session('boardMembers');
-                                @endphp
 
+                                @php $boardMembers = session('boardMembers_' . $board->id); @endphp
 
                                 @php
                                     // Đếm số lượng board members
@@ -293,3 +289,32 @@
     </div>
 
 </div>
+<script !src="">
+    function submitForm(boardId) {
+
+        var formData = {
+            access: $('input[name="access"]:checked').val(),
+        }
+        $.ajax({
+            url: `/b/${boardId}/update`,
+            method: 'PUT',
+            data: formData,
+            success: function (response) {
+                console.log('chế độ bảng thay dổi thành công');
+                $('#dropdownMenu').hide();
+                if (formData.access === 'private') {
+                    $('#accessIcon_' + boardId).removeClass().addClass('ri-lock-2-line fs-20 text-danger');
+                    $('#accessText_' + boardId).text('Riêng tư');
+                } else if (formData.access === 'public') {
+                    $('#accessIcon_' + boardId).removeClass().addClass('ri-shield-user-fill fs-20 text-primary');
+                    $('#accessText_' + boardId).text('Công khai');
+                }
+            },
+            error: function (xhr) {
+                console.error('Lỗi xảy ra:', xhr.responseText);
+            }
+        });
+
+        return false;
+    }
+</script>

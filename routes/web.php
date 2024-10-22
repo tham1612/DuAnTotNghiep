@@ -119,12 +119,18 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
-        Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
+//        Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
         Route::post('/tasks/addMember', [TaskController::class, 'addMemberTask'])
             ->name('tasks.addMemberTask');
         Route::post('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
             ->name('tasks.deleteTaskMember');
+        Route::get('/tasks/getFormChekList/{id}', [TaskController::class, 'getFormChekList'])
+            ->name('tasks.getFormChekList');
+        Route::get('/tasks/getFormAttach/{id}', [TaskController::class, 'getFormAttach'])
+            ->name('tasks.getFormAttach');
+        Route::get('/tasks/getFormAddMember/{id}', [TaskController::class, 'getFormAddMember'])
+            ->name('tasks.getFormAddMember');
 
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
             ->name('checklist.create');
@@ -140,6 +146,8 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
+        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
+            ->name('checklist.getFormAddMember');
 
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])

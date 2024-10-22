@@ -30,10 +30,12 @@ class Task extends Model
         'id_google_calendar',
         'creator_email'
     ];
+
     protected $casts = [
         'priority' => IndexEnum::class,
         'risk' => IndexEnum::class,
     ];
+
     protected $appends = ["open"];
 
     protected $dates = ['start_date', 'end_date'];
@@ -62,9 +64,9 @@ class Task extends Model
         return $this->hasMany(Follow_member::class);
     }
 
-    public function checkList()
+    public function checkLists()
     {
-        return $this->hasOne(CheckList::class);
+        return $this->hasMany(CheckList::class);
     }
 
     public function tags()
@@ -74,5 +76,10 @@ class Task extends Model
     public function attachments()
     {
         return $this->hasMany(TaskAttachment::class);
+    }
+
+    public function taskComments()
+    {
+        return $this->hasMany(TaskComment::class);
     }
 }

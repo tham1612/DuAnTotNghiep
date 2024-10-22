@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -64,9 +66,6 @@ class TaskController extends Controller
 //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
-        if (isset($data['start_date']) || isset($data['end_date'])) {
-            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
-        }
 
 
         // ghi lại hoạt động khi thêm
@@ -80,7 +79,9 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
-        // event(new TaskUpdated($task));
+        if (isset($data['start_date']) || isset($data['end_date'])) {
+            $this->googleApiClient->createEvent($data);
+        }
         session(['msg' => 'Thêm task ' . $data['text'] . ' thành công!']);
         session(['action' => 'success']);
         return back();
@@ -97,6 +98,12 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
+        if (isset($data['start']) || isset($data['end'])) {
+            $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $data['end_date'] = $data['end'];
+        } else {
+            $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+        }
 
         if ($request->hasFile('image')) {
             $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -105,12 +112,18 @@ class TaskController extends Controller
                 Storage::delete($task->image);
             }
         }
-//        dd(file_get_contents('php://input'));
-        if (isset($data['start_date']) || isset($data['end_date'])) {
-            $this->updateCalendar($request, $id);
-        }
+        $data['id'] = $id;
+        $data['id_gg_calendar'] = $task->id_google_calendar;
         $task->update($data);
 
+// xử lý thêm vào gg calendar
+        if ($data['start_date'] || $data['end_date']) {
+            if ($task->id_google_calendar) {
+                $this->googleApiClient->updateEvent($data);
+            } else {
+                $this->googleApiClient->createEvent($data);
+            }
+        }
 
         activity('Cập nhật task')
             ->performedOn($task)
@@ -126,6 +139,7 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+
 
         session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
         session(['action' => 'success']);
@@ -148,8 +162,6 @@ class TaskController extends Controller
     {
         $data = $request->all();
         $model = Task::query()->findOrFail($id);
-        // $task = Task::find($id);
-        //        dd($data,$id);
         $data['position'] = $request->position + 1;
 
         $positionOldSameCatalog = Task::query()
@@ -245,7 +257,6 @@ class TaskController extends Controller
                 ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
         $model->update($data);
-        return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
 
     public function updateFolow(Request $request, string $id)
@@ -280,12 +291,16 @@ class TaskController extends Controller
 
     }
 
-    public function updateCalendar(Request $request, string $id)
+    public function updateCalendar(Request $request)
     {
-        $task = Task::query()->findOrFail($id);
+        dd($request->id);
+        $task = Task::query()->findOrFail($request->id);
         $data = $request->all();
         $data['id_gg_calendar'] = $task->id_google_calendar;
-//        dd($data);
+        $data['start_date'] = $request->start;
+        $data['end_date'] = $request->end;
+        $data['id'] = $request->id;
+        $task->update($data);
         if ($task->id_google_calendar) {
 //            dd('ton tai');
             $this->googleApiClient->updateEvent($data);
@@ -294,7 +309,7 @@ class TaskController extends Controller
             $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
         }
 
-        $task->update($data);
+
     }
 
     public function addMemberTask(Request $request)
@@ -348,6 +363,49 @@ class TaskController extends Controller
             'message' => 'Xóa thành viên thành công.'
         ], 200);
     }
+
+    public function getFormChekList($taskId)
+    {
+        if (!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.checklist', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+
+    public function getFormAttach($taskId)
+    {
+        if (!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+    public function getFormAddMember(Request $request, $taskId)
+    {
+        $boardMembers0 = session('boardMembers_' . $request->boardId);
+        $boardMembers=json_decode(json_encode($boardMembers0));
+
+        $task=json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
+//        dd( $boardMembers);
+
+        $htmlForm = View::make('dropdowns.member', [
+            'taskId' => $taskId,
+            'boardMembers' => $boardMembers,
+            'task' => $task
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
+
+
+
 
     public function destroy(Request $request)
     {
