@@ -4,7 +4,7 @@
            class="form-control border-1" placeholder="Tìm nhãn..."/>
     <div class="mt-3">
         <strong class="fs-14">Nhãn</strong>
-        <ul class="" style="list-style: none; margin-left: -32px">
+        <ul class="" style="list-style: none; margin-left: -32px" id="danh-sach-tag">
             @foreach($board->tags as $tag)
                 @php  $tag = json_decode(json_encode($tag)); @endphp
                 <li class="mt-1 d-flex justify-content-between align-items-center">
@@ -63,7 +63,7 @@
                 Tạo nhãn mới
             </p>
             <!--dropdown nhãn-->
-            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 125%">
+            <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-creat-tag" style="width: 125%">
                 @include('dropdowns.createTag')
             </div>
         </div>
