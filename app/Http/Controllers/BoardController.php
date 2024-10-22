@@ -738,7 +738,7 @@ class BoardController extends Controller
                             Session::put('workspace_id', $board->workspace_id);
                             Session::put('user_id', $user->id);
                             Session::put('email_invited', $request->email);
-                            Session::put('authorize', $request->authorizei);
+                            Session::put('authorize', $request->authorize);
                             return redirect()->route('login');
                         }
                     }
