@@ -11,6 +11,7 @@ use App\Models\Task;
 use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Notifications\TaskDueNotification;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Log;
@@ -311,6 +312,7 @@ class BoardController extends Controller
         $boardMemberChecked = $boardMemberMain->filter(function ($member) {
             return $member->user_id == Auth::id();
         })->first();
+
         // Lấy danh sách thành viên của workspace mà chưa phải là thành viên của bảng
         $wspMember = WorkspaceMember::query()
             ->join('users', 'users.id', '=', 'workspace_members.user_id')
@@ -323,6 +325,9 @@ class BoardController extends Controller
             ->where('workspace_members.workspace_id', $board->workspace_id)
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
+
+
+     
         switch ($viewType) {
             case 'dashboard':
                 return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
@@ -652,12 +657,14 @@ class BoardController extends Controller
                             Session::put('workspace_id', $board->workspace_id);
                             Session::put('user_id', $user->id);
                             Session::put('email_invited', $request->email);
-                            Session::put('authorize', $request->authorizei);
+                            Session::put('authorize', $request->authorize);
                             return redirect()->route('login');
                         }
                     }
                 }
-            } //xử lý khi người dùng không có tài khoản
+            }
+
+            //xử lý khi người dùng không có tài khoản
             else {
                 //xử lý khi người dùng không có tài khoản
                 Auth::logout();
