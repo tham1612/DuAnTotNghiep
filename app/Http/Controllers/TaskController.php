@@ -373,17 +373,25 @@ class TaskController extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
-    public function getFormAddMember($taskId)
+    public function getFormAddMember(Request $request, $taskId)
     {
-        if(!$taskId) {
-            return response()->json(['error' => 'Task ID is missing'], 400);
-        }
+        $boardMembers0 = session('boardMembers_' . $request->boardId);
+        $boardMembers=json_decode(json_encode($boardMembers0));
 
-        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+        $task=json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
+//        dd( $boardMembers);
 
-        // Trả về HTML cho frontend
+        $htmlForm = View::make('dropdowns.member', [
+            'taskId' => $taskId,
+            'boardMembers' => $boardMembers,
+            'task' => $task
+        ])->render();
+
         return response()->json(['html' => $htmlForm]);
     }
+
+
+
 
     public function destroy(Request $request)
     {

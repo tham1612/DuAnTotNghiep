@@ -7,6 +7,7 @@ use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class ChecklistController extends Controller
 {
@@ -103,7 +104,22 @@ class ChecklistController extends Controller
 ////        ]);
 //    }
 
+    public function getFormAddMember(Request $request, $checkListItemId)
+    {
+        $boardMembers0 = session('boardMembers_' . $request->boardId);
+        $boardMembers=json_decode(json_encode($boardMembers0));
 
+        $checklistItem=json_decode(json_encode(CheckListItem::with('members')->findOrFail($checkListItemId)));
+//        dd( $checklistItem);
+
+        $htmlForm = View::make('dropdowns.memberCheckList', [
+            'checkListItemId' => $checkListItemId,
+            'boardMembers' => $boardMembers,
+            'checklistItem' => $checklistItem
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
     /**
      * Remove the specified resource from storage.
      */

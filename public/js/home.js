@@ -209,5 +209,23 @@ function updateIsStar2(boardId, userId,) {
         }
     });
 }
+function updateIsStar3(boardId, userId) {
+
+    $.ajax({
+        url: `/b/${boardId}/updateBoardMember`,
+        method: "PUT",
+        data: {
+            board_id: boardId,
+            user_id: userId,
+        },
+        success: function (response) {
+            console.log('Người dùng đã đánh dấu bảng nối bật:', response);
+            $(`#board_star_${boardId}`).closest('.board-star-container').remove();
+        },
+        error: function (xhr) {
+            console.error('An error occurred:', xhr.responseText);
+        }
+    });
+}
 
 // ============== end sidebar =================
