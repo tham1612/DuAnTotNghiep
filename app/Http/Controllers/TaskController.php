@@ -107,7 +107,7 @@ class TaskController extends Controller
             }
         }
 
-         $task->update($data);
+        $task->update($data);
 
 //        dd(file_get_contents('php://input'));
         if (isset($data['start_date']) || isset($data['end_date'])) {
@@ -151,8 +151,6 @@ class TaskController extends Controller
     {
         $data = $request->all();
         $model = Task::query()->findOrFail($id);
-        // $task = Task::find($id);
-        //        dd($data,$id);
         $data['position'] = $request->position + 1;
 
         $positionOldSameCatalog = Task::query()
@@ -248,7 +246,6 @@ class TaskController extends Controller
                 ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
         $model->update($data);
-        return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
 
     public function updateFolow(Request $request, string $id)
@@ -366,6 +363,17 @@ class TaskController extends Controller
         return response()->json(['html' => $htmlForm]);
     }
     public function getFormAttach($taskId)
+    {
+        if(!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+    public function getFormAddMember($taskId)
     {
         if(!$taskId) {
             return response()->json(['error' => 'Task ID is missing'], 400);

@@ -33,13 +33,12 @@
         ->select('user_id', 'authorize', 'is_accept_invite')
         ->first();
 
-    if (\Auth::user()->hasWorkspace()) {
-        $workspaceBoards = \App\Models\Workspace::query()->where('id', $workspaceChecked->id)->first();
-
+     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
         if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
-            $workspaceBoards->load('boards');
+            $workspaceBoards = \App\Models\Workspace::query()->with('boards')->where('id', $workspaceChecked->id)->first();
         } elseif ($workspaceChecked->authorize == 'Member') {
-            $workspaceBoards->load([
+            $workspaceBoards = \App\Models\Workspace::query()
+                ->with([
                     'boards' => function ($query) use ($userId) {
                         $query
                             ->where('access', 'public') // Bảng công khai
@@ -50,19 +49,23 @@
                                     });
                             });
                     },
-                ]);
+                ])
+                ->where('id', $workspaceChecked->workspace_id)
+                ->first();
         } else {
-            $workspaceBoards->load([
+            $workspaceBoards = \App\Models\Workspace::query()
+                ->with([
                     'boards' => function ($query) use ($userId) {
                         $query->whereHas('boardMembers', function ($q) use ($userId) {
                             $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
                         });
                     },
-                ]);
+                ])
+                ->where('id', $workspaceChecked->workspace_id)
+                ->first();
         }
-
-        $workspaceBoards->load('boards.members');
     }
+
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "

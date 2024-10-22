@@ -28,6 +28,7 @@
     <script !src="">
         const PATH_ROOT = "/theme/";
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!--jquery cdn-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"

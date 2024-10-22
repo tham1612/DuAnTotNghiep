@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 // use function Laravel\Prompts\select;
 //const PATH_UPLOAD = 'board';
 use App\Enums\AuthorizeEnum;
+use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Color;
 use App\Models\Task;
+use App\Models\User;
 use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
@@ -187,7 +190,8 @@ class BoardController extends Controller
                         'checkLists.checkListItems.checkListItemMembers.user',
                         'tags',
                         'followMembers',
-                        'attachments'
+                        'attachments',
+                        'taskComments'
                     ])->where(function ($subQuery) use ($request) {
 
                         // Điều kiện 1: Lọc thành viên
