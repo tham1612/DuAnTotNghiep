@@ -129,6 +129,8 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('tasks.getFormChekList');
         Route::get('/tasks/getFormAttach/{id}', [TaskController::class, 'getFormAttach'])
             ->name('tasks.getFormAttach');
+        Route::get('/tasks/getFormAddMember/{id}', [TaskController::class, 'getFormAddMember'])
+            ->name('tasks.getFormAddMember');
 
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
             ->name('checklist.create');

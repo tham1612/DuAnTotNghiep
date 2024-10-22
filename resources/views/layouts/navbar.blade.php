@@ -289,3 +289,32 @@
     </div>
 
 </div>
+<script !src="">
+    function submitForm(boardId) {
+
+        var formData = {
+            access: $('input[name="access"]:checked').val(),
+        }
+        $.ajax({
+            url: `/b/${boardId}/update`,
+            method: 'PUT',
+            data: formData,
+            success: function (response) {
+                console.log('chế độ bảng thay dổi thành công');
+                $('#dropdownMenu').hide();
+                if (formData.access === 'private') {
+                    $('#accessIcon_' + boardId).removeClass().addClass('ri-lock-2-line fs-20 text-danger');
+                    $('#accessText_' + boardId).text('Riêng tư');
+                } else if (formData.access === 'public') {
+                    $('#accessIcon_' + boardId).removeClass().addClass('ri-shield-user-fill fs-20 text-primary');
+                    $('#accessText_' + boardId).text('Công khai');
+                }
+            },
+            error: function (xhr) {
+                console.error('Lỗi xảy ra:', xhr.responseText);
+            }
+        });
+
+        return false;
+    }
+</script>

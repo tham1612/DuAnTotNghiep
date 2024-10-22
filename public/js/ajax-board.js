@@ -42,32 +42,7 @@ function updateIsStar(boardId, userId,) {
     });
 }
 
-function submitForm(boardId) {
 
-    var formData = {
-        access: $('input[name="access"]:checked').val(),
-    }
-    $.ajax({
-        url: `/b/${boardId}/update`,
-        method: 'PUT',
-        data: formData,
-        success: function (response) {
-            $('#dropdownMenu').hide();
-            if (formData.access === 'private') {
-                $('#accessIcon_' + boardId).removeClass().addClass('ri-lock-2-line fs-20 text-danger');
-                $('#accessText_' + boardId).text('Riêng tư');
-            } else if (formData.access === 'public') {
-                $('#accessIcon_' + boardId).removeClass().addClass('ri-shield-user-fill fs-20 text-primary');
-                $('#accessText_' + boardId).text('Công khai');
-            }
-        },
-        error: function (xhr) {
-            console.error('Lỗi xảy ra:', xhr.responseText);
-        }
-    });
-
-    return false;
-}
 
 //  ============ end navbar ========
 
@@ -127,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const dueBadge = document.getElementById(`due_date_due_${taskId}`);
             const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value); // Lấy endDate từ input hidden
             const now = new Date(); // Lấy thời gian hiện tại từ client
-            
+
             if (this.checked) {
                 console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
                 successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
@@ -305,7 +280,7 @@ $('button.create-tag-form').off('click').on('click', function (e) {
         data: formData,
         success: function (response) {
             // Đóng dropdown khi AJAX thành công
-            // $('.dropdown-menu').hide();
+            $('.dropdown-menu-creat-tag').hide();
             console.log('Tạo tag thành công:', response);
         },
         error: function (error) {
@@ -595,7 +570,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
     if (document.getElementById('card-member-' + memberId + '-' + checklistItemId)) {
-        alert(memberName + " đã có trong danh sách thành viên của thẻ.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: memberName + " đã có trong danh sách thành viên của thẻ.",
+
+        });
         return;
     }
     $.ajax({
@@ -878,7 +858,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function addMemberToTask(user_id, name, task_id) {
     if (document.getElementById('card-member-task-' + user_id + '-' + task_id)) {
-        alert(name + " đã có trong danh sách thành viên của thẻ.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: name + " đã có trong danh sách thành viên của task.",
+
+        });
         return;
     }
     $.ajax({
