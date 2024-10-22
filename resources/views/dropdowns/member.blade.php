@@ -3,7 +3,7 @@
     <input type="text" name="" id="" class="form-control border-1" placeholder="Tìm kiếm thành viên"/>
 
     @php
-        $boardMembers = session('boardMembers');
+        $boardMembers = session('boardMembers_' . $board->id);
 
     @endphp
 
@@ -47,7 +47,7 @@
     <div class="mt-3">
         <label class="fs-14">Thành viên của bảng</label>
         <ul class="" style="list-style: none; margin-left: -32px">
-            @php $boardMembers=  session('boardMembers');@endphp
+            @php $boardMembers = session('boardMembers_' . $board->id); @endphp
             @foreach ($boardMembers as $boardMember)
                 <li class="d-flex justify-content-between align-items-center task-member-item"
                     data-user-id="{{ $boardMember['id'] }}" data-task-id="{{$task->id}}"

@@ -1,20 +1,20 @@
 @php
-    $userId = \Illuminate\Support\Facades\Auth::id();
+    $userId = \Auth::id();
 
     $workspaces = \App\Models\Workspace::query()
-    ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
-    ->where('workspace_members.user_id', $userId)
-    ->where('workspace_members.is_accept_invite', 0)
-    ->whereNot('workspace_members.is_active', 1)
-    ->where('workspace_members.deleted_at', null)
-    ->select('workspaces.*', 'workspace_members.id as workspace_id')  // Giữ cột 'workspace_members.id'
-    ->groupBy('workspaces.id', 'workspace_members.id')  // Thêm cả 'workspace_members.id' vào GROUP BY
-    ->withCount([
-        'workspaceMembers as member_count' => function ($query) {
-            $query->whereNull('deleted_at');
-        },
-    ])
-    ->get();
+        ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
+        ->where('workspace_members.user_id', $userId)
+        ->where('workspace_members.is_accept_invite', 0)
+        ->whereNot('workspace_members.is_active', 1)
+        ->where('workspace_members.deleted_at', null)
+        ->select('workspaces.*', 'workspace_members.id as workspace_id')  // Giữ cột 'workspace_members.id'
+        ->groupBy('workspaces.id', 'workspace_members.id')  // Thêm cả 'workspace_members.id' vào GROUP BY
+        ->withCount([
+            'workspaceMembers as member_count' => function ($query) {
+                $query->whereNull('deleted_at');
+            },
+        ])
+        ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
@@ -33,12 +33,13 @@
         ->select('user_id', 'authorize', 'is_accept_invite')
         ->first();
 
-    if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
+    if (\Auth::user()->hasWorkspace()) {
+        $workspaceBoards = \App\Models\Workspace::query()->where('id', $workspaceChecked->id)->first();
+
         if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
-            $workspaceBoards = \App\Models\Workspace::query()->with('boards')->where('id', $workspaceChecked->id)->first();
+            $workspaceBoards->load('boards');
         } elseif ($workspaceChecked->authorize == 'Member') {
-            $workspaceBoards = \App\Models\Workspace::query()
-                ->with([
+            $workspaceBoards->load([
                     'boards' => function ($query) use ($userId) {
                         $query
                             ->where('access', 'public') // Bảng công khai
@@ -49,23 +50,19 @@
                                     });
                             });
                     },
-                ])
-                ->where('id', $workspaceChecked->workspace_id)
-                ->first();
+                ]);
         } else {
-            $workspaceBoards = \App\Models\Workspace::query()
-                ->with([
+            $workspaceBoards->load([
                     'boards' => function ($query) use ($userId) {
                         $query->whereHas('boardMembers', function ($q) use ($userId) {
                             $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
                         });
                     },
-                ])
-                ->where('id', $workspaceChecked->workspace_id)
-                ->first();
+                ]);
         }
-    }
 
+        $workspaceBoards->load('boards.members');
+    }
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
@@ -84,7 +81,7 @@
             @endif
 
             <span class="fs-15 ms-2 text-white" id="swicthWs">
-                {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 16) }}
+                {{ \Str::limit($workspaceChecked->name, 16) }}
                 <i class=" ri-arrow-drop-down-line fs-20"></i>
             </span>
 
@@ -101,7 +98,7 @@
                         </div>
                     @endif
                     <section class=" ms-2">
-                        <p class="fs-15 fw-bolder"> {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 25) }}
+                        <p class="fs-15 fw-bolder"> {{ \Str::limit($workspaceChecked->name, 25) }}
                         </p>
                         <p class="fs-10" style="margin-top: -10px">
                             <span>
@@ -140,7 +137,7 @@
                         <section class=" ms-2">
                             <p class="fs-15 fw-bolder"
                                onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
-                                {{ \Illuminate\Support\Str::limit($workspace->name, 25) }}
+                                {{ \Str::limit($workspace->name, 25) }}
                             </p>
                             <p class="fs-10" style="margin-top: -10px">
                                 <span>
@@ -208,37 +205,36 @@
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                             <img
-                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                src="{{ asset('storage/' . $board->image) }}"
-                                                style="width: 30px; height: 30px"
-                                                alt="image"/>
+                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                    src="{{ asset('storage/' . $board->image) }}"
+                                                    style="width: 30px; height: 30px"
+                                                    alt="image"/>
                                         @else
                                             <div
-                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                style="width: 30px;height: 30px">
+                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                    style="width: 30px;height: 30px">
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>
 
                                         @endif
                                         <span
-                                            class="text-white fs-16">{{ \Illuminate\Support\Str::limit($board->name, 10) }}</span>
+                                                class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
                                     </div>
                                 </a>
                                 @php
-                                    $boardMembers=$board->users->unique('id');
+                                    // Load tất cả các user duy nhất của board
+                                   $boardMembers = $board->members->unique('id');
+                                   $memberIsStar = $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
 
-                                            $member_Is_star = \App\Models\BoardMember::where('board_id', $board->id)
-                                            ->where('user_id', auth()->id())
-                                            ->value('is_star');
-                                            session([
-                                                'member_Is_star' => $member_Is_star,
-                                                'boardMembers' => $boardMembers
-                                                ]);
-
+                                    // Lưu vào session
+                                    session([
+                                        'memberIsStar_' . $board->id => $memberIsStar,
+                                        'boardMembers_' . $board->id => $boardMembers
+                                    ]);
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">
                                     <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
-                                        @if( $member_Is_star == 1) active @endif"
+                                        @if( $memberIsStar == 1) active @endif"
                                             onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
                                             id="is_star_{{ $board->id }}">
                                         <span class="avatar-title bg-transparent fs-15">
@@ -255,7 +251,7 @@
                                         <a class="dropdown-item">
                                             <input type="text" name="text"
                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                   id="name_{{ $board->id }}" value="{{ $board->name }}"
+                                                   id="name_board_{{ $board->id }}" value="{{ $board->name }}"
                                                    onchange="updateBoard({{ $board->id }})"/>
                                         </a>
                                         <div class="dropdown-item ms-2 me-2">
@@ -264,18 +260,18 @@
 
                                                 <input type="file" class="form-control" name="image"
 
-                                                       id="image_{{ $board->id }}" value="{{ $board->image }}"
+                                                       id="image_board_{{ $board->id }}" value="{{ $board->image }}"
                                                        onchange="updateBoard({{ $board->id }})"/>
                                             </div>
                                         </div>
 
                                         <!-- Đóng bảng -->
                                         <div
-                                            class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
+                                                class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
                                             <div
-                                                class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
-                                                style="height: 30px; background-color: #c7c7c7;"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                    class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
+                                                    style="height: 30px; background-color: #c7c7c7;"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="ri-archive-line"></i>
                                                 <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
                                             </div>
@@ -335,7 +331,7 @@
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
-                            {{ \Illuminate\Support\Str::limit($workspaceChecked->name, 25) }} </strong><br> chờ quản
+                            {{ \Str::limit($workspaceChecked->name, 25) }} </strong><br> chờ quản
                         trị viên duyệt
                     </div>
                 </div>

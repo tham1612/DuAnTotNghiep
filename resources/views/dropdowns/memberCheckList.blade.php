@@ -6,13 +6,15 @@
         $boardMembers = session('boardMembers');
 
     @endphp
-        <!-- thành viên của thẻ -->
+            <!-- thành viên của thẻ -->
     <div class="mt-3">
         <label class="fs-14">Thành viên của thẻ</label>
-        <ul id="cardMembersList" class="" style="list-style: none; margin-left: -32px">
-            @if(!empty($checklistItem->checkListItemMembers))
-                @foreach ($checklistItem->checkListItemMembers as $checkListItemMember)
-                    <li id="card-member-{{$checkListItemMember->user->id}}-{{$checkListItemMember->check_list_item_id}}" class="d-flex justify-content-between align-items-center">
+        <ul id="cardMembersListItem-{{$checklistItem->id}}" class="" style="list-style: none; margin-left: -32px">
+            @if(!empty($checklistItem->check_list_item_members))
+                @foreach ($checklistItem->check_list_item_members as $checkListItemMember)
+                    @php $checkListItemMember = json_decode(json_encode($checkListItemMember)); @endphp
+                    <li id="card-member-{{$checkListItemMember->user->id}}-{{$checkListItemMember->check_list_item_id}}"
+                        class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <a href="javascript: void(0);" class="avatar-group-item"
                                data-bs-toggle="tooltip" data-bs-placement="top"
@@ -31,7 +33,8 @@
                             </a>
                             <p class="ms-3 mt-3">{{$checkListItemMember->user->name}}</p>
                         </div>
-                        <i class="ri-close-line fs-20" onclick="removeMemberFromCard({{$checkListItemMember->user->id}}, {{$checkListItemMember->check_list_item_id}})"></i>
+                        <i class="ri-close-line fs-20"
+                           onclick="removeMemberFromCard({{$checkListItemMember->user->id}}, {{$checkListItemMember->check_list_item_id}})"></i>
                     </li>
                 @endforeach
             @endif
@@ -44,7 +47,10 @@
     <div class="mt-3">
         <label class="fs-14">Thành viên của bảng</label>
         <ul class="" style="list-style: none; margin-left: -32px">
-            @php $boardMembers=  session('boardMembers');@endphp
+            @php
+                $boardMembers = session('boardMembers_' . $board->id);
+                $boardMembers = json_decode(json_encode($boardMembers), true);
+            @endphp
             @foreach ($boardMembers as $boardMember)
                 <li class="d-flex justify-content-between align-items-center checklist-member-item"
                     data-member-id="{{ $boardMember['id'] }}" data-check-list-item="{{$checklistItem->id}}"
@@ -73,23 +79,23 @@
     </div>
 
     <!-- Thành viên Không gian làm việc -->
-    @if($board->access->value == "public")
-        <div class="mt-3">
-            <strong class="fs-14">Thành viên Không gian làm việc</strong>
-            <ul class="" style="list-style: none; margin-left: -32px">
-                <li class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <a href="javascript: void(0);" class="avatar-group-item"
-                           data-bs-toggle="tooltip" data-bs-trigger="hover"
-                           data-bs-placement="top" title="Nancy">
-                            <img
-                                src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                alt="" class="rounded-circle avatar-xs"/>
-                        </a>
-                        <p class="ms-3 mt-3">vinhpq</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    @endif
+{{--    @if($board->access->value == "public")--}}
+{{--        <div class="mt-3">--}}
+{{--            <strong class="fs-14">Thành viên Không gian làm việc</strong>--}}
+{{--            <ul class="" style="list-style: none; margin-left: -32px">--}}
+{{--                <li class="d-flex justify-content-between align-items-center">--}}
+{{--                    <div class="d-flex align-items-center">--}}
+{{--                        <a href="javascript: void(0);" class="avatar-group-item"--}}
+{{--                           data-bs-toggle="tooltip" data-bs-trigger="hover"--}}
+{{--                           data-bs-placement="top" title="Nancy">--}}
+{{--                            <img--}}
+{{--                                    src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"--}}
+{{--                                    alt="" class="rounded-circle avatar-xs"/>--}}
+{{--                        </a>--}}
+{{--                        <p class="ms-3 mt-3">vinhpq</p>--}}
+{{--                    </div>--}}
+{{--                </li>--}}
+{{--            </ul>--}}
+{{--        </div>--}}
+{{--    @endif--}}
 </form>
