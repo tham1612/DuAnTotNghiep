@@ -24,7 +24,7 @@
         @foreach ($catalog->tasks->toArray() as $task)
             @php
                 $task = json_decode(json_encode($task));
-//                dd($task);
+            //    dd($task);
             @endphp
             <div class="modal fade" id="detailCardModal{{ $task->id }}" tabindex="-1"
                  aria-labelledby="detailCardModalLabel"
@@ -353,12 +353,12 @@
                                                 style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-user fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-bs-offset="-40,10">
+                                               aria-expanded="false" data-bs-offset="-40,10" onclick="loadTaskFormAddMember({{ $task->id }},{{$board->id}})">
                                                 Thành viên
                                             </p>
                                             <!--dropdown thành viên-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                @include('dropdowns.member')
+                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" id="dropdown-content-add-member-task-{{ $task->id }}">
+{{--                                                @include('dropdowns.member')--}}
                                             </div>
                                         </div>
                                     </div>

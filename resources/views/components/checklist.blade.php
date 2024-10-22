@@ -146,11 +146,11 @@
                                        data-bs-toggle="dropdown"
                                        aria-haspopup="true"
                                        aria-expanded="false"
-
+                                       onclick="loadChecklistItemFormAddMember({{ $checklistItem->id }},{{$board->id}})"
                                        id="dropdownToggle_{{ $checklistItem->id }}"></i>
-                                    <div
+                                    <div id="dropdown-content-add-member-check-list-{{ $checklistItem->id }}"
                                         class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                        @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem])
+{{--                                        @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem])--}}
                                     </div>
                                 </div>
 
