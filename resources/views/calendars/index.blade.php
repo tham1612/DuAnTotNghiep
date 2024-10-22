@@ -15,7 +15,7 @@
         <div class="modal-dialog">
             <div class="modal-content p-3">
                 <h4 class="text-center">Tạo task</h4>
-                <form class="formItem">
+                <form>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Tiêu đề</label>
                         <input type="text" class="form-control" name="text" id="text">
@@ -50,7 +50,9 @@
                     {{--                        <textarea name="description" id="description" cols="30" rows="5"--}}
                     {{--                                  class="form-control"></textarea>--}}
                     {{--                    </div>--}}
-                    <button type="submit" class="btn btn-primary" id="createEvent" disabled>Tạo mới</button>
+
+                    <button type="submit" class="btn btn-primary" id="createEvent">Tạo mới</button>
+
                     {{--                    <button class="btn btn-danger" id="deteleEvent">Xóa</button>--}}
                 </form>
             </div>

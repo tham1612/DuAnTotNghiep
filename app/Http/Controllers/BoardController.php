@@ -2,31 +2,25 @@
 
 namespace App\Http\Controllers;
 
+// use function Laravel\Prompts\select;
+//const PATH_UPLOAD = 'board';
 use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToBoard;
-use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Color;
 use App\Models\Task;
-use App\Models\TaskTag;
 use App\Models\User;
-use App\Models\Workspace;
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use App\Models\WorkspaceMember;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
 
-// use function Laravel\Prompts\select;
-//const PATH_UPLOAD = 'board';
 class BoardController extends Controller
 {
     const PATH_UPLOAD = 'boards';
@@ -113,28 +107,26 @@ class BoardController extends Controller
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
         try {
-            DB::beginTransaction();
-            $board = Board::query()->create($data);
-            BoardMember::query()->create([
-                'user_id' => auth()->id(),
-                'board_id' => $board->id,
-                'authorize' => 'Owner',
-                'invite' => now(),
-            ]);
-            // ghi lại hoạt động của bảng
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+            DB::transaction(function () use ($data) {
+                $board = Board::query()->create($data);
+                BoardMember::query()->create([
+                    'user_id' => auth()->id(),
+                    'board_id' => $board->id,
+                    'authorize' => 'Owner',
+                    'invite' => now(),
+                ]);
+                // ghi lại hoạt động của bảng
+                activity('Người dùng đã tạo bảng ')
+                    ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+                    ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+                    ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
+                    ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+            });
 
-            DB::commit();
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
             return redirect()->route('home');
         } catch (\Exception $exception) {
-            DB::rollBack();
-            dd($exception->getMessage());
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
                 'action' => 'danger'
@@ -157,10 +149,10 @@ class BoardController extends Controller
 
 
         $board = Board::query()->findOrFail($id);
-        $colors = \App\Models\Color::query()->get();
+        $colors = Color::query()->get();
         session([
             'board' => $board,
-            'colors' => \App\Models\Color::query()->get(),
+            'colors' => $colors ,
         ]);
 
         $viewType = \request('viewType', 'board');
@@ -168,76 +160,69 @@ class BoardController extends Controller
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
+            'members',
             'tags',
             'users',
             'catalogs' => function ($query) use ($request) {
-                $query->with([
-                    'tasks' => function ($taskQuery) use ($request) {
-                        $taskQuery->where(function ($subQuery) use ($request) {
+                $query->with(['tasks' => function ($taskQuery) use ($request) {
+                    $taskQuery->with([
+                        'catalog:id,name',
+                        'members',
+                        'checkLists',
+                        'checkLists.checkListItems',
+                        'checkLists.checkListItems.checkListItemMembers',
+                        'checkLists.checkListItems.checkListItemMembers.user',
+                        'tags',
+                        'followMembers',
+                        'attachments',
+                        'taskComments'
+                    ])->where(function ($subQuery) use ($request) {
 
-                            // Điều kiện 1: Lọc thành viên
-                            if ($request->has('no_member') || $request->has('it_me')) {
-                                $subQuery->where(function ($query) use ($request) {
-                                    // Điều kiện 1: Lọc thành viên
-                                    if ($request->no_member) {
-                                        // Không có thành viên
-                                        $query->whereDoesntHave('members');
-                                    }
-                                    if ($request->it_me) {
-                                        // Giao cho tôi (có thành viên là chính tôi)
-                                        $query->orWhereHas('members', function ($memberQuery) {
-                                            $memberQuery->where('user_id', auth()->id());
-                                        });
-                                    }
-                                });
-                            }
+                        // Điều kiện 1: Lọc thành viên
+                        if ($request->has('no_member') || $request->has('it_me')) {
+                            $subQuery->where(function ($query) use ($request) {
+                                if ($request->no_member) {
+                                    $query->whereDoesntHave('members');
+                                }
+                                if ($request->it_me) {
+                                    $query->orWhereHas('members', function ($memberQuery) {
+                                        $memberQuery->where('user_id', auth()->id());
+                                    });
+                                }
+                            });
+                        }
 
-                            // Điều kiện 2: Ngày hết hạn
-                            if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
-                                $subQuery->where(function ($dateQuery) use ($request) {
-                                    if ($request->has('no_date')) {
-                                        // Không có ngày hết hạn
-                                        $dateQuery->whereNull('end_date');
-                                    }
-                                    if ($request->has('no_overdue')) {
-                                        // Quá hạn
-                                        $dateQuery->orWhere('end_date', '<', now());
-                                    }
-                                    if ($request->has('due_tomorrow')) {
-                                        // Hết hạn vào ngày mai
-                                        $dateQuery->orWhere('end_date', '=', now()->addDay());
-                                    }
-                                });
-                            }
+                        // Điều kiện 2: Lọc ngày hết hạn
+                        if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
+                            $subQuery->where(function ($dateQuery) use ($request) {
+                                if ($request->no_date) {
+                                    $dateQuery->whereNull('end_date');
+                                }
+                                if ($request->no_overdue) {
+                                    $dateQuery->orWhere('end_date', '<', now());
+                                }
+                                if ($request->due_tomorrow) {
+                                    $dateQuery->orWhere('end_date', '=', now()->addDay());
+                                }
+                            });
+                        }
 
-                            // Điều kiện 3: Lọc nhãn
-                            if ($request->has('no_tags') || $request->has('tags')) {
-                                $subQuery->where(function ($tagQuery) use ($request) {
-                                    if ($request->has('no_tags')) {
-                                        // Không có nhãn
-                                        $tagQuery->doesntHave('tags');
-                                    }
-                                    if ($request->has('tags')) {
-                                        // Lọc theo nhãn đã chọn
-                                        $tagQuery->whereHas('tags', function ($tagSubQuery) use ($request) {
-                                            $tagSubQuery->whereIn('tags.id', $request->input('tags'));
-                                        });
-                                    }
-                                });
-                            }
-                        })
-                            ->orderBy('position', 'asc')
-                            ->with([
-                                'members',
-                                'checkList',
-                                'checkList.checkListItems',
-                                'checkList.checkListItems.checkListItemMembers',
-                                'tags',
-                                'followMembers',
-                                'attachments'
-                            ]);
-                    }
-                ]);
+                        // Điều kiện 3: Lọc theo nhãn
+                        if ($request->has('no_tags') || $request->has('tags')) {
+                            $subQuery->where(function ($tagQuery) use ($request) {
+                                if ($request->no_tags) {
+                                    $tagQuery->doesntHave('tags');
+                                }
+                                if ($request->tags) {
+                                    $tagQuery->whereHas('tags', function ($tagSubQuery) use ($request) {
+                                        $tagSubQuery->whereIn('tags.id', $request->tags);
+                                    });
+                                }
+                            });
+                        }
+                    })
+                        ->orderBy('position', 'asc');
+                }]);
             }
         ]);
 
@@ -386,6 +371,7 @@ class BoardController extends Controller
             // Add thêm các điều kiện lọc khác
             ->get();
 
+
         return response()->json([
             'success' => true,
             'filteredTasks' => $filteredTasks
@@ -406,7 +392,9 @@ class BoardController extends Controller
                 Storage::delete($board->image);
             }
         }
+
         $board->update($data);
+
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
             'msg' => true
@@ -416,22 +404,23 @@ class BoardController extends Controller
 
     public function updateBoardMember(Request $request, string $id)
     {
-        $data = $request->only(['user_id', 'board_id']);
+        $data = $request->only(['user_id']);
 
-
-        $boardMember = BoardMember::where('board_id', $data['board_id'])
-            ->where('user_id', $data['user_id'])
-            ->first();
+        $boardMember = BoardMember::where('board_id', $id)->where('user_id', $data['user_id'])->first();
 
         if ($boardMember) {
-            $newIsStar = $boardMember->is_star == 1 ? 0 : 1;
-            $boardMember->update(['is_star' => $newIsStar]);
+            $boardMember->update(['is_star' => !$boardMember->is_star]);
 
             return response()->json([
                 'message' => 'Người dùng cập nhật dấu sao bảng thành công',
                 'msg' => true
             ]);
         }
+
+        return response()->json([
+            'message' => 'Không tồn tại người dùng trong bảng',
+            'msg' => false
+        ]);
     }
 
     public function updateBoardMember2(Request $request, string $id)
@@ -452,6 +441,113 @@ class BoardController extends Controller
             ]);
         }
     }
+    //Duyệt người dùng gửi lời mời vào board
+    public function acceptMember(Request $request)
+    {
+        try {
+            BoardMember::query()
+                ->where('user_id', $request->user_id)
+                ->where('board_id', $request->board_id)
+                ->update([
+                    'is_accept_invite' => 0,
+                ]);
+            $board = Board::find($request->board_id);
+
+            WorkspaceMember::create([
+                'user_id' => $request->user_id,
+                'workspace_id' => $board->workspace_id,
+                'authorize' => "Viewer",
+                'invite' => now(),
+                'is_active' => 0,
+            ]);
+
+            return redirect()->route('b.edit', $request->board_id)->with([
+                'msg' => 'bạn đã chấp nhận người dùng vào bảng',
+                'action' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    //Từ chối người dùng gửi lời mời vào board
+    public function refuseMember($bm_id)
+    {
+        try {
+            BoardMember::find($bm_id)->delete();
+            return back()->with([
+                'msg' => 'bạn đã từ chối người dùng vào bảng',
+                'action' => 'danger'
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    //Kích thành viên || Rời khỏi không gian làm việc
+    public function activateMember($boardMemberId)
+    {
+        //lấy được thằng boardmember đang bị xóa || lấy được cả thằng boardID || lấy được cả wspID
+        $boardMember = BoardMember::where('id', $boardMemberId)->with('board')->first();
+        $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
+        $wspChecked = WorkspaceMember::where('user_id', $boardMember->user_id)
+            ->where('workspace_id', $boardMember->board->workspace_id)->first();
+        try {
+            if ($wspChecked->authorize->value !== "Viewer") {
+                $boardMember->delete();
+            } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
+                $boardMember->delete();
+            } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
+                $wspChecked->delete();
+                $boardMember->delete();
+                $wsp = WorkspaceMember::where('user_id', $boardMember->user_id)
+                    ->whereNot('authorize', 'Viewer')
+                    ->inRandomOrder()
+                    ->first();
+                $wsp->update([
+                    'is_active' => 1
+                ]);
+            }
+        } catch (\Throwable $th) {
+            dd(vars: $th);
+        }
+
+        return redirect()->route('b.edit', $boardMember->board_id)->with([
+            'msg' => 'Bạn đã kích thành viên ra khỏi không gian làm việc',
+            'action' => 'warning'
+        ]);
+
+    }
+    //Thăng cấp thành viên
+    public function upgradeMemberShip($boardMemberId)
+    {
+        BoardMember::find($boardMemberId)->update([
+            'authorize' => AuthorizeEnum::Sub_Owner()
+        ]);
+        return back()->with([
+            'msg' => 'Bạn đã thăng cấp thành viên thành công',
+            'action' => 'success'
+        ]);
+    }
+    //Nhượng quyền
+    public function managementfranchise($boardOwnerId, $boardUserId)
+    {
+        try {
+            BoardMember::find($boardUserId)->update([
+                'authorize' => AuthorizeEnum::Owner()
+            ]);
+
+            BoardMember::find($boardOwnerId)->update([
+                'authorize' => AuthorizeEnum::Member()
+            ]);
+            return back()->with([
+                'msg' => 'Bạn đã nhượng quyền quản trị viên',
+                'action' => 'warning'
+            ]);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -696,113 +792,5 @@ class BoardController extends Controller
         session()->flash('msg', 'Bạn đã mời người dùng vào bảng');
         session()->flash('action', 'success');
         return response()->json(['success' => true]);
-    }
-
-
-    //Duyệt người dùng gửi lời mời vào board
-    public function acceptMember(Request $request)
-    {
-        try {
-            BoardMember::query()
-                ->where('user_id', $request->user_id)
-                ->where('board_id', $request->board_id)
-                ->update([
-                    'is_accept_invite' => 0,
-                ]);
-            $board = Board::find($request->board_id);
-
-            WorkspaceMember::create([
-                'user_id' => $request->user_id,
-                'workspace_id' => $board->workspace_id,
-                'authorize' => "Viewer",
-                'invite' => now(),
-                'is_active' => 0,
-            ]);
-
-            return redirect()->route('b.edit', $request->board_id)->with([
-                'msg' => 'bạn đã chấp nhận người dùng vào bảng',
-                'action' => 'success'
-            ]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-    //Từ chối người dùng gửi lời mời vào board
-    public function refuseMember($bm_id)
-    {
-        try {
-            BoardMember::find($bm_id)->delete();
-            return back()->with([
-                'msg' => 'bạn đã từ chối người dùng vào bảng',
-                'action' => 'danger'
-            ]);
-        } catch (\Throwable $th) {
-            throw $th;
-        }
-    }
-    //Kích thành viên || Rời khỏi không gian làm việc
-    public function activateMember($boardMemberId)
-    {
-        //lấy được thằng boardmember đang bị xóa || lấy được cả thằng boardID || lấy được cả wspID
-        $boardMember = BoardMember::where('id', $boardMemberId)->with('board')->first();
-        $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
-        $wspChecked = WorkspaceMember::where('user_id', $boardMember->user_id)
-            ->where('workspace_id', $boardMember->board->workspace_id)->first();
-        try {
-            if ($wspChecked->authorize->value !== "Viewer") {
-                $boardMember->delete();
-            } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
-                $boardMember->delete();
-            } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
-                $wspChecked->delete();
-                $boardMember->delete();
-                $wsp = WorkspaceMember::where('user_id', $boardMember->user_id)
-                    ->whereNot('authorize', 'Viewer')
-                    ->inRandomOrder()
-                    ->first();
-                $wsp->update([
-                    'is_active' => 1
-                ]);
-            }
-        } catch (\Throwable $th) {
-            dd(vars: $th);
-        }
-
-        return redirect()->route('b.edit', $boardMember->board_id)->with([
-            'msg' => 'Bạn đã kích thành viên ra khỏi không gian làm việc',
-            'action' => 'warning'
-        ]);
-
-    }
-    //Thăng cấp thành viên
-    public function upgradeMemberShip($boardMemberId)
-    {
-        BoardMember::find($boardMemberId)->update([
-            'authorize' => AuthorizeEnum::Sub_Owner()
-        ]);
-        return back()->with([
-            'msg' => 'Bạn đã thăng cấp thành viên thành công',
-            'action' => 'success'
-        ]);
-    }
-    //Nhượng quyền
-    public function managementfranchise($boardOwnerId, $boardUserId)
-    {
-        try {
-            BoardMember::find($boardUserId)->update([
-                'authorize' => AuthorizeEnum::Owner()
-            ]);
-
-            BoardMember::find($boardOwnerId)->update([
-                'authorize' => AuthorizeEnum::Member()
-            ]);
-            return back()->with([
-                'msg' => 'Bạn đã nhượng quyền quản trị viên',
-                'action' => 'warning'
-            ]);
-        } catch (\Throwable $th) {
-            dd($th);
-        }
-
     }
 }

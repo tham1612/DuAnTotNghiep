@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -105,7 +107,7 @@ class TaskController extends Controller
             }
         }
 
-         $task->update($data);
+        $task->update($data);
 
 //        dd(file_get_contents('php://input'));
         if (isset($data['start_date']) || isset($data['end_date'])) {
@@ -149,8 +151,6 @@ class TaskController extends Controller
     {
         $data = $request->all();
         $model = Task::query()->findOrFail($id);
-        // $task = Task::find($id);
-        //        dd($data,$id);
         $data['position'] = $request->position + 1;
 
         $positionOldSameCatalog = Task::query()
@@ -246,7 +246,6 @@ class TaskController extends Controller
                 ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
         $model->update($data);
-        return redirect()->back()->with('success', 'Cập nhật thành công!!');
     }
 
     public function updateFolow(Request $request, string $id)
@@ -351,6 +350,39 @@ class TaskController extends Controller
             'success' => true,
             'message' => 'Xóa thành viên thành công.'
         ], 200);
+    }
+    public function getFormChekList($taskId)
+    {
+        if(!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.checklist', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+    public function getFormAttach($taskId)
+    {
+        if(!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+    public function getFormAddMember($taskId)
+    {
+        if(!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
     }
 
     public function destroy(Request $request)

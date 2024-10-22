@@ -21,7 +21,7 @@ class BoardMember extends Model
         'is_accept_invite'
     ];
     protected $casts = [
-       'is_star' => 'boolean',
+        'is_star' => 'boolean',
         'follow' => 'boolean',
         'authorize' => AuthorizeEnum::class,
 

@@ -169,8 +169,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============== sidebar =================
 function updateBoard(boardId) {
     var formData = new FormData();
-    formData.append('name', $('#name_' + boardId).val());
-    var image = document.getElementById('image_' + boardId);
+    formData.append('name', $('#name_board_' + boardId).val());
+    var image = document.getElementById('image_board_' + boardId);
     if (image.files.length > 0) {
         formData.append('image', image.files[0]);
     }
