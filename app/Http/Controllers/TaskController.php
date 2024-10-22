@@ -66,9 +66,6 @@ class TaskController extends Controller
 //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
-        if (isset($data['start_date']) || isset($data['end_date'])) {
-            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
-        }
 
 
         // ghi lại hoạt động khi thêm
@@ -82,7 +79,9 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
-        // event(new TaskUpdated($task));
+        if (isset($data['start_date']) || isset($data['end_date'])) {
+            $this->googleApiClient->createEvent($data);
+        }
         session(['msg' => 'Thêm task ' . $data['text'] . ' thành công!']);
         session(['action' => 'success']);
         return back();
@@ -99,6 +98,13 @@ class TaskController extends Controller
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
+        if (isset($data['start']) || isset($data['end'])) {
+            $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $data['end_date'] = $data['end'];
+        } else {
+            $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+        }
+
         if ($request->hasFile('image')) {
             $imagePath = Storage::put(self::PATH_UPLOAD, $request->file('image'));
             $data['image'] = $imagePath;
@@ -106,14 +112,18 @@ class TaskController extends Controller
                 Storage::delete($task->image);
             }
         }
-
+        $data['id'] = $id;
+        $data['id_gg_calendar'] = $task->id_google_calendar;
         $task->update($data);
 
-//        dd(file_get_contents('php://input'));
-        if (isset($data['start_date']) || isset($data['end_date'])) {
-            $this->updateCalendar($request, $id);
+// xử lý thêm vào gg calendar
+        if ($data['start_date'] || $data['end_date']) {
+            if ($task->id_google_calendar) {
+                $this->googleApiClient->updateEvent($data);
+            } else {
+                $this->googleApiClient->createEvent($data);
+            }
         }
-
 
         activity('Cập nhật task')
             ->performedOn($task)
@@ -129,6 +139,7 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+
 
         session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
         session(['action' => 'success']);
@@ -280,14 +291,15 @@ class TaskController extends Controller
 
     }
 
-    public function updateCalendar(Request $request, string $id)
+    public function updateCalendar(Request $request)
     {
-        $task = Task::query()->findOrFail($id);
+        dd($request->id);
+        $task = Task::query()->findOrFail($request->id);
         $data = $request->all();
         $data['id_gg_calendar'] = $task->id_google_calendar;
         $data['start_date'] = $request->start;
         $data['end_date'] = $request->end;
-        $data['id'] = $id;
+        $data['id'] = $request->id;
         $task->update($data);
         if ($task->id_google_calendar) {
 //            dd('ton tai');
@@ -351,9 +363,10 @@ class TaskController extends Controller
             'message' => 'Xóa thành viên thành công.'
         ], 200);
     }
+
     public function getFormChekList($taskId)
     {
-        if(!$taskId) {
+        if (!$taskId) {
             return response()->json(['error' => 'Task ID is missing'], 400);
         }
 
@@ -362,9 +375,10 @@ class TaskController extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
+
     public function getFormAttach($taskId)
     {
-        if(!$taskId) {
+        if (!$taskId) {
             return response()->json(['error' => 'Task ID is missing'], 400);
         }
 
