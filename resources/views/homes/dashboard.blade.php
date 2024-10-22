@@ -80,7 +80,7 @@
 
     <div class="row" id="highlighted-boards">
         <div class="d-flex">
-            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5>
+            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5> 
         </div>
         <div class="row">
             @if (!empty($board_star))
