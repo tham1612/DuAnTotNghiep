@@ -8,7 +8,9 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
+use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Catalog;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
@@ -387,6 +389,17 @@ class TaskController extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
+    public function getFormDateTask( $taskID)
+    {
+        $task = Task::findOrFail($taskID);
+//        dd( $task);
+
+        $htmlForm = View::make('dropdowns.date', [
+            'task' => $task
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
     public function getFormAddMember(Request $request, $taskId)
     {
         $boardMembers0 = session('boardMembers_' . $request->boardId);
@@ -403,6 +416,13 @@ class TaskController extends Controller
 
         return response()->json(['html' => $htmlForm]);
     }
+//    public function getTaskDetail($taskId) {
+//        $task = Task::find($taskId);
+//        $catalog=Catalog::with('tasks')->where('id',$task -> catalog_id)->first();
+//        $board=Board::with('catalogs')->where('id',$catalog->board_id)->first();
+//        // Trả về view chi tiết của task
+//        return view('components.modalTask', compact(['task','board']));
+//    }
 
 
 

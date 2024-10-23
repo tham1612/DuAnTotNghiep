@@ -3,7 +3,7 @@
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <div class="d-flex justify-content-between align-items-center">
 @php $memberIsStar = session('memberIsStar_' . $board->id); @endphp
-                <h4 class="fs-20 mx-3 mt-2">{{ $board->name }}</h4>
+                <h4 class="fs-20 mx-3 mt-2 " id="2-name-board-{{$board->id}}">{{ $board->name }}</h4>
                 <button type="button"
                         class="btn avatar-xs mt-n1 p-0 favourite-btn
                     @if( $memberIsStar) active @endif"

@@ -437,7 +437,7 @@
                         <span class="d-flex align-items-center">
                             @if (auth()->user()->image)
                                 <img class="rounded header-profile-user object-fit-cover"
-                                    src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                    src="{{ asset('storage/' . auth()->user()->image) }}"
                                     alt="Avatar" />
                             @else
                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
@@ -521,28 +521,4 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-@if (!empty($boardIsStars))
-    @foreach ($boardIsStars as $boardIsStar)
-        <script>
-            var user_id = document.getElementById('user_id');
-            var board_star = document.getElementById("board_star_{{ $boardIsStar['board_id'] }}");
-            board_star.addEventListener('click', function() {
-                var board_id = this.getAttribute('data-value');
-                $.ajax({
-                    url: `/b/${board_id}/updateBoardMember`,
-                    method: "PUT",
-                    data: {
-                        board_id: board_id,
-                        user_id: user_id.value,
-                    },
-                    success: function(response) {
 
-                    },
-                    error: function(xhr) {
-
-                    }
-                });
-            })
-        </script>
-    @endforeach
-@endif
