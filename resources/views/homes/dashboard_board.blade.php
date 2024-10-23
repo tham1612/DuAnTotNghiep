@@ -6,8 +6,7 @@
     use App\Models\User;
 
     // Lấy danh sách thành viên và đếm số nhiệm vụ mà mỗi thành viên được giao
-    $taskCountPerMember = Task::with('members')
-        ->selectRaw('users.name, COUNT(tasks.id) as task_count')
+    $taskCountPerMember = Task::selectRaw('users.name, COUNT(tasks.id) as task_count')
         ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
         ->join('users', 'users.id', '=', 'task_members.user_id')
         ->join('catalogs', 'catalogs.id', '=', 'tasks.catalog_id') // Join với bảng catalogs
@@ -16,57 +15,48 @@
         ->get();
 
     // Chuyển danh sách thành viên và số nhiệm vụ thành các mảng để truyền vào JavaScript
-    $memberNames = $taskCountPerMember->pluck('name'); // Lấy tên thành viên
-    $taskCounts = $taskCountPerMember->pluck('task_count'); // Lấy số lượng nhiệm vụ
+    $memberNames = $taskCountPerMember->pluck('name');
+    $taskCounts = $taskCountPerMember->pluck('task_count');
 
     // Lấy danh sách thành viên từ session hoặc database nếu không có trong session
-    $boardMember = session('boardMembers', BoardMember::where('board_id', $id)->whereNot('authorize', 'Viewer')->get());
+    $boardMember = session('boardMembers', function () use ($id) {
+        return BoardMember::where('board_id', $id)->whereNot('authorize', 'Viewer')->get();
+    });
 
-    // Đếm số lượng thành viên trong bảng (board) cụ thể
-    $totalMembers = $boardMember->count(); // Đếm số lượng thành viên của bảng
+    // Đếm số lượng thành viên
+    $totalMembers = $boardMember->count();
 
     // Tính tổng số lượng nhiệm vụ của tất cả các catalogs thuộc bảng cụ thể
     $totalTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
-        $query->where('board_id', $id); // Chỉ lấy tasks thuộc catalogs của bảng (board) cụ thể
+        $query->where('board_id', $id);
     })->count();
 
-    // Lấy danh sách các task quá hạn từ cơ sở dữ liệu cho các catalog thuộc bảng cụ thể
-    $task_over = Task::with(['members', 'catalog']) // Gọi quan hệ members và catalog
+    // Lấy danh sách các task quá hạn và các task của người dùng hiện tại
+    $current_time = now(); // Lưu lại giá trị của thời gian hiện tại để sử dụng nhiều lần
+
+    $tasks = Task::with(['members', 'catalog'])
         ->whereHas('catalog', function ($query) use ($id) {
-            $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
+            $query->where('board_id', $id); // Lọc theo board_id từ catalogs
         })
-        ->where('end_date', '<', Carbon::now()) // So sánh ngày hết hạn với ngày hiện tại
         ->get();
 
-    // Lấy danh sách các task mà người dùng hiện tại là thành viên và thuộc về bảng cụ thể
-    $my_task = Task::with(['members', 'catalog']) // Gọi quan hệ members và catalog
-        ->whereHas('catalog', function ($query) use ($id) {
-            $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
-        })
-        ->whereHas('members', function ($query) {
-            $query->where('user_id', auth()->id()); // Lọc các task mà người dùng hiện tại là thành viên
-        })
-        ->get();
+    // Lọc danh sách các task quá hạn
+    $task_over = $tasks->filter(function ($task) use ($current_time) {
+        return $task->end_date < $current_time && $task->progress < 100;
+    });
+
+    // Lọc danh sách các task mà người dùng hiện tại là thành viên
+    $my_task = $tasks->filter(function ($task) {
+        return $task->members->contains('id', auth()->id());
+    });
 
     // Tính số lượng nhiệm vụ quá hạn cho các catalog thuộc bảng cụ thể
-    $overdueTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
-        $query->where('board_id', $id); // Chỉ tính tasks thuộc catalogs của bảng cụ thể
-    })
-        ->where('end_date', '<', Carbon::now()) // Nhiệm vụ quá hạn
-        ->count();
+    $overdueTasksCount = $tasks->where('end_date', '<', $current_time)->count();
 
-    // Tính số lượng nhiệm vụ hoàn thành (process = 100) và chưa hoàn thành (process = 0)
-    $completedTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
-        $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
-    })
-        ->where('progress', 100) // Lọc nhiệm vụ đã hoàn thành
-        ->count();
+    // Tính số lượng nhiệm vụ hoàn thành và chưa hoàn thành
+    $completedTasksCount = $tasks->where('progress', 100)->count();
+    $incompleteTasksCount = $tasks->where('progress', 0)->count();
 
-    $incompleteTasksCount = Task::whereHas('catalog', function ($query) use ($id) {
-        $query->where('board_id', $id); // Lọc tasks thuộc các catalogs của board cụ thể
-    })
-        ->where('progress', 0) // Lọc nhiệm vụ chưa hoàn thành
-        ->count();
 @endphp
 
 @extends('layouts.masterMain')
@@ -197,24 +187,39 @@
                     <h4 class="card-title mb-0">Tiến độ hoàn thành dự án</h4>
                 </div><!-- end card header -->
                 <div class="card-body">
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
-                        <canvas id="doughnutChart"></canvas>
-                    </div>
+                    @if ($completedTasksCount > 0 || $incompleteTasksCount > 0)
+                        <div
+                            style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
+                            <canvas id="doughnutChart"></canvas>
+                        </div>
+                    @else
+                        <div>
+                            <h6 class="text-center">Không có dữ liệu thống kê</h6>
+                        </div>
+                    @endif
                 </div><!-- end card-body -->
             </div><!-- end card -->
+
         </div>
+
         <div class="col-xl-4">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title mb-0">Tổng nhiệm vụ giao cho từng người</h4>
                 </div><!-- end card header -->
                 <div class="card-body">
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
+                    @if ($memberNames->count() > 0)
+                        <div
+                            style="display: flex; justify-content: center; align-items: center; width: 100%; height: 400px;">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    @else
+                        <div>
+                            <h6 class="text-center">Không có dữ liệu để hiển thị</h6>
+                        </div>
+                    @endif
+                </div><!-- end card-body -->
+            </div><!-- end card -->
         </div>
         <div class="col-xl-4">
             <div class="card card-height-100">
@@ -268,7 +273,15 @@
                 </div><!-- end card header -->
                 <div class="card-body">
                     <div>
-                        <canvas id="barChart"></canvas>
+                        @if ($memberNames->count() > 0)
+                            <div>
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        @else
+                            <div>
+                                <h6 class="text-center">Không có dữ liệu để hiển thị</h6>
+                            </div>
+                        @endif
                     </div>
                 </div><!-- end card-body -->
             </div><!-- end card -->
@@ -307,42 +320,45 @@
                                 </tr>
                             </thead><!-- end thead -->
                             <tbody>
-                                @foreach ($my_task as $task)
-                                    <tr>
-                                        <!-- Thẻ (tên nhiệm vụ) -->
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label ms-1" for="checkTask{{ $task->id }}">
-                                                    {{ $task->text }}
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <!-- Ngày bắt đầu -->
-                                        <td class="text-muted">
-                                            {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
-                                        </td>
-                                        <!-- Ngày kết thúc -->
-                                        <td class="text-muted">
-                                            {{ \Carbon\Carbon::parse($task->end_date)->format('d M Y') }}
-                                        </td>
+                                @if (!empty($my_task))
+                                    @foreach ($my_task as $task)
+                                        <tr>
+                                            <!-- Thẻ (tên nhiệm vụ) -->
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="fs-15 mb-0 flex-grow-1 task-title"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#detailCardModal{{ $task->id }}">
+                                                        {{ $task->text }}
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <!-- Ngày bắt đầu -->
+                                            <td class="text-muted">
+                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
+                                            </td>
+                                            <!-- Ngày kết thúc -->
+                                            <td class="text-muted">
+                                                {{ \Carbon\Carbon::parse($task->end_date)->format('d M Y') }}
+                                            </td>
 
-                                        <!-- Độ ưu tiên -->
-                                        <td>
-                                            <span
-                                                class="badge
-                                                @if ($task->priority == 'High') bg-danger-subtle text-danger
-                                                @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
-                                                @elseif ($task->priority == 'Low') bg-success-subtle text-success
-                                                @else bg-info-subtle text-info @endif">
-                                                {{ $task->priority }}
-                                        </td>
-
-                                        <!-- Danh sách -->
-                                        <td class="text-muted">
-                                            {{ $task->catalog->name ?? 'Không có danh sách' }}
-                                        </td>
-                                    </tr><!-- end -->
-                                @endforeach
+                                            <!-- Độ ưu tiên -->
+                                            <td>
+                                                <span
+                                                    class="badge
+                                                        @if ($task->priority == 'High') bg-danger-subtle text-danger
+                                                        @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
+                                                        @elseif ($task->priority == 'Low') bg-success-subtle text-success
+                                                        @else bg-info-subtle text-info @endif">{{ $task->priority }}
+                                                </span>
+                                            </td>
+                                            <!-- Danh sách -->
+                                            <td class="text-muted">
+                                                {{ $task->catalog->name ?? 'Không có danh sách' }}
+                                            </td>
+                                        </tr><!-- end -->
+                                    @endforeach
+                                @endif
                             </tbody><!-- end tbody -->
                         </table><!-- end table -->
                     </div>
@@ -354,7 +370,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-
                 <div class="card-header">
                     <h5 class="card-title mb-0">Nhiệm vụ quá hạn</h5>
                 </div>
@@ -372,74 +387,74 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($task_over as $task)
-                                <tr>
-                                    <td>{{ $task->id }}</td>
-                                    <td>{{ $task->text }}</td>
-                                    <td>
-                                        <div class="avatar-group d-flex justify-content-center" id="newMembar">
-                                            @if ($task->members->isNotEmpty())
-                                                @php
-                                                    // Giới hạn số thành viên hiển thị
-                                                    $maxDisplay = 3;
-                                                    $count = 0;
-                                                @endphp
-                                                @foreach ($task->members as $member)
-                                                    @if ($count < $maxDisplay)
-                                                        <a href="javascript: void(0);" class="avatar-group-item"
-                                                            data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                            data-bs-placement="top" title="{{ $member->name }}">
-                                                            @if ($member->image)
-                                                                <img src="{{ asset('storage/' . $member->image) }}"
-                                                                    alt="" class="rounded-circle avatar-xs" />
-                                                            @else
-                                                                <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                                    style="width: 40px;height: 40px">
-                                                                    {{ strtoupper(substr($member->name, 0, 1)) }}
-                                                                </div>
-                                                            @endif
-                                                        </a>
-                                                        @php $count++; @endphp
-                                                    @endif
-                                                @endforeach
+                            @if (!@empty($task_over))
+                                @foreach ($task_over as $task)
+                                    <tr>
+                                        <td>{{ $task->id }}</td>
+                                        <td class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
+                                            data-bs-target="#detailCardModal{{ $task->id }}">{{ $task->text }}</td>
+                                        <td>
+                                            <div class="avatar-group d-flex justify-content-center" id="newMembar">
+                                                @if ($task->members->isNotEmpty())
+                                                    @php
+                                                        // Giới hạn số thành viên hiển thị
+                                                        $maxDisplay = 3;
+                                                        $count = 0;
+                                                    @endphp
+                                                    @foreach ($task->members as $member)
+                                                        @if ($count < $maxDisplay)
+                                                            <a href="javascript: void(0);" class="avatar-group-item"
+                                                                data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                                data-bs-placement="top" title="{{ $member->name }}">
+                                                                @if ($member->image)
+                                                                    <img src="{{ asset('storage/' . $member->image) }}"
+                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                @else
+                                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                        style="width: 40px;height: 40px">
+                                                                        {{ strtoupper(substr($member->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </a>
+                                                            @php $count++; @endphp
+                                                        @endif
+                                                    @endforeach
 
-                                                @if ($task->members->count() > $maxDisplay)
-                                                    <a href="javascript: void(0);" class="avatar-group-item"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="{{ $task->members->count() - $maxDisplay }} more">
-                                                        <div class="avatar-xs">
-                                                            <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
-                                                                style="width: 40px; height: 40px;">
-                                                                +{{ $task->members->count() - $maxDisplay }}
+                                                    @if ($task->members->count() > $maxDisplay)
+                                                        <a href="javascript: void(0);" class="avatar-group-item"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="{{ $task->members->count() - $maxDisplay }} more">
+                                                            <div class="avatar-xs">
+                                                                <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
+                                                                    style="width: 40px; height: 40px;">
+                                                                    +{{ $task->members->count() - $maxDisplay }}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </a>
+                                                        </a>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td>{{ Carbon::parse($task->end_date)->format('d M, Y') }}</td>
-                                    <td>{{ $task->catalog->name ?? 'Chưa có danh sách' }}</td>
-                                    <!-- Hiển thị tên danh sách -->
-                                    <td>
-                                        <span
-                                            class="badge
+                                            </div>
+                                        </td>
+                                        <td>{{ Carbon::parse($task->end_date)->format('d M, Y') }}</td>
+                                        <td>{{ $task->catalog->name ?? 'Chưa có danh sách' }}</td>
+                                        <!-- Hiển thị tên danh sách -->
+                                        <td>
+                                            <span
+                                                class="badge
                                             @if ($task->priority == 'High') bg-danger-subtle text-danger
                                             @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
                                             @elseif ($task->priority == 'Low') bg-success-subtle text-success
                                             @else bg-info-subtle text-info @endif">
-                                            {{ $task->priority }}
-                                        </span>
+                                                {{ $task->priority }}
+                                            </span>
+                                        </td> <!-- Hiển thị độ ưu tiên với màu sắc tương ứng -->
+                                    </tr>
+                                @endforeach
+                            @endif
 
-                                    </td> <!-- Hiển thị độ ưu tiên với màu sắc tương ứng -->
-                                </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
-
-
-
             </div>
         </div><!--end col-->
     </div><!--end row-->
@@ -496,7 +511,6 @@
             return colors;
         }
 
-
         // Truyền dữ liệu từ PHP vào JavaScript
         const memberNames = @json($memberNames); // Tên của các thành viên
         const taskCounts = @json($taskCounts); // Số lượng nhiệm vụ giao cho từng thành viên
@@ -552,8 +566,6 @@
             }
         });
     </script>
-
-
     <!-- apexcharts -->
     <script src="{{ asset('theme/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <!-- Swiper Js -->
