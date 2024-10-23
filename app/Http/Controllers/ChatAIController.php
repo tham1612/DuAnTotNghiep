@@ -11,7 +11,6 @@ class ChatAIController extends Controller
     public function index(Request $request)
     {
         $userId = auth()->id();
-        git add .
         // Xóa các bản ghi chat quá 7 ngày
         $sevenDaysAgo = Carbon::now()->subDays(7);
         ChatAI::where('user_id', $userId)
