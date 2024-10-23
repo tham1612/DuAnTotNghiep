@@ -47,6 +47,10 @@
                                             data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{$task->text}}
                                         </h6>
+{{--                                        <h6 class="fs-15 mb-0 flex-grow-1 task-title"--}}
+{{--                                            data-task-id="{{ $task->id }}">--}}
+{{--                                            {{ $task->text }}--}}
+{{--                                        </h6>--}}
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
                                                data-bs-toggle="dropdown" aria-expanded="false"><i

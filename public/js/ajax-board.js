@@ -49,6 +49,32 @@ function updateIsStar(boardId, userId,) {
 
 // ================ task ==================
 
+// Lắng nghe sự kiện click cho các phần tử có class 'task-title'
+// document.addEventListener('click', function(event) {
+//     if (event.target.classList.contains('task-title')) {
+//         // Lấy task ID từ thuộc tính data-task-id
+//         var taskId = event.target.getAttribute('data-task-id');
+//
+//         // Gọi AJAX để lấy nội dung modal
+//         $.ajax({
+//             url: `/tasks/${taskId}/detail`,  // API để lấy thông tin chi tiết task
+//             type: 'GET',
+//             success: function(response) {
+//                 // Giả sử máy chủ trả về dữ liệu modal dưới dạng HTML
+//                 $('#modal-content').html(response); // Gắn nội dung modal vào phần tử chứa modal
+//
+//                 // Hiển thị modal
+//                 $('#detailCardModal' + taskId ).modal('show');
+//             },
+//             error: function(xhr) {
+//                 alert('Có lỗi xảy ra khi tải nội dung.');
+//                 console.log(xhr.responseText);
+//             }
+//         });
+//     }
+// });
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // thông báo
     const notificationElements = document.querySelectorAll('[id^="notification_"]');
@@ -299,6 +325,25 @@ function updateReminderOptions2(taskId) {
     reminderSelect.innerHTML += `<option value="${formatDateTime(twoDaysBefore)}">2 ngày trước</option>`;
 }
 
+function loadFormAddDateTask(taskId) {
+    $.ajax({
+        url: `/tasks/${taskId}/getFormDateTask`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('#dropdown-content-add-date-task-' + taskId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
+
+
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
 
@@ -369,8 +414,51 @@ function FormCheckListItem(checkListId) {
         type: 'POST',
         data: formData,
         success: function (response) {
+
             console.log('CheckListItem đã được thêm thành công!', response);
-            $(this).find('button[type="submit"]').prop('disabled', false);
+            let checkList = document.getElementById('check-list-' + response.check_list_id);
+            let listItem = `
+             <tr class="cursor-pointer check-list-item-{{$checklistItem->id}}">
+                            <td class="col-1">
+                                <div class="form-check">
+                                    <input class="form-check-input-checkList"
+                                           type="checkbox" name="is_complete"
+                                           @checked(${response.is_complete})
+                                           value="100"
+                                           id="is_complete-${response.id}"
+                                           data-checklist-id="${response.id}"
+                                           data-task-id="${response.task_id}"/>
+                                </div>
+                            </td>
+                            <td>
+                                <p>${response.checkListItem.name}</p>
+                            </td>
+                            <td class=" d-flex justify-content-end">
+                                <div>
+                                    <i class="ri-more-fill fs-20"
+                                       data-bs-toggle="dropdown"
+                                       aria-haspopup="true"
+                                       aria-expanded="false"></i>
+                                    <div class="dropdown-menu dropdown-menu-md"
+                                         style="padding: 15px 15px 0 15px">
+                                        <h5 class="text-center">Thao tác
+                                            mục</h5>
+                                        <p class="mt-2">Chuyển sang thẻ</p>
+                                        <p class="cursor-pointer text-danger"
+                                        onclick="removeCheckListItem(${response.id})">
+                                        Xóa</p>
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+            `;
+            if (checkList) {
+                checkList.innerHTML += listItem;
+            } else {
+                console.error('Không tìm thấy phần check-list-' +response.check_list_id);
+            }
+
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -445,7 +533,94 @@ function submitAddCheckList(taskId) {
         type: 'POST',
         data: formData,
         success: function (response) {
+            var checkList = document.getElementById('checkListCreate');
+            var listItem = `
+                <div class="row mt-3 list-checklist-${response.checkListId}" >
+        <section class="d-flex justify-content-between">
+            <section class="d-flex">
+                <i class="ri-checkbox-line fs-22"></i>
+                <!-- Lặp qua từng checklist -->
+                <input type="text" name="name"
+                       class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
+                       id="name_${response.checkListId}" value="${response.name}"
+                       />
+            </section>
+            <button class="btn btn-outline-dark" style="height: 35px"
+                    data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                Xóa
+            </button>
+            <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                <h5 class="text-center">Bạn có muốn xóa Việc cần làm</h5>
+
+                <p>Danh sách sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+
+                <button class="btn btn-danger w-100" onclick="removeCheckList(${response.checkListId})">Xóa danh sách công việc
+                </button>
+            </div>
+        </section>
+
+        <div class="ps-4">
+            <div class="progress animated-progress bg-light-subtle"
+                 style="height: 20px"
+                 data-task-id="${response.checkList.task_id}">
+                <div class="progress-bar bg-success"
+                     role="progressbar"
+                     style="width: 0"
+                     id="progress-bar-${response.checkList.task_id}"
+                     aria-valuenow="0"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    0%
+                </div>
+            </div>
+            <div class="table-responsive table-hover table-card">
+                <table class="table table-nowrap mt-4">
+                    <tbody id="check-list-${response.checkListId}">
+                    <tr class="cursor-pointer addOrUpdate-checklist d-none">
+                        <td colspan="2">
+                            <form class="formItem">
+                                <input type="hidden" name="check_list_id"
+                                       id="check_list_id_${response.checkListId}"
+                                       value="${response.checkListId}">
+                                <input type="text" name="name"
+                                       id="name_check_list_item_${response.checkListId}"
+                                       class="form-control checklistItem"
+                                       placeholder="Thêm mục"/>
+
+                                <div
+                                    class="d-flex mt-3 justify-content-between">
+                                    <div>
+                                        <button type="button"
+                                                class="btn btn-primary"
+                                                onclick="FormCheckListItem(${response.checkListId})">
+                                            Thêm
+                                        </button>
+                                        <a class="btn btn-outline-dark disable-checklist">Hủy</a>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-outline-dark ms-3 mt-2 display-checklist"
+                    type="button" id="">
+                Thêm mục
+            </button>
+        </div>
+    </div>
+            `;
+            if (checkList) {
+                checkList.innerHTML += listItem;
+            } else {
+                console.error('Không tìm thấy phần tử checkListcreat');
+            }
             console.log('checklist đã được thêm thành công!', response);
+
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -526,12 +701,28 @@ function loadChecklistItemFormAddMember(checkListItemId, boardId) {
         method: 'GET',
         data: {
             boardId: boardId,
-            task_id: checkListItemId,
         },
         success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-member-check-list-' + checkListItemId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
+function loadTaskFormAddDateCheckListItem(checkListItemId) {
+    $.ajax({
+        url: `/tasks/checklist/checklistItem/${checkListItemId}/getFormDate`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('#dropdown-content-add-date-check-list-item-' + checkListItemId).html(response.html);
             } else {
                 console.log('No HTML returned');
             }
@@ -609,6 +800,43 @@ function removeMemberFromCard(memberId, checklistItemId) {
         }
     });
 }
+function removeCheckList(checklistId) {
+    console.log(checklistId);
+    $.ajax({
+        url: `/tasks/${checklistId}/deleteChecklist`,
+        type: 'POST',
+        data: {
+            id:checklistId
+        },
+        success: function (response) {
+            $('.list-checklist-' + checklistId).hide();
+            console.log('checkList đã được xóa thành công .');
+        },
+        error: function (xhr) {
+            alert('Có lỗi xảy ra khi xóa thành viên.');
+            console.log(xhr.responseText);
+        }
+    });
+}
+function removeCheckListItem(checklistItemId) {
+    console.log(checklistItemId);
+    $.ajax({
+        url: `/tasks/checklist/checklistItem/${checklistItemId}/delete`,
+        type: 'POST',
+        data: {
+            id:checklistItemId
+        },
+        success: function (response) {
+            $('.check-list-item-' + checklistItemId).hide();
+            console.log('checklistItem đã được xóa thành công .');
+        },
+        error: function (xhr) {
+            alert('Có lỗi xảy ra khi xóa thành viên.');
+            console.log(xhr.responseText);
+        }
+    });
+}
+
 
 
 
@@ -836,7 +1064,33 @@ function addMemberToTask(user_id, name, task_id) {
                     <i class="ri-close-line fs-20" onclick="removeMemberFromTask(${user_id}, ${task_id})"></i>
                 </li>
             `;
-            cardMembersList.innerHTML += listItem;
+            // var cardMembersTask = document.getElementById('list-member-task' );
+            // var listTaskItem = `
+            //     <a href="javascript: void(0);"
+            //        class="avatar-group-item"
+            //      data-bs-toggle="tooltip"
+            //      data-bs-placement="top"
+            //      title="${name}">
+            //           <div class="avatar-sm">
+            //               <div
+            //                  class="avatar-title rounded-circle bg-info-subtle text-primary"
+            //                   style="width: 35px;height: 35px">
+            //                  ${name.charAt(0).toUpperCase()}
+            //               </div>
+            //           </div>
+            //   </a>
+            // `;
+            if (cardMembersList) {
+                cardMembersList.innerHTML += listItem;
+            } else {
+                console.error('Element cardMembersList-' + task_id + ' not found.');
+            }
+
+            // if (cardMembersTask) {
+            //     cardMembersTask.innerHTML += listTaskItem;
+            // } else {
+            //     console.error('Element list-member-task' + ' not found.');
+            // }
             console.log('Thành viên đã được thêm vào thẻ thành công.');
         },
         error: function (xhr) {

@@ -1,8 +1,9 @@
+
 @if(!empty($task->check_lists) && !empty($task))
     @foreach($task->check_lists as $checklist)
-@php $checklist = json_decode(json_encode($checklist)); @endphp
+   @php $checklist = json_decode(json_encode($checklist)); @endphp
     <!-- việc cần làm -->
-    <div class="row mt-3">
+    <div class="row mt-3 list-checklist-{{$checklist->id}}" >
         <section class="d-flex justify-content-between">
             <section class="d-flex">
                 <i class="ri-checkbox-line fs-22"></i>
@@ -22,7 +23,7 @@
 
                 <p>Danh sách sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
 
-                <button class="btn btn-danger w-100">Xóa danh sách công việc
+                <button class="btn btn-danger w-100" onclick="removeCheckList({{$checklist->id}})">Xóa danh sách công việc
                 </button>
             </div>
         </section>
@@ -43,10 +44,10 @@
             </div>
             <div class="table-responsive table-hover table-card">
                 <table class="table table-nowrap mt-4">
-                    <tbody>
+                    <tbody id="check-list-{{$checklist->id}}">
                     @foreach($checklist->check_list_items as $checklistItem)
                         @php  $checklistItem= json_decode(json_encode($checklistItem));  @endphp
-                        <tr class="cursor-pointer">
+                        <tr class="cursor-pointer check-list-item-{{$checklistItem->id}}">
                             <td class="col-1">
                                 <div class="form-check">
                                     <input class="form-check-input-checkList"
@@ -69,21 +70,25 @@
                                         <span data-bs-toggle="dropdown"
                                               aria-haspopup="true"
                                               aria-expanded="false"
-                                              id="dropdownToggle_dateChecklistItem_{{ $checklistItem->id }}">
-                                                                                    {{ $checklistItem->end_date}}
-                                                                                </span>
+                                              id="dropdownToggle_dateChecklistItem_{{ $checklistItem->id }}"
+                                              onclick="loadTaskFormAddDateCheckListItem({{ $checklistItem->id }})"
+                                        >
+                                            {{ $checklistItem->end_date}}
+                                             </span>
 
                                     @else
                                         <i class="ri-time-line fs-20 "
                                            data-bs-toggle="dropdown"
                                            aria-haspopup="true"
                                            aria-expanded="false"
+                                           onclick="loadTaskFormAddDateCheckListItem({{ $checklistItem->id }})"
                                            id="dropdownToggle_dateChecklistItem_{{ $checklistItem->id }}"></i>
                                     @endif
                                     <div
                                         class="dropdown-menu dropdown-menu-md p-3 w-50"
+                                        id="dropdown-content-add-date-check-list-item-{{ $checklistItem->id }}"
                                         aria-labelledby="dropdownToggle_dateChecklistItem_{{ $checklistItem->id }}">
-                                        @include('dropdowns.dateCheckList', ['checklistItem' => $checklistItem])
+{{--                                      dropdowns.dateCheckList sẽ được gọi vô đây --}}
                                     </div>
                                 </div>
 
@@ -164,7 +169,10 @@
                                         <h5 class="text-center">Thao tác
                                             mục</h5>
                                         <p class="mt-2">Chuyển sang thẻ</p>
-                                        <p>Xóa</p>
+                                        <p class="cursor-pointer text-danger"
+                                        onclick="removeCheckListItem({{$checklistItem->id  }})">
+                                        Xóa</p>
+
                                     </div>
                                 </div>
                             </td>
@@ -209,3 +217,4 @@
     </div>
     @endforeach
 @endif
+<div id="checkListCreate"></div>
