@@ -3,7 +3,7 @@
     Board - TaskFlow
 @endsection
 @section('main')
-{{--        @dd($board->catalogs->first()->tasks)--}}
+    {{--        @dd($board->catalogs->first()->tasks) --}}
     <div class="tasks-board mb-3" id="kanbanboard">
 
         @foreach ($board->catalogs as $data)
@@ -12,13 +12,14 @@
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                             {{ $data->name }}
-                            <small class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $data->tasks->count() }}</small>
+                            <small
+                                class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $data->tasks->count() }}</small>
                         </h6>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
                             <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false">
+                                aria-expanded="false">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
@@ -36,16 +37,15 @@
                     </div>
                 </div>
                 <div data-simplebar class="tasks-wrapper px-3 mx-n3">
-                    <div id="{{$data->name."-".$data->id}}" class="tasks">
+                    <div id="{{ $data->name . '-' . $data->id }}" class="tasks">
                         <!-- task item -->
                         @foreach ($data->tasks as $task)
                             <div class="card tasks-box cursor-pointer" data-value="{{ $task->id }}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
-                                        <h6 class="fs-15 mb-0 flex-grow-1  task-title"
-                                            data-bs-toggle="modal"
+                                        <h6 class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
                                             data-bs-target="#detailCardModal{{ $task->id }}">
-                                            {{$task->text}}
+                                            {{ $task->text }}
                                         </h6>
 {{--                                        <h6 class="fs-15 mb-0 flex-grow-1 task-title"--}}
 {{--                                            data-task-id="{{ $task->id }}">--}}
@@ -53,7 +53,7 @@
 {{--                                        </h6>--}}
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i
                                                     class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                                                 <li>
@@ -93,7 +93,7 @@
                                         <!-- Ảnh bìa -->
                                         @if ($task->image)
                                             <div class="tasks-img rounded"
-                                                 style="
+                                                style="
                                                      background-image: url('{{ asset('storage/' . $task->image) }}');
                                                      background-size: cover;
                                                      background-position: center;
@@ -102,7 +102,6 @@
                                                      height: 150px;
                                                  ">
                                             </div>
-
                                         @endif
                                         <!-- giao việc cho thành viên-->
                                         @if ($task->members->count() >= 1)
@@ -118,19 +117,15 @@
                                                         @foreach ($task->members as $taskMember)
                                                             @if ($count < $maxDisplay)
                                                                 <a href="javascript: void(0);"
-                                                                   class="avatar-group-item border-0"
-                                                                   data-bs-toggle="tooltip"
-                                                                   data-bs-placement="top"
-                                                                   title="{{ $taskMember['name'] }}">
+                                                                    class="avatar-group-item border-0"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
-                                                                        <img
-                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                            alt=""
-                                                                            class="rounded-circle avatar-sm">
+                                                                        <img src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                            alt="" class="rounded-circle avatar-sm">
                                                                     @else
                                                                         <div class="avatar-sm">
-                                                                            <div
-                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
+                                                                            <div class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                             </div>
@@ -142,14 +137,11 @@
                                                         @endforeach
 
                                                         @if ($task->members->count() > $maxDisplay)
-                                                            <a href="javascript: void(0);"
-                                                               class="avatar-group-item"
-                                                               data-bs-toggle="tooltip"
-                                                               data-bs-placement="top"
-                                                               title="{{ $task->members->count() - $maxDisplay }} more">
+                                                            <a href="javascript: void(0);" class="avatar-group-item"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="{{ $task->members->count() - $maxDisplay }} more">
                                                                 <div class="avatar-sm">
-                                                                    <div
-                                                                        class="avatar-title rounded-circle">
+                                                                    <div class="avatar-title rounded-circle">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
                                                                 </div>
@@ -181,13 +173,11 @@
                                             <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-price-tag-3-line fs-20 me-2"></i>
                                                 <div class="d-flex flex-wrap gap-2">
-                                                    @foreach($task->tags as $tag)
+                                                    @foreach ($task->tags as $tag)
                                                         <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top"
-                                                             title="{{$tag->name}}">
-                                                            <div
-                                                                class="text-white border rounded d-flex align-items-center justify-content-center"
-                                                                style="width: 40px;height: 15px; background-color: {{$tag->color_code}}">
+                                                            data-bs-placement="top" title="{{ $tag->name }}">
+                                                            <div class="text-white border rounded d-flex align-items-center justify-content-center"
+                                                                style="width: 40px;height: 15px; background-color: {{ $tag->color_code }}">
                                                             </div>
                                                         </div>
                                                     @endforeach
@@ -238,15 +228,16 @@
                 </div>
                 <div class="my-3">
                     <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
-                            aria-expanded="false" data-bs-offset="0,-50">
+                        aria-expanded="false" data-bs-offset="0,-50">
                         Thêm thẻ
                     </button>
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        <form action="{{ route('tasks.store') }}" class="formItem" method="post" onsubmit="return disableButtonOnSubmit()">
+                        <form action="{{ route('tasks.store') }}" class="formItem" method="post"
+                            onsubmit="return disableButtonOnSubmit()">
                             @csrf
                             <div class="mb-2">
                                 <input type="text" class="form-control taskNameInput" name="text"
-                                       placeholder="Nhập tên thẻ..." />
+                                    placeholder="Nhập tên thẻ..." />
                                 <input type="hidden" name="catalog_id" value="{{ $data->id }}">
                             </div>
                             <div class="mb-2 d-flex align-items-center">
@@ -264,18 +255,19 @@
 
         <div class="rounded-3 p-2 bg-info-subtle" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
-                 aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px">
+                aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px">
                 <i class="ri-add-line fs-15"></i>
                 <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                     Thêm danh sách
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                <form action="{{ route('catalogs.store') }}" method="post" class="formItem" onsubmit="return disableButtonOnSubmit()">
+                <form action="{{ route('catalogs.store') }}" method="post" class="formItem"
+                    onsubmit="return disableButtonOnSubmit()">
                     @csrf
                     <div class="mb-2">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
-                            value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                            id="nameCatalog" value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -297,13 +289,13 @@
 
 @section('style')
     <!-- Dragula css -->
-    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
 @endsection
 @section('script')
     <script>
         var tasks_list = [
-            @foreach($board->catalogs as $data)
-            document.getElementById("{{$data->name."-".$data->id}}"),
+            @foreach ($board->catalogs as $data)
+                document.getElementById("{{ $data->name . '-' . $data->id }}"),
             @endforeach
         ]
     </script>
