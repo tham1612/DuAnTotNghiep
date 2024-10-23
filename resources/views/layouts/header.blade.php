@@ -14,7 +14,8 @@
     //        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
     //        ->where('board_members.is_star', 1)
     //        ->get();
-    $boardIsStars = session('boardIsStars');
+
+    $boardIsStars = session('$board_star');
     //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
 @endphp
 <header id="page-topbar">
@@ -239,33 +240,37 @@
                                     @foreach ($boardIsStars as $boardIsStar)
                                         <div
                                             class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center board-star-container">
+                                                @if($boardIsStar['image'])
 
-                                                <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
+                                                <img src="{{ asset('storage/' .$boardIsStar['image'] )  }}"
                                                     class="me-3 rounded-circle avatar-sm p-2 bg-light"
                                                     alt="user-pic" />
+                                                @else
+                                                    <div
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                        style="width: 30px;height: 30px">
+                                                        {{ strtoupper(substr($boardIsStar['name'], 0, 1)) }}
+                                                    </div>
+                                                @endif
 
                                                 <div class="flex-grow-1">
                                                     <h6 class="mt-0 mb-1 fs-14">
                                                         {{--    Liên kết đến bảng                                            --}}
-                                                        <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardIsStar['board_id']]) }}"
+                                                        <a href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardIsStar['id']]) }}"
                                                             class="text-reset">
-                                                            {{ $boardIsStar['board_name'] }}
+                                                            {{ $boardIsStar['name'] }}
                                                         </a>
                                                     </h6>
-                                                    <p class="mb-0 fs-12 w-100 text-muted">
-                                                        {{ $boardIsStar['workspace_name'] }}
-                                                    </p>
                                                 </div>
                                                 <div class="ps-2">
                                                     <button type="button"
-                                                        data-value="{{ $boardIsStar['board_id'] }}"
-                                                        id="board_star_{{ $boardIsStar['board_id'] }}"
-                                                        class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                        data-value="{{ $boardIsStar['id'] }}"
+                                                        id="board_star_{{ $boardIsStar['id'] }}"
+                                                        class="btn btn-icon btn-sm btn-ghost-warning "
+                                                    onclick="updateIsStar3({{$boardIsStar['id']}}, {{Auth::id()}})">
                                                         <i class="ri-star-fill fs-16"></i>
                                                     </button>
-                                                    <input type="hidden" id="user_id"
-                                                        value="{{ \Illuminate\Support\Facades\Auth::id() }}">
                                                 </div>
                                             </div>
                                         </div>

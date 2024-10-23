@@ -146,6 +146,8 @@ Route::middleware(['auth', 'isWorkspdace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
+        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
+            ->name('checklist.getFormAddMember');
 
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
