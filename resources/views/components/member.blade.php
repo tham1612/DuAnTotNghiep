@@ -50,17 +50,14 @@
                             </section>
                         </div>
                         <div class="col-5">
-                            {{-- <select name="members" class="form-select invite-member-select">
-                                <option value="">Thành viên trong không gian làm việc</option>
-                                @foreach ($wspMember as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select> --}}
                             <!-- Button để mở modal -->
-                            @if ($boardMemberChecked->authorize == 'Owner' || $boardMemberChecked->authorize == 'Sub_Owner')
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inviteModal">
-                                    Chọn thành viên từ không gian làm việc
-                                </button>
+                            @if (!empty($boardMemberChecked->authorize))
+                                @if ($boardMemberChecked->authorize == 'Owner' || $boardMemberChecked->authorize == 'Sub_Owner')
+                                    <button class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#inviteModal">
+                                        Chọn thành viên từ không gian làm việc
+                                    </button>
+                                @endif
                             @endif
                         </div>
 
