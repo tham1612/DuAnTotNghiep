@@ -30,7 +30,7 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('guest');
 
-Route::middleware(['auth', 'isWorkspace'])
+Route::middleware(['auth', 'isWorkspdace'])
     ->group(function () {
         Route::prefix('workspaces')
             ->as('workspaces.')
