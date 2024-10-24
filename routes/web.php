@@ -79,7 +79,6 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
         Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
-        Route::get('/chat/load-more', [ChatAIController::class, 'loadMore'])->name('chat.loadMore');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
