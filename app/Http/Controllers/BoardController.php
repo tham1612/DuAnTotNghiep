@@ -128,7 +128,7 @@ class BoardController extends Controller
 
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
-            return redirect()->route('home');
+            return redirect()->route('boards.index');
         } catch (\Exception $exception) {
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
@@ -415,7 +415,8 @@ class BoardController extends Controller
 
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
-            'msg' => true
+            'msg' => true,
+            'board'=>$board
         ]);
     }
 
