@@ -11,15 +11,12 @@ use App\Models\BoardMember;
 use App\Models\Color;
 use App\Models\Task;
 use App\Models\User;
-use App\Models\Workspace;
-use App\Notifications\TaskDueNotification;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Activity;
@@ -162,22 +159,6 @@ class BoardController extends Controller
 
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
-        //        $board->load([
-        //            'tags',
-        //            'users',
-        //            'catalogs',
-        //            'catalogs.tasks' => function ($query) {
-        //                $query->orderBy('position', 'asc');
-        //            },
-        //            'catalogs.tasks.catalog:id,name',
-        //            'catalogs.tasks.members',
-        //            'catalogs.tasks.checkList',
-        //            'catalogs.tasks.checkList.checkListItems',
-        //            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
-        //            'catalogs.tasks.tags',
-        //            'catalogs.tasks.followMembers'
-        //        ]);
-
         $board->load([
             'members',
             'tags',
@@ -191,7 +172,6 @@ class BoardController extends Controller
                         'checkLists.checkListItems',
                         'checkLists.checkListItems.checkListItemMembers',
                         'checkLists.checkListItems.checkListItemMembers.user',
-                        'checkLists.checkListItems.members',
                         'tags',
                         'followMembers',
                         'attachments',
@@ -267,6 +247,12 @@ class BoardController extends Controller
             ->get();
 
 
+            $catalogs = $board->catalogs;
+            $tasks = $catalogs->pluck('tasks')->flatten();
+        //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+//        $boardName = $board->name; // Lấy tên của board
+
+
         $boardMembers = $boardMemberMain->filter(function ($member) {
             return $member->authorize->value !== AuthorizeEnum::Owner()->value &&
                 $member->authorize->value !== AuthorizeEnum::Sub_Owner()->value &&
@@ -300,7 +286,6 @@ class BoardController extends Controller
         $boardMemberChecked = $boardMemberMain->filter(function ($member) {
             return $member->user_id == Auth::id();
         })->first();
-
         // Lấy danh sách thành viên của workspace mà chưa phải là thành viên của bảng
         $wspMember = WorkspaceMember::query()
             ->join('users', 'users.id', '=', 'workspace_members.user_id')
@@ -313,9 +298,6 @@ class BoardController extends Controller
             ->where('workspace_members.workspace_id', $board->workspace_id)
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
-
-
-
         switch ($viewType) {
             case 'dashboard':
                 return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
@@ -324,7 +306,7 @@ class BoardController extends Controller
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors','tasks','boardMemberChecked'));
 
             case 'table':
                 return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
@@ -762,9 +744,7 @@ class BoardController extends Controller
                         }
                     }
                 }
-            }
-
-            //xử lý khi người dùng không có tài khoản
+            } //xử lý khi người dùng không có tài khoản
             else {
                 //xử lý khi người dùng không có tài khoản
                 Auth::logout();
