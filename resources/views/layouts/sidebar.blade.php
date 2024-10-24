@@ -204,7 +204,7 @@
                         <li class="nav-item">
                             <div class="nav-link menu-link d-flex text-center align-items-center"
                                  style="justify-content: space-between;">
-                                <a class="" href="{{ route('b.edit', ['id' => $board->id]) }}">
+                                <a class="" href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                             <img
@@ -220,7 +220,7 @@
                                             </div>
 
                                         @endif
-                                        <span
+                                        <span id="name-board-{{$board->id}}"
                                                 class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
                                     </div>
                                 </a>
@@ -239,7 +239,7 @@
                                     <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if( $memberIsStar == 1) active @endif"
                                             onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                            id="is_star_{{ $board->id }}">
+                                            id="2_is_star_{{ $board->id }}">
                                         <span class="avatar-title bg-transparent fs-15">
                                             <i class="ri-star-fill fs-20 mx-2"></i>
                                         </span>
@@ -252,7 +252,7 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-start">
                                         <a class="dropdown-item">
-                                            <input type="text" name="text"
+                                            <input type="text" name="name"
                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
                                                    onchange="updateBoard({{ $board->id }})"/>

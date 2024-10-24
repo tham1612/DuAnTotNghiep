@@ -167,9 +167,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // ============== sidebar =================
+
+
+
+
+
+
 function updateBoard(boardId) {
     var formData = new FormData();
-    formData.append('name', $('#name_board_' + boardId).val());
+    var boardName = $('#name_board_' + boardId).val();
+    formData.append('name', boardName);
     var image = document.getElementById('image_board_' + boardId);
     if (image.files.length > 0) {
         formData.append('image', image.files[0]);
@@ -184,6 +191,13 @@ function updateBoard(boardId) {
         processData: false,  // Bắt buộc phải false để không xử lý FormData
         contentType: false,  // Bắt buộc phải false để đặt đúng 'multipart/form-data'
         success: function (response) {
+            var nameboard2 = document.getElementById('2-name-board-' + boardId);
+            var nameboard = document.getElementById('name-board-' + boardId);
+            if (nameboard && response.board.name && nameboard2 ) {
+                // Giới hạn tên mới theo 10 ký tự như trong Blade
+                var limitedName = response.board.name.length > 10 ? response.board.name.substring(0, 10) + '...' : response.board.name;
+                nameboard.textContent =nameboard2.textContent= limitedName;  // Cập nhật tên mới vào thẻ span
+            }
             console.log('Đã cập nhật bảng:', response);
         },
         error: function (xhr) {
@@ -202,6 +216,7 @@ function updateIsStar2(boardId, userId,) {
             user_id: userId,
         },
         success: function (response) {
+
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
         },
         error: function (xhr) {

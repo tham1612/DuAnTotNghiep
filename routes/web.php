@@ -79,7 +79,6 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
         Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
-        Route::get('/chat/load-more', [ChatAIController::class, 'loadMore'])->name('chat.loadMore');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
@@ -113,10 +112,11 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::resource('catalogs', CatalogControler::class);
 
         Route::resource('tasks', TaskController::class);
-
+//        Route::get('/tasks/{id}/detail', [TaskController::class, 'getTaskDetail']);
         Route::post('/create-event', [TaskController::class, 'createEvent']);
         Route::put('/update-event/{id}', [TaskController::class, 'updateEvent'])->name('update');
 //        Route::put('/update-dateTask/{id}', [TaskController::class, 'updateEvent'])->name('updateDateTask');
+        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
         Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
@@ -139,10 +139,16 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.create');
         Route::put('/tasks/{checklist}/checklist', [ChecklistController::class, 'update'])
             ->name('checklist.update');
+        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])
+            ->name('checklist.deleteChecklist');
         Route::post('/tasks/checklist/checklistItem/create', [ChecklistController::class, 'createChecklistItem'])
             ->name('checklist.createChecklistItem');
+        Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDateChecklistItem'])
+            ->name('checklist.getFormDateChecklistItem');
         Route::put('/tasks/checklist/checklistItem/{id}/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
+        Route::post('/tasks/checklist/checklistItem/{id}/delete', [ChecklistController::class, 'deleteChecklistItem'])
+            ->name('checklist.deleteChecklistItem');
         Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
             ->name('checklist.addMemberChecklist');
         Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
