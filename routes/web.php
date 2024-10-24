@@ -30,7 +30,7 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('guest');
 
-Route::middleware(['auth', 'isWorkspdace'])
+Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
         Route::prefix('workspaces')
             ->as('workspaces.')
@@ -85,7 +85,8 @@ Route::middleware(['auth', 'isWorkspdace'])
             ->name('user');
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
-        Route::prefix('b')
+        Route::group(['middleware' => ['auth', 'check.board.@access']], function () {
+                Route::prefix('b')
             ->as('b.')
             ->group(function () {
                 Route::get('create', [BoardController::class, 'create'])->name('create');
@@ -105,6 +106,8 @@ Route::middleware(['auth', 'isWorkspdace'])
                 Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
                 Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
             });
+         });
+
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');
         Route::resource('catalogs', CatalogControler::class);
@@ -146,8 +149,6 @@ Route::middleware(['auth', 'isWorkspdace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
-        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
-            ->name('checklist.getFormAddMember');
 
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
