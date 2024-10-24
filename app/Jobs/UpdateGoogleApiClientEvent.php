@@ -58,19 +58,26 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
             $service = new \Google_Service_Calendar($client);
 
             $event = $service->events->get('primary', $this->eventId); // Lấy sự kiện cần cập nhật
+
+            $event->setSummary($this->eventData['summary']);
+            $event->setDescription($this->eventData['description']);
+
             // Tạo đối tượng Google_Service_Calendar_EventDateTime cho thời gian bắt đầu
-            $startDateTime = new \Google_Service_Calendar_EventDateTime();
-            $startDateTime->setDateTime($this->eventData['start']['dateTime']); // Đặt thời gian bắt đầu
-            $startDateTime->setTimeZone($this->eventData['start']['timeZone']); // Đặt múi giờ (nếu cần)
+            if (isset($this->eventData['start']['dateTime']) || isset($this->eventData['start']['dateTime'])) {
+                $startDateTime = new \Google_Service_Calendar_EventDateTime();
+                $startDateTime->setDateTime($this->eventData['start']['dateTime']); // Đặt thời gian bắt đầu
+                $startDateTime->setTimeZone($this->eventData['start']['timeZone']); // Đặt múi giờ (nếu cần)
 
 
-            $endDateTime = new \Google_Service_Calendar_EventDateTime();
-            $endDateTime->setDateTime($this->eventData['end']['dateTime']); // Đặt thời gian kết thúc
-            $endDateTime->setTimeZone($this->eventData['end']['timeZone']); // Đặt múi giờ (nếu cần)
+                $endDateTime = new \Google_Service_Calendar_EventDateTime();
+                $endDateTime->setDateTime($this->eventData['end']['dateTime']); // Đặt thời gian kết thúc
+                $endDateTime->setTimeZone($this->eventData['end']['timeZone']); // Đặt múi giờ (nếu cần)
 
 
-            $event->setStart($startDateTime);
-            $event->setEnd($endDateTime);
+                $event->setStart($startDateTime);
+                $event->setEnd($endDateTime);
+            }
+
 
             if (!empty($this->attendees)) {
                 $event->setAttendees($this->attendees); // Thêm người tham gia (attendees)
