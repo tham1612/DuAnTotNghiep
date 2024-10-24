@@ -136,6 +136,10 @@ class HomeController extends Controller
         $activities = Activity::whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
             ->orderBy('created_at', 'desc')
             ->get();
+            
+        $currentWorkspace = WorkspaceMember::where('user_id', $userId)
+            ->where('is_active', 1)
+            ->first();    
 
         // Truyền các biến này sang view
         return view('homes.home', compact(
@@ -150,7 +154,8 @@ class HomeController extends Controller
             'overdueTasks',
             'upcomingTasks',
             'myAssignedTasks',
-            'tasksExpiringSoon'
+            'tasksExpiringSoon',
+            'currentWorkspace'
         ));
     }
 }

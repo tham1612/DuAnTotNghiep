@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh; margin-top: -70px;" class=" me-3 ms-3">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;" class=" me-3 ms-3">
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
