@@ -84,7 +84,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('user');
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
-        Route::group(['middleware' => ['auth', 'check.board.@access']], function () {
+        Route::group(['middleware' => ['auth', 'check.board.access']], function () {
                 Route::prefix('b')
             ->as('b.')
             ->group(function () {
