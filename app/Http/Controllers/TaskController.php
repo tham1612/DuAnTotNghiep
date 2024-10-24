@@ -103,7 +103,7 @@ class TaskController extends Controller
         if (isset($data['start']) || isset($data['end'])) {
             $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
             $data['end_date'] = $data['end'];
-        } else {
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
             $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
         }
 
@@ -119,13 +119,13 @@ class TaskController extends Controller
         $task->update($data);
 
 // xử lý thêm vào gg calendar
-        if ($data['start_date'] || $data['end_date']) {
+//        if ($data['start_date'] || $data['end_date']) {
             if ($task->id_google_calendar) {
                 $this->googleApiClient->updateEvent($data);
             } else {
                 $this->googleApiClient->createEvent($data);
             }
-        }
+//        }
 
         activity('Cập nhật task')
             ->performedOn($task)
@@ -389,7 +389,8 @@ class TaskController extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
-    public function getFormDateTask( $taskID)
+
+    public function getFormDateTask($taskID)
     {
         $task = Task::findOrFail($taskID);
 //        dd( $task);
@@ -400,12 +401,13 @@ class TaskController extends Controller
 
         return response()->json(['html' => $htmlForm]);
     }
+
     public function getFormAddMember(Request $request, $taskId)
     {
         $boardMembers0 = session('boardMembers_' . $request->boardId);
-        $boardMembers=json_decode(json_encode($boardMembers0));
+        $boardMembers = json_decode(json_encode($boardMembers0));
 
-        $task=json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
+        $task = json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
 //        dd( $boardMembers);
 
         $htmlForm = View::make('dropdowns.member', [
@@ -423,8 +425,6 @@ class TaskController extends Controller
 //        // Trả về view chi tiết của task
 //        return view('components.modalTask', compact(['task','board']));
 //    }
-
-
 
 
     public function destroy(Request $request)
