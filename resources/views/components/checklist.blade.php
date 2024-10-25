@@ -29,9 +29,10 @@
 
             <div class="ps-4">
                 <div class="progress animated-progress bg-light-subtle" style="height: 20px"
-                    data-task-id="{{ $task->id }}">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 0"
-                        id="progress-bar-{{ $task->id }}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    data-checklist-id="{{ $checklist->id }}">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                        id="progress-bar-checklist-{{ $checklist->id }}" aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100">
                         0%
                     </div>
                 </div>
@@ -46,7 +47,8 @@
                                             <input class="form-check-input-checkList" type="checkbox" name="is_complete"
                                                 @checked($checklistItem->is_complete) value="100"
                                                 id="is_complete-{{ $checklistItem->id }}"
-                                                data-checklist-id="{{ $checklistItem->id }}"
+                                                data-checklist-id="{{ $checklist->id }}"
+                                                data-checklist-item-id="{{ $checklistItem->id }}"
                                                 data-task-id="{{ $task->id }}" />
                                         </div>
 
@@ -163,7 +165,7 @@
 
                                         <div class="d-flex mt-3 justify-content-between">
                                             <div>
-                                                <button type="button" class="btn btn-primary add_checklist_item"
+                                                <button type="button" class="btn btn-primary"
                                                     onclick="FormCheckListItem({{ $checklist->id }})">
                                                     Thêm
                                                 </button>
@@ -172,29 +174,6 @@
 
                                         </div>
                                     </form>
-                                    {{-- <script>
-                                        document.addEventListener('DOMContentLoaded', function() {
-                                            // Enable/disable button based on input field content
-                                            document.querySelectorAll('.checklistItem').forEach(function(input) {
-                                                input.addEventListener('input', function() {
-                                                    const button = this.closest('form').querySelector('.add_checklist_item');
-                                                    button.disabled = this.value.trim() === ''; // Disable if input is empty
-                                                });
-                                            });
-
-                                            // Prevent multiple submissions
-                                            document.querySelectorAll('.formItem').forEach(function(form) {
-                                                form.addEventListener('submit', function(event) {
-                                                    const button = this.querySelector('.add_checklist_item');
-                                                    if (button.disabled) {
-                                                        event.preventDefault(); // Prevent form submission if button is disabled
-                                                    } else {
-                                                        button.disabled = true; // Disable button to prevent multiple submissions
-                                                    }
-                                                });
-                                            });
-                                        });
-                                    </script> --}}
                                 </td>
                             </tr>
                         </tbody>

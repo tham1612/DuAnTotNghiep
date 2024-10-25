@@ -175,7 +175,8 @@ class BoardController extends Controller
                         'tags',
                         'followMembers',
                         'attachments',
-                        'taskComments'
+                        'taskComments',
+                        'taskComments.user',
                     ])->where(function ($subQuery) use ($request) {
 
                         // Điều kiện 1: Lọc thành viên
