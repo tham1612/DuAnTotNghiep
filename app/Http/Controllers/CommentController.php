@@ -13,6 +13,10 @@ class CommentController extends Controller
 {
     public function store(Request $request)
     {
+         if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $taskComment=TaskComment::create($data);
          $userOwnerID=BoardMember::where('board_id',$taskComment->task->catalog->board->id)

@@ -29,6 +29,10 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->all();
         Tag::query()->create($data);
         return response()->json([
@@ -58,6 +62,10 @@ class TagController extends Controller
      */
     public function update(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         list($task_id, $tag_id) = explode("-", $request->data);
 
         $check = TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->first();

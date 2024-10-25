@@ -34,6 +34,12 @@ class CatalogControler extends Controller
      */
     public function store(StoreCatalogRequest $request)
     {
+
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+
         $data = $request->except(['image','position']);
 
         if ($request->hasFile('image')) {
@@ -92,6 +98,10 @@ class CatalogControler extends Controller
      */
     public function destroy(string $id)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $catalog = Catalog::find($id);
 
         // Ghi log khi xóa danh sách

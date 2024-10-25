@@ -99,6 +99,10 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -446,6 +450,10 @@ class BoardController extends Controller
     //Duyệt người dùng gửi lời mời vào board
     public function acceptMember(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         try {
             BoardMember::query()
                 ->where('user_id', $request->user_id)
@@ -474,6 +482,10 @@ class BoardController extends Controller
     //Từ chối người dùng gửi lời mời vào board
     public function refuseMember($bm_id)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         try {
             BoardMember::find($bm_id)->delete();
             return back()->with([
@@ -487,6 +499,10 @@ class BoardController extends Controller
     //Kích thành viên || Rời khỏi không gian làm việc
     public function activateMember($boardMemberId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         //lấy được thằng boardmember đang bị xóa || lấy được cả thằng boardID || lấy được cả wspID
         $boardMember = BoardMember::where('id', $boardMemberId)->with('board')->first();
         $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
@@ -521,6 +537,10 @@ class BoardController extends Controller
     //Thăng cấp thành viên
     public function upgradeMemberShip($boardMemberId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         BoardMember::find($boardMemberId)->update([
             'authorize' => AuthorizeEnum::Sub_Owner()
         ]);

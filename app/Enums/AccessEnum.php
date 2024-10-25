@@ -29,5 +29,10 @@ final class AccessEnum extends Enum
             self::PUBLIC_ACCESS,
         ];
     }
+    public static function isPublic(string $access): bool
+{
+    return $access === self::PUBLIC_ACCESS;
+}
+
 
 }
