@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh; margin-top: -70px;" class=" me-3 ms-3">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;" class=" me-3 ms-3">
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
@@ -144,7 +144,7 @@
                                         <th>Ngày kết thúc</th>
                                         <th>Độ ưu tiên</th>
                                         <th>Danh sách</th>
-                                        <th>Bình luận</th>
+                                        {{-- <th>Bình luận</th> --}}
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
@@ -287,7 +287,7 @@
 
                                                 </td>
                                             </form>
-                                            <td class="">
+                                            {{-- <td class="">
                                                 <a href="javascript: void(0);">
                                                     <button class="btn ms-3" id="dropdownMenuOffset3"
                                                             data-bs-toggle="dropdown" aria-expanded="false"
@@ -308,10 +308,10 @@
                                                                 </button>
                                                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                                             </div>
-                                                        </form>
+                                                        </form>                                                   
                                                     </div>
                                                 </a>
-                                            </td>
+                                            </td> --}}
                                             <td class="">
                                                 <a href="javascript:void(0);" class="text-muted"
                                                    id="dropdownMenuLink1" data-bs-toggle="dropdown"
@@ -468,26 +468,6 @@
                     });
                 });
 
-                // // kéo thả
-                // dragula([
-                //     document.getElementById("unassigned"),
-                //     document.getElementById("improgress"),
-                //     document.getElementById("to-do"),
-                //     document.getElementById("completed")
-                // ]);
-                // removeOnSpill: false
-                //     .on("drag", function (el) {
-                //         el.className.replace("ex-moved", "");
-                //     })
-                //     .on("drop", function (el) {
-                //         el.className += "ex-moved";
-                //     })
-                //     .on("over", function (el, container) {
-                //         container.className += "ex-over";
-                //     })
-                //     .on("out", function (el, container) {
-                //         container.className.replace("ex-over", "");
-                //     });
                 function updateTaskList(taskId) {
                     var formData = {
                         catalog_id: $('#catalog_id_' + taskId).val(),
