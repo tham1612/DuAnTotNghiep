@@ -156,6 +156,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
 
+
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
             ->name('tags.create');

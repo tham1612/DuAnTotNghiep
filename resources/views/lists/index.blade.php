@@ -161,7 +161,7 @@
                                                 </div>
                                             </td>
                                             <td class="">
-                                                <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
+                                                <div id="member1"
                                                      class="cursor-pointer">
                                                     <div class="avatar-group d-flex justify-content-center"
                                                          id="newMembar">
@@ -217,11 +217,6 @@
                                                                        title="Thêm thành viên"></i>
                                                                 </span>
                                                         @endif
-                                                    </div>
-
-                                                    <div class="dropdown-menu dropdown-menu-end p-3"
-                                                         aria-labelledby="member1">
-{{--                                                        @include('dropdowns.member')--}}
                                                     </div>
                                                 </div>
                                             </td>
