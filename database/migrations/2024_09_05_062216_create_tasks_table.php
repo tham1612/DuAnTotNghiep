@@ -24,7 +24,6 @@ return new class extends Migration
             $table->float('progress')->default(0);
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
-            $table->dateTime('reminder_date')->nullable();
             $table->integer('parent')->nullable();
             $table->integer('sortorder')->default(0);
             $table->string('creator_email')->nullable(); // google calendar

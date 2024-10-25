@@ -182,8 +182,8 @@
                         end,
                     },
                     success: function (response) {
-                        // isAllowedToDrag(event) ? alert(response.message) :
-                        //     alert('Bạn không có quyền thay đổi');
+                        isAllowedToDrag(event) ? alert(response.message) :
+                            alert('Bạn không có quyền thay đổi');
 
                     }
                 })

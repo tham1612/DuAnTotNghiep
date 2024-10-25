@@ -13,6 +13,7 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleApiClientController;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,9 +73,9 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        Route::get('/chat', function () {
-            return view('chat.index');
-        })->name('chat');
+        Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
+        ->name('chat');
+    Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
@@ -182,3 +183,4 @@ Route::controller(LoginGoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('login-google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });
+Route::get('/check-user/{id?}', [UserController::class, 'check'])->name('check.user');
