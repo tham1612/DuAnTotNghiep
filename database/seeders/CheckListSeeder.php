@@ -10,8 +10,9 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskLabel;
 use App\Models\User;
-use DB;
+
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CheckListSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class CheckListSeeder extends Seeder
     public function run(): void
     {
         $tasks = Task::all();
-        
+
         $colors = [
             ['name' => 'xanh nhạt', 'code' => '#CCF2D9'],
             ['name' => 'vàng nhạt', 'code' => '#F6E8B1'],

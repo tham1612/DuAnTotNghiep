@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
         //  \App\Models\User::factory(10)->create();
 
         $this->call([
-            WorkspaceSeeder::class,
-            BoardSeeder::class,
+        //     WorkspaceSeeder::class,
+        //     BoardSeeder::class,
             TaskSeeder::class,
             CheckListSeeder::class,
             TemplateBoardSeeder::class,

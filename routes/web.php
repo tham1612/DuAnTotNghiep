@@ -79,13 +79,13 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
         Route::delete('/chat/history', [ChatAIController::class, 'destroy'])->name('chat.history.destroy');
-        Route::get('/chat/load-more', [ChatAIController::class, 'loadMore'])->name('chat.loadMore');
 
         Route::get('/user/{id}', [UserController::class, 'edit'])
             ->name('user');
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
-        Route::prefix('b')
+        Route::group(['middleware' => ['auth', 'check.board.access']], function () {
+                Route::prefix('b')
             ->as('b.')
             ->group(function () {
                 Route::get('create', [BoardController::class, 'create'])->name('create');
@@ -105,6 +105,8 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
                 Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
             });
+         });
+
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');
         Route::resource('catalogs', CatalogControler::class);
@@ -153,8 +155,6 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
-        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
-            ->name('checklist.getFormAddMember');
 
 //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])

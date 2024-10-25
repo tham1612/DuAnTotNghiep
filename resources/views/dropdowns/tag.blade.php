@@ -4,7 +4,7 @@
            class="form-control border-1" placeholder="Tìm nhãn..."/>
     <div class="mt-3">
         <strong class="fs-14">Nhãn</strong>
-        <ul class="" style="list-style: none; margin-left: -32px" id="danh-sach-tag">
+        <ul class=""  data-simplebar style="list-style: none; margin-left: -32px; max-height: 200px;" id="danh-sach-tag">
             @foreach($board->tags as $tag)
                 @php  $tag = json_decode(json_encode($tag)); @endphp
                 <li class="mt-1 d-flex justify-content-between align-items-center">

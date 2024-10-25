@@ -3,6 +3,7 @@
 @section('title')
     Dashbroad
 @endsection
+
 @section('main')
     <div class="row">
         <div class="col-12">
@@ -80,7 +81,7 @@
 
     <div class="row" id="highlighted-boards">
         <div class="d-flex">
-            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5>
+            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5> 
         </div>
         <div class="row">
             @if (!empty($board_star))
@@ -289,6 +290,7 @@
         </div>
         <!-- end col -->
     </div>
+
     <div class="row">
         <div class="d-flex">
             <h5 class="card-title fs-18 mb-2">Bảng của bạn</h5>
