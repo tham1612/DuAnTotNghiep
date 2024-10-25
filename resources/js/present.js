@@ -1,5 +1,15 @@
 import "./bootstrap";
-// Gắn ID người nhận vào giao diện và kết nối tới Presence Channel với Laravel Echo
+// window.Echo.join(`chat`)
+//     .here((users) => {
+//         console.log("Users currently in the chat:", users);
+//     })
+//     .joining((user) => {
+//         console.log("User joined:", user);
+//     })
+//     .leaving((user) => {
+//         console.log("User left:", user);
+//     });
+// console.log(1);
 window.Echo.join(`chat.${roomId}`)
     .here((users) => {
         console.log("==============here============");
@@ -24,6 +34,7 @@ window.Echo.join(`chat.${roomId}`)
             document.getElementById("user-status").textContent = "Offline";
         }
     });
+
 // Gửi tin nhắn khi người dùng nhấn nút "Gửi"
 document
     .getElementById("send-message-btn")
@@ -58,13 +69,10 @@ document
         messageInput.value = "";
     });
 
-    window.Echo.join("chat." + roomId).listen("MessageSent", (event) => {
+window.Echo.join("chat." + roomId).listen("MessageSent", (event) => {
     console.log("Tin nhắn nhận được:", event.message);
     appendMessage(event.message, event.senderId);
 });
-
-
-
 
 // Hàm thêm tin nhắn vào khung hiển thị
 function appendMessage(message, senderId) {
@@ -75,11 +83,11 @@ function appendMessage(message, senderId) {
         // Thêm thẻ div với CSS trực tiếp vào
         messageElement.innerHTML += `
         <div style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">           
-            <div class="mb-2" style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; margin-top: -10px; line-height: 1.2;"> 
+            <div class="mb-2" style="background-color: #5F93ED; padding: 10px; border-radius: 5px; color: #ffffff; margin-top: -10px; line-height: 1.2;"> 
                 ${message} 
             </div>
         </div>
-        <div style="font-size: 12px; color: #555; text-align: right; margin-top: -15px;">${currentTime}</div> <!-- Thời gian -->`;
+        <div style="font-size: 12px; color: #555; text-align: right; margin-top: -15px;">${currentTime}</div> `;
     } else {
         messageElement.innerHTML += `
         <div style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
@@ -92,9 +100,7 @@ function appendMessage(message, senderId) {
         </div>
         <div style="font-size: 12px; color: #555; text-align: right; margin-top: -15px;">${currentTime}</div> <!-- Thời gian -->
     `;
-    
     }
-    
 
     // Thêm class CSS để căn chỉnh tin nhắn
     messageElement.classList.add("message"); // Thêm class 'message' chung cho tất cả tin nhắn
@@ -112,8 +118,8 @@ function appendMessage(message, senderId) {
 }
 // Hàm để định dạng thời gian
 function formatTime(date) {
-    let hours = date.getHours().toString().padStart(2, '0');
-    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let hours = date.getHours().toString().padStart(2, "0");
+    let minutes = date.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
 }
 

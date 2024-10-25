@@ -112,12 +112,14 @@ Route::middleware(['auth', 'isWorkspace'])
 
 Route::get('inboxs', function () {
     return view('Inboxs.index');
+
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
-
+Route::get('/check-user/{id?}', [UserController::class, 'check'])->name('check.user');
 Auth::routes();
 
 Route::controller(LoginGoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('login-google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });
+

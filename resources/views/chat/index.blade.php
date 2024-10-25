@@ -3,7 +3,6 @@
     data-sidebar-image="none" data-preloader="disable">
 
 <head>
-
     <meta charset="utf-8" />
     <title>Chat | Velzon - Admin & Dashboard Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,10 +11,8 @@
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href={{ asset('theme/assets/images/favicon.ico') }}>
-
     <!-- glightbox css -->
     <link rel="stylesheet" href={{ asset('theme/assets/libs/glightbox/css/glightbox.min.css') }}>
-
     <!-- Layout config Js -->
     <script src={{ asset('theme/assets/js/layout.js') }}></script>
     <!-- Bootstrap Css -->
@@ -26,8 +23,63 @@
     <link href={{ asset('theme/assets/css/app.min.css') }} rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href={{ asset('theme/assets/css/custom.min.css') }} rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Khai báo đường dẫn đến route check.user với một placeholder 'id'
+        let checkUserRoute = "{{ route('check.user', ['id' => '']) }}"; // Đây là URL gốc
+
+        function searchData() {
+            let query = document.getElementById('searchInput').value;
+
+            axios.get('/chat', {
+                    params: {
+                        query: query
+                    }
+                })
+                .then(function(response) {
+                    let users = response.data;
+                    let output = '';
+
+                    if (users.length > 0) {
+                        users.forEach(user => {
+                            // Thay thế 'id' trong đường dẫn với user.id
+                            output += `
+                        <li>
+                            <a href="${checkUserRoute.replace(/\/$/, '')}/${user.id}"> <!-- Thay thế 'id' bằng user.id -->
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                        <div class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                 class="rounded-circle img-fluid userprofile" alt="">                                            
+                                            <span class="user-status"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-truncate mb-0">${user.name}</p>                                    
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        `;
+                        });
+                        document.getElementById('userResults').innerHTML = output;
+                        document.getElementById('tb').innerHTML = '';
+                    } else {
+                        document.getElementById('tb').innerHTML = '<p>Tên không phù hợp</p>';
+                        document.getElementById('userResults').innerHTML = '';
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Không lấy được dữ liệu', error);
+                });
+        }
+    </script>
     <style>
         /* Đặt kiểu chung cho các tin nhắn */
+        .an {
+            display: none;
+        }
+
         .message {
             padding: 10px;
             margin: 5px;
@@ -64,33 +116,7 @@
 
         @include('layouts.header')
 
-        <!-- removeNotificationModal -->
-        <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                            id="NotificationModalbtn-close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mt-2 text-center">
-                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                                colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
-                            <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                                <h4>Are you sure ?</h4>
-                                <p class="text-muted mx-4 mb-0">Are you sure you want to remove this Notification ?</p>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                            <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn w-sm btn-danger" id="delete-notification">Yes, Delete
-                                It!</button>
-                        </div>
-                    </div>
 
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
         <!-- ========== App Menu ========== -->
         @include('layouts.sidebar')
         <!-- Left Sidebar End -->
@@ -114,12 +140,12 @@
                                     </div>
                                 </div>
                                 <div class="search-box">
-                                    <form action="{{ route('chat', ['roomId' => null, 'receiverId' => null]) }}" method="get" class="d-flex"
+                                    <form class="d-flex">
                                         @csrf
-                                        <input type="text" name="search" class="form-control bg-light border-primary" placeholder="Tìm kiếm">
-                                        <button type="submit" class="ms-1 btn btn-primary">OK</button>
+                                        <input style="width:220px!important;" type="text" id="searchInput"
+                                            onkeyup="searchData()" class="form-control bg-light border-primary"
+                                            placeholder="Nhập tên người dùng">
                                     </form>
-                                
                                     <i class="ri-search-2-line search-icon"></i>
                                 </div>
                             </div> <!-- .p-4 -->
@@ -138,63 +164,85 @@
                                     <div class="chat-room-list pt-3" data-simplebar>
                                         <div class="chat-message-list">
                                             <ul class="list-unstyled chat-list chat-user-list" id="userList">
-                                                @if($users->isNotEmpty())  <!-- Kiểm tra nếu $users không rỗng -->
+                                                <li id="userResults">
+
+                                                </li>
+                                                <p id="tb" class="text-center"></p>
+                                                @if ($users->isNotEmpty())
+                                                    <p class="text-center">Đã liên hệ</p>
                                                     @foreach ($users as $user)
-                                                        <li id="contact-id-{{ $user->id }}" data-name="direct-message">
-                                                            <a href="{{ url('chat/1/' . $user->id) }}" id="userList">
-                                                                <div class="d-flex align-items-center">
-                                                                    <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
-                                                                        <div class="avatar-xxs">
-                                                                            <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                                 class="rounded-circle img-fluid userprofile" alt="">
-                                                                            {{-- <span class="user-status"></span>  --}}
+                                                        @php
+                                                            // Lấy ID của người dùng đang đăng nhập
+                                                            $currentUserId = auth()->id();
+                                                        @endphp
+
+                                                        @foreach ($rooms as $room)
+                                                            @php
+                                                                // Tách members_hash thành mảng
+                                                                $membersArray = explode(',', $room->members_hash);
+                                                                // Kiểm tra xem cả hai ID có nằm trong mảng members_array không
+                                                                $isInRoom =
+                                                                    in_array($currentUserId, $membersArray) &&
+                                                                    in_array($user->id, $membersArray);
+                                                            @endphp
+
+                                                            @if ($isInRoom && $user->id !== $currentUserId)
+                                                                <!-- Thêm điều kiện kiểm tra -->
+                                                                <li id="an1">
+                                                                    <a href="{{ url('chat/' . $room->id . '/' . $user->id) }}"
+                                                                        id="userList">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div
+                                                                                class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                                                <div
+                                                                                    class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
+                                                                                    <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                                                        class="rounded-circle avatar-xs"
+                                                                                        alt="">
+                                                                                    <span class="user-status"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                            <div style="margin-left: -15px"
+                                                                                class="flex-grow-1 overflow-hidden">
+                                                                                <p class="text-truncate mb-0 mt-2">
+                                                                                    {{ $user->name }}</p>
+                                                                                    <p>
+                                                                                        @if ($user->latest_sender_id == $currentUserId)
+                                                                                            Bạn: {{ $user->latest_message }}
+                                                                                        @else
+                                                                                            {{ $user->latest_message }}
+                                                                                        @endif
+                                                                                        <span style="float: right; font-size: 0.9em; color: gray;">
+                                                                                            {{ \Carbon\Carbon::parse($user->latest_message_time)->format('d-m-Y H:i') }}
+                                                                                        </span>
+                                                                                    </p>                                                                                                                                                                                                                           
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="flex-grow-1 overflow-hidden">
-                                                                        <p class="text-truncate mb-0">{{ $user->name }}</p>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+                                                        @endforeach
                                                     @endforeach
                                                 @else
-                                                    <p class="text-center">Không có người dùng nào.</p> <!-- Hiển thị thông báo khi không có dữ liệu -->
+                                                    <p class="text-center">Hãy trò chuyện với ai đó</p>
                                                 @endif
                                             </ul>
-                                            
-                                        </div>
-                                        <div class="d-flex align-items-center px-4 mt-4 pt-2 mb-2">
-                                            <div class="flex-grow-1">
-                                                <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified"
-                                                    role="tablist">
-                                                    <li class="nav-item d-flex">
-                                                        <a style="font-size:20px" class="nav-link active"
-                                                            data-bs-toggle="tab" href="#chats" role="tab">
-                                                            Nhóm
-                                                        </a>
-                                                        {{-- <button style="height: 30px;width:30px;" type="button"
-                                                            class="btn btn-soft-success btn-sm">
-                                                            <i class="ri-add-line align-bottom"></i>
-                                                        </button> --}}
-                                                    </li>
-                                                </ul>
-                                            </div>
 
                                         </div>
+
 
                                         <div class="chat-message-list">
 
-                                            <ul class="list-unstyled chat-list chat-user-list mb-0">
-                                                <li id="contact-id-1"> <a href="{{ url('chat/2/10') }}"
-                                                        id="userList">
+                                            {{-- <ul class="list-unstyled chat-list chat-user-list mb-0">
+                                                <li id="contact-id-1"> <a href="{{ url('chat/12') }}" id="userList">
                                                         <div class="d-flex align-items-center">
                                                             <div
                                                                 class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
                                                                 <div class="avatar-xxs"> <img
                                                                         src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
                                                                         class="rounded-circle img-fluid userprofile"
-                                                                        alt="">
-                                                                    {{-- <span class="user-status"></span>  --}}
+                                                                        alt="">                                                                
                                                                 </div>
                                                             </div>
                                                             <div class="flex-grow-1 overflow-hidden">
@@ -204,7 +252,7 @@
                                                         </div>
                                                     </a>
                                                 </li>
-                                            </ul>
+                                            </ul> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -243,104 +291,76 @@
                                                                             </h5>
                                                                             <p
                                                                                 class="text-truncate text-muted fs-14 mb-0 userStatus">
-                                                                                @if ($receiverId != 10)
-                                                                                    <small id="user-status"></small>
-                                                                                @else
-                                                                                @endif
                                                                             </p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- tiện ích ng dùng -->
-                                                        <div class="col-sm-8 col-4">
-                                                            <ul class="list-inline user-chat-nav text-end mb-0">
-                                                                <!-- chấm than -->
-                                                                <li
-                                                                    class="list-inline-item d-none d-lg-inline-block m-0">
-                                                                    <button type="button"
-                                                                        class="btn btn-ghost-secondary btn-icon"
-                                                                        data-bs-toggle="offcanvas"
-                                                                        data-bs-target="#userProfileCanvasExample"
-                                                                        aria-controls="userProfileCanvasExample">
-                                                                        <i data-feather="info" class="icon-sm"></i>
-                                                                    </button>
-                                                                </li>
-                                                                <!-- 3 chấm -->
-                                                                <li class="list-inline-item m-0">
-                                                                    <div class="dropdown">
-                                                                        <button
-                                                                            class="btn btn-ghost-secondary btn-icon"
-                                                                            type="button" data-bs-toggle="dropdown"
-                                                                            aria-haspopup="true"
-                                                                            aria-expanded="false">
-                                                                            <i data-feather="more-vertical"
-                                                                                class="icon-sm"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                                            <a class="dropdown-item d-block d-lg-none user-profile-show"
-                                                                                href="#"><i
-                                                                                    class="ri-user-2-fill align-bottom text-muted me-2"></i>
-                                                                                View Profile</a>
-                                                                            <!-- <a class="dropdown-item" href="#"><i
-                                                                                class="ri-inbox-archive-line align-bottom text-muted me-2"></i>
-                                                                            Archive</a> -->
-
-                                                                            <a class="dropdown-item" href="#"><i
-                                                                                    class="ri-delete-bin-5-line align-bottom text-muted me-2"></i>
-                                                                                Xóa lịch sử trò chuyện</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
                                                     </div>
-
                                                 </div>
                                                 <!-- khung chat cá nhân -->
                                                 <div class="chat-conversation p-3 p-lg-4" id="message-box"
                                                     style="max-height: 100%; overflow-y: auto;">
-                                                    <div class="messages-box" id="message-list">
-                                                        @foreach ($messages as $message)
-                                                            @if ($message->sender_id == auth()->id()) 
-                                                                <div class="message right"
-                                                                    style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
-                                                                    <div
-                                                                        style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; margin-top: -10px; line-height: 1.2;">
-                                                                        {{ $message->message }}
+                                                    <div class="messages-box justify-content-between"
+                                                        id="message-list">
+                                                        @php
+                                                            // Lấy ID của người dùng hiện tại
+                                                            $currentUserId = Auth::id();
+
+                                                            // Truy vấn đến bảng messages với điều kiện sender_id và receiver_id
+                                                            $messages = \App\Models\Message::where(function (
+                                                                $query,
+                                                            ) use ($currentUserId, $receiverId) {
+                                                                $query
+                                                                    ->where('sender_id', $currentUserId)
+                                                                    ->orWhere('sender_id', $receiverId);
+                                                            })
+                                                                ->where(function ($query) use (
+                                                                    $currentUserId,
+                                                                    $receiverId,
+                                                                ) {
+                                                                    $query
+                                                                        ->where('receiver_id', $currentUserId)
+                                                                        ->orWhere('receiver_id', $receiverId);
+                                                                })
+                                                                ->get();
+                                                        @endphp
+                                                        @if ($messages->isNotEmpty())
+                                                            @foreach ($messages as $message)
+                                                                @if ($message->sender_id == Auth::id())
+                                                                    <!-- Tin nhắn từ người dùng hiện tại, căn sang phải -->
+                                                                    <div class="d-flex justify-content-end mb-2">
+                                                                        <div class="mb-2"
+                                                                            style="background-color: #5F93ED; padding: 10px; border-radius: 5px; color: #ffffff; line-height: 1.2; margin-right: 0;">
+                                                                            {{ $message->message }}
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            @endif
-                                                            @if ($message->receiver_id == request()->route('receiverId'))                                                         
-                                                                @php                                                              
-                                                                    $user = \App\Models\User::find(
-                                                                        $message->receiver_id,
-                                                                    );
-                                                                    $initial = $user
-                                                                        ? strtoupper(substr($user->name, 0, 1))
-                                                                        : '';                                                                   
-                                                                @endphp
-                                                                <div class="message left"
-                                                                    style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
-                                                                    <div class="bg-info-subtle d-flex justify-content-center align-items-center"
-                                                                        style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;">
-                                                                        {{ $initial }}
-                                                                        <!-- Hiển thị ký tự đầu tiên -->
+                                                                @else
+                                                                    <!-- Tin nhắn từ người khác, căn sang trái -->
+                                                                    <div class="d-flex mb-2">
+                                                                        <div class="bg-info-subtle d-flex justify-content-center align-items-center"
+                                                                            style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;">
+                                                                            A
+                                                                        </div>
+                                                                        <div
+                                                                            style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; line-height: 1.2;">
+                                                                            {{ $message->message }}
+                                                                        </div>
                                                                     </div>
-                                                                    <div
-                                                                        style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; margin-top: -10px; line-height: 1.2;">
-                                                                        {{ $message->message }}
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                           
-                                                        @endforeach                                                                                                       
+                                                                @endif
+                                                            @endforeach
+                                                            <!-- Phần đánh dấu để cuộn xuống cuối -->
+                                                            <div id="bottom"></div>
+                                                        @else
+                                                            <p>Không có tin nhắn nào trong phòng này - Hãy trò chuyện
+                                                                ngay.</p>
+                                                        @endif
                                                     </div>
                                                 @else
                                                     <div class="d-flex justify-content-center"
                                                         style="margin-top:300px">
-                                                        <h1 class="text-center">Hãy trò chuyện với ai đó</h1>
+                                                        <p class="text-center">Hãy trò chuyện với ai đó</p>
                                                     </div>
                                             @endif
                                         </div>
@@ -500,19 +520,19 @@
 
     <!-- fgEmojiPicker js -->
     <script src={{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}></script>
-
-    <!-- chat init js -->
-
-
-    <!-- App js -->
     <script src={{ asset('theme/assets/js/app.js') }}></script>
+
     <script>
         let userId = {{ auth()->id() }};
         let receiverId = {{ $receiverId }};
-        let roomId = {{ $roomId }}; 
-      
+        let roomId = {{ $roomId }};
     </script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var chatContainer = document.getElementById('bottom');
+            chatContainer.scrollIntoView();
+        });
+    </script>
     @vite('resources/js/present.js') <!-- Gắn file JavaScript -->
 </body>
 
