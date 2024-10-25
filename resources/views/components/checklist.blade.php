@@ -29,10 +29,9 @@
 
             <div class="ps-4">
                 <div class="progress animated-progress bg-light-subtle" style="height: 20px"
-                    data-checklist-id="{{ $checklist->id }}">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
-                        id="progress-bar-checklist-{{ $checklist->id }}" aria-valuenow="0" aria-valuemin="0"
-                        aria-valuemax="100">
+                    data-task-id="{{ $task->id }}">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 0"
+                        id="progress-bar-{{ $task->id }}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                         0%
                     </div>
                 </div>
@@ -47,8 +46,7 @@
                                             <input class="form-check-input-checkList" type="checkbox" name="is_complete"
                                                 @checked($checklistItem->is_complete) value="100"
                                                 id="is_complete-{{ $checklistItem->id }}"
-                                                data-checklist-id="{{ $checklist->id }}"
-                                                data-checklist-item-id="{{ $checklistItem->id }}"
+                                                data-checklist-id="{{ $checklistItem->id }}"
                                                 data-task-id="{{ $task->id }}" />
                                         </div>
 
@@ -174,6 +172,7 @@
 
                                         </div>
                                     </form>
+
                                 </td>
                             </tr>
                         </tbody>
