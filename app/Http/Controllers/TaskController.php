@@ -8,7 +8,9 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
+use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Catalog;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
@@ -101,7 +103,7 @@ class TaskController extends Controller
         if (isset($data['start']) || isset($data['end'])) {
             $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
             $data['end_date'] = $data['end'];
-        } else {
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
             $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
         }
 
@@ -117,13 +119,13 @@ class TaskController extends Controller
         $task->update($data);
 
 // xử lý thêm vào gg calendar
-        if ($data['start_date'] || $data['end_date']) {
+//        if ($data['start_date'] || $data['end_date']) {
             if ($task->id_google_calendar) {
                 $this->googleApiClient->updateEvent($data);
             } else {
                 $this->googleApiClient->createEvent($data);
             }
-        }
+//        }
 
         activity('Cập nhật task')
             ->performedOn($task)
@@ -387,12 +389,25 @@ class TaskController extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
+
+    public function getFormDateTask($taskID)
+    {
+        $task = Task::findOrFail($taskID);
+//        dd( $task);
+
+        $htmlForm = View::make('dropdowns.date', [
+            'task' => $task
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
+
     public function getFormAddMember(Request $request, $taskId)
     {
         $boardMembers0 = session('boardMembers_' . $request->boardId);
-        $boardMembers=json_decode(json_encode($boardMembers0));
+        $boardMembers = json_decode(json_encode($boardMembers0));
 
-        $task=json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
+        $task = json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
 //        dd( $boardMembers);
 
         $htmlForm = View::make('dropdowns.member', [
@@ -403,8 +418,13 @@ class TaskController extends Controller
 
         return response()->json(['html' => $htmlForm]);
     }
-
-
+//    public function getTaskDetail($taskId) {
+//        $task = Task::find($taskId);
+//        $catalog=Catalog::with('tasks')->where('id',$task -> catalog_id)->first();
+//        $board=Board::with('catalogs')->where('id',$catalog->board_id)->first();
+//        // Trả về view chi tiết của task
+//        return view('components.modalTask', compact(['task','board']));
+//    }
 
 
     public function destroy(Request $request)

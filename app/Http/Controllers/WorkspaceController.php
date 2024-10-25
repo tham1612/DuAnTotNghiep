@@ -269,7 +269,7 @@ class WorkspaceController extends Controller
                         'workspace_id' => Session::get('workspace_id'),
                         'authorize' => Session::get('authorize'),
                         'invite' => now(),
-                        'is_active' => 1,
+                        'is_active' => 0,
                         'is_accept_invite' => 1,
                     ]);
 
@@ -665,7 +665,7 @@ class WorkspaceController extends Controller
                             Auth::logout();
                             Session::put('invited', "case1");
                             Session::put('workspace_id', $workspace->id);
-                            Session::put('user_id', $user->id);
+                            Session::put('user_id', $user);
                             Session::put('email_invited', $request->email);
                             Session::put('authorize', $request->authorize);
                             return redirect()->route('login');

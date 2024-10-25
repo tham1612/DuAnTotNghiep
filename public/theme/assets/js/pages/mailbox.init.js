@@ -1,437 +1,471 @@
-var url = "http://127.0.0.1:8000/theme/assets/json/", // Đường dẫn đến thư mục chứa tệp JSON
-    allmaillist = ""; // Biến để lưu danh sách email (ban đầu là một chuỗi rỗng)
-
-const loader = document.querySelector("#elmLoader"); // Lấy phần tử HTML có ID là "elmLoader" để hiển thị trạng thái tải
-
-// Hàm getJSON để tải tệp JSON từ máy chủ
-var getJSON = function (filename, callback) {
-    var a = new XMLHttpRequest(); // Tạo một đối tượng XMLHttpRequest để thực hiện yêu cầu AJAX
-    a.open("GET", url + filename, true); // Mở yêu cầu GET đến đường dẫn chứa tệp JSON
-    a.responseType = "json"; // Đặt kiểu phản hồi là JSON
-
-    // Xử lý phản hồi khi yêu cầu hoàn tất
-    a.onload = function () {
-        var status = a.status; // Lấy mã trạng thái từ phản hồi
-        if (status === 200) {
-            // Nếu mã trạng thái là 200 (OK)
-            document.getElementById("elmLoader").innerHTML = ""; // Xóa nội dung của loader
-            callback(null, a.response); // Gọi hàm callback với thông tin phản hồi
-        } else {
-            callback(status, a.response); // Gọi hàm callback với lỗi nếu mã trạng thái không phải 200
-        }
-    };
-
-    a.send(); // Gửi yêu cầu
+var url = "http://127.0.0.1:8000/api/inbox/" + userId,
+    allmaillist = "";
+const loader = document.querySelector("#elmLoader");
+var getJSON = function (e, t) {
+    var a = new XMLHttpRequest();
+    a.open("GET", url + e, !0),
+        (a.responseType = "json"),
+        (a.onload = function () {
+            var e = a.status;
+            200 === e
+                ? ((document.getElementById("elmLoader").innerHTML = ""),
+                  t(null, a.response))
+                : t(e, a.response);
+        }),
+        a.send();
 };
-
-// Lấy tất cả data importain
-function loadMailData(e) {
-    // Nhấp vào nút để kích hoạt tab có id là "pills-primary"
+// Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
+function loadMailData(emails) {
+    // Chuyển đến tab chính trong giao diện
     document
-        .querySelector(
-            '#mail-filter-navlist button[data-bs-target="#pills-primary"]'
-        )
+        .querySelector('#mail-filter-navlist button[data-bs-target="#pills-primary"]')
         .click();
 
-    // Xóa nội dung hiện tại của phần tử có id là "mail-list"
+    // Xóa nội dung danh sách email hiện tại
     document.querySelector("#mail-list").innerHTML = "";
 
-    // Chuyển đổi đối tượng e thành mảng và lặp qua từng phần tử của mảng
-    Array.from(e).forEach(function (email, index) {
-        // Xác định trạng thái của email (đọc hay chưa đọc)
-        var unreadClass = email.readed ? "" : "unread";
+    // Duyệt qua từng email trong danh sách
+    Array.from(emails).forEach(function (email) {
+        // Kiểm tra nếu email đã đọc hay chưa
+        var statusClass = email.readed ? "" : "unread";
+        // Kiểm tra nếu email đã được đánh dấu yêu thích
+        var starClass = email.starred ? "active" : "";
+        // Đếm số lượng nếu có
+        var countedText = email.counted ? "(" + email.counted + ")" : "";
 
-        // Xác định trạng thái của email (được đánh dấu sao hay không)
-        var starredClass = email.starred ? "active" : "";
+        // Thêm email vào danh sách
+        document.querySelector("#mail-list").innerHTML +=
+            '<li class="' + statusClass + '">' +
+                '<div class="col-mail col-mail-1">' +
+                    '<div class="form-check checkbox-wrapper-mail fs-14">' +
+                        '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
+                        '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
+                    '</div>' +
+                    '<input type="hidden" value=' + email.userImg + ' class="mail-userimg" />' +
+                    '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '">' +
+                    '</button>' +
+                    '<a href="javascript: void(0);" class="title">' +
+                        '<span class="title-name">' + email.name + '</span> ' +
+                        countedText +
+                    '</a>' +
+                '</div>' +
+                '<div class="col-mail col-mail-2">' +
+                    '<a href="javascript: void(0);" class="subject">' +
+                        '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
+                    '</a>' +
+                    '<div class="date">' + email.date + '</div>' +
+                '</div>' +
+            '</li>';
 
-        // Tạo chuỗi thông tin số lượng email (nếu có)
-        var countInfo = email.counted ? `(${email.counted})` : "";
-
-        // Cập nhật nội dung của phần tử HTML có id là "mail-list"
-        document.querySelector("#mail-list").innerHTML += `
-            <li class="${unreadClass}">
-                <div class="col-mail col-mail-1">
-                    <div class="form-check checkbox-wrapper-mail fs-14">
-                        <input class="form-check-input" type="checkbox" value="${email.id}" id="checkbox-${email.id}">
-                        <label class="form-check-label" for="checkbox-${email.id}"></label>
-                    </div>
-                    <input type="hidden" value="${email.userImg}" class="mail-userimg" />
-                    <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starredClass}">
-                    </button>
-                    <a href="javascript: void(0);" class="title">
-                        <span class="title-name">${email.name} ${countInfo}</span>
-                    </a>
-                </div>
-                <div class="col-mail col-mail-2">
-                    <a href="javascript: void(0);" class="subject">
-                        <span class="subject-title">${email.title}</span> –
-                        <span class="teaser">${email.description}</span>
-                    </a>
-                    <div class="date">${email.date}</div>
-                    <div class="assign" style="display: none;">${email.assign}</div>
-                    <div class="status" style="display: none;">${email.status_task}</div>
-                    <div class="date_t" style="display: none;">${email.date_task}</div>
-                    <div class="priority_task" style="display: none;">${email.priority}</div>
-                    <div class="time_estimate_task" style="display: none;">${email.time_estimate}</div>
-                    <div class="track_time_task" style="display: none;">${email.track_time}</div>
-                    <div class="tag" style="display: none;">${email.tag}</div>
-                </div>
-            </li>
-        `;
-
-        // Gọi các hàm khác để xử lý thêm
+        // Gọi các hàm xử lý khác để cập nhật giao diện
         favouriteBtn();
         emailDetailShow();
         emailDetailChange();
         checkBoxAll();
     });
 }
-function loadSocialMailData(e) {
-    // Chuyển đổi đối tượng e thành một mảng và lặp qua từng phần tử của mảng
-    Array.from(e).forEach(function (email, index) {
-        // Xác định trạng thái của email (đọc hay chưa đọc)
-        var unreadClass = email.readed ? "" : "unread";
 
-        // Xác định trạng thái của email (được đánh dấu sao hay không)
-        var starredClass = email.starred ? "active" : "";
+// Hàm này dùng để tải và hiển thị dữ liệu email xã hội vào danh sách
+function loadSocialMailData(emails) {
+    // Duyệt qua từng email trong danh sách
+    Array.from(emails).forEach(function (email) {
+        // Kiểm tra nếu email đã đọc hay chưa
+        var statusClass = email.readed ? "" : "unread";
+        // Kiểm tra nếu email đã được đánh dấu yêu thích
+        var starClass = email.starred ? "active" : "";
+        // Đếm số lượng nếu có
+        var countedText = email.counted ? "(" + email.counted + ")" : "";
 
-        // Tạo chuỗi thông tin số lượng email (nếu có)
-        var countInfo = email.counted ? `(${email.counted})` : "";
+        // Thêm email vào danh sách xã hội
+        document.getElementById("social-mail-list").innerHTML +=
+            '<li class="' + statusClass + '">' +
+                '<div class="col-mail col-mail-1">' +
+                    '<div class="form-check checkbox-wrapper-mail fs-14">' +
+                        '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
+                        '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
+                    '</div>' +
+                    '<input type="hidden" value=' + email.userImg + ' class="mail-userimg" />' +
+                    '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '">' +
+                        '<i class="ri-star-fill"></i>' +
+                    '</button>' +
+                    '<a href="javascript: void(0);" class="title">' +
+                        '<span class="title-name">' + email.name + '</span> ' +
+                        countedText +
+                    '</a>' +
+                '</div>' +
+                '<div class="col-mail col-mail-2">' +
+                    '<a href="javascript: void(0);" class="subject">' +
+                        '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
+                    '</a>' +
+                    '<div class="date">' + email.date + '</div>' +
+                '</div>' +
+            '</li>';
 
-        // Cập nhật nội dung của phần tử HTML có id là "social-mail-list"
-        document.getElementById("social-mail-list").innerHTML += `
-            <div class="social-mail-item ${unreadClass}">
-                <div class="mail-status ${starredClass}"></div>
-                <div class="mail-info">
-                    <span class="mail-name">${email.name} ${countInfo}</span>
-                    <span class="mail-title">${email.title}</span>
-                    <span class="mail-description"> – ${email.description}</span>
-                    <span class="mail-date">${email.date}</span>
-                </div>
-            </div>
-        `;
-
-        // Gọi các hàm khác để xử lý thêm
+        // Gọi các hàm xử lý khác để cập nhật giao diện
         emailDetailShow();
         emailDetailChange();
         checkBoxAll();
     });
 }
 
-function loadPromotionsMailData(e) {
-    Array.from(e).forEach(function (email, index) {
-        // Xác định trạng thái của email (đọc hay chưa đọc)
-        var unreadClass = email.readed ? "" : "unread";
+// Hàm này dùng để tải và hiển thị dữ liệu email khuyến mãi vào danh sách
+function loadPromotionsMailData(emails) {
+    // Duyệt qua từng email trong danh sách
+    Array.from(emails).forEach(function (email) {
+        // Kiểm tra nếu email đã đọc hay chưa
+        var statusClass = email.readed ? "" : "unread";
+        // Kiểm tra nếu email đã được đánh dấu yêu thích
+        var starClass = email.starred ? "active" : "";
+        // Đếm số lượng nếu có
+        var countedText = email.counted ? "(" + email.counted + ")" : "";
 
-        // Xác định trạng thái của email (được đánh dấu sao hay không)
-        var starredClass = email.starred ? "active" : "";
+        // Thêm email vào danh sách khuyến mãi
+        document.getElementById("promotions-mail-list").innerHTML +=
+            '<li class="' + statusClass + '">' +
+                '<div class="col-mail col-mail-1">' +
+                    '<div class="form-check checkbox-wrapper-mail fs-14">' +
+                        '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
+                        '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
+                    '</div>' +
+                    '<input type="hidden" value=' + email.userImg + ' class="mail-userimg" />' +
+                    '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '">' +
+                        '<i class="ri-star-fill"></i>' +
+                    '</button>' +
+                    '<a href="javascript: void(0);" class="title">' +
+                        '<span class="title-name">' + email.name + '</span> ' +
+                        countedText +
+                    '</a>' +
+                '</div>' +
+                '<div class="col-mail col-mail-2">' +
+                    '<a href="javascript: void(0);" class="subject">' +
+                        '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
+                    '</a>' +
+                    '<div class="date">' + email.date + '</div>' +
+                '</div>' +
+            '</li>';
 
-        // Tạo chuỗi thông tin số lượng email (nếu có)
-        var countInfo = email.counted ? `(${email.counted})` : "";
-
-        // Cập nhật nội dung của phần tử HTML có id là "promotions-mail-list"
-        document.getElementById("promotions-mail-list").innerHTML += `
-            <li class="${unreadClass}">
-                <div class="col-mail col-mail-1">
-                    <div class="form-check checkbox-wrapper-mail fs-14">
-                        <input class="form-check-input" type="checkbox" value="${email.id}" id="checkbox-${email.id}">
-                        <label class="form-check-label" for="checkbox-${email.id}"></label>
-                    </div>
-                    <input type="hidden" value="${email.userImg}" class="mail-userimg" />
-                    <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starredClass}">
-                        <i class="ri-star-fill"></i>
-                    </button>
-                    <a href="javascript: void(0);" class="title">
-                        <span class="title-name">${email.name}</span> ${countInfo}
-                    </a>
-                </div>
-                <div class="col-mail col-mail-2">
-                    <a href="javascript: void(0);" class="subject">
-                        <span class="subject-title">${email.title}</span> –
-                        <span class="teaser">${email.description}</span>
-                    </a>
-                    <div class="date">${email.date}</div>
-                </div>
-            </li>
-        `;
-
-        // Gọi các hàm khác để xử lý thêm
+        // Gọi các hàm xử lý khác để cập nhật giao diện
         emailDetailShow();
         emailDetailChange();
         checkBoxAll();
     });
 }
 
-//đánh dấu sao yêu thích
+
+// Hàm này dùng để quản lý hành vi của nút đánh dấu yêu thích
 function favouriteBtn() {
+    // Duyệt qua từng nút yêu thích trong danh sách
     Array.from(document.querySelectorAll(".favourite-btn")).forEach(function (
+        button
+    ) {
+        // Thêm sự kiện click cho nút
+        button.addEventListener("click", function () {
+            // Kiểm tra nếu nút đã được đánh dấu yêu thích
+            if (button.classList.contains("active")) {
+                // Nếu có, xóa lớp "active"
+                button.classList.remove("active");
+            } else {
+                // Nếu chưa, thêm lớp "active"
+                button.classList.add("active");
+            }
+        });
+    });
+}
+
+// Hàm này dùng để quản lý việc hiển thị chi tiết email và các tương tác liên quan
+function emailDetailShow() {
+    var a = document.getElementsByTagName("body")[0],
+        t =
+            (Array.from(document.querySelectorAll(".message-list a")).forEach(
+                function (e) {
+                    e.addEventListener("click", function (t) {
+                        a.classList.add("email-detail-show"),
+                            Array.from(
+                                document.querySelectorAll(
+                                    ".message-list li.unread"
+                                )
+                            ).forEach(function (e) {
+                                e.classList.contains("unread") &&
+                                    t.target
+                                        .closest("li")
+                                        .classList.remove("unread");
+                            });
+                    });
+                }
+            ),
+            Array.from(document.querySelectorAll(".close-btn-email")).forEach(
+                function (e) {
+                    e.addEventListener("click", function () {
+                        a.classList.remove("email-detail-show");
+                    });
+                }
+            ),
+            !1),
+        l = document.getElementsByClassName("email-menu-sidebar");
+    Array.from(document.querySelectorAll(".email-menu-btn")).forEach(function (
         e
     ) {
         e.addEventListener("click", function () {
-            e.classList.contains("active")
-                ? e.classList.remove("active")
-                : e.classList.add("active");
-        });
-    });
-}
-
-function emailDetailShow() {
-    // Lấy phần tử <body>
-    var body = document.getElementsByTagName("body")[0];
-
-    // Khởi tạo biến để theo dõi trạng thái của menu
-    var isMenuVisible =
-        // Gán sự kiện click cho tất cả các liên kết trong danh sách tin nhắn
-        (Array.from(document.querySelectorAll(".message-list a")).forEach(
-            function (link) {
-                link.addEventListener("click", function (event) {
-                    // Thêm lớp 'email-detail-show' vào <body> để hiển thị chi tiết email
-                    body.classList.add("email-detail-show");
-
-                    // Đánh dấu email là đã đọc bằng cách xóa lớp 'unread'
-                    Array.from(
-                        document.querySelectorAll(".message-list li.unread")
-                    ).forEach(function (item) {
-                        if (item.classList.contains("unread")) {
-                            item.classList.remove("unread");
-                        }
-                    });
-                });
-            }
-        ),
-        // Gán sự kiện click cho tất cả các nút đóng email
-        Array.from(document.querySelectorAll(".close-btn-email")).forEach(
-            function (closeButton) {
-                closeButton.addEventListener("click", function () {
-                    // Xóa lớp 'email-detail-show' khi nút đóng được nhấn
-                    body.classList.remove("email-detail-show");
-                });
-            }
-        ),
-        false); // Giá trị mặc định
-
-    // Lấy tất cả các phần tử menu bên
-    var menuSidebar = document.getElementsByClassName("email-menu-sidebar");
-
-    // Gán sự kiện click cho tất cả các nút menu email
-    Array.from(document.querySelectorAll(".email-menu-btn")).forEach(function (
-        menuButton
-    ) {
-        menuButton.addEventListener("click", function () {
-            // Hiển thị menu bên
-            Array.from(menuSidebar).forEach(function (menu) {
-                menu.classList.add("menubar-show");
-                isMenuVisible = true; // Đánh dấu menu là đang hiển thị
+            Array.from(l).forEach(function (e) {
+                e.classList.add("menubar-show"), (t = !0);
             });
         });
-    });
-
-    // Gán sự kiện click cho toàn bộ cửa sổ
-    window.addEventListener("click", function (event) {
-        // Kiểm tra nếu menu bên đang hiển thị
-        if (
+    }),
+        window.addEventListener("click", function (e) {
             document
                 .querySelector(".email-menu-sidebar")
-                .classList.contains("menubar-show")
-        ) {
-            // Nếu menu không được kích hoạt từ một nút menu, ẩn menu
-            if (!isMenuVisible) {
-                document
-                    .querySelector(".email-menu-sidebar")
-                    .classList.remove("menubar-show");
-            }
-            isMenuVisible = false; // Reset trạng thái menu
-        }
-    });
-
-    // Gọi hàm favouriteBtn để xử lý trạng thái yêu thích cho các email
-    favouriteBtn();
+                .classList.contains("menubar-show") &&
+                (t ||
+                    document
+                        .querySelector(".email-menu-sidebar")
+                        .classList.remove("menubar-show"),
+                (t = !1));
+        }),
+        favouriteBtn();
 }
 
+// Hàm này dùng để quản lý hành vi của các checkbox trong danh sách email
 function checkBoxAll() {
-    // Gán sự kiện click cho tất cả các checkbox
+    // Thêm sự kiện cho từng checkbox trong danh sách email
     Array.from(
         document.querySelectorAll(".checkbox-wrapper-mail input")
     ).forEach(function (checkbox) {
         checkbox.addEventListener("click", function (event) {
-            // Thêm hoặc xóa lớp 'active' cho phần tử cha của checkbox dựa trên trạng thái checked
+            // Nếu checkbox được chọn, thêm lớp "active" vào li chứa nó
             if (event.target.checked) {
                 event.target.closest("li").classList.add("active");
             } else {
+                // Nếu không, xóa lớp "active"
                 event.target.closest("li").classList.remove("active");
             }
         });
     });
 
-    // Lấy tất cả các checkbox trong tab hiện tại
-    var checkboxesInActiveTab = document.querySelectorAll(
+    // Lấy tất cả checkbox trong tab hiện tại
+    var checkboxes = document.querySelectorAll(
         ".tab-pane.show .checkbox-wrapper-mail input"
     );
 
-    // Hàm để chọn hoặc bỏ chọn tất cả checkbox
-    function selectAllCheckboxes() {
-        var checkboxes = document.querySelectorAll(
+    // Hàm xử lý cho hành vi chọn tất cả checkbox
+    function selectAll() {
+        var totalCheckboxes = document.querySelectorAll(
             ".tab-pane.show .checkbox-wrapper-mail input"
         );
         var checkedCount = document.querySelectorAll(
             ".tab-pane.show .checkbox-wrapper-mail input:checked"
         ).length;
 
-        // Nếu có checkbox nào được checked, bỏ chọn tất cả
+        // Đánh dấu tất cả checkbox là checked và thêm lớp "active"
+        Array.from(totalCheckboxes).forEach(function (checkbox) {
+            checkbox.checked = true;
+            checkbox.parentNode.parentNode.parentNode.classList.add("active");
+        });
+
+        // Hiện hoặc ẩn thanh hành động dựa trên số checkbox được chọn
+        document.getElementById("email-topbar-actions").style.display =
+            checkedCount > 0 ? "none" : "block";
+
+        // Nếu có checkbox được chọn, bỏ chọn tất cả
         if (checkedCount > 0) {
-            Array.from(checkboxes).forEach(function (checkbox) {
+            Array.from(totalCheckboxes).forEach(function (checkbox) {
                 checkbox.checked = false;
                 checkbox.parentNode.parentNode.parentNode.classList.remove(
                     "active"
                 );
             });
-            document.getElementById("email-topbar-actions").style.display =
-                "block";
         } else {
-            // Nếu không có checkbox nào được checked, chọn tất cả
-            Array.from(checkboxes).forEach(function (checkbox) {
+            // Nếu không có checkbox nào được chọn, chọn tất cả
+            Array.from(totalCheckboxes).forEach(function (checkbox) {
                 checkbox.checked = true;
                 checkbox.parentNode.parentNode.parentNode.classList.add(
                     "active"
                 );
             });
-            document.getElementById("email-topbar-actions").style.display =
-                "none";
         }
 
-        // Gọi hàm để xử lý việc xóa các mục
+        // Gọi hàm xóa các mục (nếu có)
         removeItems();
     }
 
-    // Hàm để xử lý sự kiện click cho checkbox "Check All"
-    function toggleSelectAll() {
-        var checkboxes = document.querySelectorAll(
+    // Hàm xử lý cho hành vi bỏ chọn tất cả checkbox
+    function deselectAll() {
+        var totalCheckboxes = document.querySelectorAll(
             ".tab-pane.show .checkbox-wrapper-mail input"
         );
         var checkedCount = document.querySelectorAll(
             ".tab-pane.show .checkbox-wrapper-mail input:checked"
         ).length;
 
-        // Bỏ chọn tất cả checkbox và ẩn các mục hành động nếu có checkbox được checked
-        Array.from(checkboxes).forEach(function (checkbox) {
+        // Bỏ chọn tất cả checkbox và xóa lớp "active"
+        Array.from(totalCheckboxes).forEach(function (checkbox) {
             checkbox.checked = false;
             checkbox.parentNode.parentNode.parentNode.classList.remove(
                 "active"
             );
         });
 
+        // Hiện hoặc ẩn thanh hành động dựa trên số checkbox được chọn
         document.getElementById("email-topbar-actions").style.display =
             checkedCount > 0 ? "none" : "block";
+
+        // Nếu có checkbox được chọn, bỏ chọn tất cả
+        if (checkedCount > 0) {
+            Array.from(totalCheckboxes).forEach(function (checkbox) {
+                checkbox.checked = false;
+                checkbox.parentNode.parentNode.parentNode.classList.remove(
+                    "active"
+                );
+            });
+        } else {
+            // Nếu không có checkbox nào được chọn, chọn tất cả
+            Array.from(totalCheckboxes).forEach(function (checkbox) {
+                checkbox.checked = true;
+                checkbox.parentNode.parentNode.parentNode.classList.add(
+                    "active"
+                );
+            });
+        }
     }
 
-    // Gán sự kiện click cho mỗi checkbox
-    Array.from(checkboxesInActiveTab).forEach(function (checkbox) {
+    // Thêm sự kiện cho mỗi checkbox trong danh sách để theo dõi trạng thái chọn
+    Array.from(checkboxes).forEach(function (checkbox) {
         checkbox.addEventListener("click", function (event) {
-            var allCheckboxes = document.querySelectorAll(
+            var totalCheckboxes = document.querySelectorAll(
                 ".tab-pane.show .checkbox-wrapper-mail input"
             );
-            var checkAllCheckbox = document.getElementById("checkall");
+            var selectAllCheckbox = document.getElementById("checkall");
             var checkedCount = document.querySelectorAll(
                 ".tab-pane.show .checkbox-wrapper-mail input:checked"
             ).length;
 
-            // Cập nhật trạng thái của checkbox "Check All"
-            checkAllCheckbox.checked = checkedCount > 0;
-            checkAllCheckbox.indeterminate =
-                checkedCount > 0 && checkedCount < allCheckboxes.length;
+            // Cập nhật trạng thái cho checkbox chọn tất cả
+            selectAllCheckbox.checked = checkedCount > 0;
+            selectAllCheckbox.indeterminate =
+                checkedCount > 0 && checkedCount < totalCheckboxes.length;
 
-            // Hiện hoặc ẩn các mục hành động dựa trên số lượng checkbox được checked
+            // Hiện hoặc ẩn thanh hành động dựa trên số checkbox được chọn
             document.getElementById("email-topbar-actions").style.display =
                 checkedCount > 0 ? "block" : "none";
         });
     });
 
-    // Gán sự kiện click cho checkbox "Check All"
-    document.getElementById("checkall").onclick = selectAllCheckboxes;
+    // Thêm sự kiện cho checkbox chọn tất cả
+    document.getElementById("checkall").onclick = selectAll;
 }
 
-getJSON("mail-list.init.json", function (e, t) {
-    null !== e
-        ? console.log("Something went wrong: " + e)
-        : ((allmaillist = t[0].primary),
-          (socialmaillist = t[0].social),
-          (promotionsmaillist = t[0].promotions),
-          loadMailData(allmaillist),
-          loadSocialMailData(socialmaillist),
-          loadPromotionsMailData(promotionsmaillist));
-}),
-    Array.from(document.querySelectorAll(".mail-list a")).forEach(function (l) {
-        l.addEventListener("click", function () {
-            var t,
-                e,
-                a = document.querySelector(".mail-list a.active");
-            a && a.classList.remove("active"),
-                l.classList.add("active"),
-                l.querySelector(".mail-list-link").hasAttribute("data-type")
-                    ? ((t = l.querySelector(".mail-list-link").innerHTML),
-                      (e = allmaillist.filter((e) => e.labeltype === t)))
-                    : ((t = l.querySelector(".mail-list-link").innerHTML),
-                      (document.getElementById("mail-list").innerHTML = ""),
-                      (e =
-                          "All" != t
-                              ? allmaillist.filter((e) => e.tabtype === t)
-                              : allmaillist),
-                      (document.getElementById(
-                          "mail-filter-navlist"
-                      ).style.display =
-                          "All" != t && "Inbox" != t ? "none" : "block")),
-                loadMailData(e),
-                favouriteBtn();
-        });
-    }),
-    favouriteBtn(),
-    ClassicEditor.create(document.querySelector("#email-editor"))
-        .then(function (e) {
-            e.ui.view.editable.element.style.height = "200px";
-        })
-        .catch(function (e) {
-            console.error(e);
-        });
+
+// Tải dữ liệu từ file JSON và xử lý kết quả
+getJSON("mail-list.init.json", function (error, data) {
+    // Kiểm tra xem có lỗi xảy ra không
+    if (error !== null) {
+        console.log("Something went wrong: " + error);
+    } else {
+        // Gán dữ liệu cho các biến tương ứng
+        allmaillist = data[0].primary;
+        socialmaillist = data[0].social;
+        promotionsmaillist = data[0].promotions;
+
+        // Gọi các hàm để hiển thị danh sách email
+        loadMailData(allmaillist);
+        loadSocialMailData(socialmaillist);
+        loadPromotionsMailData(promotionsmaillist);
+    }
+});
+
+// Thêm sự kiện click cho từng liên kết trong danh sách email
+Array.from(document.querySelectorAll(".mail-list a")).forEach(function (link) {
+    link.addEventListener("click", function () {
+        var activeLink = document.querySelector(".mail-list a.active");
+
+        // Xóa lớp "active" khỏi liên kết đang hoạt động (nếu có)
+        if (activeLink) {
+            activeLink.classList.remove("active");
+        }
+
+        // Thêm lớp "active" cho liên kết hiện tại
+        link.classList.add("active");
+
+        var labelType, filteredEmails;
+
+        // Kiểm tra xem liên kết có thuộc loại nào không
+        if (link.querySelector(".mail-list-link").hasAttribute("data-type")) {
+            labelType = link.querySelector(".mail-list-link").innerHTML;
+            filteredEmails = allmaillist.filter(email => email.labeltype === labelType);
+        } else {
+            labelType = link.querySelector(".mail-list-link").innerHTML;
+            document.getElementById("mail-list").innerHTML = ""; // Xóa danh sách email hiện tại
+
+            // Lọc danh sách email theo loại tab
+            filteredEmails = (labelType !== "All")
+                ? allmaillist.filter(email => email.tabtype === labelType)
+                : allmaillist;
+
+            // Hiển thị hoặc ẩn thanh điều hướng dựa trên loại tab
+            document.getElementById("mail-filter-navlist").style.display =
+                (labelType !== "All" && labelType !== "Inbox") ? "none" : "block";
+        }
+
+        // Gọi hàm để tải dữ liệu email
+        loadMailData(filteredEmails);
+        favouriteBtn(); // Cập nhật nút yêu thích
+    });
+});
+
+// Gọi hàm favouriteBtn() để thiết lập hành vi cho các nút yêu thích
+favouriteBtn();
+
+// Khởi tạo trình soạn thảo email
+ClassicEditor.create(document.querySelector("#email-editor"))
+    .then(function (editor) {
+        // Đặt chiều cao cho vùng chỉnh sửa
+        editor.ui.view.editable.element.style.height = "200px";
+    })
+    .catch(function (error) {
+        console.error(error); // Log lỗi nếu có
+    });
+
 var currentChatId = "users-chat";
-function scrollToBottom(e) {
-    // Đặt thời gian chờ 100ms trước khi cuộn xuống
+
+// Hàm cuộn xuống dưới trong cuộc hội thoại chat
+function scrollToBottom(event) {
+    // Đặt thời gian chờ 100ms trước khi thực hiện cuộn
     setTimeout(() => {
-        // Lấy phần tử chứa cuộc hội thoại
-        const chatElement = document.getElementById("chat-conversation");
-
-        // Lấy phần tử chứa danh sách người dùng
-        const usersElement = document.getElementById("users-conversation");
-
-        // Cuộn đến đáy của phần tử chat
-        new SimpleBar(chatElement).getScrollElement().scrollTop =
-            usersElement.scrollHeight;
-    }, 100); // Thời gian chờ
+        // Lấy phần tử cuộn và thiết lập vị trí cuộn đến đáy
+        new SimpleBar(
+            document.getElementById("chat-conversation")
+        ).getScrollElement().scrollTop =
+            document.getElementById("users-conversation").scrollHeight;
+    }, 100);
 }
 
+// Hàm để xử lý việc xóa các mục trong danh sách email
 function removeItems() {
-    // Gán sự kiện cho modal khi nó hiển thị
+    // Thêm sự kiện cho modal xóa khi hiển thị
     document
         .getElementById("removeItemModal")
         .addEventListener("show.bs.modal", function (event) {
-            // Gán sự kiện cho nút xóa
+            // Thêm sự kiện cho nút xóa trong modal
             document
                 .getElementById("delete-record")
                 .addEventListener("click", function () {
-                    // Lặp qua tất cả các mục trong danh sách tin nhắn
+                    // Duyệt qua từng mục trong danh sách tin nhắn
                     Array.from(
                         document.querySelectorAll(".message-list li")
                     ).forEach(function (item) {
+                        var itemId;
+
+                        // Kiểm tra nếu mục đang ở trạng thái "active"
                         if (item.classList.contains("active")) {
-                            // Lấy giá trị của checkbox trong mục
-                            var emailId =
+                            // Lấy giá trị ID của mục
+                            itemId =
                                 item.querySelector(".form-check-input").value;
 
-                            // Cập nhật danh sách tất cả email bằng cách lọc các email không được chọn
+                            // Cập nhật danh sách email bằng cách loại bỏ mục đã chọn
                             allmaillist = allmaillist.filter(function (email) {
-                                return email.id != emailId;
+                                return email.id != itemId;
                             });
 
-                            // Xóa mục khỏi giao diện
+                            // Xóa mục khỏi DOM
                             item.remove();
                         }
                     });
@@ -439,43 +473,44 @@ function removeItems() {
                     // Đóng modal sau khi xóa
                     document.getElementById("btn-close").click();
 
-                    // Ẩn thanh công cụ nếu nó tồn tại
+                    // Ẩn thanh hành động nếu cần
                     if (document.getElementById("email-topbar-actions")) {
                         document.getElementById(
                             "email-topbar-actions"
                         ).style.display = "none";
                     }
 
-                    // Đặt trạng thái của checkbox "Check All" về chưa chọn
+                    // Đặt trạng thái checkbox "check all" về không chọn
                     checkall.indeterminate = false;
                     checkall.checked = false;
                 });
         });
 }
 
+// Hàm để xử lý việc xóa một mục email đơn lẻ
 function removeSingleItem() {
-    // Khai báo biến để lưu id của email cần xóa
-    var emailId;
+    var itemId;
 
-    // Gán sự kiện click cho tất cả các nút xóa
+    // Duyệt qua tất cả các nút xóa email
     document.querySelectorAll(".remove-mail").forEach(function (button) {
+        // Thêm sự kiện cho mỗi nút xóa
         button.addEventListener("click", function (event) {
-            // Lấy id của email từ thuộc tính data-remove-id
-            emailId = button.getAttribute("data-remove-id");
+            // Lấy ID của mục cần xóa từ thuộc tính data
+            itemId = button.getAttribute("data-remove-id");
 
-            // Gán sự kiện cho nút "Xóa" trong modal
+            // Thêm sự kiện cho nút xác nhận xóa
             document
                 .getElementById("delete-record")
                 .addEventListener("click", function () {
-                    // Lọc danh sách email để xóa email có id tương ứng
+                    // Lọc danh sách email để loại bỏ mục có ID trùng khớp
                     allmaillist = allmaillist.filter(function (email) {
-                        return email.id != emailId;
+                        return email.id != itemId;
                     });
 
-                    // Tải lại danh sách email
+                    // Tải lại danh sách email để cập nhật giao diện
                     loadMailData(allmaillist);
 
-                    // Đóng modal sau khi xóa
+                    // Đóng modal hoặc giao diện sau khi xóa
                     document.getElementById("close-btn-email").click();
                 });
         });
@@ -503,139 +538,45 @@ var markAllReadBtn = document.getElementById("mark-all-read"),
         }),
         "assets/images/users/user-dummy-img.jpg"),
     mailChatDetailElm = !1;
+
 function emailDetailChange() {
-    // Lặp qua tất cả các mục trong danh sách tin nhắn
     Array.from(document.querySelectorAll(".message-list li")).forEach(function (
-        item
+        c
     ) {
-        // Gán sự kiện click cho từng mục
-        item.addEventListener("click", function () {
-            // Lấy checkbox trong mục
-            var checkboxInput = item.querySelector(
-                ".checkbox-wrapper-mail .form-check-input"
-            );
-            if (checkboxInput) {
-                // Lấy giá trị của checkbox (ID email)
-                var emailId = checkboxInput.value;
-                var removeMailBtn = document.querySelector(".remove-mail");
-                if (removeMailBtn) {
-                    // Cập nhật thuộc tính data-remove-id của nút xóa
-                    removeMailBtn.setAttribute("data-remove-id", emailId);
-                }
-            }
-
-            // Lấy các thông tin khác từ mục
-            var status_task = item.querySelector(".status");
-            var date_task = item.querySelector(".date_t");
-            var priority = item.querySelector(".priority_task");
-            var time_estimate = item.querySelector(".time_estimate_task");
-            var track_time = item.querySelector(".track_time_task");
-            var tag = item.querySelector(".tag");
-            var subjectTitle = item.querySelector(".subject-title");
-
-            // Cập nhật thông tin email chi tiết
-            updateEmailDetail(".email-subject-title", subjectTitle);
-            updateEmailDetail(".status_task", status_task);
-            updateEmailDetail(".date_task", date_task);
-            updateEmailDetail(".priority", priority);
-            updateEmailDetail(".time_estimate", time_estimate);
-            updateEmailDetail(".tag_task", tag);
-            updateEmailDetail(".track_time", track_time);
-
-            // Cập nhật thông tin người gửi
-            var titleName = item.querySelector(".title-name");
-            if (titleName) {
-                var senderName = titleName.textContent;
-                updateSenderInfo(senderName, item);
-            }
-
-            // Cập nhật thông tin người dùng hiện tại
-            updateCurrentUserInfo();
+        c.addEventListener("click", function () {
+            var e = c.querySelector(
+                    ".checkbox-wrapper-mail .form-check-input"
+                ).value,
+                e =
+                    (document
+                        .querySelector(".remove-mail")
+                        .setAttribute("data-remove-id", e),
+                    c.querySelector(".subject-title").innerHTML),
+                a =
+                    ((document.querySelector(".email-subject-title").innerHTML =
+                        e),
+                    c.querySelector(".title-name").innerHTML),
+                t =
+                    (Array.from(
+                        document.querySelectorAll(".accordion-item.left")
+                    ).forEach(function (e) {
+                        e.querySelector(".email-user-name").innerHTML = a;
+                        var t = c.querySelector(".mail-userimg").value;
+                        e.querySelector("img").setAttribute("src", t);
+                    }),
+                    document.querySelector(".user-name-text").innerHTML),
+                l = document
+                    .querySelector(".header-profile-user")
+                    .getAttribute("src");
+            Array.from(
+                document.querySelectorAll(".accordion-item.right")
+            ).forEach(function (e) {
+                (e.querySelector(".email-user-name-right").innerHTML = t),
+                    e.querySelector("img").setAttribute("src", l);
+            });
         });
     });
 }
-
-function updateEmailDetail(detailSelector, sourceElement) {
-    // Kiểm tra xem phần tử nguồn có tồn tại và có thuộc tính textContent không
-    if (sourceElement && sourceElement.textContent) {
-        // Chọn phần tử cần cập nhật dựa trên bộ chọn CSS
-        var detailElement = document.querySelector(detailSelector);
-
-        // Kiểm tra xem phần tử cần cập nhật có tồn tại không
-        if (detailElement) {
-            // Kiểm tra xem phần tử cần cập nhật có phần tử con và phần tử con đầu tiên không phải là thẻ <i>
-            if (
-                detailElement.children.length > 0 &&
-                detailElement.children[0].tagName !== "I"
-            ) {
-                // Nếu có phần tử con đầu tiên không phải là thẻ <i>, cập nhật văn bản của nó
-                detailElement.children[0].textContent =
-                    sourceElement.textContent;
-                console.log("phần tử" + detailSelector + " th 1");
-            } else {
-                // Nếu không có phần tử con hoặc phần tử con đầu tiên là thẻ <i>
-                console.log("phần tử" + detailSelector + " th 2");
-                // Tìm nút văn bản (Text Node) đầu tiên trong phần tử cần cập nhật
-                var textNode = Array.from(detailElement.childNodes).find(
-                    (node) => node.nodeType === Node.TEXT_NODE
-                );
-
-                if (textNode) {
-                    // Nếu tìm thấy nút văn bản, cập nhật nội dung của nó
-                    console.log("phần tử" + detailSelector + " th 3");
-                    textNode.textContent = sourceElement.textContent;
-                } else {
-                    console.log("phần tử" + detailSelector + " th 4");
-                    // Nếu không tìm thấy nút văn bản, tạo một nút văn bản mới và thêm nó vào phần tử
-                    detailElement.appendChild(
-                        document.createTextNode(sourceElement.textContent)
-                    );
-                }
-            }
-        }
-    }
-}
-
-function updateSenderInfo(senderName, container) {
-    Array.from(document.querySelectorAll(".accordion-item.left")).forEach(
-        function (e) {
-            var nameElement = e.querySelector(".email-user-name");
-            if (nameElement) {
-                nameElement.textContent = senderName;
-            }
-            var imgElement = container.querySelector(".mail-userimg");
-            if (imgElement) {
-                var imgSrc = imgElement.value;
-                var targetImg = e.querySelector("img");
-                if (targetImg) {
-                    targetImg.setAttribute("src", imgSrc);
-                }
-            }
-        }
-    );
-}
-
-function updateCurrentUserInfo() {
-    var currentUserName = document.querySelector(".user-name-text");
-    var currentUserImg = document.querySelector(".header-profile-user");
-    if (currentUserName && currentUserImg) {
-        var t = currentUserName.textContent;
-        var l = currentUserImg.getAttribute("src");
-        Array.from(document.querySelectorAll(".accordion-item.right")).forEach(
-            function (e) {
-                var nameElement = e.querySelector(".email-user-name-right");
-                var imgElement = e.querySelector("img");
-                if (nameElement) {
-                    nameElement.textContent = t;
-                }
-                if (imgElement) {
-                    imgElement.setAttribute("src", l);
-                }
-            }
-        );
-    }
-}
-
 document.querySelectorAll(".email-chat-list a").forEach(function (l) {
     var e, t;
     l.classList.contains("active") &&

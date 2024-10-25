@@ -17,7 +17,6 @@
 
     $boardIsStars = session('$board_star');
     //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
-    $board = session('boards');
     $userId = Auth::id();
     $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
 @endphp

@@ -88,7 +88,7 @@
                                                         <div
                                                                 class="d-flex justify-content-center align-items-center cursor-pointer ">
                                                             <div class="col-auto ms-sm-auto">
-                                                                <div class="avatar-group">
+                                                                <div class="avatar-group " id="list-member-task">
                                                                     @if (count($task->members))
 
                                                                         @php
@@ -268,16 +268,16 @@
                                             <i class="ri-line-chart-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                                         </section>
-                                        <div class=" w-100">
+                                        <div class=" w-100" id="task-comment-{{$task->id}}">
                                             <div class="d-flex">
                                                 @if (auth()->user()->image)
                                                     <img class="rounded header-profile-user object-fit-cover"
-                                                         src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                                         src="{{asset('storage/' . auth()->user()->image) }}"
                                                          alt="Avatar"/>
                                                 @else
                                                     <div
-                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                            style="width: 40px;height: 40px">
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        style="width: 40px;height: 40px">
                                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                                     </div>
                                                 @endif
@@ -305,20 +305,20 @@
                                             </div>
                                             @foreach($task->task_comments as $comment)
                                                 @php $comment = json_decode(json_encode($comment)) @endphp
-                                                <div class="d-flex mt-2">
-                                                    @if (auth()->user()->image)
+                                                <div class="d-flex mt-2 conten-comment-{{$comment->id}}">
+                                                    @if ($comment->user->image)
                                                         <img class="rounded header-profile-user object-fit-cover"
-                                                             src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
+                                                             src="{{ asset('storage/' . $comment->user->image) }}"
                                                              alt="Avatar"/>
                                                     @else
                                                         <div
                                                             class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                             style="width: 40px;height: 40px">
-                                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                                            {{ strtoupper(substr($comment->user->name, 0, 1)) }}
                                                         </div>
                                                     @endif
                                                     <section class="ms-2 w-100">
-                                                        <strong>{{auth()->user()->name}}</strong>
+                                                        <strong>{{$comment->user->name}}</strong>
                                                         @php
                                                             $createdAt = \Carbon\Carbon::parse($comment->created_at);
                                                             $now = \Carbon\Carbon::now();
@@ -335,13 +335,27 @@
                                                         <div
                                                             class="bg-info-subtle p-1 rounded ps-2">{!! $comment->content !!}
                                                         </div>
-                                                        <div class="fs-11"><span>Trả lời</span><span
-                                                                class="mx-1">-</span><span>Xóa</span></div>
+                                                        
+                                                        <div class="fs-11"><span>Trả lời</span>
+                                                                @php $userOwner = $board->members->firstWhere('pivot.authorize', 'Owner');  @endphp
+                                                                @if(auth()->id()===$comment->user->id || auth()->id()=== $userOwner->id )
+                                                                <span class="mx-1">-</span>
+                                                                  <span data-bs-toggle="dropdown"
+                                                                  aria-haspopup="true"
+                                                                  aria-expanded="false">Xóa</span>
+                                                            <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                <h5 class="text-center">Bạn có muốn xóa bình luận</h5>
+
+                                                                <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+
+                                                                <button class="btn btn-danger w-100" onclick="removeComment({{$comment->id}})">Xóa bình luận
+                                                                </button>
+                                                            </div>
+                                                               @endif
+                                                        </div>
                                                     </section>
                                                 </div>
                                             @endforeach
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -358,7 +372,7 @@
                                             </p>
                                             <!--dropdown thành viên-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" id="dropdown-content-add-member-task-{{ $task->id }}">
-{{--                                                @include('dropdowns.member')--}}
+{{--                                              dropdowns.member--}}
                                             </div>
                                         </div>
                                     </div>
@@ -400,13 +414,16 @@
                                                 style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-clock fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                               onclick="loadFormAddDateTask({{ $task->id }})"
                                                aria-expanded="false" data-bs-offset="-40,10"
                                                id="dropdownToggle_{{$task->id}}">
                                                Ngày
                                             </p>
                                             <!-- dropdown ngày-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                @include('dropdowns.date', ['task' => $task])
+                                            <div class="dropdown-menu dropdown-menu-md p-3"
+                                                 id="dropdown-content-add-date-task-{{ $task->id }}"
+                                                 style="width: 150%">
+{{--                                                @include('dropdowns.date', ['task' => $task])--}}
                                             </div>
                                         </div>
                                     </div>
@@ -569,7 +586,7 @@
                 // Lắng nghe sự kiện change của editor
                 editor.model.document.on('change:data', debounce(() => {
                     const taskId = editorElement.id.split('_')[1];
-                    updateTask2(taskId);
+                    // updateTask2(taskId);
                 }, 1000));
             })
             .catch(error => {
@@ -578,25 +595,22 @@
     });
 </script>
 <script>
-    // xử lý checklist card
-    const displayChecklistBtns = document.querySelectorAll('.display-checklist');
-    const disableChecklistBtns = document.querySelectorAll('.disable-checklist');
-    const checklistForms = document.querySelectorAll('.addOrUpdate-checklist');
-    const checklistItems = document.querySelectorAll('.checklistItem');
+    document.addEventListener('click', function(event) {
+        // Sự kiện cho nút hiển thị form 'Thêm mục'
+        if (event.target.classList.contains('display-checklist')) {
+            const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
+            formElement.classList.toggle('d-none'); // Hiện hoặc ẩn form
+            event.target.classList.add('d-none'); // Ẩn nút hiển thị form
+        }
 
-    displayChecklistBtns.forEach((displayChecklistBtn, index) => {
-        displayChecklistBtn.addEventListener('click', () => {
-            checklistForms[index].classList.toggle('d-none'); // Hiện hoặc ẩn form
-            displayChecklistBtn.classList.add('d-none'); // Ẩn nút hiện form
-        });
-    });
-
-    disableChecklistBtns.forEach((disableChecklistBtn, index) => {
-        disableChecklistBtn.addEventListener('click', () => {
-            checklistItems[index].value = ""; // Xóa nội dung ô nhập liệu
-            checklistForms[index].classList.add('d-none'); // Ẩn form
-            displayChecklistBtns[index].classList.toggle('d-none'); // Hiện lại nút hiện form
-        });
+        // Sự kiện cho nút 'Hủy'
+        if (event.target.classList.contains('disable-checklist')) {
+            const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
+            const inputElement = formElement.querySelector('.checklistItem');
+            inputElement.value = ""; // Xóa nội dung ô nhập liệu
+            formElement.classList.add('d-none'); // Ẩn form
+            event.target.closest('.row').querySelector('.display-checklist').classList.remove('d-none'); // Hiện lại nút hiển thị form
+        }
     });
 
 

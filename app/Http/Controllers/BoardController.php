@@ -125,7 +125,7 @@ class BoardController extends Controller
 
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
-            return redirect()->route('home');
+            return redirect()->route('boards.index');
         } catch (\Exception $exception) {
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
@@ -158,22 +158,6 @@ class BoardController extends Controller
 
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
-        //        $board->load([
-        //            'tags',
-        //            'users',
-        //            'catalogs',
-        //            'catalogs.tasks' => function ($query) {
-        //                $query->orderBy('position', 'asc');
-        //            },
-        //            'catalogs.tasks.catalog:id,name',
-        //            'catalogs.tasks.members',
-        //            'catalogs.tasks.checkList',
-        //            'catalogs.tasks.checkList.checkListItems',
-        //            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
-        //            'catalogs.tasks.tags',
-        //            'catalogs.tasks.followMembers'
-        //        ]);
-
         $board->load([
             'members',
             'tags',
@@ -187,11 +171,11 @@ class BoardController extends Controller
                         'checkLists.checkListItems',
                         'checkLists.checkListItems.checkListItemMembers',
                         'checkLists.checkListItems.checkListItemMembers.user',
-                        'checkLists.checkListItems.members',
                         'tags',
                         'followMembers',
                         'attachments',
-                        'taskComments'
+                        'taskComments',
+                        'taskComments.user',
                     ])->where(function ($subQuery) use ($request) {
 
                         // Điều kiện 1: Lọc thành viên
@@ -263,6 +247,12 @@ class BoardController extends Controller
             ->get();
 
 
+            $catalogs = $board->catalogs;
+            $tasks = $catalogs->pluck('tasks')->flatten();
+        //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+//        $boardName = $board->name; // Lấy tên của board
+
+
         $boardMembers = $boardMemberMain->filter(function ($member) {
             return $member->authorize->value !== AuthorizeEnum::Owner()->value &&
                 $member->authorize->value !== AuthorizeEnum::Sub_Owner()->value &&
@@ -316,7 +306,7 @@ class BoardController extends Controller
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors','tasks','boardMemberChecked'));
 
             case 'table':
                 return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
@@ -407,7 +397,8 @@ class BoardController extends Controller
 
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
-            'msg' => true
+            'msg' => true,
+            'board'=>$board
         ]);
     }
 
@@ -748,7 +739,7 @@ class BoardController extends Controller
                             Session::put('workspace_id', $board->workspace_id);
                             Session::put('user_id', $user->id);
                             Session::put('email_invited', $request->email);
-                            Session::put('authorize', $request->authorizei);
+                            Session::put('authorize', $request->authorize);
                             return redirect()->route('login');
                         }
                     }

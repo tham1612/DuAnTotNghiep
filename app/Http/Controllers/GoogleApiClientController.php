@@ -109,7 +109,7 @@ class GoogleApiClientController extends Controller
         if (isset($data['start']) || isset($data['end'])) {
             $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
             $endDate = $data['end'];
-        } else {
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
             $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
             $endDate = $data['end_date'];
         }
@@ -118,7 +118,7 @@ class GoogleApiClientController extends Controller
             ->where('id', auth()->id())
             ->value('access_token');
         $eventId = isset($data['id_google_calendar']) ? $data['id_google_calendar'] : $data['id_gg_calendar'];
-        if ($startDate || $endDate) {
+        if (isset($startDate) || isset($endDate)) {
             $eventData = [
                 'start' => [
                     'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),

@@ -32,7 +32,7 @@
             <div class="card">
                 <div class="card-body d-flex">
                     <div class="flex-grow-1">
-                                        
+
                         @if ($workspaceMembersCount > 0)
                             <!-- Nếu workspace có thành viên -->
                             <h4>{{ $workspaceMembersCount }}</h4>
@@ -130,7 +130,6 @@
                     <div class="card-header align-items-center d-flex">
                         <h4 class="card-title mb-0 flex-grow-1 fs-17">Công việc sắp tới</h4>
                     </div><!-- end card header -->
-    
                     <div class="card-body p-0">
                         <div data-simplebar style="max-height: 260px;" class="p-3">
                             <ul class="list-group list-group-flush border-dashed px-3">
@@ -142,7 +141,7 @@
                                             <li class="list-group-item ps-0">
                                                 <div class="row align-items-center g-3">
                                                     <div class="col-auto">
-                                                     
+
                                                         <div class="flex-shrink-0 avatar-sm">
                                                             @if ($task && $task->image)
                                                                 <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
@@ -164,7 +163,7 @@
                                                             <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                             {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                             <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
-                                                                <p>{{ \Illuminate\Support\Str::limit($task->catalog_name, 10) }} - {{ \Illuminate\Support\Str::limit($task->board_name, 20) }}</p></a>      
+                                                                <p>{{ \Illuminate\Support\Str::limit($task->catalog_name, 10) }} - {{ \Illuminate\Support\Str::limit($task->board_name, 20) }}</p></a>
                                                     </div>
                                                     <div class="col-sm-auto">
                                                         <div class="avatar-group">
@@ -209,7 +208,7 @@
                                                                         </div>
                                                                     </a>
                                                                 @endif
-                                                            @endif                                             
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -220,7 +219,7 @@
                             </ul><!-- end ul -->
                         </div>
                     </div><!-- end card body -->
-                    
+
                 </div><!-- end card -->
             </div><!-- end col -->
             <div class="col-xl-4">
@@ -239,7 +238,7 @@
                                         <li class="list-group-item ps-0">
                                             <div class="row align-items-center g-3">
                                                 <div class="col-auto">
-                                                
+
                                                     <div class="flex-shrink-0 avatar-sm">
                                                         @if ($task && $task->image)
                                                             <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
@@ -261,7 +260,7 @@
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
-                                                            <p>{{ \Illuminate\Support\Str::limit($task->catalog_name, 10) }} - {{ \Illuminate\Support\Str::limit($task->board_name, 20) }}</p></a>      
+                                                            <p>{{ \Illuminate\Support\Str::limit($task->catalog_name, 10) }} - {{ \Illuminate\Support\Str::limit($task->board_name, 20) }}</p></a>
                                                 </div>
                                             </div>
                                         </li><!-- end -->
@@ -366,7 +365,7 @@
                                                 <i class="ri-arrow-right-up-line align-bottom"></i></a>
                                         </div>
                                     </div>
-                                
+
                                 </div>
                             </div>
                             @endforeach
@@ -419,7 +418,7 @@
                                                     <i class="ri-arrow-right-up-line align-bottom"></i></a>
                                             </div>
                                         </div>
-                                    
+
                                     </div>
                                 </div>
                             @endforeach
@@ -433,7 +432,7 @@
                         <h5 class="fs-17 text-center mb-0">Bảng nổi bật</h5>
                     </div>
                 </div>
-                <div data-simplebar style="max-height: 450px;">  
+                <div data-simplebar style="max-height: 450px;">
                     @if (!empty($board_star))
                         @if ($board_star->isEmpty())
                         <p>Không có bảng nào được đánh dấu là nổi bật</p>
@@ -472,7 +471,6 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    
                                     </div>
                                     <div class="card-body border-top border-top-dashed">
                                         <div class="d-flex" style="justify-content: space-between;">
@@ -490,10 +488,10 @@
                             @endforeach
                         @endif
                     @endif
-                  
+
                 </div>
                 <!--end card-->
-            </div>   
+            </div>
             <div class="col-xxl-3 col-md-6">
                 <div class="card overflow-hidden">
                     <div class="card-body bg-info-subtle">
@@ -537,13 +535,12 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    
                                     </div>
                                     <div class="card-body border-top border-top-dashed">
                                         <div class="d-flex" style="justify-content: space-between;">
                                             <h6 class="text-muted mb-0">Người theo dõi <span
                                                 class="badge bg-success-subtle text-secondary">{{ $board->total_followers }}</span>
-                                            </h6>                                         
+                                            </h6>
                                         </div>
                                     </div>
                                 </div>
