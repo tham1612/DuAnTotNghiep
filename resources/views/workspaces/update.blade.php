@@ -203,42 +203,47 @@
                                                                             data-bs-toggle="tooltip"
                                                                             data-bs-trigger="hover"
                                                                             data-bs-placement="top" title="Nancy">
-                                                                            @if ($wspOwner->image)
-                                                                                <img src="{{ Storage::url($wspOwner->image) ? Storage::url($wspOwner->image) : '' }}"
-                                                                                    alt=""
-                                                                                    class="rounded-circle avatar-xs" />
-                                                                            @else
-                                                                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                                                    style="width: 25px;height: 25px">
-                                                                                    {{ strtoupper(substr($wspOwner->name, 0, 1)) }}
-                                                                                </div>
-                                                                                <span class="fs-15 ms-2 text-white"
-                                                                                    id="swicthWs">
-                                                                                    {{ \Illuminate\Support\Str::limit($wspOwner->name, 16) }}
-                                                                                    <i
-                                                                                        class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                </span>
+                                                                            @if (!empty($wspOwner))
+                                                                                @if ($wspOwner->image)
+                                                                                    <img src="{{ Storage::url($wspOwner->image) ? Storage::url($wspOwner->image) : '' }}"
+                                                                                        alt=""
+                                                                                        class="rounded-circle avatar-xs" />
+                                                                                @else
+                                                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                                        style="width: 25px;height: 25px">
+                                                                                        {{ strtoupper(substr($wspOwner->name, 0, 1)) }}
+                                                                                    </div>
+                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                        id="swicthWs">
+                                                                                        {{ \Illuminate\Support\Str::limit($wspOwner->name, 16) }}
+                                                                                        <i
+                                                                                            class=" ri-arrow-drop-down-line fs-20"></i>
+                                                                                    </span>
+                                                                                @endif
                                                                             @endif
                                                                         </a>
                                                                     </div>
                                                                     <div class="col-6 d-flex flex-column">
-                                                                        <section class="fs-12">
-                                                                            <p style="margin-bottom: 0px;"
-                                                                                class="text-danger fw-bloder">
-                                                                                {{ $wspOwner->name }}
-                                                                                @if ($wspOwner->user_id == $userId)
-                                                                                    <span
-                                                                                        class="text-danger fw-bloder">(bạn)</span>
-                                                                                @else
-                                                                                    <span
-                                                                                        class="text-danger fw-bold">(chủ)</span>
-                                                                                @endif
-                                                                            </p>
-                                                                            <span>@ {{ $wspOwner->name }}</span>
-                                                                            <span><i
-                                                                                    class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                            <span>Quản trị viên không gian làm việc</span>
-                                                                        </section>
+                                                                        @if (!empty($wspOwner))
+                                                                            <section class="fs-12">
+                                                                                <p style="margin-bottom: 0px;"
+                                                                                    class="text-danger fw-bloder">
+                                                                                    {{ $wspOwner->name }}
+                                                                                    @if ($wspOwner->user_id == $userId)
+                                                                                        <span
+                                                                                            class="text-danger fw-bloder">(bạn)</span>
+                                                                                    @else
+                                                                                        <span
+                                                                                            class="text-danger fw-bold">(chủ)</span>
+                                                                                    @endif
+                                                                                </p>
+                                                                                <span>@ {{ $wspOwner->name }}</span>
+                                                                                <span><i
+                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
+                                                                                <span>Quản trị viên không gian làm
+                                                                                    việc</span>
+                                                                            </section>
+                                                                        @endif
                                                                     </div>
                                                                     <div
                                                                         class="col-5 d-flex align-items-center justify-content-end">
@@ -254,16 +259,18 @@
                                                                                 aria-expanded="false">
                                                                                 <i class="ri-more-2-fill"></i>
                                                                             </button>
-                                                                            @if ($wspOwner->user_id == $userId)
-                                                                                <!-- Popup xuất hiện khi nhấn nút ba chấm -->
-                                                                                <ul class="dropdown-menu"
-                                                                                    aria-labelledby="dropdownMenuButton">
-                                                                                    <li><a class="dropdown-item text-danger"
-                                                                                            href="{{ route('activateMember', $wspOwner->wm_id) }}">Rời
-                                                                                            khỏi</a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            @endif
+                                                                            {{-- @if (!empty($wspOwner))
+                                                                                @if ($wspOwner->user_id == $userId)
+                                                                                    <!-- Popup xuất hiện khi nhấn nút ba chấm -->
+                                                                                    <ul class="dropdown-menu"
+                                                                                        aria-labelledby="dropdownMenuButton">
+                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $wspOwner->wm_id) }}">Rời
+                                                                                                khỏi</a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                @endif
+                                                                            @endif --}}
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -344,7 +351,7 @@
                                                                                                 nhóm</a>
                                                                                         </li>
                                                                                         <li><a class="dropdown-item text-primary"
-                                                                                                href="{{ route('managementfranchise',['owner_id'=> $wspOwner, 'user_id'=>$item->user_id]) }}">Nhượng
+                                                                                                href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
                                                                                                 quyền</a>
                                                                                         </li>
                                                                                     </ul>

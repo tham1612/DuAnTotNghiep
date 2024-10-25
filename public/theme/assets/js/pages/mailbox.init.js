@@ -15,10 +15,15 @@ var getJSON = function (e, t) {
         a.send();
 };
 // Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
+
+
+// Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
 function loadMailData(emails) {
     // Chuyển đến tab chính trong giao diện
     document
-        .querySelector('#mail-filter-navlist button[data-bs-target="#pills-primary"]')
+        .querySelector(
+            '#mail-filter-navlist button[data-bs-target="#pills-primary"]'
+        )
         .click();
 
     // Xóa nội dung danh sách email hiện tại
@@ -32,36 +37,65 @@ function loadMailData(emails) {
         var starClass = email.starred ? "active" : "";
         // Đếm số lượng nếu có
         var countedText = email.counted ? "(" + email.counted + ")" : "";
+        //  if (userId == email.user_id) {
+        //      email.description =
+        //          "bạn đã được tham gia vào không gian làm việc " + email.name;
+        //  }
+        //  console.log(email.user_id);
 
         // Thêm email vào danh sách
         document.querySelector("#mail-list").innerHTML +=
-            '<li class="' + statusClass + '">' +
-                '<div class="col-mail col-mail-1">' +
-                    '<div class="form-check checkbox-wrapper-mail fs-14">' +
-                        '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
-                        '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
-                    '</div>' +
-                    '<input type="hidden" value=' + email.userImg + ' class="mail-userimg" />' +
-                    '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '">' +
-                    '</button>' +
-                    '<a href="javascript: void(0);" class="title">' +
-                        '<span class="title-name">' + email.name + '</span> ' +
-                        countedText +
-                    '</a>' +
+        '<li class="notification-item ' + statusClass + '" data-id="' + email.id + '">' +
+            '<div class="col-mail col-mail-1">' +
+                '<div class="form-check checkbox-wrapper-mail fs-14">' +
+                    '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
+                    '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
                 '</div>' +
-                '<div class="col-mail col-mail-2">' +
-                    '<a href="javascript: void(0);" class="subject">' +
-                        '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
-                    '</a>' +
-                    '<div class="date">' + email.date + '</div>' +
-                '</div>' +
-            '</li>';
+                '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '"></button>' +
+                '<a href="javascript: void(0);" class="title">' +
+                    '<span class="title-name">' + email.name + '</span> ' + countedText +
+                '</a>' +
+            '</div>' +
+            '<div class="col-mail col-mail-2">' +
+                '<a href="javascript: void(0);" class="subject" style="padding-top: 13px;">' +
+                    '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
+                '</a>' +
+                '<div class="date">' + email.date + '</div>' +
+            '</div>' +
+        '</li>';
 
         // Gọi các hàm xử lý khác để cập nhật giao diện
         favouriteBtn();
         emailDetailShow();
         emailDetailChange();
         checkBoxAll();
+    });
+
+    // Thêm sự kiện click cho mỗi thông báo để đánh dấu là đã đọc
+    document.querySelectorAll(".notification-item").forEach(function (item) {
+        item.addEventListener("click", function () {
+            var notificationId = this.getAttribute("data-id");
+
+            // Gửi yêu cầu AJAX để đánh dấu thông báo đã đọc
+            $.ajax({
+                url: "/api/inbox/read/" + notificationId + "/" + userId,
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                success: function (response) {
+                    if (response.status === "success") {
+                        // Cập nhật giao diện để thông báo đã đọc
+                        item.classList.remove("unread");
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Something went wrong:", xhr.responseText);
+                },
+            });
+        });
     });
 }
 
@@ -78,28 +112,48 @@ function loadSocialMailData(emails) {
 
         // Thêm email vào danh sách xã hội
         document.getElementById("social-mail-list").innerHTML +=
-            '<li class="' + statusClass + '">' +
-                '<div class="col-mail col-mail-1">' +
-                    '<div class="form-check checkbox-wrapper-mail fs-14">' +
-                        '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
-                        '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
-                    '</div>' +
-                    '<input type="hidden" value=' + email.userImg + ' class="mail-userimg" />' +
-                    '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '">' +
-                        '<i class="ri-star-fill"></i>' +
-                    '</button>' +
-                    '<a href="javascript: void(0);" class="title">' +
-                        '<span class="title-name">' + email.name + '</span> ' +
-                        countedText +
-                    '</a>' +
-                '</div>' +
-                '<div class="col-mail col-mail-2">' +
-                    '<a href="javascript: void(0);" class="subject">' +
-                        '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
-                    '</a>' +
-                    '<div class="date">' + email.date + '</div>' +
-                '</div>' +
-            '</li>';
+            '<li class="' +
+            statusClass +
+            '">' +
+            '<div class="col-mail col-mail-1">' +
+            '<div class="form-check checkbox-wrapper-mail fs-14">' +
+            '<input class="form-check-input" type="checkbox" value="' +
+            email.id +
+            '" id="checkbox-' +
+            email.id +
+            '">' +
+            '<label class="form-check-label" for="checkbox-' +
+            email.id +
+            '"></label>' +
+            "</div>" +
+            '<input type="hidden" value=' +
+            email.userImg +
+            ' class="mail-userimg" />' +
+            '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' +
+            starClass +
+            '">' +
+            '<i class="ri-star-fill"></i>' +
+            "</button>" +
+            '<a href="javascript: void(0);" class="title">' +
+            '<span class="title-name">' +
+            email.name +
+            "</span> " +
+            countedText +
+            "</a>" +
+            "</div>" +
+            '<div class="col-mail col-mail-2">' +
+            '<a href="javascript: void(0);" class="subject">' +
+            '<span class="subject-title">' +
+            email.title +
+            '</span> – <span class="teaser">' +
+            email.description +
+            "</span>" +
+            "</a>" +
+            '<div class="date">' +
+            email.date +
+            "</div>" +
+            "</div>" +
+            "</li>";
 
         // Gọi các hàm xử lý khác để cập nhật giao diện
         emailDetailShow();
@@ -121,28 +175,48 @@ function loadPromotionsMailData(emails) {
 
         // Thêm email vào danh sách khuyến mãi
         document.getElementById("promotions-mail-list").innerHTML +=
-            '<li class="' + statusClass + '">' +
-                '<div class="col-mail col-mail-1">' +
-                    '<div class="form-check checkbox-wrapper-mail fs-14">' +
-                        '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
-                        '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
-                    '</div>' +
-                    '<input type="hidden" value=' + email.userImg + ' class="mail-userimg" />' +
-                    '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '">' +
-                        '<i class="ri-star-fill"></i>' +
-                    '</button>' +
-                    '<a href="javascript: void(0);" class="title">' +
-                        '<span class="title-name">' + email.name + '</span> ' +
-                        countedText +
-                    '</a>' +
-                '</div>' +
-                '<div class="col-mail col-mail-2">' +
-                    '<a href="javascript: void(0);" class="subject">' +
-                        '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
-                    '</a>' +
-                    '<div class="date">' + email.date + '</div>' +
-                '</div>' +
-            '</li>';
+            '<li class="' +
+            statusClass +
+            '">' +
+            '<div class="col-mail col-mail-1">' +
+            '<div class="form-check checkbox-wrapper-mail fs-14">' +
+            '<input class="form-check-input" type="checkbox" value="' +
+            email.id +
+            '" id="checkbox-' +
+            email.id +
+            '">' +
+            '<label class="form-check-label" for="checkbox-' +
+            email.id +
+            '"></label>' +
+            "</div>" +
+            '<input type="hidden" value=' +
+            email.userImg +
+            ' class="mail-userimg" />' +
+            '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' +
+            starClass +
+            '">' +
+            '<i class="ri-star-fill"></i>' +
+            "</button>" +
+            '<a href="javascript: void(0);" class="title">' +
+            '<span class="title-name">' +
+            email.name +
+            "</span> " +
+            countedText +
+            "</a>" +
+            "</div>" +
+            '<div class="col-mail col-mail-2">' +
+            '<a href="javascript: void(0);" class="subject">' +
+            '<span class="subject-title">' +
+            email.title +
+            '</span> – <span class="teaser">' +
+            email.description +
+            "</span>" +
+            "</a>" +
+            '<div class="date">' +
+            email.date +
+            "</div>" +
+            "</div>" +
+            "</li>";
 
         // Gọi các hàm xử lý khác để cập nhật giao diện
         emailDetailShow();
@@ -150,7 +224,6 @@ function loadPromotionsMailData(emails) {
         checkBoxAll();
     });
 }
-
 
 // Hàm này dùng để quản lý hành vi của nút đánh dấu yêu thích
 function favouriteBtn() {
@@ -353,7 +426,6 @@ function checkBoxAll() {
     document.getElementById("checkall").onclick = selectAll;
 }
 
-
 // Tải dữ liệu từ file JSON và xử lý kết quả
 getJSON("mail-list.init.json", function (error, data) {
     // Kiểm tra xem có lỗi xảy ra không
@@ -390,19 +462,22 @@ Array.from(document.querySelectorAll(".mail-list a")).forEach(function (link) {
         // Kiểm tra xem liên kết có thuộc loại nào không
         if (link.querySelector(".mail-list-link").hasAttribute("data-type")) {
             labelType = link.querySelector(".mail-list-link").innerHTML;
-            filteredEmails = allmaillist.filter(email => email.labeltype === labelType);
+            filteredEmails = allmaillist.filter(
+                (email) => email.labeltype === labelType
+            );
         } else {
             labelType = link.querySelector(".mail-list-link").innerHTML;
             document.getElementById("mail-list").innerHTML = ""; // Xóa danh sách email hiện tại
 
             // Lọc danh sách email theo loại tab
-            filteredEmails = (labelType !== "All")
-                ? allmaillist.filter(email => email.tabtype === labelType)
-                : allmaillist;
+            filteredEmails =
+                labelType !== "All"
+                    ? allmaillist.filter((email) => email.tabtype === labelType)
+                    : allmaillist;
 
             // Hiển thị hoặc ẩn thanh điều hướng dựa trên loại tab
             document.getElementById("mail-filter-navlist").style.display =
-                (labelType !== "All" && labelType !== "Inbox") ? "none" : "block";
+                labelType !== "All" && labelType !== "Inbox" ? "none" : "block";
         }
 
         // Gọi hàm để tải dữ liệu email

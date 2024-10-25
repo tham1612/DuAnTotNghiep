@@ -7,16 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WorkspaceMemberAddedNotification extends Notification
+class WorksaceNotification extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $user; // Người được thêm vào không gian làm việc
     protected $workspace; // Không gian làm việc
+    protected $name; // Không gian làm việc
+    protected $description; // Không gian làm việc
+    protected $title; // Không gian làm việc
 
-    public function __construct($user, $workspace)
+    public function __construct($user, $workspace, $name, $description, $title)
     {
         $this->user = $user;
         $this->workspace = $workspace;
+        $this->name = $name;
+        $this->description = $description;
+        $this->title = $title;
     }
 
     public function via($notifiable)
@@ -31,10 +37,12 @@ class WorkspaceMemberAddedNotification extends Notification
         return [
             'user_id' => $this->user->id,
             'workspace_id' => $this->workspace->id,
-            'description' => 'Người dùng "' . $this->user->name . '" đã được thêm vào không gian làm việc "' . $this->workspace->name . '".',
+            'name' => $this->name,
+            'description' => $this->description,
             'readed' => false,
-            'title' => 'Thành viên mới trong không gian làm việc',
+            'title' => $this->title,
             'date' => now(),
         ];
     }
 }
+
