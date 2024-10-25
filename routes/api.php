@@ -30,4 +30,6 @@ Route::prefix('inbox')
     ->as('inbox.')
     ->group(function () {
         Route::get('/{user_id}', [NotificationController::class, 'index'])->name('index');
+        // web.php
+        Route::post('/read/{id}/{user_id}', [NotificationController::class, 'markAsRead'])->name('markAsRead');
     });

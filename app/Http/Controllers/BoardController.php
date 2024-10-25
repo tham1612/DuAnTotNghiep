@@ -12,8 +12,12 @@ use App\Models\Color;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Notifications\WorksaceNotification;
+use App\Notifications\BoardMemberNotification;
+use App\Notifications\BoardNotification;
 use App\Notifications\TaskDueNotification;
 use Carbon\Carbon;
+use Google\Service\Forms\FormResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Models\WorkspaceMember;
@@ -150,12 +154,11 @@ class BoardController extends Controller
     public function edit(Request $request, string $id)
     {
 
-
         $board = Board::query()->findOrFail($id);
         $colors = Color::query()->get();
         session([
             'board' => $board,
-            'colors' => $colors ,
+            'colors' => $colors,
         ]);
 
         $viewType = \request('viewType', 'board');
@@ -183,66 +186,68 @@ class BoardController extends Controller
             'tags',
             'users',
             'catalogs' => function ($query) use ($request) {
-                $query->with(['tasks' => function ($taskQuery) use ($request) {
-                    $taskQuery->with([
-                        'catalog:id,name',
-                        'members',
-                        'checkLists',
-                        'checkLists.checkListItems',
-                        'checkLists.checkListItems.checkListItemMembers',
-                        'checkLists.checkListItems.checkListItemMembers.user',
-                        'checkLists.checkListItems.members',
-                        'tags',
-                        'followMembers',
-                        'attachments',
-                        'taskComments'
-                    ])->where(function ($subQuery) use ($request) {
+                $query->with([
+                    'tasks' => function ($taskQuery) use ($request) {
+                        $taskQuery->with([
+                            'catalog:id,name',
+                            'members',
+                            'checkLists',
+                            'checkLists.checkListItems',
+                            'checkLists.checkListItems.checkListItemMembers',
+                            'checkLists.checkListItems.checkListItemMembers.user',
+                            'checkLists.checkListItems.members',
+                            'tags',
+                            'followMembers',
+                            'attachments',
+                            'taskComments'
+                        ])->where(function ($subQuery) use ($request) {
 
-                        // Điều kiện 1: Lọc thành viên
-                        if ($request->has('no_member') || $request->has('it_me')) {
-                            $subQuery->where(function ($query) use ($request) {
-                                if ($request->no_member) {
-                                    $query->whereDoesntHave('members');
-                                }
-                                if ($request->it_me) {
-                                    $query->orWhereHas('members', function ($memberQuery) {
-                                        $memberQuery->where('user_id', auth()->id());
-                                    });
-                                }
-                            });
-                        }
+                            // Điều kiện 1: Lọc thành viên
+                            if ($request->has('no_member') || $request->has('it_me')) {
+                                $subQuery->where(function ($query) use ($request) {
+                                    if ($request->no_member) {
+                                        $query->whereDoesntHave('members');
+                                    }
+                                    if ($request->it_me) {
+                                        $query->orWhereHas('members', function ($memberQuery) {
+                                            $memberQuery->where('user_id', auth()->id());
+                                        });
+                                    }
+                                });
+                            }
 
-                        // Điều kiện 2: Lọc ngày hết hạn
-                        if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
-                            $subQuery->where(function ($dateQuery) use ($request) {
-                                if ($request->no_date) {
-                                    $dateQuery->whereNull('end_date');
-                                }
-                                if ($request->no_overdue) {
-                                    $dateQuery->orWhere('end_date', '<', now());
-                                }
-                                if ($request->due_tomorrow) {
-                                    $dateQuery->orWhere('end_date', '=', now()->addDay());
-                                }
-                            });
-                        }
+                            // Điều kiện 2: Lọc ngày hết hạn
+                            if ($request->has('no_date') || $request->has('no_overdue') || $request->has('due_tomorrow')) {
+                                $subQuery->where(function ($dateQuery) use ($request) {
+                                    if ($request->no_date) {
+                                        $dateQuery->whereNull('end_date');
+                                    }
+                                    if ($request->no_overdue) {
+                                        $dateQuery->orWhere('end_date', '<', now());
+                                    }
+                                    if ($request->due_tomorrow) {
+                                        $dateQuery->orWhere('end_date', '=', now()->addDay());
+                                    }
+                                });
+                            }
 
-                        // Điều kiện 3: Lọc theo nhãn
-                        if ($request->has('no_tags') || $request->has('tags')) {
-                            $subQuery->where(function ($tagQuery) use ($request) {
-                                if ($request->no_tags) {
-                                    $tagQuery->doesntHave('tags');
-                                }
-                                if ($request->tags) {
-                                    $tagQuery->whereHas('tags', function ($tagSubQuery) use ($request) {
-                                        $tagSubQuery->whereIn('tags.id', $request->tags);
-                                    });
-                                }
-                            });
-                        }
-                    })
-                        ->orderBy('position', 'asc');
-                }]);
+                            // Điều kiện 3: Lọc theo nhãn
+                            if ($request->has('no_tags') || $request->has('tags')) {
+                                $subQuery->where(function ($tagQuery) use ($request) {
+                                    if ($request->no_tags) {
+                                        $tagQuery->doesntHave('tags');
+                                    }
+                                    if ($request->tags) {
+                                        $tagQuery->whereHas('tags', function ($tagSubQuery) use ($request) {
+                                            $tagSubQuery->whereIn('tags.id', $request->tags);
+                                        });
+                                    }
+                                });
+                            }
+                        })
+                            ->orderBy('position', 'asc');
+                    }
+                ]);
             }
         ]);
 
@@ -314,7 +319,16 @@ class BoardController extends Controller
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
 
+        $tasks = Task::where('end_date', '>=', Carbon::tomorrow())
+            ->where('end_date', '<', Carbon::tomorrow()->addDays(1))
+            ->where('progress', '<', 100) // Chỉ lấy task chưa hoàn thành
+            ->with(['members', 'catalog.board'])->get();
 
+        foreach ($tasks as $task) {
+            $task->members->each(function ($user) use ($task) {
+                $user->notify(new TaskDueNotification($task));
+            });
+        }
 
         switch ($viewType) {
             case 'dashboard':
@@ -459,9 +473,12 @@ class BoardController extends Controller
             ]);
         }
     }
+
     //Duyệt người dùng gửi lời mời vào board
+    //thông báo done
     public function acceptMember(Request $request)
     {
+        $user = User::find($request->user_id);
         try {
             BoardMember::query()
                 ->where('user_id', $request->user_id)
@@ -478,7 +495,7 @@ class BoardController extends Controller
                 'invite' => now(),
                 'is_active' => 0,
             ]);
-
+            $this->notificationMemberInviteBoard($board->id, $user->name);
             return redirect()->route('b.edit', $request->board_id)->with([
                 'msg' => 'bạn đã chấp nhận người dùng vào bảng',
                 'action' => 'success'
@@ -487,11 +504,18 @@ class BoardController extends Controller
             throw $e;
         }
     }
+
     //Từ chối người dùng gửi lời mời vào board
+    //thông báo  done
     public function refuseMember($bm_id)
     {
+        $boardMember = BoardMember::with(['user', 'board'])->find($bm_id);
+
         try {
             BoardMember::find($bm_id)->delete();
+            $title = "Từ chối lời mời";
+            $description = 'Bạn đã bị từ chối lời mời vào bảng ' . $boardMember->board->name;
+            $boardMember->user->notify(new BoardMemberNotification($title, $description));
             return back()->with([
                 'msg' => 'bạn đã từ chối người dùng vào bảng',
                 'action' => 'danger'
@@ -500,19 +524,29 @@ class BoardController extends Controller
             throw $th;
         }
     }
+
     //Kích thành viên || Rời khỏi không gian làm việc
+    //thông báo done
     public function activateMember($boardMemberId)
     {
         //lấy được thằng boardmember đang bị xóa || lấy được cả thằng boardID || lấy được cả wspID
-        $boardMember = BoardMember::where('id', $boardMemberId)->with('board')->first();
+        $boardMember = BoardMember::where('id', $boardMemberId)->with('board', 'user')->first();
         $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
         $wspChecked = WorkspaceMember::where('user_id', $boardMember->user_id)
             ->where('workspace_id', $boardMember->board->workspace_id)->first();
         try {
             if ($wspChecked->authorize->value !== "Viewer") {
                 $boardMember->delete();
+
+                $title = "Bạn bị kick khỏi không gian làm việc";
+                $description = 'Bạn đã xóa khỏi bảng ' . $boardMember->board->name;
+                $boardMember->user->notify(new BoardMemberNotification($title, $description));
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
                 $boardMember->delete();
+
+                $title = "Bạn bị kick khỏi không gian làm việc";
+                $description = 'Bạn đã xóa khỏi bảng ' . $boardMember->board->name;
+                $boardMember->user->notify(new BoardMemberNotification($title, $description));
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
                 $wspChecked->delete();
                 $boardMember->delete();
@@ -523,6 +557,10 @@ class BoardController extends Controller
                 $wsp->update([
                     'is_active' => 1
                 ]);
+
+                $title = "Bạn bị kick khỏi không gian làm việc";
+                $description = 'Bạn đã xóa khỏi bảng ' . $boardMember->board->name;
+                $boardMember->user->notify(new BoardMemberNotification($title, $description));
             }
         } catch (\Throwable $th) {
             dd(vars: $th);
@@ -534,20 +572,27 @@ class BoardController extends Controller
         ]);
 
     }
+
     //Thăng cấp thành viên
+    //thông báo done
     public function upgradeMemberShip($boardMemberId)
     {
+        $boardMember = BoardMember::with(['user', 'board'])->find($boardMemberId);
         BoardMember::find($boardMemberId)->update([
             'authorize' => AuthorizeEnum::Sub_Owner()
         ]);
+        $this->notificationUpgradeMemberShipBoard($boardMember->board->id, $boardMember->user->name);
         return back()->with([
             'msg' => 'Bạn đã thăng cấp thành viên thành công',
             'action' => 'success'
         ]);
     }
+
     //Nhượng quyền
+    //thông báo done
     public function managementfranchise($boardOwnerId, $boardUserId)
     {
+        $boardMember = BoardMember::with(['user', 'board'])->find($boardUserId);
         try {
             BoardMember::find($boardUserId)->update([
                 'authorize' => AuthorizeEnum::Owner()
@@ -556,6 +601,7 @@ class BoardController extends Controller
             BoardMember::find($boardOwnerId)->update([
                 'authorize' => AuthorizeEnum::Member()
             ]);
+            $this->notificationManagementfranchiseBoard($boardMember->board->id, $boardMember->user->name);
             return back()->with([
                 'msg' => 'Bạn đã nhượng quyền quản trị viên',
                 'action' => 'warning'
@@ -575,6 +621,7 @@ class BoardController extends Controller
         //
     }
 
+    // gửi mail thêm người vào bảng
     public function inviteUserBoard(Request $request)
     {
         $boardId = $request->id;
@@ -596,7 +643,8 @@ class BoardController extends Controller
         return back();
     }
 
-
+    //người dùng tham gia vào bảng
+    //thông báo done
     public function acceptInviteBoard($uuid, $token, Request $request)
     {
         //xử lý khi admin gửi link invite cho người dùng
@@ -636,7 +684,7 @@ class BoardController extends Controller
                                         'authorize' => $request->authorize,
                                         'invite' => now(),
                                     ]);
-
+                                    $this->notificationMemberInviteBoard($board->id, $user_check->name);
                                     // ghi lại hoạt động thêm người vào ws
                                     activity('Member Added to Bảng')
                                         ->causedBy(Auth::user()) // Người thực hiện hành động
@@ -724,7 +772,7 @@ class BoardController extends Controller
                                     WorkspaceMember::query()
                                         ->where('id', $wm->id)
                                         ->update(['is_active' => 1]);
-
+                                    $this->notificationMemberInviteBoard($board->id, $user_check->name);
                                     // ghi lại hoạt động thêm người vào ws
                                     activity('Member Added to Bảng')
                                         ->causedBy(Auth::user()) // Người thực hiện hành động
@@ -787,20 +835,48 @@ class BoardController extends Controller
         }
     }
 
+    //người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
+    //thông báo done
     public function requestToJoinWorkspace()
     {
+
         $workspace_member = WorkspaceMember::where('user_id', Auth::id())
             ->where('is_active', 1)
             ->first();
+
         $workspace_member->update([
             'is_accept_invite' => 1,
         ]);
+        $workspaceMemberOwner = Workspace::where('id', $workspace_member->workspace_id)
+            ->whereHas('workspaceMembers', function ($query) {
+                $query->whereIn('authorize', ['Owner', 'Sub_Owner']);
+            })
+            ->with([
+                'workspaceMembers' => function ($query) {
+                    $query->whereIn('authorize', ['Owner', 'Sub_Owner']);
+                },
+                'workspaceMembers.user'
+            ])
+            ->first();
+        $workspace = $workspaceMemberOwner;
+        $userName = auth()->user()->name;
+        $workspaceMemberOwner->workspaceMembers->each(function ($workspaceMember) use ($workspace, $userName) {
+            $user = $workspaceMember->user; // Truy cập user từ WorkspaceMember
+            $name = 'không gian làm việc ' . $workspace->name;
+            $title = 'Lời mời vào không gian làm việc';
+            $description = 'Người dùng "' . $userName . '" Đã gửi lời mời vào không gian làm việc!.';
+
+            // Gửi notification cho user
+            $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+        });
+
 
         session(['msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc']);
         session(['action' => 'success']);
         return redirect()->route('home');
     }
-
+    //mời người dùng từ wsp vào bảng
+    //thông báo done
     public function inviteMemberWorkspace($userId, $boardId)
     {
         BoardMember::create([
@@ -809,8 +885,110 @@ class BoardController extends Controller
             'authorize' => AuthorizeEnum::Member(),
             'invite' => now(),
         ]);
+        $boardMember = BoardMember::with(['user', 'board'])->find($boardId);
+        $this->notificationMemberInviteBoard($boardMember->board->id, $boardMember->user->name);
         session()->flash('msg', 'Bạn đã mời người dùng vào bảng');
         session()->flash('action', 'success');
         return response()->json(['success' => true]);
+    }
+
+    //thông báo người dùng tham gia vào bảng
+    protected function notificationMemberInviteBoard($boardID, $userName)
+    {
+        // Eager load boardMembers và user, lọc authorize != Viewer
+        $board = Board::with([
+            'boardMembers' => function ($query) {
+                $query->where('authorize', '!=', 'Viewer');
+            },
+            'boardMembers.user' // Eager load user
+        ])->find($boardID);
+
+        if ($board) {
+            // Gửi thông báo tới các thành viên hợp lệ
+            $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
+                $user = $boardMember->user;
+                if ($user) {
+                    $name = 'Bảng ' . $board->name;
+                    $title = 'Thành viên mới trong bảng';
+                    $description = 'Người dùng "' . $userName . '" đã được thêm vào bảng "' . $board->name . '".';
+                    $user->notify(new BoardNotification($user, $board, $name, $description, $title));
+                }
+            });
+        }
+    }
+
+    //thông báo nhượng quyền
+    protected function notificationManagementfranchiseBoard($boardID, $userName)
+    {
+        // Eager load boardMembers và user, lọc authorize != Viewer
+        $board = Board::with([
+            'boardMembers' => function ($query) {
+                $query->where('authorize', '!=', 'Viewer');
+            },
+            'boardMembers.user' // Eager load user
+        ])->find($boardID);
+
+        if ($board) {
+            // Gửi thông báo tới các thành viên hợp lệ
+            $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
+                $user = $boardMember->user;
+                if ($user) {
+                    $name = 'Bảng ' . $board->name;
+                    $title = 'Nhượng quyền';
+                    $description = 'Người dùng "' . $userName . '" đã được nhượng quyền lên Chủ Nhóm.';
+                    $user->notify(new BoardNotification($user, $board, $name, $description, $title));
+                }
+            });
+        }
+    }
+
+    //thông báo thăng cấp thành viên
+    protected function notificationUpgradeMemberShipBoard($boardID, $userName)
+    {
+        // Eager load boardMembers và user, lọc authorize != Viewer
+        $board = Board::with([
+            'boardMembers' => function ($query) {
+                $query->where('authorize', '!=', 'Viewer');
+            },
+            'boardMembers.user' // Eager load user
+        ])->find($boardID);
+
+        if ($board) {
+            // Gửi thông báo tới các thành viên hợp lệ
+            $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
+                $user = $boardMember->user;
+                if ($user) {
+                    $name = 'Bảng ' . $board->name;
+                    $title = 'Thăng cấp thành viên';
+                    $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
+                    $user->notify(new BoardNotification($user, $board, $name, $description, $title));
+                }
+            });
+        }
+    }
+
+    //thông báo thăng cấp thành viên
+    protected function notificationAcceptMemberBoard($boardID, $userName)
+    {
+        // Eager load boardMembers và user, lọc authorize != Viewer
+        $board = Board::with([
+            'boardMembers' => function ($query) {
+                $query->where('authorize', '!=', 'Viewer');
+            },
+            'boardMembers.user' // Eager load user
+        ])->find($boardID);
+
+        if ($board) {
+            // Gửi thông báo tới các thành viên hợp lệ
+            $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
+                $user = $boardMember->user;
+                if ($user) {
+                    $name = 'Bảng ' . $board->name;
+                    $title = 'Thăng cấp thành viên';
+                    $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
+                    $user->notify(new BoardNotification($user, $board, $name, $description, $title));
+                }
+            });
+        }
     }
 }
