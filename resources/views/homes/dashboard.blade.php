@@ -5,6 +5,22 @@
 @endsection
 
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
+
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -81,7 +97,7 @@
 
     <div class="row" id="highlighted-boards">
         <div class="d-flex">
-            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5> 
+            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5>
         </div>
         <div class="row">
             @if (!empty($board_star))

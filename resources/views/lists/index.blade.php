@@ -3,6 +3,22 @@
     List - TaskFlow
 @endsection
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
+
     <div class="row mt-3 ms-3 me-3">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-left justify-content-between">
