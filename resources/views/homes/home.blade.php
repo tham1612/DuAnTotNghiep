@@ -3,6 +3,21 @@
     Home - TaskFlow
 @endsection
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
 
     @php
         // Đếm tổng số thành viên của workspace
