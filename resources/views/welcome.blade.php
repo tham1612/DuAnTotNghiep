@@ -49,22 +49,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto mt-2 mt-lg-0" id="navbar-example">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#hero">Home</a>
+                            <a class="nav-link active" href="#hero">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#process">Process</a>
+                            <a class="nav-link" href="#process">Giới thiệu</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#categories">Categories</a>
+                            <a class="nav-link" href="#categories">Danh sách</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#findJob">Find Jobs</a>
+                            <a class="nav-link" href="#findJob">Tìm kiếm</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#candidates">Candidates</a>
+                            <a class="nav-link" href="#blog">Tiện ích</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#blog">Blog</a>
+                            <a class="nav-link" href="#1">Khác</a>
                         </li>
                     </ul>
 
@@ -88,10 +88,10 @@
                 <div class="row justify-content-between align-items-center">
                     <div class="col-lg-6">
                         <div>
-                            <h1 class="display-6 fw-semibold text-capitalize mb-3 lh-base">PHẦN MỀM QUẢN LÝ DỰ ÁN TRỰC
+                            <h1 class="display-6 fw-semibold text-capitalize mb-3 lh-base">PHẦN MỀM QUẢN LÝ công việc TRỰC
                                 TUYẾN.</h1>
-                            <p class="lead text-muted lh-base mb-4">Phần mềm quản lý dự án TaskFlow giúp quản lý tập
-                                trung hàng trăm dự án trực tuyến trên một màn hình .</p>
+                            <p class="lead text-muted lh-base mb-4">Phần mềm quản lý công việc TaskFlow giúp quản lý tập
+                                trung hàng trăm công việc trực tuyến trên một màn hình .</p>
                             <form action="#" class="job-panel-filter">
                                 <div class="row g-md-0 g-2">
                                     <div class="col-md-4">
@@ -105,10 +105,10 @@
                                         <div>
                                             <select class="form-control" data-choices>
                                                 <option value="">Công việc </option>
-                                                <option value="Full Time">Full Time</option>
-                                                <option value="Part Time">Part Time</option>
-                                                <option value="Freelance">Freelance</option>
-                                                <option value="Internship">Internship</option>
+                                                <option value="Full Time">Toàn thời gian</option>
+                                                <option value="Part Time">Bán thời gian</option>
+                                                <option value="Freelance">Tự do</option>
+                                                <option value="Internship">Thực tập</option>
                                             </select>
                                         </div>
                                     </div>
@@ -223,8 +223,8 @@
                     <div class="col-lg-8">
                         <div class="text-center mb-5">
                             <h1 class="mb-3 ff-secondary fw-semibold lh-base">Giới thiệu</h1>
-                            <p class="text-muted">Phần mềm quản lý dự án FastWork Project giúp doanh nghiệp nâng cao
-                                hiệu quả quản lý công việc dự án, giám sát chặt chẽ tiến độ dự án mọi lúc mọi nơi. Giúp
+                            <p class="text-muted">Phần mềm quản lý công việc  FastWork Project giúp doanh nghiệp nâng cao
+                                hiệu quả quản lý công việc, giám sát chặt chẽ tiến độ công việc  mọi lúc mọi nơi. Giúp
                                 nhà quản lý và nhân viên thực hiện công việc nhanh chóng, dễ dàng, sáng tạo và hiệu quả
                                 hơn.</p>
                         </div>
@@ -995,7 +995,7 @@
                 </div>
             </div>
         </section>
-        <section class="section bg-light" id="categories">
+        <section class="section bg-light" id="blog">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
@@ -1138,7 +1138,7 @@
                 <!-- end container -->
         </section>
         <!-- start find jobs -->
-        <section class="section">
+        <section class="section" id="1">
             <div class="container">
                 <div class="row align-items-center gy-4">
                     <div class="col-lg-6 order-2 order-lg-1">

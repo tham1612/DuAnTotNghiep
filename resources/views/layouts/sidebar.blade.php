@@ -7,8 +7,8 @@
         ->where('workspace_members.is_accept_invite', 0)
         ->whereNot('workspace_members.is_active', 1)
         ->where('workspace_members.deleted_at', null)
-        ->select('workspaces.*', 'workspace_members.id as workspace_id')  // Giữ cột 'workspace_members.id'
-        ->groupBy('workspaces.id', 'workspace_members.id')  // Thêm cả 'workspace_members.id' vào GROUP BY
+        ->select('workspaces.*', 'workspace_members.id as workspace_id') // Giữ cột 'workspace_members.id'
+        ->groupBy('workspaces.id', 'workspace_members.id') // Thêm cả 'workspace_members.id' vào GROUP BY
         ->withCount([
             'workspaceMembers as member_count' => function ($query) {
                 $query->whereNull('deleted_at');
@@ -33,9 +33,12 @@
         ->select('user_id', 'authorize', 'is_accept_invite')
         ->first();
 
-     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
+    if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
         if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
-            $workspaceBoards = \App\Models\Workspace::query()->with('boards')->where('id', $workspaceChecked->id)->first();
+            $workspaceBoards = \App\Models\Workspace::query()
+                ->with('boards')
+                ->where('id', $workspaceChecked->workspace_id)
+                ->first();
         } elseif ($workspaceChecked->authorize == 'Member') {
             $workspaceBoards = \App\Models\Workspace::query()
                 ->with([
@@ -66,19 +69,29 @@
         }
     }
 
+    $allNotifications = \App\Models\User::find($userId)
+        ->notifications()
+        ->get()
+        ->filter(function ($notification) {
+            // Truy cập trực tiếp đến mảng data, vì Laravel sẽ tự động chuyển đổi JSON thành mảng
+            $data = $notification->data;
+
+            // Kiểm tra xem trường `readed` có tồn tại và giá trị là false
+            return isset($data['readed']) && $data['readed'] == false;
+        });
+
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
-    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
-         data-bs-toggle="dropdown"
-         aria-expanded="false" data-bs-offset="0,20">
+    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
+        aria-expanded="false" data-bs-offset="0,20">
 
         @if ($workspaceChecked)
             @if ($workspaceChecked->image)
                 <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt="" class="rounded avatar-sm"
-                     style="width: 25px;height: 25px">
+                    style="width: 25px;height: 25px">
             @else
                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                     style="width: 25px;height: 25px">
+                    style="width: 25px;height: 25px">
                     {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                 </div>
             @endif
@@ -93,10 +106,10 @@
                 <li class="d-flex">
                     @if ($workspaceChecked->image)
                         <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt=""
-                             class="rounded avatar-sm">
+                            class="rounded avatar-sm">
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                             style="width: 40px;height: 40px">
+                            style="width: 40px;height: 40px">
                             {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                         </div>
                     @endif
@@ -121,7 +134,7 @@
                 </li> --}}
                 <li class="d-flex">
                     <a href="{{ route('showFormEditWorkspace') }}"
-                       onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
                         việc</a>
                 </li>
                 <li class="border mb-3"></li>
@@ -130,16 +143,16 @@
                     <li class="d-flex">
                         @if ($workspace->image)
                             <img src="{{ asset('storage/' . $workspace->image) }}" alt=""
-                                 class="rounded-circle avatar-sm">
+                                class="rounded-circle avatar-sm">
                         @else
                             <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                 style="width: 40px;height: 40px">
+                                style="width: 40px;height: 40px">
                                 {{ strtoupper(substr($workspace->name, 0, 1)) }}
                             </div>
                         @endif
                         <section class=" ms-2">
                             <p class="fs-15 fw-bolder"
-                               onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
+                                onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
                                 {{ \Str::limit($workspace->name, 25) }}
                             </p>
                             <p class="fs-10" style="margin-top: -10px">
@@ -185,10 +198,17 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('inbox') }}">
                         <i class=" ri-notification-3-line"></i> <span data-key="">Thông Báo</span>
+                        @if (!empty($allNotifications))
+                            @if ($allNotifications->count() > 0)
+                                <span
+                                    class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
+                            @endif
+                        @endif
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('homes.dashboard', $workspaceChecked->id) }}">
+                    <a class="nav-link menu-link"
+                        href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>
@@ -203,99 +223,107 @@
                     @foreach ($workspaceBoards->boards as $board)
                         <li class="nav-item">
                             <div class="nav-link menu-link d-flex text-center align-items-center"
-                                 style="justify-content: space-between;">
-                                <a class="" href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
+                                style="justify-content: space-between;">
+                                <a class=""
+                                    href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
-                                            <img
-                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                    src="{{ asset('storage/' . $board->image) }}"
-                                                    style="width: 30px; height: 30px"
-                                                    alt="image"/>
+                                            <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                src="{{ asset('storage/' . $board->image) }}"
+                                                style="width: 30px; height: 30px" alt="image" />
                                         @else
-                                            <div
-                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                    style="width: 30px;height: 30px">
+                                            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                style="width: 30px;height: 30px">
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>
-
                                         @endif
-                                        <span id="name-board-{{$board->id}}"
-                                                class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
+                                        <span id="name-board-{{ $board->id }}"
+                                            class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
                                     </div>
                                 </a>
                                 @php
                                     // Load tất cả các user duy nhất của board
-                                   $boardMembers = $board->members->unique('id');
-                                   $memberIsStar = $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
+                                    $boardMembers = $board->members->unique('id');
+                                    $memberIsStar =
+                                        $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
 
                                     // Lưu vào session
                                     session([
                                         'memberIsStar_' . $board->id => $memberIsStar,
-                                        'boardMembers_' . $board->id => $boardMembers
+                                        'boardMembers_' . $board->id => $boardMembers,
                                     ]);
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">
-                                    <button type="button" class="btn avatar-xs mt-n1 p-0 favourite-btn
-                                        @if( $memberIsStar == 1) active @endif"
+                                    <button type="button"
+                                        class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                        @if ($memberIsStar == 1) active @endif"
+                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                        id="is_star_{{ $board->id }}">
+                                        <button type="button"
+                                            class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                        @if ($memberIsStar == 1) active @endif"
                                             onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
                                             id="2_is_star_{{ $board->id }}">
-                                        <span class="avatar-title bg-transparent fs-15">
-                                            <i class="ri-star-fill fs-20 mx-2"></i>
-                                        </span>
-                                    </button>
-                                    <a class="text-reset dropdown-btn" data-bs-toggle="dropdown" aria-haspopup="true"
-                                       aria-expanded="false">
-                                        <span class="fw-medium text-muted fs-12">
-                                            <i class="ri-more-fill fs-20" title=""></i>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-start">
-                                        <a class="dropdown-item">
-                                            <input type="text" name="name"
-                                                   class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                   id="name_board_{{ $board->id }}" value="{{ $board->name }}"
-                                                   onchange="updateBoard({{ $board->id }})"/>
+                                            <span class="avatar-title bg-transparent fs-15">
+                                                <i class="ri-star-fill fs-20 mx-2"></i>
+                                            </span>
+                                        </button>
+                                        <a class="text-reset dropdown-btn" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <span class="fw-medium text-muted fs-12">
+                                                <i class="ri-more-fill fs-20" title=""></i>
+                                            </span>
                                         </a>
-                                        <div class="dropdown-item ms-2 me-2">
-                                            <div class="mb-2">
-                                                <label for="">Ảnh của bảng</label>
+                                        <div class="dropdown-menu dropdown-menu-start">
+                                            <a class="dropdown-item">
+                                                <input type="text" name="text"
+                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
+                                                    onchange="updateBoard({{ $board->id }})" />
+                                                <input type="text" name="name"
+                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
+                                                    onchange="updateBoard({{ $board->id }})" />
+                                            </a>
+                                            <div class="dropdown-item ms-2 me-2">
+                                                <div class="mb-2">
+                                                    <label for="">Ảnh của bảng</label>
 
-                                                <input type="file" class="form-control" name="image"
-
-                                                       id="image_board_{{ $board->id }}" value="{{ $board->image }}"
-                                                       onchange="updateBoard({{ $board->id }})"/>
+                                                    <input type="file" class="form-control" name="image"
+                                                        id="image_board_{{ $board->id }}"
+                                                        value="{{ $board->image }}"
+                                                        onchange="updateBoard({{ $board->id }})" />
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Đóng bảng -->
-                                        <div
-                                                class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
+                                            <!-- Đóng bảng -->
                                             <div
-                                                    class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
+                                                class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
+                                                <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
                                                     style="height: 30px; background-color: #c7c7c7;"
                                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-archive-line"></i>
-                                                <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
-                                            </div>
-                                            <!-- Dropdown Menu con -->
-                                            <ul class="dropdown-menu dropdown-menu-end w-100"
-                                                style="left: 100%; top: 0;">
-                                                <h5 class="text-center">Đóng bảng?</h5>
-                                                <li>
-                                                    <p class="dropdown-item-text">
-                                                        Bạn có thể tìm và mở lại các bảng đã đóng ở cuối
-                                                        <a href="{{ route('homes.dashboard',  $workspaceChecked->id) }}">trang
-                                                            các bảng của bạn</a>.
-                                                    </p>
+                                                    <i class="ri-archive-line"></i>
+                                                    <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
+                                                </div>
+                                                <!-- Dropdown Menu con -->
+                                                <ul class="dropdown-menu dropdown-menu-end w-100"
+                                                    style="left: 100%; top: 0;">
+                                                    <h5 class="text-center">Đóng bảng?</h5>
+                                                    <li>
+                                                        <p class="dropdown-item-text">
+                                                            Bạn có thể tìm và mở lại các bảng đã đóng ở cuối
+                                                            <a
+                                                                href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">trang
+                                                                các bảng của bạn</a>.
+                                                        </p>
 
-                                                </li>
-                                                <li class="d-flex justify-content-center">
-                                                    <button class="btn btn-danger" type="button">Đóng</button>
-                                                </li>
-                                            </ul>
+                                                    </li>
+                                                    <li class="d-flex justify-content-center">
+                                                        <button class="btn btn-danger" type="button">Đóng</button>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -305,7 +333,7 @@
         </div>
 
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-                id="vertical-hover">
+            id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
 
@@ -314,7 +342,7 @@
         @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                     style="background-color: #f0f4ff; border-radius: 8px;">
+                    style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đang là khách</strong> trong không gian làm việc này.
@@ -323,14 +351,14 @@
                 </div>
 
                 <a href="{{ route('b.requestToJoinWorkspace') }}" class="btn btn-primary mt-2 "
-                   style="width: 100%; text-align: center;">
+                    style="width: 100%; text-align: center;">
                     Yêu cầu tham gia
                 </a>
             </div>
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                     style="background-color: #f0f4ff; border-radius: 8px;">
+                    style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>

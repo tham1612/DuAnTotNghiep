@@ -165,13 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-// ============== sidebar =================
-
-
-
-
-
+// ============== sidebar ================
 
 function updateBoard(boardId) {
     var formData = new FormData();

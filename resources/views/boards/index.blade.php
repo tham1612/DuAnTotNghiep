@@ -3,6 +3,12 @@
     Board - TaskFlow
 @endsection
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
+@endif
+
     {{--        @dd($board->catalogs->first()->tasks) --}}
     <div class="tasks-board mb-3" id="kanbanboard">
 
