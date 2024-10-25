@@ -1,97 +1,25 @@
-<h5 class="mb-3" style="text-align: center">
-    Thêm danh sách công việc
-</h5>
-<form>
-
-
-@if($checklist)
-    <form id="taskFormUpdate_{{$checklist->id}}" class="formItem" onsubmit="return submitFormCheckList({{$checklist->id}})">
-        <div class="mt-2">
-            <label class="form-label" for="name_{{$checklist->id}}">Tiêu đề</label>
-            <input type="hidden" name="task_id" id="task_id_{{$checklist->id}}" value="{{$task->id}}">
-            <input type="text" class="form-control" name="name" id="name_{{$checklist->id}}" value="{{$checklist->name}}"/>
-        </div>
-        <div class="mt-2">
-            <button type="submit" class="btn btn-primary" disabled>Thay đổi</button>
-        </div>
-    </form>
-@else
-    <form id="taskFormAdd" class="formItem" onsubmit="return submitAddCheckList({{$task->id}})">
-        <div class="mt-2">
-            <label class="form-label" for="name_{{$task->id}}">Tiêu đề</label>
-            <input type="hidden" name="task_id" id="task_id_{{$task->id}}" value="{{$task->id}}">
-            <input type="text" class="form-control" name="name" id="name_{{$task->id}}" placeholder="Việc cần làm"/>
-        </div>
-        <div class="mt-2">
-            <button type="submit" class="btn btn-primary" disabled>Thêm</button>
-        </div>
-    </form>
-@endif
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<script>
-    function submitAddCheckList(taskId) {
-        var formData = {
-            task_id: $('#task_id_' + taskId).val(),
-            name: $('#name_' + taskId).val()
-        };
-        if (!formData.name.trim()) {
-            alert('Tiêu đề không được để trống!');
-            return false;
-        }
-        $.ajax({
-            url: `/tasks/checklist/create`,
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                console.log('Task đã được thêm thành công!', response);
-            },
-            error: function(xhr) {
-                alert('Đã xảy ra lỗi!');
-                console.log(xhr.responseText);
-            }
-        });
-
-        return false;
-    }
-
-    function submitFormCheckList(checklistId) {
-        var formData = {
-            task_id: $('#task_id_' + checklistId).val(),
-            name: $('#name_' + checklistId).val()
-        };
-
-
-        if (!formData.name.trim()) {
-            alert('Tiêu đề không được để trống!');
-            return false;
-        }
-
-        $.ajax({
-            url: `/tasks/${checklistId}/checklist`,
-            type: 'PUT',
-            data: formData,
-            success: function(response) {
-                console.log('Task đã được cập nhật thành công!', response);
-            },
-            error: function(xhr) {
-                alert('Đã xảy ra lỗi!');
-                console.log(xhr.responseText);
-            }
-        });
-
-        return false;
-    }
-</script>
-=======
+<h5 class="mb-3" style="text-align: center">Thêm danh sách công việc</h5>
+<form id="taskFormAdd" class="formItem">
     <div class="mt-2">
-        <label class="form-label" for="">Tiêu đề</label>
-        <input type="text" class="form-control"
+        <label class="form-label" for="name_{{ $taskId }}">Tiêu đề</label>
+        <input type="text" class="form-control" name="name" id="name_checkList"
                placeholder="Việc cần làm"/>
     </div>
     <div class="mt-2">
-        <button class="btn btn-primary">Thêm</button>
+        <button type="button" id="create_checkList" class="btn btn-primary" onclick="submitAddCheckList({{ $taskId }})">
+            Thêm
+        </button>
     </div>
 </form>
->>>>>>> Stashed changes
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameCheckList = document.getElementById('name_checkList');
+        const createCheckList = document.getElementById('create_checkList');
+
+        // Kiểm tra sự kiện khi người dùng nhập vào ô input
+        nameCheckList.addEventListener('input', function() {
+            console.log('Input value:', nameCheckList.value);  // Kiểm tra giá trị ô input trong console
+            createCheckList.disabled = !nameCheckList.value.trim();  // Bật/tắt nút dựa trên việc ô input có giá trị hay không
+        });
+    });
+</script> --}}

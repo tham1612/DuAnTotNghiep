@@ -116,12 +116,17 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $user = User::query()->findOrFail($id);
         return view('users.profile', compact('user'));
     }
 
     public function update(UpdateUserRequest $request, string $id)
     {
+
         $user = User::query()->findOrFail($id);
         $validatedData = $request->except('image');
 

@@ -52,10 +52,16 @@ class GoogleApiClientController extends Controller
 
     public function createEvent($data)
     {
-//        dd($data);
-        $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
-        $endDate = $data['end_date'];
+        if (isset($data['start']) || isset($data['end'])) {
+            $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $endDate = $data['end'];
+        } else {
+            $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+            $endDate = $data['end_date'];
+        }
+
         $description = isset($data['description']) ? $data['description'] : '';
+        $summary = isset($data['text']) ? $data['text'] : '';
 
 //        $accessToken = session('google_access_token');
         $accessToken = User::query()
@@ -63,14 +69,14 @@ class GoogleApiClientController extends Controller
             ->value('access_token');
 
         $eventData = [
-            'summary' => $data['text'],
+            'summary' => $summary,
             'start' => [
                 'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
             ],
             'end' => [
                 'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
             ],
-            'description' => $description,
+//            'description' => $description,
             'reminders' => [
                 'useDefault' => false,
                 'overrides' => [
@@ -100,45 +106,53 @@ class GoogleApiClientController extends Controller
 
     public function updateEvent($data)
     {
+        if (isset($data['start']) || isset($data['end'])) {
+            $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $endDate = $data['end'];
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
+            $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+            $endDate = $data['end_date'];
+        }
         $attendees = [];
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
-        $eventId = $data['id_gg_calendar'];
-        if ($data['changeDate']) {
+        $eventId = isset($data['id_google_calendar']) ? $data['id_google_calendar'] : $data['id_gg_calendar'];
+        if (isset($startDate) || isset($endDate)) {
             $eventData = [
                 'start' => [
-                    'dateTime' => Carbon::parse($data['start_date'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                    'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
                     'timeZone' => 'Asia/Ho_Chi_Minh',
                 ],
                 'end' => [
-                    'dateTime' => Carbon::parse($data['end_date'], 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                    'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
                     'timeZone' => 'Asia/Ho_Chi_Minh',
                 ],
             ];
         } else {
             $eventData = [
-                'summary' => $data->text,
-                'start' => ['dateTime' => Carbon::parse($data->start, 'Asia/Ho_Chi_Minh')->toIso8601String()],
-                'end' => ['dateTime' => Carbon::parse($data->end, 'Asia/Ho_Chi_Minh')->toIso8601String()],
-                'description' => $data->description,
+                'summary' => $data['text'],
+//                'start' => ['dateTime' => Carbon::parse($data['start_date'], 'Asia/Ho_Chi_Minh')->toIso8601String()],
+//                'end' => ['dateTime' => Carbon::parse($data['end_date'], 'Asia/Ho_Chi_Minh')->toIso8601String()],
+                'description' => $data['description'],
             ];
-            // Thêm người tham gia (attendees)
-            if (!empty($data->attendees)) {
-                foreach ($data->attendees as $email) {
-                    // Tách email nếu có nhiều
-                    $emails = explode(',', $email);
-                    foreach ($emails as $email) {
-                        $attendees[] = ['email' => trim($email)];
-                    }
+        }
+        // Thêm người tham gia (attendees)
+        if (!empty($data->attendees)) {
+            foreach ($data->attendees as $email) {
+                // Tách email nếu có nhiều
+                $emails = explode(',', $email);
+                foreach ($emails as $email) {
+                    $attendees[] = ['email' => trim($email)];
                 }
             }
         }
+//        }
         $userOrTaskId = [
             'user_id' => Auth::id(),
             'task_id' => $data['id'],
         ];
-        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken,$userOrTaskId);
+        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 
     }
 

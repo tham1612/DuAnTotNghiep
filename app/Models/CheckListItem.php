@@ -19,7 +19,21 @@ class CheckListItem extends Model
         'reminder_date',
     ];
     protected $casts = [
-        'is_complete'=> 'boolean',
+        'is_complete' => 'boolean',
 
     ];
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'check_list_item_members', 'check_list_item_id', 'user_id');
+    }
+
+    public function checkListItemMembers()
+    {
+        return $this->hasMany(CheckListItemMember::class);
+    }
+
+    public function checkList(){
+        return $this->belongsTo(CheckList::class, 'check_list_id');
+    }
 }

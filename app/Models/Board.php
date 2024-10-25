@@ -32,8 +32,9 @@ class Board extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id');
+        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id')->withPivot('authorize');
     }
+
     public function workspace()
     {
         return $this->belongsTo(Workspace::class);
@@ -54,6 +55,7 @@ class Board extends Model
     {
         return $this->morphMany(TaskLink::class, 'linkable');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -62,5 +64,18 @@ class Board extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id')// Nếu bảng `board_members` có cột `is_star`
+        ->withPivot('authorize', 'is_star', 'follow', 'invite')
+            ->withTimestamps();    // Nếu bảng trung gian có các cột timestamps
     }
 }

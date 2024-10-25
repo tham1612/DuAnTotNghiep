@@ -16,8 +16,8 @@
                         <div class="text-center">
                             <div class="profile-user position-relative d-inline-block mx-auto mb-4">
                                 @if (auth()->user()->image)
-                                    <img class="rounded-circle avatar-xl img-thumbnail user-profile-imager"
-                                         src="{{\Illuminate\Support\Facades\Storage::url(auth()->user()->image)}}"
+                                    <img class="rounded-circle avatar-xl img-thumbnail user-profile-imager object-fit-cover"
+                                         src="{{asset('storage/' . auth()->user()->image)}}"
                                          alt="Avatar"/>
                                 @else
                                     <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center fs-20"

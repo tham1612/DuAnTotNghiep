@@ -24,9 +24,10 @@
                         <label for="exampleInputEmail1" class="form-label">Danh sách</label>
                         <select name="catalog_id" id="catalog_id" class="form-select">
                             <option hidden="">---Lựa chọn---</option>
-                            @foreach ($catalogs as $catalog)
+                            @foreach ($board->catalogs as $catalog)
                                 <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                             @endforeach
+
                         </select>
                     </div>
                     <div class="mb-3">
@@ -49,7 +50,9 @@
                     {{--                        <textarea name="description" id="description" cols="30" rows="5"--}}
                     {{--                                  class="form-control"></textarea>--}}
                     {{--                    </div>--}}
+
                     <button type="submit" class="btn btn-primary" id="createEvent">Tạo mới</button>
+
                     {{--                    <button class="btn btn-danger" id="deteleEvent">Xóa</button>--}}
                 </form>
             </div>
@@ -68,14 +71,14 @@
     <script src="https://momentjs.com/downloads/moment-timezone-with-data.min.js"></script>
 
     <script>
-        const startDateInput = document.querySelector('input[name="start"]');
-        const endDateInput = document.querySelector('input[name="end"]');
-        var text = document.querySelector('#text');
-        var active_checkbox = document.querySelector('#active_checkbox');
-        var deteleEvent = document.getElementById('deteleEvent');
-        var createEvent = document.getElementById('createEvent');
-        var emailName = document.getElementById('emailName');
-        var catalog_id = document.getElementById('catalog_id');
+        let startDateInput = document.querySelector('input[name="start"]');
+        let endDateInput = document.querySelector('input[name="end"]');
+        let text = document.querySelector('#text');
+        let active_checkbox = document.querySelector('#active_checkbox');
+        let deteleEvent = document.getElementById('deteleEvent');
+        let createEvent = document.getElementById('createEvent');
+        let emailName = document.getElementById('emailName');
+        let catalog_id = document.getElementById('catalog_id');
 
         // lấy ra dữ liệu trong db
         var fullCalendars = @json($listEvent);
@@ -142,7 +145,9 @@
                 if (!isAllowedToDrag(event)) {
                     revertFunc();
                 }
+                console.log(event)
                 var changeDate = 'true';
+                var text = event.title;
                 var id_gg_calendar = event.id_google_calendar;
                 var id = event.id;
                 var start = moment(event.start).format('YYYY-MM-DD HH:mm:00');
@@ -152,6 +157,7 @@
                     type: "PUT",
                     dataType: "json",
                     data: {
+                        text,
                         changeDate,
                         id,
                         id_gg_calendar,

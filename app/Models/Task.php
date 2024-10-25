@@ -29,10 +29,12 @@ class Task extends Model
         'id_google_calendar',
         'creator_email'
     ];
+
     protected $casts = [
         'priority' => IndexEnum::class,
         'risk' => IndexEnum::class,
     ];
+
     protected $appends = ["open"];
 
     protected $dates = ['start_date', 'end_date'];
@@ -49,11 +51,34 @@ class Task extends Model
 
     public function members()
     {
-        return $this->belongsToMany(User::class, 'task_members');
+        return $this->belongsToMany(User::class, 'task_members', 'task_id', 'user_id');
     }
     public function membersFl()
     {
         return $this->belongsToMany(User::class, 'follow_members')->withPivot('follow');
     }
 
+    public function followMembers()
+    {
+        return $this->hasMany(Follow_member::class);
+    }
+
+    public function checkLists()
+    {
+        return $this->hasMany(CheckList::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'task_tags', 'task_id', 'tag_id');
+    }
+    public function attachments()
+    {
+        return $this->hasMany(TaskAttachment::class);
+    }
+
+    public function taskComments()
+    {
+        return $this->hasMany(TaskComment::class);
+    }
 }

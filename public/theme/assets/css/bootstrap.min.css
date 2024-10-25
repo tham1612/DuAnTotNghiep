@@ -76,8 +76,8 @@
     --vz-body-font-size: 0.8125rem;
     --vz-body-font-weight: 400;
     --vz-body-line-height: 1.5;
-    --vz-body-color: #212529;
-    --vz-body-color-rgb: 33, 37, 41;
+    --vz-body-color: #172b4d; // màu chữ
+    --vz-body-color-rgb: 23, 43, 77;
     --vz-body-bg: #f3f3f9;
     --vz-body-bg-rgb: 243, 243, 249;
     --vz-emphasis-color: #212529;
@@ -90,7 +90,7 @@
     --vz-tertiary-color-rgb: 33, 37, 41;
     --vz-tertiary-bg: #eff2f7;
     --vz-tertiary-bg-rgb: 239, 242, 247;
-    --vz-heading-color: #495057;
+    --vz-heading-color: #172b4d;
     --vz-link-color: #405189;
     --vz-link-color-rgb: 64, 81, 137;
     --vz-link-decoration: none;

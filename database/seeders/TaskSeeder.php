@@ -20,7 +20,17 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        for ($CatalogID = 01; $CatalogID < 5; $CatalogID++) {
+
+        // Truncate để xóa dữ liệu cũ trước khi seed
+        TaskMember::truncate();
+        TaskComment::truncate();
+        TaskAttachment::truncate();
+        TaskLink::truncate();
+        Task::truncate();
+
+        Schema::enableForeignKeyConstraints();
+
+        for ($CatalogID = 1; $CatalogID < 10; $CatalogID++) {
             $access = \App\Enums\IndexEnum::getValues();
             $randomAccess = $access[array_rand($access)];
             Task::query()->create([
@@ -28,28 +38,39 @@ class TaskSeeder extends Seeder
                 'text' => fake()->sentence(),
                 'description' => fake()->paragraph(),
                 'position' => fake()->numberBetween(1, 5),
-                'duration' => 12,
-                'progress' => rand(0, 100),  // Giá trị ngẫu nhiên từ 0 đến 100
-                'start_date' => '2024-09-14',  // Ngày cố định
-                'parent' => 0,  // Không có task cha
-                'sortorder' => rand(1, 100),  // Giá trị ngẫu nhiên cho thứ tự sắp xếp
+                'progress' => rand(0, 100),
+                'start_date' => '2024-10-20',
+                'end_date' => '2024-10-30',
+                'reminder_date' => '2024-10-27',
+                'parent' => 0,
+                'sortorder' => rand(1, 10),
                 'image' => fake()->optional()->imageUrl(),
                 'priority' => $randomAccess,
                 'risk' => $randomAccess,
-                'start_date'=>now(),
             ]);
         }
-        for ($TaskID = 01; $TaskID < 5; $TaskID++) {
-            for ($UserID = 01; $UserID < 10; $UserID++) {
-                TaskMember::query()->create([
-                    'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
-                    'follow' => fake()->boolean(20),
-                ]);
+
+        for ($TaskID = 1; $TaskID < 10; $TaskID++) {
+            for ($UserID = 1; $UserID < 10; $UserID++) {
+                // Kiểm tra nếu đã tồn tại task_id và user_id trong bảng task_members
+                $exists = TaskMember::where('task_id', $TaskID)
+                                    ->where('user_id', $UserID)
+                                    ->exists();
+
+                if (!$exists) {
+                    TaskMember::create([
+                        'task_id' => $TaskID,
+                        'user_id' => $UserID,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
         }
-        for ($TaskID = 01; $TaskID < 5; $TaskID++) {
-            for ($UserID = 01; $UserID < 10; $UserID++) {
+
+
+        for ($TaskID = 1; $TaskID < 5; $TaskID++) {
+            for ($UserID = 01; $UserID < 5; $UserID++) {
                 TaskComment::query()->create([
                     'task_id' =>$TaskID,
                     'user_id' =>$UserID,
@@ -59,26 +80,11 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-       $data=TaskComment::query()->get();
-        for ($TaskID = 01; $TaskID < 5; $TaskID++) {
-            for ($UserID = 01; $UserID < 10; $UserID++) {
-                TaskComment::query()->create([
-                    'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
-                    'content' => fake()->paragraph(),
-                    'image' => fake()->optional()->imageUrl(),
-                    'parent_id' =>  $data->random()->id,
-                ]);
-            }
-        }
-        for ($TaskID = 01; $TaskID < 10; $TaskID++) {
-            for ($UserID = 01; $UserID < 10; $UserID++) {
+        for ($TaskID = 1; $TaskID < 5; $TaskID++) {
                 TaskAttachment::query()->create([
                     'task_id' =>$TaskID,
-                    'user_id' =>$UserID,
                     'file_name' => fake()->word() . '.pdf',
                 ]);
-            }
         }
         for ($TaskID = 01; $TaskID < 5; $TaskID++){
             if (fake()->boolean()){
@@ -95,7 +101,6 @@ class TaskSeeder extends Seeder
                 ]);
             }
         }
-
-
     }
 }
+

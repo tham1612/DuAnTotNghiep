@@ -1,19 +1,24 @@
 @php
-    $boardIsStars = \App\Models\Board::query()
-        ->select(
-            'boards.name AS board_name',
-            'workspaces.name AS workspace_name',
-            'boards.id AS board_id',
-            'boards.image AS board_image',
-        )
-        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
-        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-        ->where('workspace_members.is_active', 1)
-        ->where('workspace_members.id', \Illuminate\Support\Facades\Auth::id())
-        ->where('board_members.is_star', 1)
-        ->get();
+    //    $boardIsStars = \App\Models\Board::query()
+    //        ->distinct()
+    //        ->select(
+    //            'boards.name AS board_name',
+    //            'workspaces.name AS workspace_name',
+    //            'boards.id AS board_id',
+    //            'boards.image AS board_image',
+    //        )
+    //        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
+    //        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
+    //        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
+    //        ->where('workspace_members.is_active', 1)
+    //        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
+    //        ->where('board_members.is_star', 1)
+    //        ->get();
 
+    $boardIsStars = session('$board_star');
+    //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
+    $userId = Auth::id();
+    $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
 @endphp
 <header id="page-topbar">
     <div class="layout-width">
@@ -30,104 +35,24 @@
                 </button>
 
                 <!-- App Search-->
+                <!-- Form tìm kiếm -->
                 <form class="app-search d-none d-md-block">
                     <div class="position-relative">
+                        <input type="hidden" id="workspace-id" value="{{ $currentWorkspace->workspace_id }}">
                         <input type="text" class="form-control" placeholder="Tìm kiếm" autocomplete="off"
                             id="search-options" value="" />
                         <span class="mdi mdi-magnify search-widget-icon"></span>
                         <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none"
                             id="search-close-options"></span>
                     </div>
-                    <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
-                        <div data-simplebar style="max-height: 320px">
-                            <!-- item-->
-                            <div class="dropdown-header">
-                                <h6 class="text-overflow text-muted mb-0 text-uppercase">
-                                    Recent Searches
-                                </h6>
-                            </div>
-
-                            <div class="dropdown-item bg-transparent text-wrap">
-                                <a href="index.html" class="btn btn-soft-secondary btn-sm rounded-pill">how to setup <i
-                                        class="mdi mdi-magnify ms-1"></i></a>
-                                <a href="index.html" class="btn btn-soft-secondary btn-sm rounded-pill">buttons <i
-                                        class="mdi mdi-magnify ms-1"></i></a>
-                            </div>
-                            <!-- item-->
-                            <div class="dropdown-header mt-2">
-                                <h6 class="text-overflow text-muted mb-1 text-uppercase">
-                                    Pages
-                                </h6>
-                            </div>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="ri-bubble-chart-line align-middle fs-18 text-muted me-2"></i>
-                                <span>Analytics Dashboard</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="ri-lifebuoy-line align-middle fs-18 text-muted me-2"></i>
-                                <span>Help Center</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="ri-user-settings-line align-middle fs-18 text-muted me-2"></i>
-                                <span>My account settings</span>
-                            </a>
-
-                            <!-- item-->
-                            <div class="dropdown-header mt-2">
-                                <h6 class="text-overflow text-muted mb-2 text-uppercase">
-                                    Members
-                                </h6>
-                            </div>
-
-                            <div class="notification-list">
-                                <!-- item -->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
-                                    <div class="d-flex">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                            class="me-3 rounded-circle avatar-xs" alt="user-pic" />
-                                        <div class="flex-grow-1">
-                                            <h6 class="m-0">Angela Bernier</h6>
-                                            <span class="fs-11 mb-0 text-muted">Manager</span>
-                                        </div>
-                                    </div>
-                                </a>
-                                <!-- item -->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
-                                    <div class="d-flex">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-3.jpg') }}"
-                                            class="me-3 rounded-circle avatar-xs" alt="user-pic" />
-                                        <div class="flex-grow-1">
-                                            <h6 class="m-0">David Grasso</h6>
-                                            <span class="fs-11 mb-0 text-muted">Web Designer</span>
-                                        </div>
-                                    </div>
-                                </a>
-                                <!-- item -->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
-                                    <div class="d-flex">
-                                        <img src="{{ asset('theme/assets/images/users/avatar-5.jpg') }}"
-                                            class="me-3 rounded-circle avatar-xs" alt="user-pic" />
-                                        <div class="flex-grow-1">
-                                            <h6 class="m-0">Mike Bunch</h6>
-                                            <span class="fs-11 mb-0 text-muted">React Developer</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="text-center pt-3 pb-1">
-                            <a href="pages-search-results.html" class="btn btn-primary btn-sm">View All Results <i
-                                    class="ri-arrow-right-line ms-1"></i></a>
+                    <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown" style="width: 50%">
+                        <div data-simplebar style="max-height: 400px;">
+                            <!-- Kết quả tìm kiếm sẽ được hiển thị ở đây -->
                         </div>
                     </div>
                 </form>
+
+
                 {{--  Bảng hoạt động gần đây              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
@@ -224,44 +149,52 @@
                 </div>
                 {{--  bảng được đánh dấu sao              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3"
-                        style="width: 150px" id="page-header-cart-dropdown" data-bs-toggle="dropdown"
-                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
+                        id="page-header-cart-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                        aria-haspopup="true" aria-expanded="false">
                         <p>Đã đánh dấu sao <i class=" ri-arrow-drop-down-line fs-20"></i></p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
                         aria-labelledby="page-header-cart-dropdown">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
-                                @foreach ($boardIsStars as $boardIsStar)
-                                    <div
-                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
-                                        <div class="d-flex align-items-center">
+                                @if (!empty($boardIsStars))
+                                    @foreach ($boardIsStars as $boardIsStar)
+                                        <div
+                                            class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                            <div class="d-flex align-items-center board-star-container">
+                                                @if ($boardIsStar['image'])
+                                                    <img src="{{ asset('storage/' . $boardIsStar['image']) }}"
+                                                        class="me-3 rounded-circle avatar-sm p-2 bg-light"
+                                                        alt="user-pic" />
+                                                @else
+                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                        style="width: 30px;height: 30px">
+                                                        {{ strtoupper(substr($boardIsStar['name'], 0, 1)) }}
+                                                    </div>
+                                                @endif
 
-                                            <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                                class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
-
-                                            <div class="flex-grow-1">
-                                                <h6 class="mt-0 mb-1 fs-14">
-                                                    {{--    Liên kết đến bảng                                            --}}
-                                                    <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => $boardIsStar->board_id]) }}"
-                                                        class="text-reset">
-                                                        {{ $boardIsStar->board_name }}
-                                                    </a>
-                                                </h6>
-                                                <p class="mb-0 fs-12 w-100 text-muted">
-                                                    {{ $boardIsStar->workspace_name }}
-                                                </p>
-                                            </div>
-                                            <div class="ps-2">
-                                                <button type="button" data-value="{{ $boardIsStar->board_id }}"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
-                                                    <i class="ri-star-fill fs-16"></i>
-                                                </button>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mt-0 mb-1 fs-14">
+                                                        {{--    Liên kết đến bảng                                            --}}
+                                                        <a href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardIsStar['id']]) }}"
+                                                            class="text-reset">
+                                                            {{ $boardIsStar['name'] }}
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="ps-2">
+                                                    <button type="button" data-value="{{ $boardIsStar['id'] }}"
+                                                        id="board_star_{{ $boardIsStar['id'] }}"
+                                                        class="btn btn-icon btn-sm btn-ghost-warning "
+                                                        onclick="updateIsStar3({{ $boardIsStar['id'] }}, {{ Auth::id() }})">
+                                                        <i class="ri-star-fill fs-16"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -381,9 +314,8 @@
             <div class="d-flex align-items-center">
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#chatAi"
-                        aria-controls="offcanvasRight">
-{{--                        <i class=" ri-question-answer-line fs-22"></i>--}}
+                        data-bs-toggle="offcanvas" data-bs-target="#chatAi" aria-controls="offcanvasRight">
+                        {{--                        <i class=" ri-question-answer-line fs-22"></i> --}}
                         <i class="  ri-character-recognition-line fs-22"></i>
                     </button>
                 </div>
@@ -410,24 +342,21 @@
                 {{--                </div> --}}
 
                 {{-- giao diện sáng tối --}}
-                                <div class="ms-1 header-item d-none d-sm-flex">
-                                    <button type="button"
-                                            class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
-                                        <i class="bx bx-moon fs-22"></i>
-                                    </button>
-                                </div>
-
+                <div class="ms-1 header-item d-none d-sm-flex">
+                    <button type="button"
+                        class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                        <i class="bx bx-moon fs-22"></i>
+                    </button>
+                </div>
 
 
                 <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
-
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             @if (auth()->user()->image)
-                                <img class="rounded header-profile-user"
-                                    src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->image) }}"
-                                    alt="Avatar" />
+                                <img class="rounded header-profile-user object-fit-cover"
+                                    src="{{ asset('storage/' . auth()->user()->image) }}" alt="Avatar" />
                             @else
                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                     style="width: 40px;height: 40px">
@@ -443,45 +372,197 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
+                        <h6 class="dropdown-header">Xin chào {{ auth()->user()->name }}!</h6>
                         <a class="dropdown-item" href="{{ route('user', auth()->user()->id) }}">
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Profile</span>
+                            <span class="align-middle">Thông tin</span>
                         </a>
-                        <a class="dropdown-item" href=" {{ route('chat') }}"><i
-                                class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
                                 class="ri-group-line text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Tạo không gian làm việc</span></a>
-                        <form action="{{ route('logout') }}" method="post" class="dropdown-item">
+                        <a class="dropdown-item" href="{{ route('chat') }}"><i
+                                class="ri-archive-line text-muted fs-16 align-middle me-1"></i>
+                            <span class="align-middle">Lưu trữ</span></a>
+                        <form id="logoutForm" action="{{ route('logout') }}" method="post" class="dropdown-item">
                             @csrf
                             <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
-                            <button type="submit" class="bg-transparent border-0">Logout</button>
+                            <button type="button" class="bg-transparent border-0" data-bs-toggle="modal"
+                                data-bs-target="#topmodal">
+                                Đăng xuất
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </header>
-<div class="bg-light" aria-live="polite" aria-atomic="true"
-     style="position: fixed; top: 70px;right: 10px; z-index: 100">
-    @if (!empty(session('msg')) && session('action'))
-        {{--        @foreach (session('success') as $notification) --}}
-        <div class="toast fade show bg-success-subtle" role="alert" aria-live="assertive" aria-atomic="true"
-             data-bs-toggle="toast" id="notification-messenger">
+
+@if (!empty(session('msg')) && !empty(session('action')))
+    <div class="bg-light" aria-live="polite" aria-atomic="true"
+        style="position: fixed; top: 70px;right: 10px; z-index: 100">
+        <div class="toast fade show bg-{{ session('action') }}-subtle" role="alert" aria-live="assertive"
+            aria-atomic="true" data-bs-toggle="toast" id="notification-messenger">
             <div class="toast-header">
                 <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
-                     height="20">
+                    height="20">
                 <span class="fw-semibold me-auto">Task Flow.</span>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body fw-bolder text-{{session('action')}}">
+            <div class="toast-body fw-bolder text-{{ session('action') }}">
                 {{ session('msg') }}
             </div>
         </div>
-        {{--        @endforeach --}}
-    @endif
-</div>
+    </div>
+@endif
+
+
+<div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <lord-icon src="https://cdn.lordicon.com/pithnlch.json" trigger="loop"
+                    colors="primary:#121331,secondary:#08a88a" style="width:120px;height:120px">
+                </lord-icon>
+                <div class="mt-4">
+                    <h4 class="mb-3">Bạn có muốn đăng xuất không?</h4>
+                    <div class="hstack gap-2 justify-content-center">
+                        <button type="button" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal">
+                            <i class="ri-close-line me-1 align-middle"></i> Hủy
+                        </button>
+                        <!-- Submit form on click -->
+                        <button type="submit" class="btn btn-success" form="logoutForm">Đăng xuất</button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{{-- tìm kiếm --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-options');
+        const searchDropdown = document.getElementById('search-dropdown');
+        const workspaceId = document.getElementById('workspace-id').value;
+
+        // Hiện dropdown với chữ "Tìm Kiếm" khi nhấn vào ô input
+        searchInput.addEventListener('focus', function() {
+            searchDropdown.classList.add('show');
+
+            // Hiển thị "Tìm Kiếm" khi không có input
+            if (searchInput.value === '') {
+                searchDropdown.innerHTML = '<div class="dropdown-header">Tìm Kiếm bảng, danh sách, thẻ công việc</div>';
+            }
+        });
+
+        // Lắng nghe sự kiện input
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value;
+            if (query.length > 1) {
+                fetch(`/api/search?query=${query}&workspace_id=${workspaceId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let resultsHtml = '';
+
+                        // Hiển thị kết quả bảng (boards)
+                        if (data.boards.length > 0) {
+                            resultsHtml += `<div class="dropdown-header">Bảng</div>`;
+                            data.boards.forEach(board => {
+                                resultsHtml += `
+                            <div class="d-flex justify-content-center align-items-center ms-3 me-3">
+                                ${board.image ? 
+                                    `<img src="/storage/${board.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` : 
+                                    `<div class="bg-info-subtle rounded d-flex justify-content-center align-items-center" style="width: 20px; height: 20px;">
+                                        ${board.name.charAt(0).toUpperCase()}
+                                    </div>`
+                                }
+                                <a href="/b/${board.id}/edit" class="dropdown-item notify-item">
+                                    <span>${board.name}</span>
+                                </a>
+                            </div>`;
+                            });
+                        }
+                        // Hiển thị kết quả catalog
+                        if (data.catalogs.length > 0) {
+                            resultsHtml += `<div class="dropdown-header">Danh sách</div>`;
+                            data.catalogs.forEach(catalog => {
+                            resultsHtml += `
+                                <div class="d-flex justify-content-center align-items-center ms-3 me-3">
+                                ${catalog.image ? 
+                                    `<img src="/storage/${catalog.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` : 
+                                    `<div class="bg-info-subtle rounded d-flex justify-content-center align-items-center" style="width: 20px; height: 20px;">
+                                    ${catalog.name.charAt(0).toUpperCase()}
+                                    </div>`
+                                }
+                                <a href="/b/${catalog.board_id}/edit" class="dropdown-item notify-item">
+                                        <span>${catalog.board_name} : ${catalog.name}</span>
+                                    </a>
+                                </div>                                   
+                            `;
+                            });
+                        }
+
+                        // Hiển thị kết quả task 
+                        if (data.tasks.length > 0) {
+                            resultsHtml += `<div class="dropdown-header">Thẻ</div>`;
+                            data.tasks.forEach(task => {
+                            resultsHtml += `
+                                <div class="d-flex justify-content-center align-items-center ms-3 me-3">
+                                ${task.image ? 
+                                    `<img src="/storage/${task.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` : 
+                                    `<div class="bg-info-subtle rounded d-flex justify-content-center align-items-center" style="width: 20px; height: 20px;">
+                                        ${task.text.charAt(0).toUpperCase()}
+                                    </div>`
+                                }
+                                    <div class="dropdown-item notify-item">
+                                        <span class="task-text" data-bs-toggle="modal"
+                                                        data-bs-target="#detailCardModal${task.id}">${task.text}</span>
+                                        <a href="/b/${task.board_id}/edit"><span class="task-details">${task.board_name} : ${task.catalog_name}</span>  
+                                    </a>
+                                    </div>
+                                </div>  
+                            `;
+                            });
+                        }
+
+                        // Nếu không có kết quả cho cả bảng và catalog
+                        if (resultsHtml === '') {
+                            resultsHtml =
+                                '<div class="dropdown-item text-muted">Không tìm thấy kết quả</div>';
+                        }
+
+                        searchDropdown.innerHTML = resultsHtml;
+                        searchDropdown.classList.add('show');
+
+                        // Ngăn không cho nhấn Enter nếu không có kết quả hoặc dropdown đang mở
+                        searchInput.addEventListener('keydown', function(event) {
+                            const isDropdownOpen = searchDropdown.classList.contains(
+                            'show');
+                            if ((resultsHtml.includes('Không tìm thấy kết quả') ||
+                                    isDropdownOpen) && event.key === 'Enter') {
+                                event.preventDefault();
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                // Hiển thị "Tìm Kiếm" nếu input rỗng
+                searchDropdown.innerHTML = '<div class="dropdown-header">Tìm Kiếm</div>';
+            }
+        });
+    });
+</script>
+
+<style>
+    .dropdown-item.notify-item {
+        display: block;
+        padding: 10px;
+        /* border-bottom: 1px solid #ddd; */
+    }
+
+    .dropdown-item.notify-item span {
+        display: block;
+        line-height: 1.5;
+    }
+</style>

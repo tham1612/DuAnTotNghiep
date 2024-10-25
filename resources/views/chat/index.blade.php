@@ -265,7 +265,7 @@
                                     <!-- conversation user -->
                                     <div class="position-relative">
                                         <div class="position-relative" id="users-chat">
-                                            @if (isset($receiverId) && $receiverId && isset($user) && $user)
+                                            @if (isset($receiverId) && $receiverId && isset($userss) && $userss)
                                                 <div class="p-3 user-chat-topbar">
                                                     <div class="row align-items-center">
                                                         <!-- avt chat -->
@@ -366,7 +366,7 @@
                                         </div>
 
                                     </div>
-                                    @if (isset($receiverId) && $receiverId && isset($user) && $user)
+                                    @if (isset($receiverId) && $receiverId && isset($userss) && $userss)
                                         <div class="chat-input-section p-3 p-lg-4">
                                             <form onsubmit="return false;" enctype="multipart/form-data">
                                                 <div class="row g-0 align-items-center">

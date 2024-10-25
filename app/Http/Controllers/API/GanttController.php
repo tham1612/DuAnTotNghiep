@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Broadcast;
 class GanttController extends Controller
 {
     public function data($boardId)
-    {
+    {   
         $board = Board::with([
             'catalogs.tasks',
         ])->findOrFail($boardId);

@@ -18,15 +18,24 @@
                 overflow: hidden;
                 width: 100%;
             }
+
+            .custom_grid_background {
+                background-color: #fff3f3;
+
+            }
+
+            /* .custom_task_background {
+                    background-color: #f1edf0;
+                } */
         </style>
     </head>
 
     <body>
-        @if (session('success'))
+        {{-- @if (session('success'))
             <div class="alert alert-success m-4" id="success-alert">
                 {{ session('success') }}
             </div>
-        @endif
+        @endif --}}
 
         <div id="gantt_here" style='width:100%; height:350px;'></div>
         <br>
@@ -41,19 +50,18 @@
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
                     <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
-                    <form action="{{ route('catalogs.store') }}" method="POST" onsubmit="disableButtonOnSubmit()">
                         @csrf
-                        <h5 class="text-center">Thêm danh sách</h5>
                         <div class="mb-2">
-                            <input type="text" class="form-control" id="exampleDropdownFormEmail"
-                                placeholder="Nhập tên danh sách..."name="name" />
+                            <input type="text" class="form-control" name="name" id="nameCatalog"
+                                value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
                             <input type="hidden" name="board_id" value="{{ $board->id }}">
                         </div>
-                        <div class="mb-2 d-grid ">
-                            <button type="submit" class="btn btn-primary">
+                        <div class="mb-2 d-flex align-items-center">
+                            <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
                                 Thêm danh sách
                             </button>
-
+                            <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
+                                aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
                         </div>
                     </form>
                 </div>
@@ -65,11 +73,18 @@
                     <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
-
                         <div class="mb-2">
-                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..." required />
+                            <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..."
+                                required />
                         </div>
-
+                        <div class="mb-2">
+                            <select name="parent"  class="form-select">
+                                <option value="">Parent</option>
+                                @foreach ($tasks as $task)
+                                    <option value="{{ $task->id }}">{{ $task->text }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>
                             <input type="datetime-local" class="form-control" name="start_date" id="start_date" required />
@@ -79,16 +94,14 @@
                             <label class="form-label" for="">Ngày kết thúc</label>
                             <input type="datetime-local" class="form-control" name="end_date" id="end_date" required />
                         </div>
-
                         <div class="mb-2">
                             <select name="catalog_id" id="" class="form-select">
-                                <option value="">---Lựa chọn---</option>
-                                @foreach ($catalogs as $catalog)
+                                <option value="">Catalog</option>
+                                @foreach ($board->catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="mb-2 d-grid">
                             <button type="submit" class="btn btn-primary">Thêm Task</button>
                         </div>
@@ -111,7 +124,7 @@
             gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
             gantt.config.order_branch = true;
             // gantt.config.order_branch_free = true;
-            var boardId = "{{ $board->id}}"; // Gán giá trị ID của Board từ server
+            var boardId = "{{ $board->id }}"; // Gán giá trị ID của Board từ server
             gantt.init("gantt_here");
             gantt.load("/api/boards/" + boardId + "/tasks");
             // Cập nhật dataProcessor để thao tác với đúng URL
@@ -136,13 +149,13 @@
                     template: function(task) {
                         var catalog = getCatalogById(task.catalog_id); // Hàm lấy tên catalog
                         return catalog ? catalog.name :
-                        "Không có danh sách"; // Hiển thị tên catalog, hoặc thông báo nếu không có
+                            "Không có danh sách"; // Hiển thị tên catalog, hoặc thông báo nếu không có
                     }
                 }
             ];
 
             // Giả sử bạn đã có dữ liệu catalogs từ server
-            var catalogs = @json($catalogs);
+            var catalogs = @json($board->catalogs);
 
             // Hàm để lấy catalog theo ID
             function getCatalogById(catalog_id) {
@@ -152,7 +165,7 @@
             // Hàm để mở modal tùy chỉnh
             function openCustomModal(taskId) {
                 // Lấy phần tử modal dựa vào ID của nó
-                var modalElement = document.getElementById('detailCardModal'+ taskId);
+                var modalElement = document.getElementById('detailCardModal' + taskId);
 
                 if (modalElement) {
                     var modalInstance = new bootstrap.Modal(modalElement);
@@ -167,6 +180,12 @@
                 return false
             })
             gantt.config.buttons_left = "";
+            gantt.templates.grid_row_class = function(start, end, task) {
+                return "custom_grid_background"; // Thay đổi màu nền của hàng lưới
+            };
+            gantt.templates.task_cell_class = function(task, date) {
+                return "custom_task_background"; // Thay đổi màu nền của ô nhiệm vụ
+            };
         </script>
     </body>
 @endsection
