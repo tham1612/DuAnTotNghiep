@@ -46,7 +46,6 @@ function updateIsStar(boardId, userId,) {
 //  ============ end navbar ========
 
 
-
 // ================ task ==================
 
 // Lắng nghe sự kiện click cho các phần tử có class 'task-title'
@@ -456,7 +455,7 @@ function FormCheckListItem(checkListId) {
             if (checkList) {
                 checkList.innerHTML += listItem;
             } else {
-                console.error('Không tìm thấy phần check-list-' +response.check_list_id);
+                console.error('Không tìm thấy phần check-list-' + response.check_list_id);
             }
 
         },
@@ -471,22 +470,22 @@ function FormCheckListItem(checkListId) {
 }
 
 $('.form-check-input-checkList').on('change', function () {
-    let checkListItemId = $(this).data('checklist-id');
-    console.log(checkListItemId)
+    let checkListItemId = $(this).data('checklist-item-id');
     let checkbox = $(this);
 
     if (!checkbox.length) {
         console.log('Không tìm thấy checkbox với checkListItemId:', checkListItemId);
         return;
     }
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('is_complete', checkbox.is(':checked') ? 1 : 0);
-    formData.append('id', checkListItemId);
+    formData.append('check_list_item_id', checkListItemId);
+    formData.append('_method', 'PUT');
 
-
+    console.log(checkListItemId)
     $.ajax({
         url: `/tasks/checklist/checklistItem/${checkListItemId}/update`,
-        type: 'PUT',
+        type: 'POST',
         data: formData,
         contentType: false,
         processData: false,
@@ -518,6 +517,7 @@ function loadTaskFormAddCheckList(taskId) {
         }
     });
 }
+
 function submitAddCheckList(taskId) {
     var formData = {
         task_id: taskId,
@@ -663,33 +663,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // Lấy tất cả các checkbox
     const checkboxes = document.querySelectorAll('.form-check-input-checkList');
 
-    function updateProgressBar(taskId) {
-        // Lọc các checkbox thuộc về task có taskId cụ thể
-        const taskCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.getAttribute('data-task-id') === taskId);
-        const totalCheckboxes = taskCheckboxes.length;
-        const checkedCheckboxes = taskCheckboxes.filter(checkbox => checkbox.checked).length;
+    function updateProgressBar(checklistId) {
+        // Lọc các checkbox thuộc về checklist có checklistId cụ thể
+        const checklistCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.getAttribute('data-checklist-id') === checklistId);
+        const totalCheckboxes = checklistCheckboxes.length;
+        const checkedCheckboxes = checklistCheckboxes.filter(checkbox => checkbox.checked).length;
+
+        console.log(`Checklist ID: ${checklistId}, Total: ${totalCheckboxes}, Checked: ${checkedCheckboxes.length}`);
 
         // Tính phần trăm hoàn thành
         const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
 
-        // Cập nhật thanh tiến trình cho task tương ứng
-        const progressBar = document.getElementById('progress-bar-' + taskId);
-        progressBar.style.width = percentCompleted + '%';
-        progressBar.setAttribute('aria-valuenow', percentCompleted);
-        progressBar.innerHTML = Math.round(percentCompleted) + '%'; // Làm tròn phần trăm
+        // Cập nhật thanh tiến trình cho checklist tương ứng
+        const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
+        if (progressBar) {  // Kiểm tra thanh progress có tồn tại
+            progressBar.style.width = percentCompleted + '%';
+            progressBar.setAttribute('aria-valuenow', percentCompleted);
+            progressBar.innerHTML = Math.round(percentCompleted) + '%'; // Làm tròn phần trăm
+        } else {
+            console.error(`Progress bar not found for checklist ID: ${checklistId}`);
+        }
     }
 
     // Lắng nghe sự kiện thay đổi trên từng checkbox
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
-            const taskId = this.getAttribute('data-task-id');
-            updateProgressBar(taskId);
+            const checklistId = this.getAttribute('data-checklist-id');
+            if (checklistId) {
+                updateProgressBar(checklistId);
+            } else {
+                console.error('Checklist ID not found on checkbox');
+            }
         });
     });
 
-    // Gọi hàm để cập nhật thanh tiến trình ban đầu cho mỗi task
-    const tasks = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-task-id')));
-    tasks.forEach(taskId => updateProgressBar(taskId));
+    // Cập nhật thanh tiến trình ban đầu cho mỗi checklist
+    const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
+    checklists.forEach(checklistId => updateProgressBar(checklistId));
 });
 // ============= end checklist ======================
 
@@ -715,6 +725,7 @@ function loadChecklistItemFormAddMember(checkListItemId, boardId) {
         }
     });
 }
+
 function loadTaskFormAddDateCheckListItem(checkListItemId) {
     $.ajax({
         url: `/tasks/checklist/checklistItem/${checkListItemId}/getFormDate`, // Đường dẫn API hoặc route để lấy form
@@ -732,6 +743,7 @@ function loadTaskFormAddDateCheckListItem(checkListItemId) {
         }
     });
 }
+
 function onclickAddMemberCheckListItem(memberId, memberName, check_list_item_id) {
     addMemberToCheckListItem(memberId, memberName, check_list_item_id);
 }
@@ -800,13 +812,14 @@ function removeMemberFromCard(memberId, checklistItemId) {
         }
     });
 }
+
 function removeCheckList(checklistId) {
     console.log(checklistId);
     $.ajax({
         url: `/tasks/${checklistId}/deleteChecklist`,
         type: 'POST',
         data: {
-            id:checklistId
+            id: checklistId
         },
         success: function (response) {
             $('.list-checklist-' + checklistId).hide();
@@ -818,13 +831,14 @@ function removeCheckList(checklistId) {
         }
     });
 }
+
 function removeCheckListItem(checklistItemId) {
     console.log(checklistItemId);
     $.ajax({
         url: `/tasks/checklist/checklistItem/${checklistItemId}/delete`,
         type: 'POST',
         data: {
-            id:checklistItemId
+            id: checklistItemId
         },
         success: function (response) {
             $('.check-list-item-' + checklistItemId).hide();
@@ -836,9 +850,6 @@ function removeCheckListItem(checklistItemId) {
         }
     });
 }
-
-
-
 
 
 // ============= end checklist item member ===============
@@ -873,7 +884,7 @@ function updateReminderOptions(checklistItemId) {
 }
 
 function submitUpdateDateCheckListItem(checklistItemId) {
-    var formData = {
+    let formData = {
         start_date: $('#start_date_' + checklistItemId).val(),
         end_date: $('#end_date_' + checklistItemId).val(),
         reminder_date: $('#reminder_date_' + checklistItemId).val()
@@ -1026,6 +1037,7 @@ function loadTaskFormAddMember(taskId, boardId) {
         }
     });
 }
+
 function onclickAddMember(user_id, name, task_id) {
     addMemberToTask(user_id, name, task_id);
 }
@@ -1123,8 +1135,6 @@ function removeMemberFromTask(user_id, task_id) {
 }
 
 // ============= end member ===============
-
-
 
 
 // ============= comment ===============
