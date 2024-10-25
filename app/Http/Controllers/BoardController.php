@@ -150,8 +150,7 @@ class BoardController extends Controller
      */
     public function edit(Request $request, string $id)
     {
-
-
+       
         $board = Board::query()->findOrFail($id);
         $colors = Color::query()->get();
         session([

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\GanttController;
 use App\Http\Controllers\Api\LinkController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\Api\TaskController;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/boards/{boardId}/tasks', [GanttController::class, 'data']);
 Route::resource('task', TaskController::class);
 Route::resource('link', LinkController::class);
+Route::get('/search', [SearchController::class, 'search']);
 
 Route::prefix('inbox')
     ->as('inbox.')
