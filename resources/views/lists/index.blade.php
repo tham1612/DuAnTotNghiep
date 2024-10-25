@@ -69,7 +69,7 @@
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh; margin-top: -70px;" class=" me-3 ms-3">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;" class=" me-3 ms-3">
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
@@ -160,7 +160,7 @@
                                         <th>Ngày kết thúc</th>
                                         <th>Độ ưu tiên</th>
                                         <th>Danh sách</th>
-                                        <th>Bình luận</th>
+                                        {{-- <th>Bình luận</th> --}}
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
@@ -184,7 +184,7 @@
                                                         @if ($task->members->isNotEmpty())
                                                             @php
                                                                 // Giới hạn số thành viên hiển thị
-                                                                $maxDisplay = 3;
+                                                                $maxDisplay = 2;
                                                                 $count = 0;
                                                             @endphp
                                                             @foreach ($task->members as $member)
@@ -199,11 +199,10 @@
                                                                             <img
                                                                                 src="{{ asset('storage/' . $member->image) }}"
                                                                                 alt=""
-                                                                                class="rounded-circle avatar-xs"/>
+                                                                                class="rounded-circle avatar-xxs"/>
                                                                         @else
                                                                             <div
-                                                                                class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                                                style="width: 40px;height: 40px">
+                                                                                class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
                                                                                 {{ strtoupper(substr($member->name, 0, 1)) }}
                                                                             </div>
                                                                         @endif
@@ -217,10 +216,9 @@
                                                                    class="avatar-group-item" data-bs-toggle="tooltip"
                                                                    data-bs-placement="top"
                                                                    title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                    <div class="avatar-xs">
+                                                                    <div class="avatar-xxs">
                                                                         <div
-                                                                            class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
-                                                                            style="width: 40px; height: 40px;">
+                                                                            class="avatar-title rounded-circle avatar-xxs bg-info-subtle d-flex justify-content-center align-items-center text-black">
                                                                             +{{ $task->members->count() - $maxDisplay }}
                                                                         </div>
                                                                     </div>
@@ -305,7 +303,7 @@
 
                                                 </td>
                                             </form>
-                                            <td class="">
+                                            {{-- <td class="">
                                                 <a href="javascript: void(0);">
                                                     <button class="btn ms-3" id="dropdownMenuOffset3"
                                                             data-bs-toggle="dropdown" aria-expanded="false"
@@ -326,10 +324,10 @@
                                                                 </button>
                                                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                                             </div>
-                                                        </form>
+                                                        </form>                                                   
                                                     </div>
                                                 </a>
-                                            </td>
+                                            </td> --}}
                                             <td class="">
                                                 <a href="javascript:void(0);" class="text-muted"
                                                    id="dropdownMenuLink1" data-bs-toggle="dropdown"
@@ -486,26 +484,6 @@
                     });
                 });
 
-                // // kéo thả
-                // dragula([
-                //     document.getElementById("unassigned"),
-                //     document.getElementById("improgress"),
-                //     document.getElementById("to-do"),
-                //     document.getElementById("completed")
-                // ]);
-                // removeOnSpill: false
-                //     .on("drag", function (el) {
-                //         el.className.replace("ex-moved", "");
-                //     })
-                //     .on("drop", function (el) {
-                //         el.className += "ex-moved";
-                //     })
-                //     .on("over", function (el, container) {
-                //         container.className += "ex-over";
-                //     })
-                //     .on("out", function (el, container) {
-                //         container.className.replace("ex-over", "");
-                //     });
                 function updateTaskList(taskId) {
                     var formData = {
                         catalog_id: $('#catalog_id_' + taskId).val(),

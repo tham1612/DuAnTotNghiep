@@ -116,13 +116,13 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);
         Route::put('/update-event/{id}', [TaskController::class, 'updateEvent'])->name('update');
-//        Route::put('/update-dateTask/{id}', [TaskController::class, 'updateEvent'])->name('updateDateTask');
+        //        Route::put('/update-dateTask/{id}', [TaskController::class, 'updateEvent'])->name('updateDateTask');
         Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
-//        Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
+        //        Route::put('/tasks/updateCalendar/{id}', [TaskController::class, 'updateCalendar'])->name('update.calendar');
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
         Route::post('/tasks/addMember', [TaskController::class, 'addMemberTask'])
             ->name('tasks.addMemberTask');
@@ -150,7 +150,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
 
-//       task tag
+        //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
             ->name('tags.create');
         Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
@@ -162,11 +162,13 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
             ->name('attachments.destroy');
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
-            ->name('comments.create');
+            ->name('comments.create'); 
+        Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
+            ->name('comments.destroy');
     });
 
 
-Route::get('inboxs', function () {
+Route::middleware('auth')->get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 Route::get('/ai-chat', [ChatAIController::class, 'chat']);
