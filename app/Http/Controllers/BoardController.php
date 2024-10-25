@@ -106,6 +106,10 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -132,7 +136,7 @@ class BoardController extends Controller
 
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
-            return redirect()->route('home');
+            return redirect()->route('boards.index');
         } catch (\Exception $exception) {
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
@@ -165,22 +169,6 @@ class BoardController extends Controller
 
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
-        //        $board->load([
-        //            'tags',
-        //            'users',
-        //            'catalogs',
-        //            'catalogs.tasks' => function ($query) {
-        //                $query->orderBy('position', 'asc');
-        //            },
-        //            'catalogs.tasks.catalog:id,name',
-        //            'catalogs.tasks.members',
-        //            'catalogs.tasks.checkList',
-        //            'catalogs.tasks.checkList.checkListItems',
-        //            'catalogs.tasks.checkList.checkListItems.checkListItemMembers',
-        //            'catalogs.tasks.tags',
-        //            'catalogs.tasks.followMembers'
-        //        ]);
-
         $board->load([
             'members',
             'tags',
@@ -195,11 +183,11 @@ class BoardController extends Controller
                             'checkLists.checkListItems',
                             'checkLists.checkListItems.checkListItemMembers',
                             'checkLists.checkListItems.checkListItemMembers.user',
-                            'checkLists.checkListItems.members',
                             'tags',
                             'followMembers',
                             'attachments',
-                            'taskComments'
+                            'taskComments',
+                            'taskComments.user',
                         ])->where(function ($subQuery) use ($request) {
 
                             // Điều kiện 1: Lọc thành viên
@@ -272,6 +260,12 @@ class BoardController extends Controller
             ->get();
 
 
+        $catalogs = $board->catalogs;
+        $tasks = $catalogs->pluck('tasks')->flatten();
+        //        $board = Board::find($boardId); // Truy xuất thông tin của board từ bảng boards
+//        $boardName = $board->name; // Lấy tên của board
+
+
         $boardMembers = $boardMemberMain->filter(function ($member) {
             return $member->authorize->value !== AuthorizeEnum::Owner()->value &&
                 $member->authorize->value !== AuthorizeEnum::Sub_Owner()->value &&
@@ -305,7 +299,6 @@ class BoardController extends Controller
         $boardMemberChecked = $boardMemberMain->filter(function ($member) {
             return $member->user_id == Auth::id();
         })->first();
-
         // Lấy danh sách thành viên của workspace mà chưa phải là thành viên của bảng
         $wspMember = WorkspaceMember::query()
             ->join('users', 'users.id', '=', 'workspace_members.user_id')
@@ -319,17 +312,6 @@ class BoardController extends Controller
             ->where('workspace_members.authorize', '!=', 'Viewer') // Lọc những người không phải Viewer
             ->get();
 
-        $tasks = Task::where('end_date', '>=', Carbon::tomorrow())
-            ->where('end_date', '<', Carbon::tomorrow()->addDays(1))
-            ->where('progress', '<', 100) // Chỉ lấy task chưa hoàn thành
-            ->with(['members', 'catalog.board'])->get();
-
-        foreach ($tasks as $task) {
-            $task->members->each(function ($user) use ($task) {
-                $user->notify(new TaskDueNotification($task));
-            });
-        }
-
         switch ($viewType) {
             case 'dashboard':
                 return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
@@ -338,7 +320,7 @@ class BoardController extends Controller
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'tasks', 'boardMemberChecked'));
 
             case 'table':
                 return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
@@ -429,7 +411,8 @@ class BoardController extends Controller
 
         return response()->json([
             'message' => 'Board đã được cập nhật thành công',
-            'msg' => true
+            'msg' => true,
+            'board' => $board
         ]);
     }
 
@@ -478,7 +461,12 @@ class BoardController extends Controller
     //thông báo done
     public function acceptMember(Request $request)
     {
+
         $user = User::find($request->user_id);
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         try {
             BoardMember::query()
                 ->where('user_id', $request->user_id)
@@ -511,6 +499,10 @@ class BoardController extends Controller
     {
         $boardMember = BoardMember::with(['user', 'board'])->find($bm_id);
 
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         try {
             BoardMember::find($bm_id)->delete();
             $title = "Từ chối lời mời";
@@ -529,6 +521,10 @@ class BoardController extends Controller
     //thông báo done
     public function activateMember($boardMemberId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         //lấy được thằng boardmember đang bị xóa || lấy được cả thằng boardID || lấy được cả wspID
         $boardMember = BoardMember::where('id', $boardMemberId)->with('board', 'user')->first();
         $boardOneMemberChecked = BoardMember::where('user_id', $boardMember->user_id)->get();
@@ -578,6 +574,10 @@ class BoardController extends Controller
     public function upgradeMemberShip($boardMemberId)
     {
         $boardMember = BoardMember::with(['user', 'board'])->find($boardMemberId);
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         BoardMember::find($boardMemberId)->update([
             'authorize' => AuthorizeEnum::Sub_Owner()
         ]);
@@ -809,9 +809,7 @@ class BoardController extends Controller
                         }
                     }
                 }
-            }
-
-            //xử lý khi người dùng không có tài khoản
+            } //xử lý khi người dùng không có tài khoản
             else {
                 //xử lý khi người dùng không có tài khoản
                 Auth::logout();

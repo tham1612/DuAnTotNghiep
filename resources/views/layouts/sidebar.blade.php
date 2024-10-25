@@ -207,7 +207,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
+                    <a class="nav-link menu-link"
+                        href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>
@@ -223,7 +224,8 @@
                         <li class="nav-item">
                             <div class="nav-link menu-link d-flex text-center align-items-center"
                                 style="justify-content: space-between;">
-                                <a class="" href="{{ route('b.edit', ['id' => $board->id]) }}">
+                                <a class=""
+                                    href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                             <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
@@ -235,7 +237,8 @@
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>
                                         @endif
-                                        <span class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
+                                        <span id="name-board-{{ $board->id }}"
+                                            class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
                                     </div>
                                 </a>
                                 @php
@@ -256,61 +259,71 @@
                                         @if ($memberIsStar == 1) active @endif"
                                         onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
                                         id="is_star_{{ $board->id }}">
-                                        <span class="avatar-title bg-transparent fs-15">
-                                            <i class="ri-star-fill fs-20 mx-2"></i>
-                                        </span>
-                                    </button>
-                                    <a class="text-reset dropdown-btn" data-bs-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <span class="fw-medium text-muted fs-12">
-                                            <i class="ri-more-fill fs-20" title=""></i>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-start">
-                                        <a class="dropdown-item">
-                                            <input type="text" name="text"
-                                                class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                id="name_board_{{ $board->id }}" value="{{ $board->name }}"
-                                                onchange="updateBoard({{ $board->id }})" />
+                                        <button type="button"
+                                            class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                        @if ($memberIsStar == 1) active @endif"
+                                            onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                            id="2_is_star_{{ $board->id }}">
+                                            <span class="avatar-title bg-transparent fs-15">
+                                                <i class="ri-star-fill fs-20 mx-2"></i>
+                                            </span>
+                                        </button>
+                                        <a class="text-reset dropdown-btn" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <span class="fw-medium text-muted fs-12">
+                                                <i class="ri-more-fill fs-20" title=""></i>
+                                            </span>
                                         </a>
-                                        <div class="dropdown-item ms-2 me-2">
-                                            <div class="mb-2">
-                                                <label for="">Ảnh của bảng</label>
-
-                                                <input type="file" class="form-control" name="image"
-                                                    id="image_board_{{ $board->id }}" value="{{ $board->image }}"
+                                        <div class="dropdown-menu dropdown-menu-start">
+                                            <a class="dropdown-item">
+                                                <input type="text" name="text"
+                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
                                                     onchange="updateBoard({{ $board->id }})" />
+                                                <input type="text" name="name"
+                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
+                                                    onchange="updateBoard({{ $board->id }})" />
+                                            </a>
+                                            <div class="dropdown-item ms-2 me-2">
+                                                <div class="mb-2">
+                                                    <label for="">Ảnh của bảng</label>
+
+                                                    <input type="file" class="form-control" name="image"
+                                                        id="image_board_{{ $board->id }}"
+                                                        value="{{ $board->image }}"
+                                                        onchange="updateBoard({{ $board->id }})" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Đóng bảng -->
+                                            <div
+                                                class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
+                                                <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
+                                                    style="height: 30px; background-color: #c7c7c7;"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ri-archive-line"></i>
+                                                    <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
+                                                </div>
+                                                <!-- Dropdown Menu con -->
+                                                <ul class="dropdown-menu dropdown-menu-end w-100"
+                                                    style="left: 100%; top: 0;">
+                                                    <h5 class="text-center">Đóng bảng?</h5>
+                                                    <li>
+                                                        <p class="dropdown-item-text">
+                                                            Bạn có thể tìm và mở lại các bảng đã đóng ở cuối
+                                                            <a
+                                                                href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">trang
+                                                                các bảng của bạn</a>.
+                                                        </p>
+
+                                                    </li>
+                                                    <li class="d-flex justify-content-center">
+                                                        <button class="btn btn-danger" type="button">Đóng</button>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
-
-                                        <!-- Đóng bảng -->
-                                        <div
-                                            class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
-                                            <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
-                                                style="height: 30px; background-color: #c7c7c7;"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ri-archive-line"></i>
-                                                <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
-                                            </div>
-                                            <!-- Dropdown Menu con -->
-                                            <ul class="dropdown-menu dropdown-menu-end w-100"
-                                                style="left: 100%; top: 0;">
-                                                <h5 class="text-center">Đóng bảng?</h5>
-                                                <li>
-                                                    <p class="dropdown-item-text">
-                                                        Bạn có thể tìm và mở lại các bảng đã đóng ở cuối
-                                                        <a
-                                                            href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">trang
-                                                            các bảng của bạn</a>.
-                                                    </p>
-
-                                                </li>
-                                                <li class="d-flex justify-content-center">
-                                                    <button class="btn btn-danger" type="button">Đóng</button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </li>

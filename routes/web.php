@@ -85,7 +85,8 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('user');
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
-        Route::prefix('b')
+        Route::group(['middleware' => ['auth', 'check.board.access']], function () {
+                Route::prefix('b')
             ->as('b.')
             ->group(function () {
                 Route::get('create', [BoardController::class, 'create'])->name('create');
@@ -105,6 +106,8 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
                 Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
             });
+         });
+
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');
         Route::resource('catalogs', CatalogControler::class);
@@ -146,8 +149,6 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
-        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
-            ->name('checklist.getFormAddMember');
 
         //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
@@ -161,7 +162,9 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
             ->name('attachments.destroy');
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
-            ->name('comments.create');
+            ->name('comments.create'); 
+        Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
+            ->name('comments.destroy');
     });
 
 

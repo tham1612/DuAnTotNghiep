@@ -66,7 +66,8 @@ class User extends Authenticatable
 
     public function Board()
     {
-        return $this->belongsToMany(Board::class);
+        return $this->belongsToMany(Board::class,'board_members', 'user_id', 'board_id')
+        ->withPivot('authorize');
     }
 
     public function BoardMember()
@@ -80,6 +81,11 @@ class User extends Authenticatable
     public function checklistItems()
     {
         return $this->belongsToMany(ChecklistItem::class, 'check_list_item_members', 'user_id', 'check_list_item_id');
+
+    }
+    public function taskComments()
+    {
+        return $this->hasMany(TaskComment::class);
     }
 
     //    kieemr tra xem nguoiwf dung dax cso workspace chuaw

@@ -37,7 +37,6 @@ class CreateGoogleApiClientEvent implements ShouldQueue
      */
     public function handle()
     {
-        Log::debug(Auth::id());
         $client = $this->getClient();
         //        $accessToken = User::query()->where('id', auth()->id())->value('remember_token'); // lay ra token trong db
         $accessToken = $this->accessToken;

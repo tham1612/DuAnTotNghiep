@@ -1,7 +1,7 @@
 <!-- chia sẻ bảng & thêm thành viên -->
 <div class="modal fade"
-    id="{{ 'create-board-home-modal' ? 'create-board-home-modal' : 'create-board-template-home-modal' }}" tabindex="-1"
-    aria-labelledby="create-board-home-modal-label" aria-hidden="true">
+     id="{{ 'create-board-home-modal' ? 'create-board-home-modal' : 'create-board-template-home-modal' }}" tabindex="-1"
+     aria-labelledby="create-board-home-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content border-0" style="width: 125%;">
             <div class="modal-header p-3 d-grid" style="grid-template-columns: 1fr auto 1fr;">
@@ -10,7 +10,7 @@
                     Tạo bảng
                 </h5>
                 <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body" style="margin-top: -50px">
                 @php
@@ -29,10 +29,10 @@
                     <div class="mt-3">
                         <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('board.name') is-invalid @enderror"
-                        id="boardName" placeholder="Nhập tiêu đề bảng" value="{{ old('board.name') }}"
-                            name="name" />
+                               id="boardName" placeholder="Nhập tiêu đề bảng" value="{{ old('board.name') }}"
+                               name="name" />
                         @error('board.name')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mt-3">
@@ -65,7 +65,7 @@
 </div>
 
 <script>
-     document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const forms = document.querySelectorAll('.formItem');
 
         forms.forEach((form) => {

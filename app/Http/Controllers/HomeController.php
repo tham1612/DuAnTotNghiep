@@ -31,7 +31,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
+
         $userId = Auth::id();
 
         // Lấy tất cả các bảng mà người dùng tạo hoặc thuộc về workspace
@@ -41,18 +41,18 @@ class HomeController extends Controller
         ->with(['workspace', 'boardMembers']) // Tải thông tin workspace và boardMembers
         ->get()
         ->map(function ($board) {
-            // Tính tổng số thành viên trong bảng 
+            // Tính tổng số thành viên trong bảng
             $board->total_members = $board->boardMembers->count();
-    
+
             // Kiểm tra xem bảng có được đánh dấu sao không
             $board->is_star = $board->boardMembers->contains(fn($member) => $member->is_star == 1);
-    
+
             // Kiểm tra follow = 1
             $board->follow = $board->boardMembers->contains(fn($member) => $member->follow == 1);
-    
+
             // Đếm số thành viên theo dõi bảng
             $board->total_followers = $board->boardMembers->where('follow', 1)->count();
-    
+
             return $board;
         });
         // dd($boards);
@@ -87,20 +87,20 @@ class HomeController extends Controller
         ->whereIn('catalog_id', function ($query) use ($userId) {
             $query->select('catalogs.id')
                 ->from('catalogs')
-                ->join('boards', 'catalogs.board_id', '=', 'boards.id') 
-                ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id') 
+                ->join('boards', 'catalogs.board_id', '=', 'boards.id')
+                ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
                 ->join('workspace_members', 'workspaces.id', '=', 'workspace_members.workspace_id')
                 ->where('workspace_members.user_id', $userId)
                 ->where('workspace_members.is_active', 1)
                 ->whereNull('workspace_members.deleted_at');
         })
-        ->get() 
+        ->get()
         ->map(function ($task) {
             // Lấy trực tiếp thông tin từ quan hệ của task
             $task->catalog_name = $task->catalog->name;
             $task->board_name = $task->catalog->board->name;
             $task->board_id = $task->catalog->board->id;
-            
+
             return $task;
         });
 
@@ -136,6 +136,10 @@ class HomeController extends Controller
         $activities = Activity::whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
             ->orderBy('created_at', 'desc')
             ->get();
+            
+        $currentWorkspace = WorkspaceMember::where('user_id', $userId)
+            ->where('is_active', 1)
+            ->first();    
 
         // Truyền các biến này sang view
         return view('homes.home', compact(
@@ -150,7 +154,8 @@ class HomeController extends Controller
             'overdueTasks',
             'upcomingTasks',
             'myAssignedTasks',
-            'tasksExpiringSoon'
+            'tasksExpiringSoon',
+            'currentWorkspace'
         ));
     }
 }
