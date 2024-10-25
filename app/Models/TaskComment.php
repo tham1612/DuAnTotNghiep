@@ -17,4 +17,18 @@ class TaskComment extends Model
         'image',
         'parent_id',
     ];
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(TaskComment::class, 'parent_id');
+    }
 }

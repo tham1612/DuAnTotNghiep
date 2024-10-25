@@ -142,14 +142,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // cập nhật mô tả, ảnh, checkbox
 function updateTask2(taskId) {
-    var description = editors['description_' + taskId].getData();
-    var checkbox = document.getElementById('due_date_checkbox_' + taskId);
-    var image = document.getElementById('image_task_' + taskId);
+    var description = editors['description_' + taskId] ? editors['description_' + taskId].getData() : '';
+    let checkbox = document.getElementById('due_date_checkbox_' + taskId);
+    let image = document.getElementById('image_task_' + taskId);
 
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('description', description);
     formData.append('text', $('#text_' + taskId).val());
-    formData.append('progress', checkbox.checked ? 100 : 0);
+    if (checkbox) {
+        formData.append('progress', checkbox.checked ? 100 : 0);
+    } else {
+        console.log('Checkbox không tồn tại');
+    }
+    // formData.append('progress', checkbox.checked ? 100 : 0);
 
 
     // Kiểm tra và thêm file ảnh nếu có
@@ -827,7 +832,7 @@ function removeCheckListItem(checklistItemId) {
             id:checklistItemId
         },
         success: function (response) {
-            $('.check-list-item-' + checklistItemId).hide();
+            $('.check-list-item-' + checklistItemId).remove();
             console.log('checklistItem đã được xóa thành công .');
         },
         error: function (xhr) {
@@ -1064,22 +1069,7 @@ function addMemberToTask(user_id, name, task_id) {
                     <i class="ri-close-line fs-20" onclick="removeMemberFromTask(${user_id}, ${task_id})"></i>
                 </li>
             `;
-            // var cardMembersTask = document.getElementById('list-member-task' );
-            // var listTaskItem = `
-            //     <a href="javascript: void(0);"
-            //        class="avatar-group-item"
-            //      data-bs-toggle="tooltip"
-            //      data-bs-placement="top"
-            //      title="${name}">
-            //           <div class="avatar-sm">
-            //               <div
-            //                  class="avatar-title rounded-circle bg-info-subtle text-primary"
-            //                   style="width: 35px;height: 35px">
-            //                  ${name.charAt(0).toUpperCase()}
-            //               </div>
-            //           </div>
-            //   </a>
-            // `;
+
             if (cardMembersList) {
                 cardMembersList.innerHTML += listItem;
             } else {
@@ -1129,7 +1119,7 @@ function removeMemberFromTask(user_id, task_id) {
 
 // ============= comment ===============
 function addTaskComment(taskId, user_id) {
-    var content = editors['comment_task_' + taskId].getData();
+    var content = editors['comment_task_' + taskId] ? editors['comment_task_' + taskId].getData() : '';
     var formData = {
         content: content,
         user_id: user_id,
@@ -1142,7 +1132,67 @@ function addTaskComment(taskId, user_id) {
         data: formData,
         success: function (response) {
             console.log('taskComment đã được thêm thành công!', response);
-            $(this).find('button[type="submit"]').prop('disabled', false);
+
+            let taskComment = document.getElementById('task-comment-' + taskId);
+            let createdAt = new Date(response.comment.created_at);
+            let content = response.comment.content; // Comment content
+
+            // Lấy thời gian hiện tại
+            let now = new Date();
+
+            // Tính số giờ chênh lệch giữa hiện tại và thời gian tạo comment
+            let diffInHours = Math.abs(now - createdAt) / 36e5;
+
+            // Tính toán "X giờ trước" hoặc định dạng đầy đủ
+            let timeAgo;
+            if (diffInHours < 24) {
+                let diffInMinutes = Math.floor((now - createdAt) / (1000 * 60)); // Tính phút chênh lệch
+                if (diffInMinutes < 60) {
+                    timeAgo = `${diffInMinutes} phút trước`;
+                } else {
+                    timeAgo = `${Math.floor(diffInMinutes / 60)} giờ trước`;
+                }
+            } else {
+                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).
+                slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
+                ${createdAt.getFullYear()}`;
+            }
+            var btnXoa = '';
+            if (response.userOwnerID === formData.user_id || response.userId === formData.user_id) {
+                btnXoa = `
+                       <span class="mx-1">-</span>
+                        <span data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Xóa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                            <h5 class="text-center">Bạn có muốn xóa bình luận</h5>
+                            <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+                            <button class="btn btn-danger w-100" onclick="removeComment(${response.comment.id})">Xóa bình luận</button>
+                        </div>
+                    `;
+             }
+
+
+            let taskComment2 = `
+        <div class="d-flex mt-2 conten-comment-${response.comment.id}">
+                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                     style="width: 40px;height: 40px">
+                    ${response.userName.charAt(0).toUpperCase()}
+                 </div>
+            <section class="ms-2 w-100">
+                <strong>${response.userName}</strong>
+                <span class="fs-11">${timeAgo}</span>
+                <div class="bg-info-subtle p-1 rounded ps-2">${content}</div>
+                <div class="fs-11">
+                    <span>Trả lời</span> ${btnXoa}
+
+                </div>
+            </section>
+          </div>
+         `;
+
+            taskComment.innerHTML += taskComment2;
+
+
+        $(this).find('button[type="submit"]').prop('disabled', false);
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -1152,6 +1202,24 @@ function addTaskComment(taskId, user_id) {
     });
 
     return false;
+}
+function removeComment(commentId) {
+    console.log(commentId);
+    $.ajax({
+        url: `/tasks/comments/{commentId}/destroy`,
+        type: 'POST',
+        data: {
+            id:commentId
+        },
+        success: function (response) {
+            document.querySelector(`.conten-comment-${commentId}`).remove();
+            console.log('cmt đã được xóa thành công .');
+        },
+        error: function (xhr) {
+            alert('Có lỗi xảy ra khi xóa cmt.');
+            console.log(xhr.responseText);
+        }
+    });
 }
 
 // ============= end comment ===============
