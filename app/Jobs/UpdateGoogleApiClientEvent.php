@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateGoogleApiClientEvent implements ShouldQueue
 {
@@ -37,6 +38,7 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
      */
     public function handle()
     {
+//        dd($this->attendees);
         $client = $this->getClient();
 //        $accessToken = User::query()->where('id', auth()->id())->value('remember_token');
         $accessToken = $this->accessToken;
@@ -59,8 +61,8 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
 
             $event = $service->events->get('primary', $this->eventId); // Lấy sự kiện cần cập nhật
 
-            $event->setSummary($this->eventData['summary']);
-            $event->setDescription($this->eventData['description']);
+            $event->setSummary(isset($this->eventData['summary']) ? $this->eventData['summary'] : '');
+            $event->setDescription(isset($this->eventData['description']) ? $this->eventData['description'] : '');
 
             // Tạo đối tượng Google_Service_Calendar_EventDateTime cho thời gian bắt đầu
             if (isset($this->eventData['start']['dateTime']) || isset($this->eventData['start']['dateTime'])) {
@@ -80,9 +82,39 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
 
 
             if (!empty($this->attendees)) {
-                $event->setAttendees($this->attendees); // Thêm người tham gia (attendees)
-            }
+                // Giả sử $this->attendees chỉ chứa một người tham gia mới mỗi lần
+                $newAttendee = $this->attendees[0]; // Lấy người tham gia mới
+                $email = $newAttendee['email'] ?? null; // Lấy email của người mới
 
+                // Lấy danh sách người tham gia hiện tại từ sự kiện (nếu có) hoặc khởi tạo mảng trống
+                $currentAttendees = $event->getAttendees() ?? [];
+
+                // Tạo mảng kết hợp chứa email duy nhất làm key, giá trị là thông tin người tham gia
+                $uniqueAttendees = [];
+
+                // Đưa tất cả người tham gia hiện tại vào mảng $uniqueAttendees với email làm key
+                foreach ($currentAttendees as $attendee) {
+                    if (isset($attendee['email'])) {
+                        $uniqueAttendees[$attendee['email']] = $attendee;
+                    }
+                }
+
+                // Kiểm tra nếu email của người tham gia mới đã có trong danh sách
+                if ($email && array_key_exists($email, $uniqueAttendees)) {
+                    // Xóa người tham gia có email trùng lặp khỏi danh sách
+                    unset($uniqueAttendees[$email]);
+                    Log::debug("Xóa người tham gia trùng lặp: {$email}");
+                } else {
+                    // Thêm người tham gia mới vào danh sách nếu không có trùng lặp
+                    if ($email) {
+                        $uniqueAttendees[$email] = $newAttendee;
+                        Log::debug("Thêm người tham gia mới: {$newAttendee['email']}");
+                    }
+                }
+
+                // Cập nhật danh sách người tham gia không trùng lặp cho sự kiện
+                $event->setAttendees(array_values($uniqueAttendees));
+            }
             $calendarId = 'primary'; // Hoặc sử dụng calendarId khác nếu cần
             $service->events->update($calendarId, $this->eventId, $event);
 

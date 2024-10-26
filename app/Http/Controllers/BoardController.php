@@ -128,7 +128,7 @@ class BoardController extends Controller
 
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
-            return redirect()->route('boards.index');
+            return redirect()->route('b.index');
         } catch (\Exception $exception) {
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
