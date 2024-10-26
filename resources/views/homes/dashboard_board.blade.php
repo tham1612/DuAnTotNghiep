@@ -64,6 +64,12 @@
     Dashbroad_board
 @endsection
 @section('main')
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -335,11 +341,13 @@
                                             </td>
                                             <!-- Ngày bắt đầu -->
                                             <td class="text-muted">
-                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
+                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
+
                                             </td>
                                             <!-- Ngày kết thúc -->
                                             <td class="text-muted">
-                                                {{ \Carbon\Carbon::parse($task->end_date)->format('d M Y') }}
+                                                {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+
                                             </td>
 
                                             <!-- Độ ưu tiên -->
@@ -382,8 +390,9 @@
                                 <th>Tên card</th>
                                 <th>Thành viên</th>
                                 <th>Ngày hết hạn</th>
-                                <th>Danh sách</th>
                                 <th>Độ ưu tiên</th>
+                                <th>Danh sách</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -398,7 +407,7 @@
                                                 @if ($task->members->isNotEmpty())
                                                     @php
                                                         // Giới hạn số thành viên hiển thị
-                                                        $maxDisplay = 3;
+                                                        $maxDisplay = 2;
                                                         $count = 0;
                                                     @endphp
                                                     @foreach ($task->members as $member)
@@ -435,8 +444,9 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td>{{ Carbon::parse($task->end_date)->format('d M, Y') }}</td>
-                                        <td>{{ $task->catalog->name ?? 'Chưa có danh sách' }}</td>
+                                        <td> {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                        </td>
+
                                         <!-- Hiển thị tên danh sách -->
                                         <td>
                                             <span
@@ -448,6 +458,7 @@
                                                 {{ $task->priority }}
                                             </span>
                                         </td> <!-- Hiển thị độ ưu tiên với màu sắc tương ứng -->
+                                        <td>{{ $task->catalog->name ?? 'Chưa có danh sách' }}</td>
                                     </tr>
                                 @endforeach
                             @endif

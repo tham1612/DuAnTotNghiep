@@ -32,7 +32,7 @@ class Board extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id');
+        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id')->withPivot('authorize');
     }
 
     public function workspace()
@@ -43,7 +43,7 @@ class Board extends Model
     // Định nghĩa quan hệ với BoardMembers nếu cần
     public function boardMembers()
     {
-        return $this->hasMany(BoardMember::class)->where('is_accept_invite', 0);
+        return $this->hasMany(BoardMember::class)->where('is_accept_invite', null);
     }
 
     public function catalogs()
@@ -75,7 +75,7 @@ class Board extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id')// Nếu bảng `board_members` có cột `is_star`
-            ->withPivot('is_star')
+        ->withPivot('authorize', 'is_star', 'follow', 'invite')
             ->withTimestamps();    // Nếu bảng trung gian có các cột timestamps
     }
 }

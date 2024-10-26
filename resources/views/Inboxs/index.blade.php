@@ -1,6 +1,21 @@
 @extends('layouts.masterMain')
 
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
     <div class="email-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
         <!-- end email-menu-sidebar -->
 

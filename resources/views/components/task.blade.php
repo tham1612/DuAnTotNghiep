@@ -268,7 +268,7 @@
                                             <i class="ri-line-chart-line fs-22"></i>
                                             <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                                         </section>
-                                        <div class=" w-100">
+                                        <div class=" w-100" id="task-comment-{{$task->id}}">
                                             <div class="d-flex">
                                                 @if (auth()->user()->image)
                                                     <img class="rounded header-profile-user object-fit-cover"
@@ -276,8 +276,8 @@
                                                          alt="Avatar"/>
                                                 @else
                                                     <div
-                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                            style="width: 40px;height: 40px">
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        style="width: 40px;height: 40px">
                                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                                     </div>
                                                 @endif
@@ -305,20 +305,20 @@
                                             </div>
                                             @foreach($task->task_comments as $comment)
                                                 @php $comment = json_decode(json_encode($comment)) @endphp
-                                                <div class="d-flex mt-2">
-                                                    @if (auth()->user()->image)
+                                                <div class="d-flex mt-2 conten-comment-{{$comment->id}}">
+                                                    @if ($comment->user->image)
                                                         <img class="rounded header-profile-user object-fit-cover"
-                                                             src="{{ asset('storage/' . auth()->user()->image) }}"
+                                                             src="{{ asset('storage/' . $comment->user->image) }}"
                                                              alt="Avatar"/>
                                                     @else
                                                         <div
                                                             class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                             style="width: 40px;height: 40px">
-                                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                                            {{ strtoupper(substr($comment->user->name, 0, 1)) }}
                                                         </div>
                                                     @endif
                                                     <section class="ms-2 w-100">
-                                                        <strong>{{auth()->user()->name}}</strong>
+                                                        <strong>{{$comment->user->name}}</strong>
                                                         @php
                                                             $createdAt = \Carbon\Carbon::parse($comment->created_at);
                                                             $now = \Carbon\Carbon::now();
@@ -335,13 +335,27 @@
                                                         <div
                                                             class="bg-info-subtle p-1 rounded ps-2">{!! $comment->content !!}
                                                         </div>
-                                                        <div class="fs-11"><span>Trả lời</span><span
-                                                                class="mx-1">-</span><span>Xóa</span></div>
+                                                        
+                                                        <div class="fs-11"><span>Trả lời</span>
+                                                                @php $userOwner = $board->members->firstWhere('pivot.authorize', 'Owner');  @endphp
+                                                                @if(auth()->id()===$comment->user->id || auth()->id()=== $userOwner->id )
+                                                                <span class="mx-1">-</span>
+                                                                  <span data-bs-toggle="dropdown"
+                                                                  aria-haspopup="true"
+                                                                  aria-expanded="false">Xóa</span>
+                                                            <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                <h5 class="text-center">Bạn có muốn xóa bình luận</h5>
+
+                                                                <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+
+                                                                <button class="btn btn-danger w-100" onclick="removeComment({{$comment->id}})">Xóa bình luận
+                                                                </button>
+                                                            </div>
+                                                               @endif
+                                                        </div>
                                                     </section>
                                                 </div>
                                             @endforeach
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -358,7 +372,7 @@
                                             </p>
                                             <!--dropdown thành viên-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" id="dropdown-content-add-member-task-{{ $task->id }}">
-{{--                                                @include('dropdowns.member')--}}
+{{--                                              dropdowns.member--}}
                                             </div>
                                         </div>
                                     </div>
@@ -572,7 +586,7 @@
                 // Lắng nghe sự kiện change của editor
                 editor.model.document.on('change:data', debounce(() => {
                     const taskId = editorElement.id.split('_')[1];
-                    updateTask2(taskId);
+                    // updateTask2(taskId);
                 }, 1000));
             })
             .catch(error => {

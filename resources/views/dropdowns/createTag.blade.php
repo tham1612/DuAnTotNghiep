@@ -22,67 +22,9 @@
     </div>
 
     <div class="mt-3">
-        <button type="button" class="create-btn btn btn-outline-primary waves-effect waves-light create-tag-form" disabled>
+        <button type="button" class="btn btn-outline-primary waves-effect waves-light create-tag-form">
             Tạo mới
         </button>
     </div>
 </form>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Sử dụng class để chọn tất cả các form trên toàn trang
-        const forms = document.querySelectorAll('.tag-form');
-
-        // Hàm bật/tắt nút "Tạo mới"
-        function toggleCreateButton(nameInput, selectedColor, createBtn) {
-            createBtn.disabled = !(nameInput.value.trim() && selectedColor);
-        }
-
-        // Lặp qua tất cả các form trên trang web
-        forms.forEach(function(form) {
-            const nameInput = form.querySelector('.name-input');
-            const createBtn = form.querySelector('.create-btn');
-            const colorOptions = form.querySelectorAll('.color-option');
-            const selectedColorInput = form.querySelector('.selected-color');
-
-            let selectedColor = ''; // Để lưu màu đã chọn
-
-            // Xử lý sự kiện nhập tên nhãn
-            nameInput.addEventListener('input', function() {
-                toggleCreateButton(nameInput, selectedColor, createBtn);
-            });
-
-            // Xử lý sự kiện chọn màu
-            colorOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Xóa chọn màu từ tất cả các ô
-                    colorOptions.forEach(opt => opt.classList.remove('selected-tag'));
-
-                    // Đánh dấu ô màu được chọn
-                    this.classList.add('selected-tag');
-
-                    // Lưu màu đã chọn và gán cho input ẩn
-                    selectedColor = this.getAttribute('data-color');
-                    selectedColorInput.value = selectedColor;
-
-                    // Kiểm tra xem cả tên và màu đều đã được cung cấp
-                    toggleCreateButton(nameInput, selectedColor, createBtn);
-                });
-            });
-
-            // Ngăn gửi form nhiều lần
-            createBtn.addEventListener('click', function() {
-                if (!createBtn.disabled) {
-                    createBtn.disabled = true; // Disable nút sau lần click đầu tiên
-                    form.submit(); // Gửi form
-                }
-            });
-        });
-    });
-</script>
-
-<style>
-    .color-option.selected-tag .color-box {
-        border: 2px solid black; /* Thêm viền để làm nổi bật màu đã chọn */
-    }
-</style>

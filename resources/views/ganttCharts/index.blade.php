@@ -1,6 +1,21 @@
 @extends('layouts.masterMain')
 
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
     <!DOCTYPE html>
 
     <head>
@@ -73,24 +88,18 @@
                     <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
-
                         <div class="mb-2">
                             <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..."
                                 required />
                         </div>
-
-{{--                        <div class="mb-2">--}}
-{{--                            <select class="form-select">--}}
-{{--                                <option value="">---Lựa chọn---</option>--}}
-{{--                                @foreach ($catalogs as $catalog)--}}
-{{--                                    @foreach ($catalog->tasks as $task)--}}
-{{--                                        <option value="{{ $task->id }}">{{ $task->text }}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                @endforeach--}}
-{{--                               --}}
-{{--                            </select>--}}
-{{--                        </div>--}}
-
+                        <div class="mb-2">
+                            <select name="parent"  class="form-select">
+                                <option value="">Parent</option>
+                                @foreach ($tasks as $task)
+                                    <option value="{{ $task->id }}">{{ $task->text }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>
                             <input type="datetime-local" class="form-control" name="start_date" id="start_date" required />
@@ -100,16 +109,14 @@
                             <label class="form-label" for="">Ngày kết thúc</label>
                             <input type="datetime-local" class="form-control" name="end_date" id="end_date" required />
                         </div>
-
                         <div class="mb-2">
                             <select name="catalog_id" id="" class="form-select">
-                                <option value="">---Lựa chọn---</option>
+                                <option value="">Catalog</option>
                                 @foreach ($board->catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="mb-2 d-grid">
                             <button type="submit" class="btn btn-primary">Thêm Task</button>
                         </div>

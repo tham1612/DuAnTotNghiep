@@ -51,6 +51,10 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
         if (isset($data['start']) || isset($data['end'])) {
             $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
@@ -98,7 +102,13 @@ class TaskController extends Controller
 
     public function update(string $id, UpdateTaskRequest $request)
     {
-//        dd($request->all());
+
+
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
@@ -163,6 +173,10 @@ class TaskController extends Controller
 //    }
     public function updatePosition(Request $request, string $id)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->all();
         $model = Task::query()->findOrFail($id);
         $data['position'] = $request->position + 1;
@@ -264,6 +278,10 @@ class TaskController extends Controller
 
     public function updateFolow(Request $request, string $id)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->only(['user_id']);
         $userId = $data['user_id'];
 
@@ -296,6 +314,10 @@ class TaskController extends Controller
 
     public function updateCalendar(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         dd($request->id);
         $task = Task::query()->findOrFail($request->id);
         $data = $request->all();
@@ -317,12 +339,14 @@ class TaskController extends Controller
 
     public function addMemberTask(Request $request)
     {
-        $data = $request->except(['_token', '_method']);
-        $task = Task::query()->where('id', $data['task_id'])->select('text', 'description')->first();
-        $data['text'] = $task->text;
-        $data['description'] = $task->description;
-        $existingMember = TaskMember::where('task_id', $data['task_id'])
-            ->where('user_id', $data['user_id'])
+
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $existingMember = TaskMember::where('task_id', $request->task_id)
+            ->where('user_id', $request->user_id)
+
             ->first();
 
         if ($existingMember) {
@@ -350,7 +374,13 @@ class TaskController extends Controller
 
     public function deleteTaskMember(Request $request)
     {
-        $data = $request->except(['_token', '_method']);
+
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+//        dd($request->all());
+
         $taskMember = TaskMember::query()
             ->where('task_id', $data['task_id'])
             ->where('user_id', $data['user_id'])
@@ -382,6 +412,10 @@ class TaskController extends Controller
 
     public function getFormChekList($taskId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         if (!$taskId) {
             return response()->json(['error' => 'Task ID is missing'], 400);
         }
@@ -394,6 +428,10 @@ class TaskController extends Controller
 
     public function getFormAttach($taskId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         if (!$taskId) {
             return response()->json(['error' => 'Task ID is missing'], 400);
         }
@@ -406,6 +444,10 @@ class TaskController extends Controller
 
     public function getFormDateTask($taskID)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $task = Task::findOrFail($taskID);
 //        dd( $task);
 
@@ -418,6 +460,10 @@ class TaskController extends Controller
 
     public function getFormAddMember(Request $request, $taskId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $boardMembers0 = session('boardMembers_' . $request->boardId);
         $boardMembers = json_decode(json_encode($boardMembers0));
 

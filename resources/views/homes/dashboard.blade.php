@@ -5,6 +5,22 @@
 @endsection
 
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
+
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -210,7 +226,7 @@
                                             <div class="avatar-group">
                                                 @php
                                                     // Giới hạn số thành viên hiển thị
-                                                    $maxDisplay = 3;
+                                                    $maxDisplay = 2;
                                                     $count = 0;
                                                 @endphp
 
@@ -220,17 +236,17 @@
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                             data-bs-placement="top" title="{{ $member->user->name }}">
                                                             <div class="avatar-xxs">
-                                                                <div class="avatar-title rounded-circle bg-danger">
-                                                                    @if ($member->user->avatar_url)
-                                                                        <img src="{{ $member->user->avatar_url }}"
-                                                                            alt="{{ $member->user->name }}"
-                                                                            class="rounded-circle" width="16">
-                                                                    @else
-                                                                        <div class="avatar-title rounded-circle bg-danger">
-                                                                            {{ strtoupper(substr($member->user->name, 0, 1)) }}
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
+                                                                @if ($member->user->avatar_url)
+                                                                    <img src="{{ $member->user->avatar_url }}"
+                                                                        alt="{{ $member->user->name }}"
+                                                                        class="rounded-circle" width="16">
+                                                                @else
+                                                                    <div
+                                                                        class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
+                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+
                                                             </div>
                                                         </a>
                                                         @php $count++; @endphp
@@ -430,9 +446,10 @@
                                             <div class="avatar-group">
                                                 @php
                                                     // Giới hạn số thành viên hiển thị
-                                                    $maxDisplay = 3;
+                                                    $maxDisplay = 2;
                                                     $count = 0;
                                                 @endphp
+
 
                                                 @foreach ($board->boardMembers as $member)
                                                     @if ($count < $maxDisplay)
@@ -440,17 +457,17 @@
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                             data-bs-placement="top" title="{{ $member->user->name }}">
                                                             <div class="avatar-xxs">
-                                                                <div class="avatar-title rounded-circle bg-danger">
-                                                                    @if ($member->user->avatar_url)
-                                                                        <img src="{{ $member->user->avatar_url }}"
-                                                                            alt="{{ $member->user->name }}"
-                                                                            class="rounded-circle" width="16">
-                                                                    @else
-                                                                        <div class="avatar-title rounded-circle bg-danger">
-                                                                            {{ strtoupper(substr($member->user->name, 0, 1)) }}
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
+                                                                @if ($member->user->avatar_url)
+                                                                    <img src="{{ $member->user->avatar_url }}"
+                                                                        alt="{{ $member->user->name }}"
+                                                                        class="rounded-circle" width="16">
+                                                                @else
+                                                                    <div
+                                                                        class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
+                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+
                                                             </div>
                                                         </a>
                                                         @php $count++; @endphp
