@@ -662,6 +662,7 @@ class WorkspaceController extends Controller
             if ($user) {
                 $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $workspace->id)
                     ->first();
+                    
                 //xử lý khi người dùng chưa ở trong wsp đó
                 if (!$check_user_wsp) {
 

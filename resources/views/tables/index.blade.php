@@ -69,7 +69,7 @@
                                             @endif
                                         </td>
                                         <td class="col-1">
-                                            <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            <div id="member1"
                                                  class="member cursor-pointer">
                                                 <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                     @if ($task->members->isNotEmpty())
@@ -118,10 +118,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="dropdown-menu dropdown-menu-end p-3"
-                                                     aria-labelledby="member1">
-{{--                                                    @include('dropdowns.member')--}}
-                                                </div>
+
                                             </div>
                                         </td>
                                         <form id="updateTaskForm{{ $task->id }}">

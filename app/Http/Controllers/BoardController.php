@@ -461,36 +461,60 @@ class BoardController extends Controller
     //thông báo done
     public function acceptMember(Request $request)
     {
-
-        $user = User::find($request->user_id);
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-        try {
-            BoardMember::query()
-                ->where('user_id', $request->user_id)
-                ->where('board_id', $request->board_id)
-                ->update([
-                    'is_accept_invite' => 0,
-                ]);
-            $board = Board::find($request->board_id);
 
-            WorkspaceMember::create([
-                'user_id' => $request->user_id,
-                'workspace_id' => $board->workspace_id,
-                'authorize' => "Viewer",
-                'invite' => now(),
-                'is_active' => 0,
-            ]);
-            $this->notificationMemberInviteBoard($board->id, $user->name);
-            return redirect()->route('b.edit', $request->board_id)->with([
-                'msg' => 'bạn đã chấp nhận người dùng vào bảng',
-                'action' => 'success'
-            ]);
-        } catch (\Exception $e) {
-            throw $e;
+        $user = User::find($request->user_id);
+        $board = Board::find($request->board_id);
+        $checkUser = WorkspaceMember::where('user_id', $request->user_id)
+        ->where('Workspace_id', $board->workspace_id)
+        ->first();
+        if (empty($checkUser)) {
+            try {
+                BoardMember::query()
+                    ->where('user_id', $request->user_id)
+                    ->where('board_id', $request->board_id)
+                    ->update([
+                        'is_accept_invite' => 0,
+                    ]);
+
+                WorkspaceMember::create([
+                    'user_id' => $request->user_id,
+                    'workspace_id' => $board->workspace_id,
+                    'authorize' => "Viewer",
+                    'invite' => now(),
+                    'is_active' => 0,
+                ]);
+                $this->notificationMemberInviteBoard($board->id, $user->name);
+                return redirect()->route('b.edit', $request->board_id)->with([
+                    'msg' => 'bạn đã chấp nhận người dùng vào bảng',
+                    'action' => 'success'
+                ]);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        } else {
+            try {
+                BoardMember::query()
+                    ->where('user_id', $request->user_id)
+                    ->where('board_id', $request->board_id)
+                    ->update([
+                        'is_accept_invite' => 0,
+                    ]);
+
+                $this->notificationMemberInviteBoard($board->id, $user->name);
+                return redirect()->route('b.edit', $request->board_id)->with([
+                    'msg' => 'bạn đã chấp nhận người dùng vào bảng',
+                    'action' => 'success'
+                ]);
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
+
+
     }
 
     //Từ chối người dùng gửi lời mời vào board
