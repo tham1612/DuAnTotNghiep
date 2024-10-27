@@ -150,6 +150,18 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
+        Route::post('/tasks/checklist/checklistItem/{id}/delete', [ChecklistController::class, 'deleteChecklistItem'])
+            ->name('checklist.deleteChecklistItem');
+        Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDateChecklistItem'])
+            ->name('checklist.getFormDateChecklistItem');
+        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])
+            ->name('checklist.deleteChecklist');
+        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
+            ->name('tasks.getFormAddMember');
+        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
+
+//        Route::get('/tasks/{id}/detail', [TaskController::class, 'getTaskDetail']);
+
 
         //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
@@ -163,7 +175,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
             ->name('attachments.destroy');
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
-            ->name('comments.create'); 
+            ->name('comments.create');
         Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
             ->name('comments.destroy');
     });

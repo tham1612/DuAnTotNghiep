@@ -104,9 +104,6 @@ class ChecklistController extends Controller
 
     public function addMemberChecklist(Request $request)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         CheckListItemMember::create($data);
@@ -145,10 +142,6 @@ class ChecklistController extends Controller
 
     public function getFormAddMember(Request $request, $checkListItemId)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
         $boardMembers0 = session('boardMembers_' . $request->boardId);
         $boardMembers = json_decode(json_encode($boardMembers0));
 
