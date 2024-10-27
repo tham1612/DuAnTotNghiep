@@ -281,6 +281,23 @@ class WorkspaceController extends Controller
 
                 }
             }
+            if (Session::get('invited_board') == "case3") {
+                $user = Auth::user();
+                try {
+                    BoardMember::create([
+                        'user_id' => $user->id,
+                        'board_id' => Session::get('board_id'),
+                        'authorize' => Session::get('authorize'),
+                        'invite' => now(),
+                        'is_accept_invite' => 1,
+                    ]);
+                    Session::forget('board_id');
+                    Session::forget('authorize');
+                    Session::put('msg', 'two');
+                } catch (\Throwable $th) {
+                    throw $th;
+                }
+            }
 
             DB::commit();
 

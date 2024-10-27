@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Mockery\Exception;
 use Spatie\Activitylog\Models\Activity;
 
 
@@ -102,10 +103,12 @@ class TaskController extends Controller
     public function update(string $id, UpdateTaskRequest $request)
     {
 
+
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
+
         $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
@@ -128,13 +131,12 @@ class TaskController extends Controller
         $task->update($data);
 
 // xử lý thêm vào gg calendar
-//        if ($data['start_date'] || $data['end_date']) {
-            if ($task->id_google_calendar) {
-                $this->googleApiClient->updateEvent($data);
-            } else {
-                $this->googleApiClient->createEvent($data);
-            }
-//        }
+        if ($task->id_google_calendar) {
+            $this->googleApiClient->updateEvent($data);
+        } else {
+            $this->googleApiClient->createEvent($data);
+        }
+
 
         activity('Cập nhật task')
             ->performedOn($task)
@@ -337,12 +339,14 @@ class TaskController extends Controller
 
     public function addMemberTask(Request $request)
     {
+
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
         $existingMember = TaskMember::where('task_id', $request->task_id)
             ->where('user_id', $request->user_id)
+
             ->first();
 
         if ($existingMember) {
@@ -352,8 +356,15 @@ class TaskController extends Controller
             ], 400);
         }
 
-        $data = $request->except(['_token', '_method']);
-        TaskMember::query()->insert($data);
+        try {
+            TaskMember::query()->insert([
+                "user_id" => $data['user_id'],
+                "task_id" => $data['task_id']
+            ]);
+            $this->googleApiClient->updateEvent($data); // cập nhật người được giao việc
+        } catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
 
         return response()->json([
             'success' => true,
@@ -363,16 +374,20 @@ class TaskController extends Controller
 
     public function deleteTaskMember(Request $request)
     {
+
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
 //        dd($request->all());
+
         $taskMember = TaskMember::query()
-            ->where('task_id', $request->task_id)
-            ->where('user_id', $request->user_id)
+            ->where('task_id', $data['task_id'])
+            ->where('user_id', $data['user_id'])
             ->first();
-//        dd($taskMember);
+        $task = Task::query()->where('id', $data['task_id'])->select('text', 'description')->first();
+        $data['text'] = $task->text;
+        $data['description'] = $task->description;
         if (!$taskMember) {
             return response()->json([
                 'success' => false,
@@ -381,10 +396,10 @@ class TaskController extends Controller
         }
         try {
             TaskMember::query()
-                ->where('task_id', $request->task_id)
-                ->where('user_id', $request->user_id)
+                ->where('task_id', $data['task_id'])
+                ->where('user_id', $data['user_id'])
                 ->delete();
-
+            $this->googleApiClient->updateEvent($data); // cập nhật người được giao việc
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }

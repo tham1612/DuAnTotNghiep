@@ -163,7 +163,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
             ->name('attachments.destroy');
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
-            ->name('comments.create'); 
+            ->name('comments.create');
         Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
             ->name('comments.destroy');
     });

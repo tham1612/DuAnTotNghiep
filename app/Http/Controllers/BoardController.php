@@ -279,7 +279,7 @@ class BoardController extends Controller
             return $member->is_accept_invite === 1;
         });
 
-        // Kiểm tra và cập nhật tất cả thành viên đã được mời vào workspace cùng một lần truy vấn
+        // Kiểm tra và cập nhật tất cả thành viên   đã được mời vào workspace cùng một lần truy vấn
         $userIds = $boardMemberInvites->pluck('user_id')->toArray();
         $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
             ->where('workspace_id', $board->workspace_id)
@@ -504,7 +504,7 @@ class BoardController extends Controller
         }
         session()->forget('view_only');
         try {
-            BoardMember::find($bm_id)->delete();
+            $boardMember->delete();
             $title = "Từ chối lời mời";
             $description = 'Bạn đã bị từ chối lời mời vào bảng ' . $boardMember->board->name;
             $boardMember->user->notify(new BoardMemberNotification($title, $description));
@@ -901,6 +901,7 @@ class BoardController extends Controller
         session()->flash('action', 'success');
         return response()->json(['success' => true]);
     }
+
 
     //thông báo người dùng tham gia vào bảng
     protected function notificationMemberInviteBoard($boardID, $userName)
