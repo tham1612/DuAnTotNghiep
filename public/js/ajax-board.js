@@ -1,6 +1,6 @@
 //  ============ navbar ========
 document.getElementById('dropdownToggle').addEventListener('click', function () {
-    var dropdownMenu = document.getElementById('dropdownMenu');
+    let dropdownMenu = document.getElementById('dropdownMenu');
     dropdownMenu.style.display = (dropdownMenu.style.display === 'none') ? 'block' : 'none';
 });
 
@@ -17,8 +17,8 @@ document.getElementById('saveChanges').addEventListener('click', function () {
 });
 
 document.addEventListener('click', function (event) {
-    var dropdownMenu = document.getElementById('dropdownMenu');
-    var dropdownToggle = document.getElementById('dropdownToggle');
+    let dropdownMenu = document.getElementById('dropdownMenu');
+    let dropdownToggle = document.getElementById('dropdownToggle');
     if (!dropdownMenu.contains(event.target) && !dropdownToggle.contains(event.target)) {
         dropdownMenu.style.display = 'none';
     }
@@ -52,7 +52,7 @@ function updateIsStar(boardId, userId,) {
 // document.addEventListener('click', function(event) {
 //     if (event.target.classList.contains('task-title')) {
 //         // Lấy task ID từ thuộc tính data-task-id
-//         var taskId = event.target.getAttribute('data-task-id');
+//         let taskId = event.target.getAttribute('data-task-id');
 //
 //         // Gọi AJAX để lấy nội dung modal
 //         $.ajax({
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // cập nhật mô tả, ảnh, checkbox
 function updateTask2(taskId) {
-    var description = editors['description_' + taskId] ? editors['description_' + taskId].getData() : '';
+    let description = editors['description_' + taskId] ? editors['description_' + taskId].getData() : '';
     let checkbox = document.getElementById('due_date_checkbox_' + taskId);
     let image = document.getElementById('image_task_' + taskId);
 
@@ -297,7 +297,7 @@ $('button.create-tag-form').off('click').on('click', function (e) {
 
 // ============ date ============
 function updateReminderOptions2(taskId) {
-    var endDateInput = document.getElementById('end_date_task_' + taskId).value;
+    let endDateInput = document.getElementById('end_date_task_' + taskId).value;
 
     // Kiểm tra xem sự kiện có được kích hoạt và giá trị của end_date
     console.log('updateReminderOptions2 called for task:', taskId);
@@ -307,19 +307,19 @@ function updateReminderOptions2(taskId) {
         console.log('No end date provided.');
         return;
     }
-    var endDate = new Date(endDateInput);
+    let endDate = new Date(endDateInput);
 
-    var oneDayBefore = new Date(endDate);
+    let oneDayBefore = new Date(endDate);
     oneDayBefore.setDate(endDate.getDate() - 1); // Lùi lại 1 ngày
 
-    var twoDaysBefore = new Date(endDate);
+    let twoDaysBefore = new Date(endDate);
     twoDaysBefore.setDate(endDate.getDate() - 2); // Lùi lại 2 ngày
 
     // Định dạng ngày theo kiểu yyyy-mm-ddTHH:MM
-    var formatDateTime = (date) => date.toISOString().slice(0, 16);
+    let formatDateTime = (date) => date.toISOString().slice(0, 16);
 
     // Lấy thẻ select nhắc nhở
-    var reminderSelect = document.getElementById('reminder_date_task_' + taskId);
+    let reminderSelect = document.getElementById('reminder_date_task_' + taskId);
 
     // Xóa tất cả các option hiện tại
     reminderSelect.innerHTML = '';
@@ -352,7 +352,7 @@ function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
 
     // Sử dụng FormData để linh hoạt trong việc thêm dữ liệu
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('text', document.getElementById('text_' + taskId).value);
     formData.append('start_date', document.getElementById('start_date_task_' + taskId).value);
     formData.append('end_date', document.getElementById('end_date_task_' + taskId).value);
@@ -383,7 +383,7 @@ function submitUpdateDateTask(taskId, event) {
 //  ========= checklist ==============
 // Xử lý sự kiện khi checkbox được chọn
 $('.form-check-input-tag').on('change', function () {
-    var data = $(this).val(); // Lấy giá trị tag ID
+    let data = $(this).val(); // Lấy giá trị tag ID
 
     $.ajax({
         url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
@@ -403,7 +403,7 @@ $('.form-check-input-tag').on('change', function () {
 
 // thêm checklist
 function FormCheckListItem(checkListId) {
-    var formData = {
+    let formData = {
         check_list_id: $('#check_list_id_' + checkListId).val(),
         name: $('#name_check_list_item_' + checkListId).val()
     };
@@ -422,15 +422,15 @@ function FormCheckListItem(checkListId) {
             console.log('CheckListItem đã được thêm thành công!', response);
             let checkList = document.getElementById('check-list-' + response.check_list_id);
             let listItem = `
-             <tr class="cursor-pointer check-list-item-{{$checklistItem->id}}">
+             <tr class="cursor-pointer check-list-item-${response.id}">
                             <td class="col-1">
                                 <div class="form-check">
                                     <input class="form-check-input-checkList"
                                            type="checkbox" name="is_complete"
-                                           @checked(${response.is_complete})
+                                            ${response.is_complete ? 'checked' : ''}
                                            value="100"
                                            id="is_complete-${response.id}"
-                                           data-checklist-id="${response.id}"
+                                           data-checklist-id="${response.check_list_id}"
                                            data-task-id="${response.task_id}"/>
                                 </div>
                             </td>
@@ -458,10 +458,12 @@ function FormCheckListItem(checkListId) {
                         </tr>
             `;
             if (checkList) {
-                checkList.innerHTML += listItem;
+                checkList.insertAdjacentHTML('beforeend', listItem);
             } else {
                 console.error('Không tìm thấy phần check-list-' + response.check_list_id);
             }
+            $('#name_check_list_item_' + checkListId).val('');
+            updateProgressBar(response.check_list_id);
 
         },
         error: function (xhr) {
@@ -474,7 +476,7 @@ function FormCheckListItem(checkListId) {
     return false;
 }
 
-$('.form-check-input-checkList').on('change', function () {
+$(document).on('change', '.form-check-input-checkList', function () {
     let checkListItemId = $(this).data('checklist-item-id');
     let checkbox = $(this);
 
@@ -524,22 +526,18 @@ function loadTaskFormAddCheckList(taskId) {
 }
 
 function submitAddCheckList(taskId) {
-    var formData = {
+    let formData = {
         task_id: taskId,
-        name: $('#name_checkList').val(),
+        name: $('#name_checkList_' + taskId).val(),
         method: 'POST'
     };
-    if (!formData.name.trim()) {
-        alert('Tiêu đề không được để trống!');
-        return false;
-    }
     $.ajax({
         url: `/tasks/checklist/create`,
         type: 'POST',
         data: formData,
         success: function (response) {
-            var checkList = document.getElementById('checkListCreate');
-            var listItem = `
+            let checkList = document.getElementById('checkListCreate');
+            let listItem = `
                 <div class="row mt-3 list-checklist-${response.checkListId}" >
         <section class="d-flex justify-content-between">
             <section class="d-flex">
@@ -566,19 +564,14 @@ function submitAddCheckList(taskId) {
         </section>
 
         <div class="ps-4">
-            <div class="progress animated-progress bg-light-subtle"
-                 style="height: 20px"
-                 data-task-id="${response.checkList.task_id}">
-                <div class="progress-bar bg-success"
-                     role="progressbar"
-                     style="width: 0"
-                     id="progress-bar-${response.checkList.task_id}"
-                     aria-valuenow="0"
-                     aria-valuemin="0"
-                     aria-valuemax="100">
-                    0%
+             <div class="progress animated-progress bg-light-subtle" style="height: 20px"
+                     data-checklist-id="${response.checkListId}">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                         id="progress-bar-checklist-${response.checkListId}" aria-valuenow="0" aria-valuemin="0"
+                         aria-valuemax="100">
+                        0%
+                    </div>
                 </div>
-            </div>
             <div class="table-responsive table-hover table-card">
                 <table class="table table-nowrap mt-4">
                     <tbody id="check-list-${response.checkListId}">
@@ -624,6 +617,7 @@ function submitAddCheckList(taskId) {
             } else {
                 console.error('Không tìm thấy phần tử checkListcreat');
             }
+            $('#name_checkList_' + taskId).val('');
             console.log('checklist đã được thêm thành công!', response);
 
         },
@@ -637,7 +631,7 @@ function submitAddCheckList(taskId) {
 }
 
 function submitUpdateCheckList(checklistId, taskId) {
-    var formData = {
+    let formData = {
         task_id: taskId,
         name: $('#name_' + checklistId).val()
     };
@@ -692,15 +686,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Lắng nghe sự kiện thay đổi trên từng checkbox
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
+        checkbox.onclick = function () {
             const checklistId = this.getAttribute('data-checklist-id');
             if (checklistId) {
                 updateProgressBar(checklistId);
             } else {
                 console.error('Checklist ID not found on checkbox');
             }
-        });
+        };
     });
+
 
     // Cập nhật thanh tiến trình ban đầu cho mỗi checklist
     const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
@@ -771,8 +766,8 @@ function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
             check_list_item_id: checklistItemId,
         },
         success: function (response) {
-            var cardMembersListItem = document.getElementById('cardMembersListItem-' + checklistItemId);
-            var listItem = `
+            let cardMembersListItem = document.getElementById('cardMembersListItem-' + checklistItemId);
+            let listItem = `
                 <li id="card-member-${memberId}-${checklistItemId}" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip" data-bs-placement="top" title="${memberName}">
@@ -805,7 +800,7 @@ function removeMemberFromCard(memberId, checklistItemId) {
             check_list_item_id: checklistItemId
         },
         success: function (response) {
-            var memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
+            let memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
             if (memberElement) {
                 memberElement.remove();
             }
@@ -862,23 +857,23 @@ function removeCheckListItem(checklistItemId) {
 
 // ============= date checklist item ===============
 function updateReminderOptions(checklistItemId) {
-    var endDateInput = document.getElementById('end_date_' + checklistItemId).value;
+    let endDateInput = document.getElementById('end_date_' + checklistItemId).value;
 
     if (!endDateInput) return;
 
-    var endDate = new Date(endDateInput);
+    let endDate = new Date(endDateInput);
 
-    var oneDayBefore = new Date(endDate);
+    let oneDayBefore = new Date(endDate);
     oneDayBefore.setDate(endDate.getDate() - 1); // Lùi lại 1 ngày
 
-    var twoDaysBefore = new Date(endDate);
+    let twoDaysBefore = new Date(endDate);
     twoDaysBefore.setDate(endDate.getDate() - 2); // Lùi lại 2 ngày
 
     // Định dạng ngày theo kiểu yyyy-mm-ddTHH:MM
-    var formatDateTime = (date) => date.toISOString().slice(0, 16);
+    let formatDateTime = (date) => date.toISOString().slice(0, 16);
 
     // Lấy thẻ select nhắc nhở
-    var reminderSelect = document.getElementById('reminder_date_' + checklistItemId);
+    let reminderSelect = document.getElementById('reminder_date_' + checklistItemId);
 
     // Xóa tất cả các option hiện tại
     reminderSelect.innerHTML = '';
@@ -903,7 +898,7 @@ function submitUpdateDateCheckListItem(checklistItemId) {
             console.log('checklistItem đã được cập nhật thành công!', response);
             if (formData.end_date) {
                 // Định dạng ngày thành yyyy-mm-dd hh:mm:ss
-                var formattedDate = new Date(formData.end_date).toLocaleString('sv-SE', {
+                let formattedDate = new Date(formData.end_date).toLocaleString('sv-SE', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -948,11 +943,11 @@ function loadTaskFormAddAttach(taskId) {
 }
 
 function uploadTaskAttachments(taskId) {
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('task_id', taskId);
-    var fileInput = document.getElementById('file_name_task_' + taskId);
-    var files = fileInput.files;
-    for (var i = 0; i < files.length; i++) {
+    let fileInput = document.getElementById('file_name_task_' + taskId);
+    let files = fileInput.files;
+    for (let i = 0; i < files.length; i++) {
         formData.append(`file_name[]`, files[i]);
         formData.append(`name[]`, files[i].name);
     }
@@ -976,10 +971,10 @@ function uploadTaskAttachments(taskId) {
 }
 
 function updateTaskAttachment(attachmentId) {
-    var formData = {
+    let formData = {
         name: $('#name_attachment_' + attachmentId).val(),
     };
-    var nameDisplay = document.getElementById('name_display_' + attachmentId);
+    let nameDisplay = document.getElementById('name_display_' + attachmentId);
     if (nameDisplay) {
         nameDisplay.textContent = formData.name;
     }
@@ -1065,8 +1060,8 @@ function addMemberToTask(user_id, name, task_id) {
             task_id: task_id,
         },
         success: function (response) {
-            var cardMembersList = document.getElementById('cardMembersList-' + task_id);
-            var listItem = `
+            let cardMembersList = document.getElementById('cardMembersList-' + task_id);
+            let listItem = `
                 <li id="card-member-task-${user_id}-${task_id}" class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip" data-bs-placement="top" title="${name}">
@@ -1111,7 +1106,7 @@ function removeMemberFromTask(user_id, task_id) {
             task_id: task_id
         },
         success: function (response) {
-            var memberElement = document.getElementById('card-member-task-' + user_id + '-' + task_id);
+            let memberElement = document.getElementById('card-member-task-' + user_id + '-' + task_id);
             if (memberElement) {
                 memberElement.remove();
             }
@@ -1129,8 +1124,8 @@ function removeMemberFromTask(user_id, task_id) {
 
 // ============= comment ===============
 function addTaskComment(taskId, user_id) {
-    var content = editors['comment_task_' + taskId] ? editors['comment_task_' + taskId].getData() : '';
-    var formData = {
+    let content = editors['comment_task_' + taskId] ? editors['comment_task_' + taskId].getData() : '';
+    let formData = {
         content: content,
         user_id: user_id,
         task_id: taskId,
@@ -1167,7 +1162,7 @@ function addTaskComment(taskId, user_id) {
                 slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
                 ${createdAt.getFullYear()}`;
             }
-            var btnXoa = '';
+            let btnXoa = '';
             if (response.userOwnerID === formData.user_id || response.userId === formData.user_id) {
                 btnXoa = `
                        <span class="mx-1">-</span>
@@ -1200,8 +1195,6 @@ function addTaskComment(taskId, user_id) {
          `;
 
             taskComment.innerHTML += taskComment2;
-
-
         $(this).find('button[type="submit"]').prop('disabled', false);
         },
         error: function (xhr) {

@@ -150,6 +150,17 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
+        Route::post('/tasks/checklist/checklistItem/{id}/delete', [ChecklistController::class, 'deleteChecklistItem'])
+            ->name('checklist.deleteChecklistItem');
+        Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDateChecklistItem'])
+            ->name('checklist.getFormDateChecklistItem');
+        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])
+            ->name('checklist.deleteChecklist');
+        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
+            ->name('tasks.getFormAddMember');
+        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
+
+//        Route::get('/tasks/{id}/detail', [TaskController::class, 'getTaskDetail']);
 
 
         //       task tag
