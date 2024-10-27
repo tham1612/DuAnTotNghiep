@@ -624,6 +624,10 @@ class BoardController extends Controller
     // gửi mail thêm người vào bảng
     public function inviteUserBoard(Request $request)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $boardId = $request->id;
         $board = Board::query()
             ->where('id', $boardId)
@@ -648,6 +652,10 @@ class BoardController extends Controller
     public function acceptInviteBoard($uuid, $token, Request $request)
     {
         //xử lý khi admin gửi link invite cho người dùng
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             $user = User::query()->where('email', $request->email)->first();
@@ -877,6 +885,10 @@ class BoardController extends Controller
     //thông báo done
     public function inviteMemberWorkspace($userId, $boardId)
     {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         BoardMember::create([
             'user_id' => $userId,
             'board_id' => $boardId,

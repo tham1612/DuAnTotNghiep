@@ -639,12 +639,12 @@ class WorkspaceController extends Controller
         if ($request->email) {
             $workspace = Workspace::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             $user = User::query()->where('email', $request->email)->first();
-            $check_user_wsp = WorkspaceMember::where('user_id', $user)->where('workspace_id', $workspace->id)
-                ->first();
+
 
             //logic sử lý thêm người dùng
             if ($user) {
-
+                $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $workspace->id)
+                    ->first();
                 //xử lý khi người dùng chưa ở trong wsp đó
                 if (!$check_user_wsp) {
 
@@ -793,7 +793,7 @@ class WorkspaceController extends Controller
             dd($th);
         }
     }
-  
+
     //Thăng cấp thành viên
     //thông báo Done
     public function upgradeMemberShip($wm_id)
