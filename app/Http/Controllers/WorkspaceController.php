@@ -281,6 +281,23 @@ class WorkspaceController extends Controller
 
                 }
             }
+            if (Session::get('invited_board') == "case3") {
+                $user = Auth::user();
+                try {
+                    BoardMember::create([
+                        'user_id' => $user->id,
+                        'board_id' => Session::get('board_id'),
+                        'authorize' => Session::get('authorize'),
+                        'invite' => now(),
+                        'is_accept_invite' => 1,
+                    ]);
+                    Session::forget('board_id');
+                    Session::forget('authorize');
+                    Session::put('msg', 'two');
+                } catch (\Throwable $th) {
+                    throw $th;
+                }
+            }
 
             DB::commit();
 
@@ -644,7 +661,8 @@ class WorkspaceController extends Controller
             //logic sử lý thêm người dùng
             if ($user) {
                 $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $workspace->id)
-                ->first();
+                    ->first();
+                    
                 //xử lý khi người dùng chưa ở trong wsp đó
                 if (!$check_user_wsp) {
 

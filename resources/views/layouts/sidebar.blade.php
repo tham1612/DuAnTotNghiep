@@ -57,13 +57,7 @@
                 ->first();
         } else {
             $workspaceBoards = \App\Models\Workspace::query()
-                ->with([
-                    'boards' => function ($query) use ($userId) {
-                        $query->whereHas('boardMembers', function ($q) use ($userId) {
-                            $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
-                        });
-                    },
-                ])
+                ->with('boards.boardMembers') // Lấy luôn boardMembers để kiểm tra
                 ->where('id', $workspaceChecked->workspace_id)
                 ->first();
         }

@@ -460,44 +460,44 @@
         });
     }
 
-   document.addEventListener('DOMContentLoaded', function() {
-    // Gắn sự kiện khi chọn thành viên từ dropdown
-    document.querySelector('#inviteButton').addEventListener('click', function() {
-        const selectElement = document.querySelector('.invite-member-select');
-        const memberId = selectElement.value;
-        const memberName = selectElement.options[selectElement.selectedIndex].text;
-        const boardId = {{ $board->id }}; // Lấy giá trị ID board từ biến Laravel
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gắn sự kiện khi chọn thành viên từ dropdown
+        document.querySelector('#inviteButton').addEventListener('click', function() {
+            const selectElement = document.querySelector('.invite-member-select');
+            const memberId = selectElement.value;
+            const memberName = selectElement.options[selectElement.selectedIndex].text;
+            const boardId = {{ $board->id }}; // Lấy giá trị ID board từ biến Laravel
 
-        // Gọi đến URL xử lý mời thành viên
-        const inviteUrl = `/b/invite-member-workspace/${memberId}/${boardId}`;
+            // Gọi đến URL xử lý mời thành viên
+            const inviteUrl = `/b/invite-member-workspace/${memberId}/${boardId}`;
 
-        fetch(inviteUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                        .getAttribute('content')
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json(); // Parse response as JSON
-            })
-            .then(data => {
-                if (data.success) {
-                    console.log(`Đã thêm thành viên ${memberName} thành công`);
-                    window.location
-                        .reload(); // Tải lại trang sau khi mời thành viên thành công
-                } else {
-                    alert('Thêm thành viên thất bại');
-                }
-            })
-            .catch(error => {
-                console.error('Error inviting member:', error);
-                alert('Có lỗi xảy ra, vui lòng thử lại.');
-            });
+            fetch(inviteUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse response as JSON
+                })
+                .then(data => {
+                    if (data.success) {
+                        console.log(`Đã thêm thành viên ${memberName} thành công`);
+                        window.location
+                            .reload(); // Tải lại trang sau khi mời thành viên thành công
+                    } else {
+                        alert('Thêm thành viên thất bại');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error inviting member:', error);
+                    alert('Có lỗi xảy ra, vui lòng thử lại.');
+                });
+        });
     });
-});
 </script>
