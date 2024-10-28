@@ -183,6 +183,7 @@ class BoardController extends Controller
                             'checkLists.checkListItems',
                             'checkLists.checkListItems.checkListItemMembers',
                             'checkLists.checkListItems.checkListItemMembers.user',
+                            'checkLists.checkListItems.members',
                             'tags',
                             'followMembers',
                             'attachments',
