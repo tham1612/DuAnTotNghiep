@@ -285,7 +285,7 @@
                                                 <div class="ms-2 w-100">
                                                     <form class="flex-column" id="comment_form_{{$task->id}}"
                                                           style="display: none;" data-task-id="{{$task->id}}">
-                                                              <textarea name="content" class="form-control editor"
+                                                              <textarea name="content" class="form-control"
                                                                         id="comment_task_{{$task->id}}"
                                                                         placeholder="Viết bình luận"></textarea>
 
