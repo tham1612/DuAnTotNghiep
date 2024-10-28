@@ -1124,7 +1124,7 @@ function removeMemberFromTask(user_id, task_id) {
 
 // ============= comment ===============
 function addTaskComment(taskId, user_id) {
-    let content = editors['comment_task_' + taskId] ? editors['comment_task_' + taskId].getData() : '';
+    let content = $('#comment_task_'+taskId).val();
     let formData = {
         content: content,
         user_id: user_id,
@@ -1158,8 +1158,7 @@ function addTaskComment(taskId, user_id) {
                     timeAgo = `${Math.floor(diffInMinutes / 60)} giờ trước`;
                 }
             } else {
-                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).
-                slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
+                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
                 ${createdAt.getFullYear()}`;
             }
             let btnXoa = '';
@@ -1173,7 +1172,7 @@ function addTaskComment(taskId, user_id) {
                             <button class="btn btn-danger w-100" onclick="removeComment(${response.comment.id})">Xóa bình luận</button>
                         </div>
                     `;
-             }
+            }
 
 
             let taskComment2 = `
@@ -1195,7 +1194,7 @@ function addTaskComment(taskId, user_id) {
          `;
 
             taskComment.innerHTML += taskComment2;
-        $(this).find('button[type="submit"]').prop('disabled', false);
+            $(this).find('button[type="submit"]').prop('disabled', false);
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -1206,13 +1205,14 @@ function addTaskComment(taskId, user_id) {
 
     return false;
 }
+
 function removeComment(commentId) {
     console.log(commentId);
     $.ajax({
         url: `/tasks/comments/{commentId}/destroy`,
         type: 'POST',
         data: {
-            id:commentId
+            id: commentId
         },
         success: function (response) {
             document.querySelector(`.conten-comment-${commentId}`).remove();
