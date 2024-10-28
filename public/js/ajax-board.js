@@ -444,7 +444,7 @@ function FormCheckListItem(checkListId) {
                 // Thêm checklist item mới vào cuối danh sách
                 checkList.insertAdjacentHTML('beforeend', listItem);
 
-                // Gọi lại `updateProgressBar` để cập nhật thanh tiến trình
+                // Gọi lại `updateProgressBar` để cập nhật thanh tiến trình cho checklist hiện tại
                 updateProgressBar(response.check_list_id);
             } else {
                 console.error('Không tìm thấy phần check-list-' + response.check_list_id);
@@ -647,15 +647,15 @@ function submitUpdateCheckList(checklistId, taskId) {
 
 // document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
-    // Lắng nghe sự kiện click trên phần tử cha bao gồm tất cả checklist items
-    document.getElementById('check-list-container').addEventListener('click', function (event) {
+    // Lắng nghe sự kiện click trên tất cả các checkbox trong DOM
+    document.addEventListener('click', function (event) {
         const checkbox = event.target;
 
-        // Kiểm tra xem click có phải là trên checkbox không
+        // Kiểm tra xem click có phải là checkbox thuộc checklist không
         if (checkbox.classList.contains('form-check-input-checkList')) {
             const checklistId = checkbox.getAttribute('data-checklist-id');
             if (checklistId) {
-                updateProgressBar(checklistId);
+                updateProgressBar(checklistId); // Cập nhật thanh progress cho checklist cụ thể
             } else {
                 console.error('Checklist ID not found on checkbox');
             }
@@ -678,7 +678,7 @@ document.querySelector('table').addEventListener('click', function (event) {
 const checkboxes = document.querySelectorAll('.form-check-input-checkList');
 
 function updateProgressBar(checklistId) {
-    // Tìm tất cả các checkbox của checklist với checklistId
+    // Lấy tất cả các checkbox thuộc về checklist có checklistId cụ thể
     const checklistCheckboxes = Array.from(document.querySelectorAll(`.form-check-input-checkList[data-checklist-id="${checklistId}"]`));
     const totalCheckboxes = checklistCheckboxes.length;
     const checkedCheckboxes = checklistCheckboxes.filter(checkbox => checkbox.checked).length;
@@ -686,7 +686,7 @@ function updateProgressBar(checklistId) {
     // Tính phần trăm hoàn thành
     const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
 
-    // Cập nhật thanh tiến trình
+    // Cập nhật thanh tiến trình cho checklist tương ứng
     const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
     if (progressBar) {
         progressBar.style.width = percentCompleted + '%';
