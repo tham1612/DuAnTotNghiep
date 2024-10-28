@@ -417,54 +417,41 @@ function FormCheckListItem(checkListId) {
         url: `/tasks/checklist/checklistItem/create`,
         type: 'POST',
         data: formData,
-        success: function (response) {
-
-            console.log('CheckListItem đã được thêm thành công!', response);
+        success: function(response) {
             let checkList = document.getElementById('check-list-' + response.check_list_id);
             let listItem = `
-             <tr class="cursor-pointer check-list-item-${response.id}">
-                            <td class="col-1">
-                                <div class="form-check">
-                                    <input class="form-check-input-checkList"
-                                           type="checkbox" name="is_complete"
-                                            ${response.is_complete ? 'checked' : ''}
-                                           value="100"
-                                           id="is_complete-${response.id}"
-                                           data-checklist-id="${response.check_list_id}"
-                                           data-task-id="${response.task_id}"/>
-                                </div>
-                            </td>
-                            <td>
-                                <p>${response.checkListItem.name}</p>
-                            </td>
-                            <td class=" d-flex justify-content-end">
-                                <div>
-                                    <i class="ri-more-fill fs-20"
-                                       data-bs-toggle="dropdown"
-                                       aria-haspopup="true"
-                                       aria-expanded="false"></i>
-                                    <div class="dropdown-menu dropdown-menu-md"
-                                         style="padding: 15px 15px 0 15px">
-                                        <h5 class="text-center">Thao tác
-                                            mục</h5>
-                                        <p class="mt-2">Chuyển sang thẻ</p>
-                                        <p class="cursor-pointer text-danger"
-                                        onclick="removeCheckListItem(${response.id})">
-                                        Xóa</p>
+        <tr class="cursor-pointer check-list-item-${response.id}">
+            <td class="col-1">
+                <div class="form-check">
+                    <input class="form-check-input-checkList"
+                           type="checkbox" name="is_complete"
+                           ${response.is_complete ? 'checked' : ''}
+                           value="100"
+                           id="is_complete-${response.id}"
+                           data-checklist-id="${response.check_list_id}"
+                            data-checklist-item-id="${response.check_list_id}"
+                           data-task-id="${response.task_id}"/>
+                </div>
+            </td>
+            <td>${response.checkListItem.name}</td>
+            <td class="d-flex justify-content-end">
+                <!-- Các thao tác khác nếu có -->
+            </td>
+        </tr>
+    `;
 
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-            `;
             if (checkList) {
+                // Thêm checklist item mới vào cuối danh sách
                 checkList.insertAdjacentHTML('beforeend', listItem);
+
+                // Gọi lại `updateProgressBar` để cập nhật thanh tiến trình
+                updateProgressBar(response.check_list_id);
             } else {
                 console.error('Không tìm thấy phần check-list-' + response.check_list_id);
             }
-            $('#name_check_list_item_' + checkListId).val('');
-            updateProgressBar(response.check_list_id);
 
+            // Xóa giá trị input sau khi thêm
+            $('#name_check_list_item_' + checkListId).val('');
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -658,49 +645,75 @@ function submitUpdateCheckList(checklistId, taskId) {
     return false;
 }
 
+// document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
-    // Lấy tất cả các checkbox
-    const checkboxes = document.querySelectorAll('.form-check-input-checkList');
+    // Lắng nghe sự kiện click trên phần tử cha bao gồm tất cả checklist items
+    document.getElementById('check-list-container').addEventListener('click', function (event) {
+        const checkbox = event.target;
 
-    function updateProgressBar(checklistId) {
-        // Lọc các checkbox thuộc về checklist có checklistId cụ thể
-        const checklistCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.getAttribute('data-checklist-id') === checklistId);
-        const totalCheckboxes = checklistCheckboxes.length;
-        const checkedCheckboxes = checklistCheckboxes.filter(checkbox => checkbox.checked).length;
-
-        console.log(`Checklist ID: ${checklistId}, Total: ${totalCheckboxes}, Checked: ${checkedCheckboxes.length}`);
-
-        // Tính phần trăm hoàn thành
-        const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
-
-        // Cập nhật thanh tiến trình cho checklist tương ứng
-        const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
-        if (progressBar) {  // Kiểm tra thanh progress có tồn tại
-            progressBar.style.width = percentCompleted + '%';
-            progressBar.setAttribute('aria-valuenow', percentCompleted);
-            progressBar.innerHTML = Math.round(percentCompleted) + '%'; // Làm tròn phần trăm
-        } else {
-            console.error(`Progress bar not found for checklist ID: ${checklistId}`);
-        }
-    }
-
-    // Lắng nghe sự kiện thay đổi trên từng checkbox
-    checkboxes.forEach(checkbox => {
-        checkbox.onclick = function () {
-            const checklistId = this.getAttribute('data-checklist-id');
+        // Kiểm tra xem click có phải là trên checkbox không
+        if (checkbox.classList.contains('form-check-input-checkList')) {
+            const checklistId = checkbox.getAttribute('data-checklist-id');
             if (checklistId) {
                 updateProgressBar(checklistId);
             } else {
                 console.error('Checklist ID not found on checkbox');
             }
-        };
+        }
     });
-
-
-    // Cập nhật thanh tiến trình ban đầu cho mỗi checklist
-    const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
-    checklists.forEach(checklistId => updateProgressBar(checklistId));
 });
+document.querySelector('table').addEventListener('click', function (event) {
+    const checkbox = event.target;
+
+    if (checkbox.classList.contains('form-check-input-checkList')) {
+        const checklistId = checkbox.getAttribute('data-checklist-id');
+        if (checklistId) {
+            updateProgressBar(checklistId);
+        } else {
+            console.error('Checklist ID not found on checkbox');
+        }
+    }
+});
+// Lấy tất cả các checkbox
+const checkboxes = document.querySelectorAll('.form-check-input-checkList');
+
+function updateProgressBar(checklistId) {
+    // Tìm tất cả các checkbox của checklist với checklistId
+    const checklistCheckboxes = Array.from(document.querySelectorAll(`.form-check-input-checkList[data-checklist-id="${checklistId}"]`));
+    const totalCheckboxes = checklistCheckboxes.length;
+    const checkedCheckboxes = checklistCheckboxes.filter(checkbox => checkbox.checked).length;
+
+    // Tính phần trăm hoàn thành
+    const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
+
+    // Cập nhật thanh tiến trình
+    const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
+    if (progressBar) {
+        progressBar.style.width = percentCompleted + '%';
+        progressBar.setAttribute('aria-valuenow', percentCompleted);
+        progressBar.innerHTML = Math.round(percentCompleted) + '%';
+    } else {
+        console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
+    }
+}
+
+// Lắng nghe sự kiện thay đổi trên từng checkbox
+checkboxes.forEach(checkbox => {
+    checkbox.onclick = function () {
+        const checklistId = this.getAttribute('data-checklist-id');
+        if (checklistId) {
+            updateProgressBar(checklistId);
+        } else {
+            console.error('Checklist ID not found on checkbox');
+        }
+    };
+});
+
+
+// Cập nhật thanh tiến trình ban đầu cho mỗi checklist
+const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
+checklists.forEach(checklistId => updateProgressBar(checklistId));
+// });
 // ============= end checklist ======================
 
 
@@ -1124,7 +1137,7 @@ function removeMemberFromTask(user_id, task_id) {
 
 // ============= comment ===============
 function addTaskComment(taskId, user_id) {
-    let content = $('#comment_task_'+taskId).val();
+    let content = $('#comment_task_' + taskId).val();
     let formData = {
         content: content,
         user_id: user_id,
