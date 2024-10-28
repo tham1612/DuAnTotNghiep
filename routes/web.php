@@ -74,8 +74,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/home', [HomeController::class, 'index'])->name('home');
 
         Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
-        ->name('chat');
-    Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+            ->name('chat');
+        Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
         Route::post('/chatAI', [ChatAIController::class, 'store'])->name('store');
@@ -87,27 +87,27 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
         Route::group(['middleware' => ['auth', 'check.board.access']], function () {
-                Route::prefix('b')
-            ->as('b.')
-            ->group(function () {
-                Route::get('create', [BoardController::class, 'create'])->name('create');
-                Route::post('store', [BoardController::class, 'store'])->name('store');
-                Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
-                Route::post('{id}/filter', [BoardController::class, 'filter']);
-                Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
-                Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
-                Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
-                Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
-                Route::get('request-to-join-workspace', [BoardController::class, 'requestToJoinWorkspace'])->name('requestToJoinWorkspace');
-                Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
-                Route::put('accept-member', [BoardController::class, 'acceptMember'])->name('acceptMember');
-                Route::delete('refuse-member/{id}', [BoardController::class, 'refuseMember'])->name('refuseMember');
-                Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
-                Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
-                Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
-                Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
-            });
-         });
+            Route::prefix('b')
+                ->as('b.')
+                ->group(function () {
+                    Route::get('create', [BoardController::class, 'create'])->name('create');
+                    Route::post('store', [BoardController::class, 'store'])->name('store');
+                    Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
+                    Route::post('{id}/filter', [BoardController::class, 'filter']);
+                    Route::put('{id}/update', [BoardController::class, 'update'])->name('update');
+                    Route::get('/boards/{boardId}/edit', [BoardController::class, 'edit'])->name('boards.edit');
+                    Route::put('{id}/updateBoardMember', [BoardController::class, 'updateBoardMember'])->name('updateBoardMember');
+                    Route::put('{id}/updateBoardMember2', [BoardController::class, 'updateBoardMember2'])->name('updateBoardMember2');
+                    Route::get('request-to-join-workspace', [BoardController::class, 'requestToJoinWorkspace'])->name('requestToJoinWorkspace');
+                    Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
+                    Route::put('accept-member', [BoardController::class, 'acceptMember'])->name('acceptMember');
+                    Route::delete('refuse-member/{id}', [BoardController::class, 'refuseMember'])->name('refuseMember');
+                    Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
+                    Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
+                    Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
+                    Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
+                });
+        });
 
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
             ->withoutMiddleware('auth');
@@ -160,7 +160,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('tasks.getFormAddMember');
         Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
 
-//        Route::get('/tasks/{id}/detail', [TaskController::class, 'getTaskDetail']);
+        //        Route::get('/tasks/{id}/detail', [TaskController::class, 'getTaskDetail']);
 
 
         //       task tag
