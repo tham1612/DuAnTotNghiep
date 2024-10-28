@@ -270,10 +270,6 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-start">
                                             <a class="dropdown-item">
-                                                <input type="text" name="text"
-                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
-                                                    onchange="updateBoard({{ $board->id }})" />
                                                 <input type="text" name="name"
                                                     class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
                                                     id="name_board_{{ $board->id }}" value="{{ $board->name }}"

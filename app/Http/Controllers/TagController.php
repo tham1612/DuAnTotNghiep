@@ -34,10 +34,11 @@ class TagController extends Controller
         }
         session()->forget('view_only');
         $data = $request->all();
-        Tag::query()->create($data);
+        $tag=Tag::query()->create($data);
         return response()->json([
             'data' => $data,
-            'success' => true
+            'success' => true,
+            'tag'=>$tag
         ]);
     }
 

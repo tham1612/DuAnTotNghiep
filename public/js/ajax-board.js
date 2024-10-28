@@ -384,6 +384,7 @@ function submitUpdateDateTask(taskId, event) {
 // Xử lý sự kiện khi checkbox được chọn
 $('.form-check-input-tag').on('change', function () {
     let data = $(this).val(); // Lấy giá trị tag ID
+    console.log(data);
 
     $.ajax({
         url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
@@ -392,6 +393,8 @@ $('.form-check-input-tag').on('change', function () {
             data: data,
         },
         success: function (response) {
+            // let checkList = document.getElementById('check-list-' + response.check_list_id);
+
             console.log('Checkbox đã được cập nhật:', response);
             // Xử lý thêm nếu cần
         },
@@ -1142,6 +1145,7 @@ function addTaskComment(taskId, user_id) {
         content: content,
         user_id: user_id,
         task_id: taskId,
+        parent_id: ''
     };
     console.log(formData);
     $.ajax({
@@ -1174,6 +1178,50 @@ function addTaskComment(taskId, user_id) {
                 timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
                 ${createdAt.getFullYear()}`;
             }
+            let btnThaoTac = ``;
+
+            if (response.auth === formData.user_id) {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Chỉnh sửa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-update-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted">Chỉnh sửa</div>
+                            <form class="flex-column"
+                                  id="comment_form_${response.comment.task_id}">
+                                  <textarea name="content" class="form-control"
+                                    id="update_comment_${response.comment.id}">${response.comment.content}
+                                    </textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="updateTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+            } else {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Trả lời</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-reply-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted"><i class=" ri-arrow-go-forward-fill"></i><h5 class="text-center text-muted ">${response.userName}</h5></div>
+                            <form class="flex-column"
+                                  id="comment_form_{{$task->id}}">
+                                  <textarea name="content" class="form-control"
+                                            id="reply_comment_${response.comment.id}"
+                                            placeholder="Trả lời bình luận"></textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="addReplyTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+
+            }
             let btnXoa = '';
             if (response.userOwnerID === formData.user_id || response.userId === formData.user_id) {
                 btnXoa = `
@@ -1197,9 +1245,10 @@ function addTaskComment(taskId, user_id) {
             <section class="ms-2 w-100">
                 <strong>${response.userName}</strong>
                 <span class="fs-11">${timeAgo}</span>
-                <div class="bg-info-subtle p-1 rounded ps-2">${content}</div>
-                <div class="fs-11">
-                    <span>Trả lời</span> ${btnXoa}
+                <div class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-${response.comment.id}">${content}</div>
+                <div class="fs-11 d-flex">
+                   <div class=""> ${btnThaoTac} </div>
+                    <div class=""> ${btnXoa}</div>
 
                 </div>
             </section>
@@ -1207,6 +1256,192 @@ function addTaskComment(taskId, user_id) {
          `;
 
             taskComment.innerHTML += taskComment2;
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        }
+    });
+
+    return false;
+}
+
+function addReplyTaskComment(taskId, user_id, commentId) {
+    let content = $('#reply_comment_' + commentId).val();
+    let formData = {
+        content: content,
+        user_id: user_id,
+        task_id: taskId,
+        parent_id: commentId
+    };
+    console.log(formData);
+    $.ajax({
+        url: `/tasks/comments/create`,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            console.log('taskComment đã được thêm thành công!', response);
+
+            let taskComment = document.getElementById('task-comment-' + taskId);
+            let createdAt = new Date(response.comment.created_at);
+            let content = response.comment.content; // Comment content
+
+            // Lấy thời gian hiện tại
+            let now = new Date();
+
+            // Tính số giờ chênh lệch giữa hiện tại và thời gian tạo comment
+            let diffInHours = Math.abs(now - createdAt) / 36e5;
+
+            // Tính toán "X giờ trước" hoặc định dạng đầy đủ
+            let timeAgo;
+            if (diffInHours < 24) {
+                let diffInMinutes = Math.floor((now - createdAt) / (1000 * 60)); // Tính phút chênh lệch
+                if (diffInMinutes < 60) {
+                    timeAgo = `${diffInMinutes} phút trước`;
+                } else {
+                    timeAgo = `${Math.floor(diffInMinutes / 60)} giờ trước`;
+                }
+            } else {
+                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
+                ${createdAt.getFullYear()}`;
+            }
+            let btnThaoTac = ``;
+
+            if (response.auth === formData.user_id) {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Chỉnh sửa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-update-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted">Chỉnh sửa</div>
+                            <form class="flex-column"
+                                  id="comment_form_${response.comment.task_id}">
+                                  <textarea name="content" class="form-control"
+                                    id="update_comment_${response.comment.id}">${response.comment.content}
+                                    </textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="updateTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+            } else {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Trả lời</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-reply-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted"><i class=" ri-arrow-go-forward-fill"></i><h5 class="text-center text-muted ">${response.userName}</h5></div>
+                            <form class="flex-column"
+                                  id="comment_form_{{$task->id}}">
+                                  <textarea name="content" class="form-control"
+                                            id="reply_comment_${response.comment.id}"
+                                            placeholder="Trả lời bình luận"></textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="addReplyTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+
+            }
+            let btnXoa = '';
+            if (response.userOwnerID === formData.user_id || response.userId === formData.user_id) {
+                btnXoa = `
+                       <span class="mx-1">-</span>
+                        <span data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Xóa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                            <h5 class="text-center">Bạn có muốn xóa bình luận</h5>
+                            <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+                            <button class="btn btn-danger w-100" onclick="removeComment(${response.comment.id})">Xóa bình luận</button>
+                        </div>
+                    `;
+            }
+
+
+            let taskComment2 = `
+        <div class="d-flex mt-2 conten-comment-${response.comment.id}">
+                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                     style="width: 40px;height: 40px">
+                    ${response.userName.charAt(0).toUpperCase()}
+                 </div>
+            <section class="ms-2 w-100">
+                <strong>${response.userName}</strong>
+                <span class="fs-11">${timeAgo}</span>
+                <div class="bg-info-subtle p-1 rounded ps-2 d-flex " id="1content-coment-${response.comment.id}">
+                    <div
+                        class="badge border rounded  align-items-center "
+                        style=" background-color:  #4A90E2">@
+                        ${response.replyUser}
+                        </div>
+                ${content}</div>
+                <div class="fs-11 d-flex">
+                    <div class=""> ${btnThaoTac}</div>
+                    <div class=""> ${btnXoa}</div>
+                </div>
+
+
+                </div>
+            </section>
+          </div>
+         `;
+
+            taskComment.innerHTML += taskComment2;
+            $('.dropdown-menu-reply-comemnt-' + commentId).dropdown('hide');
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        }
+    });
+
+    return false;
+}
+
+function updateTaskComment(taskId, user_id, commentId) {
+    let content = $('#update_comment_' + commentId).val();
+    let formData = {
+        content: content,
+        user_id: user_id,
+        task_id: taskId,
+        id: commentId
+    };
+    console.log(formData);
+    $.ajax({
+        url: `/tasks/comments/${commentId}/update`,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+            console.log('taskComment đã được thêm thành công!', response);
+
+            let taskComment = document.getElementById('1content-coment-' + commentId);
+            let repon = `
+            <div class="bg-info-subtle p-1 rounded ps-2 d-flex " id="1content-coment-${commentId}">
+                ${response.replyUser ? `
+                    <div class="badge border rounded align-items-center" style="background-color: #4A90E2;">
+                        @${response.replyUser}
+                    </div>
+                ` : ''}
+                ${response.comment.content}
+            </div>
+             `;
+
+          // Thay vì `textContent`, dùng `innerHTML` để thêm HTML vào phần tử
+            if (taskComment) {
+                taskComment.innerHTML = repon;
+            } else {
+                console.error("Không tìm thấy phần tử với id:", '1content-coment-' + commentId);
+            }
+
+            $('.dropdown-menu-update-comemnt-' + commentId).dropdown('hide');
             $(this).find('button[type="submit"]').prop('disabled', false);
         },
         error: function (xhr) {
