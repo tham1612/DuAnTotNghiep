@@ -55,7 +55,7 @@
 
                                 </td>
                                 <td>
-                                    <p>{{ $checklistItem->name }}</p>
+                                    {{ $checklistItem->name }}
                                 </td>
                                 <td class=" d-flex justify-content-end">
                                     <div>
@@ -156,6 +156,9 @@
                             </tr>
                         @endforeach
 
+
+                        </tbody>
+                        <tfoot>
                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
                             <td colspan="2">
                                 <form class="formItem">
@@ -179,7 +182,7 @@
 
                             </td>
                         </tr>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
                 <button class="btn btn-outline-dark ms-3 mt-2 display-checklist" type="button" id="">
