@@ -57,13 +57,7 @@
                 ->first();
         } else {
             $workspaceBoards = \App\Models\Workspace::query()
-                ->with([
-                    'boards' => function ($query) use ($userId) {
-                        $query->whereHas('boardMembers', function ($q) use ($userId) {
-                            $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
-                        });
-                    },
-                ])
+                ->with('boards.boardMembers') // Lấy luôn boardMembers để kiểm tra
                 ->where('id', $workspaceChecked->workspace_id)
                 ->first();
         }
@@ -276,10 +270,6 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-start">
                                             <a class="dropdown-item">
-                                                <input type="text" name="text"
-                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
-                                                    onchange="updateBoard({{ $board->id }})" />
                                                 <input type="text" name="name"
                                                     class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
                                                     id="name_board_{{ $board->id }}" value="{{ $board->name }}"

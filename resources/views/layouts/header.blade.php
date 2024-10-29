@@ -1,22 +1,22 @@
 @php
-    //    $boardIsStars = \App\Models\Board::query()
-    //        ->distinct()
-    //        ->select(
-    //            'boards.name AS board_name',
-    //            'workspaces.name AS workspace_name',
-    //            'boards.id AS board_id',
-    //            'boards.image AS board_image',
-    //        )
-    //        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-    //        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
-    //        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-    //        ->where('workspace_members.is_active', 1)
-    //        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
-    //        ->where('board_members.is_star', 1)
-    //        ->get();
+        $boardIsStars = \App\Models\Board::query()
+            ->distinct()
+            ->select(
+                'boards.name AS board_name',
+                'workspaces.name AS workspace_name',
+                'boards.id AS board_id',
+                'boards.image AS board_image',
+            )
+            ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
+            ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
+            ->join('board_members', 'board_members.board_id', '=', 'boards.id')
+            ->where('workspace_members.is_active', 1)
+            ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
+            ->where('board_members.is_star', 1)
+            ->get();
 
-    $boardIsStars = session('$board_star');
-    //dd(\Illuminate\Support\Facades\Auth::id(),$boardIsStars);
+//    $boardIsStars = session('$board_star');
+//    dd($boardIsStars);
     $userId = Auth::id();
     $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
 @endphp
@@ -164,30 +164,33 @@
                                             class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                             <div class="d-flex align-items-center board-star-container">
                                                 @if ($boardIsStar['image'])
-                                                    <img src="{{ asset('storage/' . $boardIsStar['image']) }}"
+                                                    <img src="{{ asset('storage/' . $boardIsStar['board_image']) }}"
                                                         class="me-3 rounded-circle avatar-sm p-2 bg-light"
                                                         alt="user-pic" />
                                                 @else
                                                     <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                         style="width: 30px;height: 30px">
-                                                        {{ strtoupper(substr($boardIsStar['name'], 0, 1)) }}
+                                                        {{ strtoupper(substr($boardIsStar['board_name'], 0, 1)) }}
                                                     </div>
                                                 @endif
 
                                                 <div class="flex-grow-1">
                                                     <h6 class="mt-0 mb-1 fs-14">
                                                         {{--    Liên kết đến bảng                                            --}}
-                                                        <a href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardIsStar['id']]) }}"
+                                                        <a href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardIsStar['board_id']]) }}"
                                                             class="text-reset">
-                                                            {{ $boardIsStar['name'] }}
+                                                            {{ $boardIsStar['board_name'] }}
                                                         </a>
                                                     </h6>
+                                                    <p class="mb-0 fs-12 w-100 text-muted">
+                                                        {{ $boardIsStar['workspace_name'] }}
+                                                    </p>
                                                 </div>
                                                 <div class="ps-2">
-                                                    <button type="button" data-value="{{ $boardIsStar['id'] }}"
-                                                        id="board_star_{{ $boardIsStar['id'] }}"
+                                                    <button type="button" data-value="{{ $boardIsStar['board_id'] }}"
+                                                        id="board_star_{{ $boardIsStar['board_id'] }}"
                                                         class="btn btn-icon btn-sm btn-ghost-warning "
-                                                        onclick="updateIsStar3({{ $boardIsStar['id'] }}, {{ Auth::id() }})">
+                                                        onclick="updateIsStar3({{ $boardIsStar['board_id'] }}, {{ Auth::id() }})">
                                                         <i class="ri-star-fill fs-16"></i>
                                                     </button>
                                                 </div>
@@ -471,8 +474,8 @@
                             data.boards.forEach(board => {
                                 resultsHtml += `
                             <div class="d-flex justify-content-center align-items-center ms-3 me-3">
-                                ${board.image ? 
-                                    `<img src="/storage/${board.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` : 
+                                ${board.image ?
+                                    `<img src="/storage/${board.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` :
                                     `<div class="bg-info-subtle rounded d-flex justify-content-center align-items-center" style="width: 20px; height: 20px;">
                                         ${board.name.charAt(0).toUpperCase()}
                                     </div>`
@@ -489,8 +492,8 @@
                             data.catalogs.forEach(catalog => {
                             resultsHtml += `
                                 <div class="d-flex justify-content-center align-items-center ms-3 me-3">
-                                ${catalog.image ? 
-                                    `<img src="/storage/${catalog.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` : 
+                                ${catalog.image ?
+                                    `<img src="/storage/${catalog.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` :
                                     `<div class="bg-info-subtle rounded d-flex justify-content-center align-items-center" style="width: 20px; height: 20px;">
                                     ${catalog.name.charAt(0).toUpperCase()}
                                     </div>`
@@ -498,19 +501,19 @@
                                 <a href="/b/${catalog.board_id}/edit" class="dropdown-item notify-item">
                                         <span>${catalog.board_name} : ${catalog.name}</span>
                                     </a>
-                                </div>                                   
+                                </div>
                             `;
                             });
                         }
 
-                        // Hiển thị kết quả task 
+                        // Hiển thị kết quả task
                         if (data.tasks.length > 0) {
                             resultsHtml += `<div class="dropdown-header">Thẻ</div>`;
                             data.tasks.forEach(task => {
                             resultsHtml += `
                                 <div class="d-flex justify-content-center align-items-center ms-3 me-3">
-                                ${task.image ? 
-                                    `<img src="/storage/${task.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` : 
+                                ${task.image ?
+                                    `<img src="/storage/${task.image}" alt="" class="rounded avatar-sm" style="width: 20px; height: 20px;">` :
                                     `<div class="bg-info-subtle rounded d-flex justify-content-center align-items-center" style="width: 20px; height: 20px;">
                                         ${task.text.charAt(0).toUpperCase()}
                                     </div>`
@@ -518,10 +521,10 @@
                                     <div class="dropdown-item notify-item">
                                         <span class="task-text" data-bs-toggle="modal"
                                                         data-bs-target="#detailCardModal${task.id}">${task.text}</span>
-                                        <a href="/b/${task.board_id}/edit"><span class="task-details">${task.board_name} : ${task.catalog_name}</span>  
+                                        <a href="/b/${task.board_id}/edit"><span class="task-details">${task.board_name} : ${task.catalog_name}</span>
                                     </a>
                                     </div>
-                                </div>  
+                                </div>
                             `;
                             });
                         }

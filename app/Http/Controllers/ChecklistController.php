@@ -5,27 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
+use App\Models\Tag;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class ChecklistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function create(Request $request)
     {
         if (session('view_only', false)) {
@@ -45,6 +31,7 @@ class ChecklistController extends Controller
         ]);
     }
 
+
     public function createChecklistItem(Request $request)
     {
 
@@ -54,6 +41,8 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkListItem = CheckListItem::create($data);
+        $boardId=($checkListItem->checkList->task->catalog->board->id);
+        $checkListMembers=json_decode(json_encode($checkListItem->check_list_item_members));
         return response()->json([
             'success' => "them ChecklistItem thành công",
             'msg' => true,
@@ -66,12 +55,15 @@ class ChecklistController extends Controller
             'reminder_date' => $checkListItem->reminder_date,
             'task_id' => CheckList::with('checkListItems')
                 ->where('id',  $checkListItem->check_list_id)->value('task_id'),
+            'checkListMembers'=>$checkListMembers,
+            'boardId'=>$boardId
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, string $id)
     {
         if (session('view_only', false)) {
@@ -86,6 +78,7 @@ class ChecklistController extends Controller
             'msg' => true
         ]);
     }
+
 
     public function updateChecklistItem(Request $request)
     {
@@ -104,24 +97,23 @@ class ChecklistController extends Controller
 
     public function addMemberChecklist(Request $request)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
-        CheckListItemMember::create($data);
+        $checkListItemMember=CheckListItemMember::create($data);
+//        dd($checkListItemMember);
         return response()->json([
             'success' => "them CheckListItemMember thành công",
-            'msg' => true
+            'msg' => true,
+            'checkListItemMember'=>$checkListItemMember
         ]);
     }
 
     public function deleteMemberChecklist(Request $request)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
+//        if (session('view_only', false)) {
+//            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+//        }
+//        session()->forget('view_only');
         $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
             ->where('user_id', $request->user_id)
             ->first();
@@ -145,10 +137,6 @@ class ChecklistController extends Controller
 
     public function getFormAddMember(Request $request, $checkListItemId)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
         $boardMembers0 = session('boardMembers_' . $request->boardId);
         $boardMembers = json_decode(json_encode($boardMembers0));
 
@@ -180,6 +168,7 @@ class ChecklistController extends Controller
     }
 
     public function deleteChecklist(Request $request)
+
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
@@ -208,6 +197,46 @@ class ChecklistController extends Controller
                 'msg' => "CheckList không tồn tại"
             ], 404);
         }
+    }
+
+//    checklist item
+    public function createChecklistItem(Request $request)
+    {
+
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $data = $request->except(['_token', '_method']);
+        $checkListItem = CheckListItem::create($data);
+        return response()->json([
+            'success' => "them ChecklistItem thành công",
+            'msg' => true,
+            'checkListItem' => $checkListItem,
+            'check_list_id' => $checkListItem->check_list_id,
+            'id' => $checkListItem->id,
+            'is_complete' => $checkListItem->is_complete,
+            'start_date' => $checkListItem->start_date,
+            'end_date' => $checkListItem->end_date,
+            'reminder_date' => $checkListItem->reminder_date,
+            'task_id' => CheckList::with('checkListItems')
+                ->where('id', $checkListItem->check_list_id)->value('task_id'),
+        ]);
+    }
+
+    public function updateChecklistItem(Request $request)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $checkListItem = CheckListItem::query()->findOrFail($request->id);
+        $data = $request->only(['reminder_date', 'end_date', 'start_date', 'is_complete']);
+        $checkListItem->update($data);
+        return response()->json([
+            'success' => "update checkListItem thành công",
+            'msg' => true
+        ]);
     }
 
     public function deleteChecklistItem(Request $request)
@@ -239,11 +268,38 @@ class ChecklistController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+//    call giao diện
+    public function getFormChekList($taskId)
     {
-        //
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        if (!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.checklist', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
     }
+
+
+    public function getFormDate($checkListItemId)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $checklistItem = CheckListItem::findOrFail($checkListItemId);
+//        dd( $checklistItem);
+
+        $htmlForm = View::make('dropdowns.dateCheckList', [
+            'checklistItem' => $checklistItem
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
+
 }
