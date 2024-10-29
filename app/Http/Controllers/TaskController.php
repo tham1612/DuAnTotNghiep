@@ -29,26 +29,14 @@ use Spatie\Activitylog\Models\Activity;
 class TaskController extends Controller
 {
     protected $googleApiClient;
+    const PATH_UPLOAD = 'tasks';
 
     public function __construct(GoogleApiClientController $googleApiClient)
     {
         $this->googleApiClient = $googleApiClient;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    const PATH_UPLOAD = 'tasks';
 
-    public function index($id, Request $request)
-    {
-
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function store(StoreTaskRequest $request)
     {
         if (session('view_only', false)) {
@@ -94,11 +82,6 @@ class TaskController extends Controller
         return back();
     }
 
-    public function show()
-    {
-        // $activities = Activity::all();
-        // return
-    }
 
     public function update(string $id, UpdateTaskRequest $request)
     {
@@ -162,15 +145,7 @@ class TaskController extends Controller
         ]);
 
     }
-//    public function updateDateTask(Request $request, string $id)
-//    {
-//        $dateTask = Task::query()->findOrFail($id);
-//        $data=$request->only(['reminder_date','end_date','start_date']);
-//        $dateTask->update($data);
-//        return response()->json([
-//            'success' => "update dateTask thành công",
-//        ]);
-//    }
+
     public function updatePosition(Request $request, string $id)
     {
         if (session('view_only', false)) {
@@ -312,135 +287,12 @@ class TaskController extends Controller
 
     }
 
-    public function updateCalendar(Request $request)
+    public function destroy(Request $request)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-        dd($request->id);
-        $task = Task::query()->findOrFail($request->id);
-        $data = $request->all();
-        $data['id_gg_calendar'] = $task->id_google_calendar;
-        $data['start_date'] = $request->start;
-        $data['end_date'] = $request->end;
-        $data['id'] = $request->id;
-        $task->update($data);
-        if ($task->id_google_calendar) {
-//            dd('ton tai');
-            $this->googleApiClient->updateEvent($data);
-        } else {
-//            dd('khong ton tai');
-            $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
-        }
-
 
     }
 
-    public function addMemberTask(Request $request)
-    {
-
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-        $existingMember = TaskMember::where('task_id', $request->task_id)
-            ->where('user_id', $request->user_id)
-
-            ->first();
-
-        if ($existingMember) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Thành viên đã tồn tại trong task.'
-            ], 400);
-        }
-
-        try {
-            TaskMember::query()->insert([
-                "user_id" => $data['user_id'],
-                "task_id" => $data['task_id']
-            ]);
-            $this->googleApiClient->updateEvent($data); // cập nhật người được giao việc
-        } catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Thêm thành viên thành công.'
-        ]);
-    }
-
-    public function deleteTaskMember(Request $request)
-    {
-
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-//        dd($request->all());
-
-        $taskMember = TaskMember::query()
-            ->where('task_id', $data['task_id'])
-            ->where('user_id', $data['user_id'])
-            ->first();
-        $task = Task::query()->where('id', $data['task_id'])->select('text', 'description')->first();
-        $data['text'] = $task->text;
-        $data['description'] = $task->description;
-        if (!$taskMember) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Thành viên không tồn tại trong task này.'
-            ], 404);
-        }
-        try {
-            TaskMember::query()
-                ->where('task_id', $data['task_id'])
-                ->where('user_id', $data['user_id'])
-                ->delete();
-            $this->googleApiClient->updateEvent($data); // cập nhật người được giao việc
-        } catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Xóa thành viên thành công.'
-        ], 200);
-    }
-
-    public function getFormChekList($taskId)
-    {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-        if (!$taskId) {
-            return response()->json(['error' => 'Task ID is missing'], 400);
-        }
-
-        $htmlForm = View::make('dropdowns.checklist', ['taskId' => $taskId])->render();
-
-        // Trả về HTML cho frontend
-        return response()->json(['html' => $htmlForm]);
-    }
-
-    public function getFormAttach($taskId)
-    {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-        if (!$taskId) {
-            return response()->json(['error' => 'Task ID is missing'], 400);
-        }
-
-        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
-
-        // Trả về HTML cho frontend
-        return response()->json(['html' => $htmlForm]);
-    }
+// call giao diện
 
     public function getFormDateTask($taskID)
     {
@@ -458,37 +310,4 @@ class TaskController extends Controller
         return response()->json(['html' => $htmlForm]);
     }
 
-    public function getFormAddMember(Request $request, $taskId)
-    {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-        $boardMembers0 = session('boardMembers_' . $request->boardId);
-        $boardMembers = json_decode(json_encode($boardMembers0));
-
-        $task = json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
-//        dd( $boardMembers);
-
-        $htmlForm = View::make('dropdowns.member', [
-            'taskId' => $taskId,
-            'boardMembers' => $boardMembers,
-            'task' => $task
-        ])->render();
-
-        return response()->json(['html' => $htmlForm]);
-    }
-//    public function getTaskDetail($taskId) {
-//        $task = Task::find($taskId);
-//        $catalog=Catalog::with('tasks')->where('id',$task -> catalog_id)->first();
-//        $board=Board::with('catalogs')->where('id',$catalog->board_id)->first();
-//        // Trả về view chi tiết của task
-//        return view('components.modalTask', compact(['task','board']));
-//    }
-
-
-    public function destroy(Request $request)
-    {
-
-    }
 }
