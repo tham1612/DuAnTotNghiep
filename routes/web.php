@@ -65,7 +65,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->withoutMiddleware('auth');
         Route::post('/workspaces/{workspaceId}/invite', [WorkspaceController::class, 'inviteUser'])
             ->middleware('auth')->name('invite_workspace');
-        Route::get('workspace/activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
+Route::get('workspace/activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
         Route::get('workspace/upgrade-member-ship/{id}', [WorkspaceController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
         Route::get('workspace/management-franchise/{owner_id}/{user_id}', [WorkspaceController::class, 'managementfranchise'])->name('managementfranchise');
 
@@ -103,7 +103,7 @@ Route::middleware(['auth', 'isWorkspace'])
                 Route::put('accept-member', [BoardController::class, 'acceptMember'])->name('acceptMember');
                 Route::delete('refuse-member/{id}', [BoardController::class, 'refuseMember'])->name('refuseMember');
                 Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
-                Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
+Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
                 Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
                 Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
             });
@@ -144,12 +144,21 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('checklist.createChecklistItem');
         Route::put('/tasks/checklist/checklistItem/{id}/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
-        Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
+Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
             ->name('checklist.addMemberChecklist');
         Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
             ->name('checklist.deleteMemberChecklist');
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
+        Route::post('/tasks/checklist/checklistItem/{id}/delete', [ChecklistController::class, 'deleteChecklistItem'])
+            ->name('checklist.deleteChecklistItem');
+        Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDateChecklistItem'])
+            ->name('checklist.getFormDateChecklistItem');
+        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])
+            ->name('checklist.deleteChecklist');
+        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
+//        Route::get('/tasks/{id}/detail', [TaskController::class, 'getTaskDetail']);
+
 
         //       task tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
@@ -163,7 +172,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
             ->name('attachments.destroy');
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
-            ->name('comments.create'); 
+            ->name('comments.create');
         Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
             ->name('comments.destroy');
     });
