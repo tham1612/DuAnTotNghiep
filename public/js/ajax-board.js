@@ -273,6 +273,7 @@ $('button.create-tag-form').off('click').on('click', function (e) {
     // Lấy dữ liệu từ form cụ thể
     const formData = {
         board_id: form.find('input[name="board_id"]').val(),
+        task_id: form.find('input[name="task_id"]').val(),
         name: form.find('input[name="name"]').val(),
         color_code: selectedColor // Sử dụng mã màu đã chọn trước đó
     };

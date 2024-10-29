@@ -146,7 +146,7 @@ class ChecklistController extends Controller
 
 
 //    call giao diện
-    public function getFormChekList($taskId)
+    public function getFormCheckList($taskId)
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');

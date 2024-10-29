@@ -9,7 +9,7 @@ class Tag extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['board_id', 'task_id', 'color_code', 'name'];
+    protected $fillable = ['board_id', 'color_code', 'name'];
 
     public function board()
     {

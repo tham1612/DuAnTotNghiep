@@ -4,7 +4,7 @@
 
     <div class="mt-3">
         <label for="">Tiêu đề</label>
-        <input type="text" name="name" class="name-input form-control border-1" placeholder="Nhập tên nhãn" />
+        <input type="text" name="name" class="name-input form-control border-1" placeholder="Nhập tên nhãn"/>
     </div>
 
     <div class="mt-3">
@@ -12,13 +12,15 @@
         <div class="d-flex flex-wrap gap-2 select-color" id="color-options">
             @if (isset($colors))
                 @foreach ($colors as $color)
-                    <div class="color-option" data-color="{{ $color->code }}" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="{{ $color->name }}">
-                        <div class="color-box border rounded" style="width: 50px;height: 30px; background-color: {{ $color->code }}"></div>
+                    <div class="color-option" data-color="{{ $color->code }}" data-bs-toggle="tooltip"
+                         data-bs-trigger="hover" data-bs-placement="top" title="{{ $color->name }}">
+                        <div class="color-box border rounded"
+                             style="width: 50px;height: 30px; background-color: {{ $color->code }}"></div>
                     </div>
                 @endforeach
             @endif
         </div>
-        <input type="hidden" name="color" class="selected-color" value="" />
+        <input type="hidden" name="task_id" value="{{$task->id}}"/>
     </div>
 
     <div class="mt-3">
