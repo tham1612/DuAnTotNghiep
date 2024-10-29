@@ -36,20 +36,9 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
-        Route::post('/tasks/addMember', [TaskController::class, 'addMemberTask'])
-            ->name('tasks.addMemberTask');
-
-        Route::post('/tasks/deleteTaskMember', [TaskController::class, 'deleteTaskMember'])
-            ->name('tasks.deleteTaskMember');
-
-        Route::get('/tasks/getFormChekList/{id}', [TaskController::class, 'getFormChekList'])
+        Route::get('/tasks/getFormChekList/{id}', [ChecklistController::class, 'getFormChekList'])
             ->name('tasks.getFormChekList');
 
-        Route::get('/tasks/getFormAttach/{id}', [TaskController::class, 'getFormAttach'])
-            ->name('tasks.getFormAttach');
-
-        Route::get('/tasks/getFormAddMember/{id}', [TaskController::class, 'getFormAddMember'])
-            ->name('tasks.getFormAddMember');
 
         //  checklist
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
@@ -64,11 +53,6 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/checklist/checklistItem/{id}/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
 
-        Route::post('/checklistItem/addMemberChecklist', [ChecklistController::class, 'addMemberChecklist'])
-            ->name('checklist.addMemberChecklist');
-
-        Route::post('/checklistItem/deleteMemberChecklist', [ChecklistController::class, 'deleteMemberChecklist'])
-            ->name('checklist.deleteMemberChecklist');
 
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');
@@ -76,23 +60,39 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/tasks/checklist/checklistItem/{id}/delete', [ChecklistController::class, 'deleteChecklistItem'])
             ->name('checklist.deleteChecklistItem');
 
-        Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDateChecklistItem'])
-            ->name('checklist.getFormDateChecklistItem');
+        Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDate'])
+            ->name('checklist.getFormDate');
 
-        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])
-            ->name('checklist.deleteChecklist');
+        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'destroy'])
+            ->name('checklist.destroy');
 
-        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [ChecklistController::class, 'getFormAddMember'])
-            ->name('tasks.getFormAddMember');
 
-        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
+        // member
+        Route::post('/tasks/addMember', [\App\Http\Controllers\MemberController::class, 'addMemberTask'])
+            ->name('tasks.addMemberTask');
 
-        //       task tag
+        Route::post('/tasks/deleteTaskMember', [\App\Http\Controllers\MemberController::class, 'deleteTaskMember'])
+            ->name('tasks.deleteTaskMember');
+
+        Route::get('/tasks/getFormAddMember/{id}', [\App\Http\Controllers\MemberController::class, 'getFormMemberTask'])
+            ->name('tasks.getFormMemberTask');
+
+        Route::post('/checklistItem/addMemberChecklist', [\App\Http\Controllers\MemberController::class, 'addMemberChecklistItem'])
+            ->name('checklist.addMemberChecklistItem');
+
+        Route::post('/checklistItem/deleteMemberChecklist', [\App\Http\Controllers\MemberController::class, 'deleteMemberChecklistItem'])
+            ->name('checklist.deleteMemberChecklistItem');
+
+        Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [\App\Http\Controllers\MemberController::class, 'getFormMemberChecklistItem'])
+            ->name('tasks.getFormMemberChecklistItem');
+
+        //       tag
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
             ->name('tags.create');
 
         Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
             ->name('tags.update');
+
 
         //        attachment
         Route::post('/tasks/attachments/create', [\App\Http\Controllers\AttachmentController::class, 'store'])
@@ -103,6 +103,10 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::delete('/tasks/attachments/{id}/destroy', [\App\Http\Controllers\AttachmentController::class, 'destroy'])
             ->name('attachments.destroy');
+
+        Route::get('/tasks/getFormAttach/{id}', [\App\Http\Controllers\AttachmentController::class, 'getFormAttach'])
+            ->name('tasks.getFormAttach');
+
 
         //        comment
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])

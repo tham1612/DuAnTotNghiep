@@ -6,6 +6,7 @@ use App\Models\CheckList;
 use App\Models\TaskAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
 class AttachmentController extends Controller
 {
@@ -66,5 +67,22 @@ class AttachmentController extends Controller
             'success' => false,
             'msg' => 'Tệp không tồn tại'
         ], 404);
+    }
+
+//    call giao diện
+    public function getFormAttach($taskId)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        if (!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
     }
 }

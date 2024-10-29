@@ -259,9 +259,7 @@ class WorkspaceController extends Controller
                     } catch (\Throwable $th) {
                         dd($th);
                     }
-                }
-
-                //xử lý người dùng kick link invte và workspace đang private
+                } //xử lý người dùng kick link invte và workspace đang private
                 else {
                     WorkspaceMember::create([
                         'user_id' => $user->id,
@@ -312,10 +310,8 @@ class WorkspaceController extends Controller
     /**
      * sử lý xóa không gian làm việc
      */
-    public
-        function delete(
-        $id
-    ) {
+    public function delete(string $id)
+    {
         $userId = Auth::id();
         $workspaceAuthorize = WorkspaceMember::query()
             ->select('authorize')
@@ -348,6 +344,7 @@ class WorkspaceController extends Controller
             throw $th;
         }
     }
+
     // show form chỉnh sửa ws
     public function showFormEditWorkspace()
     {
@@ -644,7 +641,7 @@ class WorkspaceController extends Controller
             //logic sử lý thêm người dùng
             if ($user) {
                 $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $workspace->id)
-                ->first();
+                    ->first();
                 //xử lý khi người dùng chưa ở trong wsp đó
                 if (!$check_user_wsp) {
 
@@ -696,9 +693,7 @@ class WorkspaceController extends Controller
                             } catch (\Throwable $th) {
                                 throw $th;
                             }
-                        }
-
-                        // Người dùng đã đăng nhập nhưng email khác
+                        } // Người dùng đã đăng nhập nhưng email khác
                         else {
                             Auth::logout();
                             Session::put('invited', "case1");
@@ -708,9 +703,7 @@ class WorkspaceController extends Controller
                             Session::put('authorize', $request->authorize);
                             return redirect()->route('login');
                         }
-                    }
-
-                    //xử lý khi người dùng có tài khoản và chưa đăng nhập
+                    } //xử lý khi người dùng có tài khoản và chưa đăng nhập
                     else {
                         Session::put('invited', "case1");
                         Session::put('workspace_id', $workspace->id);
@@ -719,9 +712,7 @@ class WorkspaceController extends Controller
                         return redirect()->route('login');
                     }
 
-                }
-
-                //xử lý khi người dùng đã ở trong wsp đó rồi
+                } //xử lý khi người dùng đã ở trong wsp đó rồi
                 else {
                     return redirect()->route('home');
                 }
@@ -735,9 +726,7 @@ class WorkspaceController extends Controller
                 Session::put('authorize', $request->authorize);
                 return redirect()->route('register');
             }
-        }
-
-        //xử lý khi người dùng kick vào link invite
+        } //xử lý khi người dùng kick vào link invite
         else {
             $workspace = Workspace::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             Auth::logout();
@@ -839,7 +828,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -859,7 +848,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -872,13 +861,14 @@ class WorkspaceController extends Controller
             });
         }
     }
+
     //Thông báo thăng cấp thành viên
     protected function notificationUpgradeMemberShip($workspaceID, $userName)
     {
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -898,7 +888,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -911,12 +901,13 @@ class WorkspaceController extends Controller
             });
         }
     }
+
     protected function notificationEditWorkspace($workspaceID, $userName)
     {
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -929,6 +920,7 @@ class WorkspaceController extends Controller
             });
         }
     }
+
     //thông báo thêm người dùng vào bảng
     protected function notificationMemberInviteBoard($boardID, $userName)
     {

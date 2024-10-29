@@ -75,7 +75,7 @@
                                                 </section>
 
                                                 <span
-                                                        class="ms-4">trong danh sách : <strong>{{$task->catalog->name}}</strong> </span>
+                                                    class="ms-4">trong danh sách : <strong>{{$task->catalog->name}}</strong> </span>
 
                                             </div>
                                         </div>
@@ -86,7 +86,7 @@
                                                     <section class="d-flex">
                                                         <!-- thêm thành viên & chia sẻ link bảng -->
                                                         <div
-                                                                class="d-flex justify-content-center align-items-center cursor-pointer ">
+                                                            class="d-flex justify-content-center align-items-center cursor-pointer ">
                                                             <div class="col-auto ms-sm-auto">
                                                                 <div class="avatar-group " id="list-member-task">
                                                                     @if (count($task->members))
@@ -106,14 +106,14 @@
                                                                                    title="{{ $taskMember->name }}">
                                                                                     @if ($taskMember->image)
                                                                                         <img
-                                                                                                src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                                                alt=""
-                                                                                                class="rounded-circle avatar-sm">
+                                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                                            alt=""
+                                                                                            class="rounded-circle avatar-sm">
                                                                                     @else
                                                                                         <div class="avatar-sm">
                                                                                             <div
-                                                                                                    class="avatar-title rounded-circle bg-info-subtle text-primary"
-                                                                                                    style="width: 35px;height: 35px">
+                                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
+                                                                                                style="width: 35px;height: 35px">
                                                                                                 {{ strtoupper(substr($taskMember->name, 0, 1)) }}
                                                                                             </div>
                                                                                         </div>
@@ -131,7 +131,7 @@
                                                                                title="{{ $task->members->count() - $maxDisplay }} more">
                                                                                 <div class="avatar-sm">
                                                                                     <div
-                                                                                            class="avatar-title rounded-circle">
+                                                                                        class="avatar-title rounded-circle">
                                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                                     </div>
                                                                                 </div>
@@ -145,37 +145,37 @@
                                                     </section>
                                                 </div>
                                             @endif
-                                                <div class="p-3">
-                                                    <strong>Thông báo</strong>
-                                                    @php
-                                                        //                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
-                                                        //                                                        ->where('user_id', auth()->id())
-                                                        //                                                        ->value('follow');
-                                                     $memberFollow1 = collect($task->follow_members)->firstWhere('user_id', auth()->id());
-                                                     $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
+                                            <div class="p-3">
+                                                <strong>Thông báo</strong>
+                                                @php
+                                                    //                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
+                                                    //                                                        ->where('user_id', auth()->id())
+                                                    //                                                        ->value('follow');
+                                                 $memberFollow1 = collect($task->follow_members)->firstWhere('user_id', auth()->id());
+                                                 $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
 
-                                                    @endphp
-                                                    <div
-                                                        class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
-                                                        style="height: 35px; background-color: #091e420f; color: #172b4d"
-                                                        id="notification_{{$task->id}}"
-                                                        onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
-                                                        <i class="@if($memberFollow == 1)
+                                                @endphp
+                                                <div
+                                                    class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                                                    style="height: 35px; background-color: #091e420f; color: #172b4d"
+                                                    id="notification_{{$task->id}}"
+                                                    onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
+                                                    <i class="@if($memberFollow == 1)
                                                     ri-eye-line @else ri-eye-off-line @endif
                                                     fs-22" id="notification_icon_{{$task->id}}"></i>
-                                                        <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">
-                                                            @if($memberFollow == 1)
-                                                                Đang theo dõi
-                                                            @else
-                                                                Theo dõi
-                                                            @endif</p>
-                                                        <div @if( $memberFollow == 0) class="d-none"
-                                                             @endif id="notification_follow_{{$task->id}}">
-                                                            <i class="ri-check-line fs-22 bg-light ms-2 rounded"
-                                                               style="color: black"></i>
-                                                        </div>
+                                                    <p class="ms-2 mt-3" id="notification_content_{{$task->id}}">
+                                                        @if($memberFollow == 1)
+                                                            Đang theo dõi
+                                                        @else
+                                                            Theo dõi
+                                                        @endif</p>
+                                                    <div @if( $memberFollow == 0) class="d-none"
+                                                         @endif id="notification_follow_{{$task->id}}">
+                                                        <i class="ri-check-line fs-22 bg-light ms-2 rounded"
+                                                           style="color: black"></i>
                                                     </div>
                                                 </div>
+                                            </div>
 
 
                                             <div class="p-3 ">
@@ -185,13 +185,14 @@
                                                     $endDate = \Carbon\Carbon::parse($task->end_date);
                                                 @endphp
                                                 <div
-                                                        class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
-                                                        style="height: 35px; background-color: #091e420f; color: #172b4d">
+                                                    class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                                                    style="height: 35px; background-color: #091e420f; color: #172b4d">
                                                     <input type="checkbox" id="due_date_checkbox_{{ $task->id }}"
                                                            class="form-check-input"
                                                            onchange="updateTask2({{ $task->id }})" name="progress"
                                                            @if($task->progress == 100 ) checked @endif />
-                                                    <input type="hidden" id="task_end_date_{{ $task->id }}" value="{{ $task->end_date }}">
+                                                    <input type="hidden" id="task_end_date_{{ $task->id }}"
+                                                           value="{{ $task->end_date }}">
                                                     @if(!empty($task->end_date) || !empty($task->start_date))
                                                         <p class="ms-2 mt-3">{{ $task->end_date }}</p>
                                                     @endif
@@ -220,8 +221,8 @@
                                                                  data-bs-placement="top"
                                                                  title="{{$tag->name}}">
                                                                 <div
-                                                                        class="text-white border rounded d-flex align-items-center justify-content-center"
-                                                                        style="width: 60px;height: 35px; background-color: {{$tag->color_code}}">
+                                                                    class="text-white border rounded d-flex align-items-center justify-content-center"
+                                                                    style="width: 60px;height: 35px; background-color: {{$tag->color_code}}">
                                                                     {{$tag->name}}
                                                                 </div>
                                                             </div>
@@ -264,9 +265,21 @@
 
 
                                     <div class="row mt-4">
-                                        <section class="d-flex">
-                                            <i class="ri-line-chart-line fs-22"></i>
-                                            <p class="fs-18 ms-2 mt-1">Hoạt động</p>
+                                        <section class="d-flex justify-content-between">
+                                            <div class="d-flex">
+                                                <i class="ri-line-chart-line fs-22"></i>
+                                                <p class="fs-18 ms-2 mt-1">Hoạt động</p>
+                                            </div>
+
+
+                                            <div class="hstack gap-2 flex-wrap mb-3">
+                                                <button class="btn btn-outline-dark" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#activity-{{$task->id}}" aria-expanded="false"
+                                                        aria-controls="collapseExample">
+                                                    Ẩn chi tiết
+                                                </button>
+                                            </div>
                                         </section>
                                         <div class=" w-100" id="task-comment-{{$task->id}}">
                                             <div class="d-flex">
@@ -303,59 +316,68 @@
                                                 </div>
 
                                             </div>
-                                            @foreach($task->task_comments as $comment)
-                                                @php $comment = json_decode(json_encode($comment)) @endphp
-                                                <div class="d-flex mt-2 conten-comment-{{$comment->id}}">
-                                                    @if ($comment->user->image)
-                                                        <img class="rounded header-profile-user object-fit-cover"
-                                                             src="{{ asset('storage/' . $comment->user->image) }}"
-                                                             alt="Avatar"/>
-                                                    @else
-                                                        <div
-                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                            style="width: 40px;height: 40px">
-                                                            {{ strtoupper(substr($comment->user->name, 0, 1)) }}
-                                                        </div>
-                                                    @endif
-                                                    <section class="ms-2 w-100">
-                                                        <strong>{{$comment->user->name}}</strong>
-                                                        @php
-                                                            $createdAt = \Carbon\Carbon::parse($comment->created_at);
-                                                            $now = \Carbon\Carbon::now();
-                                                            $diffInHours = $createdAt->diffInHours($now);
-                                                            \Carbon\Carbon::setLocale('vi');
-                                                        @endphp
-
-                                                        @if ($diffInHours < 24)
-                                                            <span class="fs-11">{{ $createdAt->diffForHumans() }}</span>
+                                            <div class="collapse show" id="activity-{{$task->id}}">
+                                                @foreach($task->task_comments as $comment)
+                                                    @php $comment = json_decode(json_encode($comment)) @endphp
+                                                    <div class="d-flex mt-2 conten-comment-{{$comment->id}}">
+                                                        @if ($comment->user->image)
+                                                            <img class="rounded header-profile-user object-fit-cover"
+                                                                 src="{{ asset('storage/' . $comment->user->image) }}"
+                                                                 alt="Avatar"/>
                                                         @else
-                                                            <span
-                                                                class="fs-11">{{ $createdAt->format('H:i j \t\h\g m, Y') }}</span>
+                                                            <div
+                                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                style="width: 40px;height: 40px">
+                                                                {{ strtoupper(substr($comment->user->name, 0, 1)) }}
+                                                            </div>
                                                         @endif
-                                                        <div
-                                                            class="bg-info-subtle p-1 rounded ps-2">{!! $comment->content !!}
-                                                        </div>
+                                                        <section class="ms-2 w-100">
+                                                            <strong>{{$comment->user->name}}</strong>
+                                                            @php
+                                                                $createdAt = \Carbon\Carbon::parse($comment->created_at);
+                                                                $now = \Carbon\Carbon::now();
+                                                                $diffInHours = $createdAt->diffInHours($now);
+                                                                \Carbon\Carbon::setLocale('vi');
+                                                            @endphp
 
-                                                        <div class="fs-11"><span>Trả lời</span>
+                                                            @if ($diffInHours < 24)
+                                                                <span
+                                                                    class="fs-11">{{ $createdAt->diffForHumans() }}</span>
+                                                            @else
+                                                                <span
+                                                                    class="fs-11">{{ $createdAt->format('H:i j \t\h\g m, Y') }}</span>
+                                                            @endif
+                                                            <div
+                                                                class="bg-info-subtle p-1 rounded ps-2">{!! $comment->content !!}
+                                                            </div>
+
+                                                            <div class="fs-11"><span>Trả lời</span>
                                                                 @php $userOwner = $board->members->firstWhere('pivot.authorize', 'Owner');  @endphp
                                                                 @if(auth()->id()===$comment->user->id || auth()->id()=== $userOwner->id )
-                                                                <span class="mx-1">-</span>
-                                                                  <span data-bs-toggle="dropdown"
-                                                                  aria-haspopup="true"
-                                                                  aria-expanded="false">Xóa</span>
-                                                            <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                <h5 class="text-center">Bạn có muốn xóa bình luận</h5>
+                                                                    <span class="mx-1">-</span>
+                                                                    <span data-bs-toggle="dropdown"
+                                                                          aria-haspopup="true"
+                                                                          aria-expanded="false">Xóa</span>
+                                                                    <div
+                                                                        class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                                                        <h5 class="text-center">Bạn có muốn xóa bình
+                                                                            luận</h5>
 
-                                                                <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+                                                                        <p>Bình luận sẽ bị xóa vĩnh viễn và không thể
+                                                                            khôi phục</p>
 
-                                                                <button class="btn btn-danger w-100" onclick="removeComment({{$comment->id}})">Xóa bình luận
-                                                                </button>
+                                                                        <button class="btn btn-danger w-100"
+                                                                                onclick="removeComment({{$comment->id}})">
+                                                                            Xóa bình luận
+                                                                        </button>
+                                                                    </div>
+                                                                @endif
                                                             </div>
-                                                               @endif
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                            @endforeach
+                                                        </section>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -363,23 +385,25 @@
                                     <h5 class="mt-3 mb-3"><strong>Thêm vào thẻ</strong></h5>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-user fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-bs-offset="-40,10" onclick="loadTaskFormAddMember({{ $task->id }},{{$board->id}})">
+                                               aria-expanded="false" data-bs-offset="-40,10"
+                                               onclick="loadTaskFormAddMember({{ $task->id }},{{$board->id}})">
                                                 Thành viên
                                             </p>
                                             <!--dropdown thành viên-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" id="dropdown-content-add-member-task-{{ $task->id }}">
-{{--                                              dropdowns.member--}}
+                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
+                                                 id="dropdown-content-add-member-task-{{ $task->id }}">
+                                                {{--                                              dropdowns.member--}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-tag fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
@@ -397,12 +421,14 @@
                                             style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-check-square fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-bs-offset="-40,10" onclick="loadTaskFormAddCheckList({{ $task->id }})">
+                                               aria-expanded="false" data-bs-offset="-40,10"
+                                               onclick="loadTaskFormAddCheckList({{ $task->id }})">
                                                 Việc cần làm
                                             </p>
 
                                             <!-- dropdown việc cần làm-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" id="dropdown-content-add-checkList-{{ $task->id }}">
+                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
+                                                 id="dropdown-content-add-checkList-{{ $task->id }}">
                                                 <!-- Nội dung form sẽ được chèn vào đây bằng AJAX -->
                                             </div>
                                         </div>
@@ -410,35 +436,37 @@
 
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-clock fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                onclick="loadFormAddDateTask({{ $task->id }})"
                                                aria-expanded="false" data-bs-offset="-40,10"
                                                id="dropdownToggle_{{$task->id}}">
-                                               Ngày
+                                                Ngày
                                             </p>
                                             <!-- dropdown ngày-->
                                             <div class="dropdown-menu dropdown-menu-md p-3"
                                                  id="dropdown-content-add-date-task-{{ $task->id }}"
                                                  style="width: 150%">
-{{--                                                @include('dropdowns.date', ['task' => $task])--}}
+                                                {{--                                                @include('dropdowns.date', ['task' => $task])--}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-paperclip fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-bs-offset="-40,10" onclick="loadTaskFormAddAttach({{ $task->id }})">
+                                               aria-expanded="false" data-bs-offset="-40,10"
+                                               onclick="loadTaskFormAddAttach({{ $task->id }})">
                                                 Đính kèm
                                             </p>
                                             <!--                                    dropdown tệp đính kèm-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%" id="dropdown-content-add-attach-{{ $task->id }}">
-{{--                                                @include('dropdowns.attach')--}}
+                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
+                                                 id="dropdown-content-add-attach-{{ $task->id }}">
+                                                {{--                                                @include('dropdowns.attach')--}}
                                             </div>
                                         </div>
                                     </div>
@@ -446,8 +474,8 @@
                                     <h5 class="mt-3 mb-3"><strong>Thao tác</strong></h5>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style="height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style="height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-arrow-circle-right fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
@@ -461,8 +489,8 @@
                                     </div>
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-copy fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">
@@ -470,7 +498,7 @@
                                             </p>
                                             <!--  dropdown sao chép-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-{{--                                                @include('dropdowns.copyTask')--}}
+                                                {{--                                                @include('dropdowns.copyTask')--}}
                                             </div>
                                         </div>
                                     </div>
@@ -478,8 +506,8 @@
                                     <!-- lưu trữ-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="ri-archive-line fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -491,8 +519,8 @@
                                     <!--                            hoàn tác-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -504,8 +532,8 @@
                                     <!--                            xóa vĩnh viễn-->
                                     <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: red">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: red">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -517,8 +545,8 @@
 
                                     <div class="d-flex mt-3 mb-3 cursor-pointer">
                                         <div
-                                                class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                                style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las ri-share-line fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false" data-bs-offset="-40,10">Chia sẻ</p>
@@ -595,7 +623,7 @@
     });
 </script>
 <script>
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         // Sự kiện cho nút hiển thị form 'Thêm mục'
         if (event.target.classList.contains('display-checklist')) {
             const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
