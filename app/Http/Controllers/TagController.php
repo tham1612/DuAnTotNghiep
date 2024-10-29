@@ -34,7 +34,16 @@ class TagController extends Controller
         }
         session()->forget('view_only');
         $data = $request->all();
-        $tag=Tag::query()->create($data);
+
+        $tag = Tag::query()->create($data);
+
+        if (isset($data['task_id']) && !empty($data['task_id'])) {
+            TaskTag::query()->insert([
+                'task_id' => $data['task_id'],
+                'tag_id' => $tag->id,
+            ]);
+        }
+
         return response()->json([
             'data' => $data,
             'success' => true,

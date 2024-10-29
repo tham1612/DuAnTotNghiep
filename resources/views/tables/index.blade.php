@@ -8,16 +8,6 @@
     {{ session('error') }}
 </div>
 @endif
-
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -263,6 +253,13 @@
 
 @section('style')
     <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
         .no-arrow {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -305,8 +302,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 @endsection
 @section('script')
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <!-- DataTables Buttons JS -->

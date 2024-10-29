@@ -36,8 +36,10 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
-        Route::get('/tasks/getFormChekList/{id}', [ChecklistController::class, 'getFormChekList'])
-            ->name('tasks.getFormChekList');
+        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
+
+        Route::get('/tasks/getFormChekList/{id}', [ChecklistController::class, 'getFormCheckList'])
+            ->name('tasks.getFormCheckList');
 
 
         //  checklist
