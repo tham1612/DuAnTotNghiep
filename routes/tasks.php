@@ -112,6 +112,9 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/tasks/comments/create', [\App\Http\Controllers\CommentController::class, 'store'])
             ->name('comments.create');
 
+        Route::put('/tasks/comments/{id}/update', [\App\Http\Controllers\CommentController::class, 'update'])
+            ->name('comments.update');
+
         Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
             ->name('comments.destroy');
     });

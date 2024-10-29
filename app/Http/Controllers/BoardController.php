@@ -183,6 +183,7 @@ class BoardController extends Controller
                             'checkLists.checkListItems',
                             'checkLists.checkListItems.checkListItemMembers',
                             'checkLists.checkListItems.checkListItemMembers.user',
+                            'checkLists.checkListItems.members',
                             'tags',
                             'followMembers',
                             'attachments',
@@ -279,7 +280,7 @@ class BoardController extends Controller
             return $member->is_accept_invite === 1;
         });
 
-        // Kiểm tra và cập nhật tất cả thành viên đã được mời vào workspace cùng một lần truy vấn
+        // Kiểm tra và cập nhật tất cả thành viên   đã được mời vào workspace cùng một lần truy vấn
         $userIds = $boardMemberInvites->pluck('user_id')->toArray();
         $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
             ->where('workspace_id', $board->workspace_id)
@@ -461,36 +462,60 @@ class BoardController extends Controller
     //thông báo done
     public function acceptMember(Request $request)
     {
-
-        $user = User::find($request->user_id);
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-        try {
-            BoardMember::query()
-                ->where('user_id', $request->user_id)
-                ->where('board_id', $request->board_id)
-                ->update([
-                    'is_accept_invite' => 0,
-                ]);
-            $board = Board::find($request->board_id);
 
-            WorkspaceMember::create([
-                'user_id' => $request->user_id,
-                'workspace_id' => $board->workspace_id,
-                'authorize' => "Viewer",
-                'invite' => now(),
-                'is_active' => 0,
-            ]);
-            $this->notificationMemberInviteBoard($board->id, $user->name);
-            return redirect()->route('b.edit', $request->board_id)->with([
-                'msg' => 'bạn đã chấp nhận người dùng vào bảng',
-                'action' => 'success'
-            ]);
-        } catch (\Exception $e) {
-            throw $e;
+        $user = User::find($request->user_id);
+        $board = Board::find($request->board_id);
+        $checkUser = WorkspaceMember::where('user_id', $request->user_id)
+        ->where('Workspace_id', $board->workspace_id)
+        ->first();
+        if (empty($checkUser)) {
+            try {
+                BoardMember::query()
+                    ->where('user_id', $request->user_id)
+                    ->where('board_id', $request->board_id)
+                    ->update([
+                        'is_accept_invite' => 0,
+                    ]);
+
+                WorkspaceMember::create([
+                    'user_id' => $request->user_id,
+                    'workspace_id' => $board->workspace_id,
+                    'authorize' => "Viewer",
+                    'invite' => now(),
+                    'is_active' => 0,
+                ]);
+                $this->notificationMemberInviteBoard($board->id, $user->name);
+                return redirect()->route('b.edit', $request->board_id)->with([
+                    'msg' => 'bạn đã chấp nhận người dùng vào bảng',
+                    'action' => 'success'
+                ]);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        } else {
+            try {
+                BoardMember::query()
+                    ->where('user_id', $request->user_id)
+                    ->where('board_id', $request->board_id)
+                    ->update([
+                        'is_accept_invite' => 0,
+                    ]);
+
+                $this->notificationMemberInviteBoard($board->id, $user->name);
+                return redirect()->route('b.edit', $request->board_id)->with([
+                    'msg' => 'bạn đã chấp nhận người dùng vào bảng',
+                    'action' => 'success'
+                ]);
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
+
+
     }
 
     //Từ chối người dùng gửi lời mời vào board
@@ -504,7 +529,7 @@ class BoardController extends Controller
         }
         session()->forget('view_only');
         try {
-            BoardMember::find($bm_id)->delete();
+            $boardMember->delete();
             $title = "Từ chối lời mời";
             $description = 'Bạn đã bị từ chối lời mời vào bảng ' . $boardMember->board->name;
             $boardMember->user->notify(new BoardMemberNotification($title, $description));
@@ -1003,4 +1028,3 @@ class BoardController extends Controller
         }
     }
 }
-
