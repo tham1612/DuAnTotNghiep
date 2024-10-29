@@ -417,7 +417,7 @@ function FormCheckListItem(checkListId) {
         url: `/tasks/checklist/checklistItem/create`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             let checkList = document.getElementById('check-list-' + response.check_list_id);
             let listItem = `
         <tr class="cursor-pointer check-list-item-${response.id}">
@@ -661,6 +661,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // Lấy tất cả các checkbox
+    const checkboxes = document.querySelectorAll('.form-check-input-checkList');
+    checkboxes.forEach(checkbox => {
+        checkbox.onclick = function () {
+            const checklistId = this.getAttribute('data-checklist-id');
+            if (checklistId) {
+                updateProgressBar(checklistId);
+            } else {
+                console.error('Checklist ID not found on checkbox');
+            }
+        };
+    });
+
+
+// Cập nhật thanh tiến trình ban đầu cho mỗi checklist
+    const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
+    checklists.forEach(checklistId => updateProgressBar(checklistId));
 });
 document.querySelector('table').addEventListener('click', function (event) {
     const checkbox = event.target;
@@ -674,8 +692,7 @@ document.querySelector('table').addEventListener('click', function (event) {
         }
     }
 });
-// Lấy tất cả các checkbox
-const checkboxes = document.querySelectorAll('.form-check-input-checkList');
+
 
 function updateProgressBar(checklistId) {
     // Lấy tất cả các checkbox thuộc về checklist có checklistId cụ thể
@@ -698,21 +715,7 @@ function updateProgressBar(checklistId) {
 }
 
 // Lắng nghe sự kiện thay đổi trên từng checkbox
-checkboxes.forEach(checkbox => {
-    checkbox.onclick = function () {
-        const checklistId = this.getAttribute('data-checklist-id');
-        if (checklistId) {
-            updateProgressBar(checklistId);
-        } else {
-            console.error('Checklist ID not found on checkbox');
-        }
-    };
-});
 
-
-// Cập nhật thanh tiến trình ban đầu cho mỗi checklist
-const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
-checklists.forEach(checklistId => updateProgressBar(checklistId));
 // });
 // ============= end checklist ======================
 
