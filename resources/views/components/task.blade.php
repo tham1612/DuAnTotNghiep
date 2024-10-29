@@ -221,8 +221,10 @@
                                                                  data-bs-placement="top"
                                                                  title="{{$tag->name}}">
                                                                 <div
+
                                                                     class="badge border rounded d-flex align-items-center justify-content-center"
                                                                     style=" background-color: {{$tag->color_code}}">
+
                                                                     {{$tag->name}}
                                                                 </div>
                                                             </div>
@@ -265,9 +267,21 @@
 
 
                                     <div class="row mt-4">
-                                        <section class="d-flex">
-                                            <i class="ri-line-chart-line fs-22"></i>
-                                            <p class="fs-18 ms-2 mt-1">Hoạt động</p>
+                                        <section class="d-flex justify-content-between">
+                                            <div class="d-flex">
+                                                <i class="ri-line-chart-line fs-22"></i>
+                                                <p class="fs-18 ms-2 mt-1">Hoạt động</p>
+                                            </div>
+
+
+                                            <div class="hstack gap-2 flex-wrap mb-3">
+                                                <button class="btn btn-outline-dark" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#activity-{{$task->id}}" aria-expanded="false"
+                                                        aria-controls="collapseExample">
+                                                    Ẩn chi tiết
+                                                </button>
+                                            </div>
                                         </section>
                                         <div class=" w-100" id="task-comment-{{$task->id}}">
                                             <div class="d-flex">
@@ -304,8 +318,9 @@
                                                 </div>
 
                                             </div>
-                                            <div class="comment-section" style="max-height: 400px; overflow-y: scroll; scrollbar-width: none;">
-                                                @foreach($task->task_comments as $comment)
+
+                                            <div class="collapse show" id="activity-{{$task->id}}">
+                                                  @foreach($task->task_comments as $comment)
                                                     @php
                                                         $comment = json_decode(json_encode($comment)) ;
                                                       $replyUser = collect($task->task_comments)->where('id', $comment->parent_id)->first();
@@ -331,15 +346,18 @@
                                                                 $diffInHours = $createdAt->diffInHours($now);
                                                                 \Carbon\Carbon::setLocale('vi');
 
+
                                                             @endphp
 
                                                             @if ($diffInHours < 24)
                                                                 <span class="fs-11">{{ $createdAt->diffForHumans() }}</span>
+
                                                             @else
                                                                 <span
                                                                     class="fs-11">{{ $createdAt->format('H:i j \t\h\g m, Y') }}</span>
                                                             @endif
                                                             <div
+
                                                                 class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-{{$comment->id}}">
                                                                 @if(!empty($replyUser))
                                                                 <div
@@ -417,6 +435,7 @@
 
                                                 @endforeach
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
