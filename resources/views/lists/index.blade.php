@@ -218,7 +218,7 @@
                                                                    title="{{ $task->members->count() - $maxDisplay }} more">
                                                                     <div class="avatar-xxs">
                                                                         <div
-                                                                            class="avatar-title rounded-circle avatar-xxs bg-info-subtle d-flex justify-content-center align-items-center text-black">
+                                                                            class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
                                                                             +{{ $task->members->count() - $maxDisplay }}
                                                                         </div>
                                                                     </div>
@@ -319,7 +319,7 @@
                                                                 </button>
                                                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                                                             </div>
-                                                        </form>                                                   
+                                                        </form>
                                                     </div>
                                                 </a>
                                             </td> --}}

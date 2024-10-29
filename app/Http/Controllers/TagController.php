@@ -34,6 +34,7 @@ class TagController extends Controller
         }
         session()->forget('view_only');
         $data = $request->all();
+
         $tag = Tag::query()->create($data);
 
         if (isset($data['task_id']) && !empty($data['task_id'])) {
@@ -45,7 +46,8 @@ class TagController extends Controller
 
         return response()->json([
             'data' => $data,
-            'success' => true
+            'success' => true,
+            'tag'=>$tag
         ]);
     }
 
