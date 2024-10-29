@@ -31,7 +31,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
             ->name('chat');
-
+      
         Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');

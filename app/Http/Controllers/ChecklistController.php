@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
+use App\Models\Tag;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -54,6 +55,8 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkListItem = CheckListItem::create($data);
+        $boardId=($checkListItem->checkList->task->catalog->board->id);
+        $checkListMembers=json_decode(json_encode($checkListItem->check_list_item_members));
         return response()->json([
             'success' => "them ChecklistItem thành công",
             'msg' => true,
@@ -66,6 +69,8 @@ class ChecklistController extends Controller
             'reminder_date' => $checkListItem->reminder_date,
             'task_id' => CheckList::with('checkListItems')
                 ->where('id',  $checkListItem->check_list_id)->value('task_id'),
+            'checkListMembers'=>$checkListMembers,
+            'boardId'=>$boardId
         ]);
     }
 
@@ -106,19 +111,21 @@ class ChecklistController extends Controller
     {
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
-        CheckListItemMember::create($data);
+        $checkListItemMember=CheckListItemMember::create($data);
+//        dd($checkListItemMember);
         return response()->json([
             'success' => "them CheckListItemMember thành công",
-            'msg' => true
+            'msg' => true,
+            'checkListItemMember'=>$checkListItemMember
         ]);
     }
 
     public function deleteMemberChecklist(Request $request)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
+//        if (session('view_only', false)) {
+//            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+//        }
+//        session()->forget('view_only');
         $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
             ->where('user_id', $request->user_id)
             ->first();
