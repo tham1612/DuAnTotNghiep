@@ -28,6 +28,9 @@ class MemberController extends Controller
         session()->forget('view_only');
 
         $data = $request->all();
+        $task = Task::query()->findOrFail($data['task_id']);
+        $data['text'] = $task->text;
+        $data['description'] = $task->description;
         $existingMember = TaskMember::where('task_id', $request->task_id)
             ->where('user_id', $request->user_id)
             ->first();

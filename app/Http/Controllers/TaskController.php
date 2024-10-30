@@ -110,6 +110,7 @@ class TaskController extends Controller
             }
         }
         $data['id'] = $id;
+        $data['text'] = $task->text;
         $data['id_gg_calendar'] = $task->id_google_calendar;
         $task->update($data);
 
