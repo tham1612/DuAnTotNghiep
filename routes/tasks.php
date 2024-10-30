@@ -35,9 +35,10 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
 
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
+        Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
 
-        Route::get('/tasks/getFormChekList/{id}', [ChecklistController::class, 'getFormChekList'])
-            ->name('tasks.getFormChekList');
+        Route::get('/tasks/getFormCheckList/{id}', [ChecklistController::class, 'getFormCheckList'])
+            ->name('tasks.getFormCheckList');
 
 
         //  checklist
@@ -117,4 +118,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/tasks/comments/{id}/destroy', [\App\Http\Controllers\CommentController::class, 'destroy'])
             ->name('comments.destroy');
+
+        Route::get('/tasks/comments/{id}/getAllComment', [\App\Http\Controllers\CommentController::class, 'getAllComment'])
+            ->name('comments.getAllComment');
     });
