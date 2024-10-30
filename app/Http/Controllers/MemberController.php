@@ -146,14 +146,12 @@ class MemberController extends Controller
         return response()->json(['html' => $htmlForm]);
     }
 
-    public function getFormMemberChecklistItem(Request $request, $checkListItemId)
+    public function getFormMemberChecklistItem( $checkListItemId)
     {
-        $boardMembers0 = session('boardMembers_' . $request->boardId);
-        $boardMembers = json_decode(json_encode($boardMembers0));
-
-        $checklistItem = json_decode(json_encode(CheckListItem::with('members')->findOrFail($checkListItemId)));
+        $checklistItem = CheckListItem::findOrFail($checkListItemId);
 //        dd( $checklistItem);
-
+        $boardMembers0=$checklistItem->checkList->task->catalog->board->members->unique('id');
+        $boardMembers = json_decode(json_encode($boardMembers0));
         $htmlForm = View::make('dropdowns.memberCheckList', [
             'checkListItemId' => $checkListItemId,
             'boardMembers' => $boardMembers,

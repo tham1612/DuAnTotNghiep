@@ -599,7 +599,7 @@ $(document).on('change', '.form-check-input-checkList', function () {
 
 function loadTaskFormAddCheckList(taskId) {
     $.ajax({
-        url: `/tasks/getFormChekList/${taskId}`, // Đường dẫn API hoặc route để lấy form
+        url: `/tasks/getFormCheckList/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
         success: function (response) {
             if (response.html) {
@@ -824,13 +824,11 @@ function updateProgressBar(checklistId) {
 
 
 // ============= checklist item member ===============
-function loadChecklistItemFormAddMember(checkListItemId, boardId) {
+function loadChecklistItemFormAddMember(checkListItemId) {
     $.ajax({
         url: `/tasks/checklist/checklistItem/getFormAddMember/${checkListItemId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        data: {
-            boardId: boardId,
-        },
+        data: {},
         success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
@@ -898,6 +896,7 @@ function onclickAddMemberCheckListItem(memberId, memberName, checklistItemId) {
                     <i class="ri-close-line fs-20" onclick="removeMemberFromCard(${memberId}, ${checklistItemId})"></i>
                 </li>
             `;
+            let memberCheckListItem =document.getElementById();
             cardMembersListItem.innerHTML += listItem;
             console.log('Thành viên đã được thêm vào checkListMember thành công.');
         },
@@ -1567,6 +1566,23 @@ function removeComment(commentId) {
         error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa cmt.');
             console.log(xhr.responseText);
+        }
+    });
+}
+function loadAllTaskComment(taskId) {
+    $.ajax({
+        url: `/tasks/comments/${taskId}/getAllComment`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $(`#activity-${taskId}`).html(response.html).collapse('toggle');
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
         }
     });
 }

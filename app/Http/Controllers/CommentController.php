@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\CheckList;
+use App\Models\Task;
 use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class CommentController extends Controller
 {
@@ -69,6 +72,32 @@ class CommentController extends Controller
 
         ]);
     }
+
+    public function getAllComment($taskId)
+    {
+        if (!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $task = Task::with(['catalog.board.members' => function($query) {
+            $query->wherePivot('authorize', 'Owner');
+        }])->findOrFail($taskId);
+
+        $comments = TaskComment::with('user')->where('task_id', $taskId)->get();
+
+        $userOwner = $task->catalog->board->members->first();
+
+        $htmlForm = view('components.comment', [
+            'taskId' => $taskId,
+            'comments' => $comments,
+            'userOwner' => $userOwner,
+        ])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+
+
     public function destroy(Request $request , string $id)
     {
         $comment = TaskComment::where('id', $request->id)->first();
