@@ -280,15 +280,14 @@ class BoardController extends Controller
         });
 
         // Kiểm tra và cập nhật tất cả thành viên   đã được mời vào workspace cùng một lần truy vấn
-        $userIds = $boardMemberInvites->pluck('user_id')->toArray();
-        $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
-            ->where('workspace_id', $board->workspace_id)
-            ->get();
+        // $userIds = $boardMemberInvites->pluck('user_id')->toArray();
+        // $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
+        //     ->where('workspace_id', $board->workspace_id)
+        //     ->get();
 
-
-        BoardMember::whereIn('user_id', $invitedWorkspaceMembers->pluck('user_id'))
-            ->where('board_id', $board->id)
-            ->update(['is_accept_invite' => 0]);
+        // BoardMember::whereIn('user_id', $invitedWorkspaceMembers->pluck('user_id'))
+        //     ->where('board_id', $board->id)
+        //     ->update(['is_accept_invite' => 0]);
 
         // Lấy ra chủ sở hữu của bảng
         $boardOwner = $boardMemberMain->firstWhere('authorize', AuthorizeEnum::Owner()->value);
@@ -348,7 +347,6 @@ class BoardController extends Controller
                         // Hiển thị task nếu đã xử lý xong
                         return true;
                     });
-                //        dd($taskCalendar);
                 foreach ($taskCalendar as $event) {
                     $listEvent[] = [
                         'id' => $event->id,

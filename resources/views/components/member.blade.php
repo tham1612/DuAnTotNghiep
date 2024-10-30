@@ -71,7 +71,7 @@
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
                                 style="border-radius: 100%; width: 20px ;height: 20px;">
                                 @if (!empty($boardMembers))
-                                    {{ $boardMembers->count() + 1 }}
+                                    {{ $boardMembers->count() + 1 +  $boardSubOwner->count() }}
                                 @endif
                             </span>
 
