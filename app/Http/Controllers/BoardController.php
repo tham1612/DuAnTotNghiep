@@ -183,6 +183,7 @@ class BoardController extends Controller
                             'checkLists.checkListItems',
                             'checkLists.checkListItems.checkListItemMembers',
                             'checkLists.checkListItems.checkListItemMembers.user',
+                            'checkLists.checkListItems.members',
                             'tags',
                             'followMembers',
                             'attachments',
@@ -319,7 +320,7 @@ class BoardController extends Controller
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'tasks', 'boardMemberChecked'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'tasks', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'table':
                 return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));

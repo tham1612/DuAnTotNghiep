@@ -94,13 +94,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Nếu đang ẩn (chưa theo dõi), bật theo dõi
                 followElement.classList.remove('d-none'); // Hiện icon dấu check
                 contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
-                iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line');// Thay đổi icon
+                iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon
             } else {
                 // Nếu đang hiển thị (đang theo dõi), bỏ theo dõi
                 followElement.classList.add('d-none'); // Ẩn icon dấu check
                 contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
 
-                iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line');// Thay đổi icon về cũ
+                iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon về cũ
             }
 
             // In ra taskId để kiểm tra
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // check ngày hết hạn
     document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(checkbox => {
         checkbox.addEventListener('change', function () {
-            const taskId = this.id.split('due_date_checkbox_')[1];  // Lấy taskId từ id của checkbox
+            const taskId = this.id.split('due_date_checkbox_')[1]; // Lấy taskId từ id của checkbox
 
             const successBadge = document.getElementById(`due_date_success_${taskId}`);
             const dueBadge = document.getElementById(`due_date_due_${taskId}`);
@@ -166,11 +166,11 @@ function updateTask2(taskId) {
     console.log(image);
     $.ajax({
         url: `/tasks/` + taskId,
-        method: "POST",  // Sử dụng POST nhưng với method PUT
+        method: "POST", // Sử dụng POST nhưng với method PUT
         dataType: 'json',
         data: formData,
-        processData: false,  // Bắt buộc phải false để không xử lý FormData thành chuỗi
-        contentType: false,  // Bắt buộc phải false để đặt đúng 'multipart/form-data'
+        processData: false, // Bắt buộc phải false để không xử lý FormData thành chuỗi
+        contentType: false, // Bắt buộc phải false để đặt đúng 'multipart/form-data'
         success: function (response) {
             console.log('Task updated successfully:', response);
         },
@@ -273,6 +273,7 @@ $('button.create-tag-form').off('click').on('click', function (e) {
     // Lấy dữ liệu từ form cụ thể
     const formData = {
         board_id: form.find('input[name="board_id"]').val(),
+        task_id: form.find('input[name="task_id"]').val(),
         name: form.find('input[name="name"]').val(),
         color_code: selectedColor // Sử dụng mã màu đã chọn trước đó
     };
@@ -357,14 +358,14 @@ function submitUpdateDateTask(taskId, event) {
     formData.append('start_date', document.getElementById('start_date_task_' + taskId).value);
     formData.append('end_date', document.getElementById('end_date_task_' + taskId).value);
     formData.append('reminder_date', document.getElementById('reminder_date_task_' + taskId).value);
-    formData.append('_method', 'PUT');  // Để giả lập method PUT với Laravel
+    formData.append('_method', 'PUT'); // Để giả lập method PUT với Laravel
 
     $.ajax({
         url: `/tasks/` + taskId,
-        method: "POST",  // Sử dụng POST với method spoofing PUT
+        method: "POST", // Sử dụng POST với method spoofing PUT
         dataType: 'json',
-        processData: false,  // Không xử lý dữ liệu (vì là FormData)
-        contentType: false,  // Để trình duyệt tự đặt Content-Type (multipart/form-data)
+        processData: false, // Không xử lý dữ liệu (vì là FormData)
+        contentType: false, // Để trình duyệt tự đặt Content-Type (multipart/form-data)
         data: formData,
         success: function (response) {
             console.log('Task updated successfully:', response);
@@ -384,6 +385,7 @@ function submitUpdateDateTask(taskId, event) {
 // Xử lý sự kiện khi checkbox được chọn
 $('.form-check-input-tag').on('change', function () {
     let data = $(this).val(); // Lấy giá trị tag ID
+    console.log(data);
 
     $.ajax({
         url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
@@ -392,6 +394,8 @@ $('.form-check-input-tag').on('change', function () {
             data: data,
         },
         success: function (response) {
+            // let checkList = document.getElementById('check-list-' + response.check_list_id);
+
             console.log('Checkbox đã được cập nhật:', response);
             // Xử lý thêm nếu cần
         },
@@ -419,52 +423,139 @@ function FormCheckListItem(checkListId) {
         data: formData,
         success: function (response) {
 
-            console.log('CheckListItem đã được thêm thành công!', response);
+            let maxDisplay = 2;
+            let count = 0;
+            let end_date = ``;
+            if (response.end_date) {
+                end_date = `<span data-bs-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false"
+                      id="dropdownToggle_dateChecklistItem_{{ $checklistItem->id }}"
+                      onclick="loadTaskFormAddDateCheckListItem(${response.id})">
+                               ${response.end_date}
+                            </span>`;
+            } else {
+                end_date = ` <i class="ri-time-line fs-20 " data-bs-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false"
+               onclick="loadTaskFormAddDateCheckListItem(${response.id})"
+               id="dropdownToggle_dateChecklistItem_${response.id}"></i>`;
+            }
+
             let checkList = document.getElementById('check-list-' + response.check_list_id);
             let listItem = `
-             <tr class="cursor-pointer check-list-item-${response.id}">
-                            <td class="col-1">
-                                <div class="form-check">
-                                    <input class="form-check-input-checkList"
-                                           type="checkbox" name="is_complete"
-                                            ${response.is_complete ? 'checked' : ''}
-                                           value="100"
-                                           id="is_complete-${response.id}"
-                                           data-checklist-id="${response.check_list_id}"
-                                           data-task-id="${response.task_id}"/>
-                                </div>
-                            </td>
-                            <td>
-                                <p>${response.checkListItem.name}</p>
-                            </td>
-                            <td class=" d-flex justify-content-end">
-                                <div>
-                                    <i class="ri-more-fill fs-20"
-                                       data-bs-toggle="dropdown"
-                                       aria-haspopup="true"
-                                       aria-expanded="false"></i>
-                                    <div class="dropdown-menu dropdown-menu-md"
-                                         style="padding: 15px 15px 0 15px">
-                                        <h5 class="text-center">Thao tác
-                                            mục</h5>
-                                        <p class="mt-2">Chuyển sang thẻ</p>
-                                        <p class="cursor-pointer text-danger"
-                                        onclick="removeCheckListItem(${response.id})">
-                                        Xóa</p>
+        <tr class="cursor-pointer check-list-item-${response.id}">
+            <td class="col-1">
+                <div class="form-check">
+                    <input class="form-check-input-checkList"
+                       type="checkbox" name="is_complete"
+                       ${response.is_complete ? 'checked' : ''}
+                       value="100"
+                       id="is_complete-${response.id}"
+                       data-checklist-id="${response.check_list_id}"
+                        data-checklist-item-id="${response.check_list_id}"
+                       data-task-id="${response.task_id}"/>
+                </div>
+            </td>
+            <td>${response.checkListItem.name}</td>
+            <td class="d-flex justify-content-end">
+                <div>
+                     ${end_date}
+                    <div class="dropdown-menu dropdown-menu-md p-3 w-50"
+                         id="dropdown-content-add-date-check-list-item-${response.id}"
+                         aria-labelledby="dropdownToggle_dateChecklistItem_${response.id}">
+                    </div>
+                </div>
+                <div class="avatar-group d-flex justify-content-center">
+                `;
+            if (Array.isArray(response.checkListItem.members)) {
+                response.checkListMembers.forEach((checkListItemMember, index) => {
+                    if (count < maxDisplay) {
+                        listItem += `
+                            <a href="javascript: void(0);" class="avatar-group-item"
+                               data-bs-toggle="tooltip" data-bs-placement="top"
+                               title="${checkListItemMember.user.name}">
+                            `;
 
+                        if (checkListItemMember.user.image) {
+                            // Nếu người dùng có ảnh đại diện
+                            listItem += `<img src="/storage/${checkListItemMember.user.image}" alt=""
+                                     class="rounded-circle avatar-xxs object-fit-cover">`;
+                        } else {
+                            // Nếu người dùng không có ảnh đại diện, hiển thị ký tự đầu của tên
+                            listItem += `
+                                    <div class="avatar-xxs">
+                                        <div class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
+                                            ${checkListItemMember.user.name.charAt(0).toUpperCase()}
+                                        </div>
                                     </div>
+                                `;
+                        }
+
+                        listItem += `</a>`;
+                        count++;
+                    }
+                });
+
+// Kiểm tra nếu có nhiều hơn `maxDisplay` thành viên, hiển thị số dư
+                if (response.checkListMembers.length > maxDisplay) {
+                    listItem += `
+                        <a href="javascript: void(0);" class="avatar-group-item"
+                           data-bs-toggle="tooltip" data-bs-placement="top"
+                           title="${response.checkListMembers.length - maxDisplay} more">
+                            <div class="avatar-xxs">
+                                <div class="avatar-title rounded-circle avatar-xxs bg-info-subtle d-flex justify-content-center align-items-center text-black">
+                                    +${response.checkListMembers.length - maxDisplay}
                                 </div>
-                            </td>
-                        </tr>
-            `;
+                            </div>
+                        </a>
+                         `;
+                }
+            }
+
+                // Thêm biểu tượng để thêm thành viên
+                            listItem += `
+                    <i class="ri-user-add-line fs-20" data-bs-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"
+                       onclick="loadChecklistItemFormAddMember(${response.id}, ${response.boardId})"
+                       id="dropdownToggle_${response.id}"></i>
+                    <div id="dropdown-content-add-member-check-list-${response.id}"
+                         class="dropdown-menu dropdown-menu-md p-3 w-50">
+                    </div>
+                `;
+
+                // Kết thúc chuỗi HTML và đóng các thẻ còn lại
+                            listItem += `
+                        </div>
+                        <div>
+                        <i class="ri-more-fill fs-20" data-bs-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false"></i>
+                        <div class="dropdown-menu dropdown-menu-md"
+                             style="padding: 15px 15px 0 15px">
+                            <h5 class="text-center">Thao tác
+                                mục</h5>
+                            <p class="mt-2">Chuyển sang thẻ</p>
+                            <p class="cursor-pointer text-danger"
+                               onclick="removeCheckListItem(${response.id},${response.check_list_id})">
+                                Xóa</p>
+
+                        </div>
+                    </div>
+                    </td>
+                </tr>
+                `;
+
+
             if (checkList) {
+                // Thêm checklist item mới vào cuối danh sách
                 checkList.insertAdjacentHTML('beforeend', listItem);
+
+                // Gọi lại `updateProgressBar` để cập nhật thanh tiến trình cho checklist hiện tại
+                updateProgressBar(response.check_list_id);
             } else {
                 console.error('Không tìm thấy phần check-list-' + response.check_list_id);
             }
-            $('#name_check_list_item_' + checkListId).val('');
-            updateProgressBar(response.check_list_id);
 
+            // Xóa giá trị input sau khi thêm
+            $('#name_check_list_item_' + checkListId).val('');
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -500,7 +591,6 @@ $(document).on('change', '.form-check-input-checkList', function () {
             console.log('ChecklistItem đã được cập nhật thành công!', response);
         },
         error: function (xhr) {
-            alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
         }
     });
@@ -509,7 +599,7 @@ $(document).on('change', '.form-check-input-checkList', function () {
 
 function loadTaskFormAddCheckList(taskId) {
     $.ajax({
-        url: `/tasks/getFormChekList/${taskId}`, // Đường dẫn API hoặc route để lấy form
+        url: `/tasks/getFormCheckList/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
         success: function (response) {
             if (response.html) {
@@ -658,33 +748,25 @@ function submitUpdateCheckList(checklistId, taskId) {
     return false;
 }
 
+// document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
+    // Lắng nghe sự kiện click trên tất cả các checkbox trong DOM
+    document.addEventListener('click', function (event) {
+        const checkbox = event.target;
+
+        // Kiểm tra xem click có phải là checkbox thuộc checklist không
+        if (checkbox.classList.contains('form-check-input-checkList')) {
+            const checklistId = checkbox.getAttribute('data-checklist-id');
+            if (checklistId) {
+                updateProgressBar(checklistId); // Cập nhật thanh progress cho checklist cụ thể
+            } else {
+                console.error('Checklist ID not found on checkbox');
+            }
+        }
+    });
+
     // Lấy tất cả các checkbox
     const checkboxes = document.querySelectorAll('.form-check-input-checkList');
-
-    function updateProgressBar(checklistId) {
-        // Lọc các checkbox thuộc về checklist có checklistId cụ thể
-        const checklistCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.getAttribute('data-checklist-id') === checklistId);
-        const totalCheckboxes = checklistCheckboxes.length;
-        const checkedCheckboxes = checklistCheckboxes.filter(checkbox => checkbox.checked).length;
-
-        console.log(`Checklist ID: ${checklistId}, Total: ${totalCheckboxes}, Checked: ${checkedCheckboxes.length}`);
-
-        // Tính phần trăm hoàn thành
-        const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
-
-        // Cập nhật thanh tiến trình cho checklist tương ứng
-        const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
-        if (progressBar) {  // Kiểm tra thanh progress có tồn tại
-            progressBar.style.width = percentCompleted + '%';
-            progressBar.setAttribute('aria-valuenow', percentCompleted);
-            progressBar.innerHTML = Math.round(percentCompleted) + '%'; // Làm tròn phần trăm
-        } else {
-            console.error(`Progress bar not found for checklist ID: ${checklistId}`);
-        }
-    }
-
-    // Lắng nghe sự kiện thay đổi trên từng checkbox
     checkboxes.forEach(checkbox => {
         checkbox.onclick = function () {
             const checklistId = this.getAttribute('data-checklist-id');
@@ -697,21 +779,56 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    // Cập nhật thanh tiến trình ban đầu cho mỗi checklist
+// Cập nhật thanh tiến trình ban đầu cho mỗi checklist
     const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
     checklists.forEach(checklistId => updateProgressBar(checklistId));
 });
+document.querySelector('table').addEventListener('click', function (event) {
+    const checkbox = event.target;
+
+    if (checkbox.classList.contains('form-check-input-checkList')) {
+        const checklistId = checkbox.getAttribute('data-checklist-id');
+        if (checklistId) {
+            updateProgressBar(checklistId);
+        } else {
+            console.error('Checklist ID not found on checkbox');
+        }
+    }
+});
+
+
+function updateProgressBar(checklistId) {
+    // Lấy tất cả các checkbox thuộc về checklist có checklistId cụ thể
+    const checklistCheckboxes = Array.from(document.querySelectorAll(`.form-check-input-checkList[data-checklist-id="${checklistId}"]`));
+    const totalCheckboxes = checklistCheckboxes.length;
+    const checkedCheckboxes = checklistCheckboxes.filter(checkbox => checkbox.checked).length;
+
+    // Tính phần trăm hoàn thành
+    const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
+
+    // Cập nhật thanh tiến trình cho checklist tương ứng
+    const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
+    if (progressBar) {
+        progressBar.style.width = percentCompleted + '%';
+        progressBar.setAttribute('aria-valuenow', percentCompleted);
+        progressBar.innerHTML = Math.round(percentCompleted) + '%';
+    } else {
+        console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
+    }
+}
+
+// Lắng nghe sự kiện thay đổi trên từng checkbox
+
+// });
 // ============= end checklist ======================
 
 
 // ============= checklist item member ===============
-function loadChecklistItemFormAddMember(checkListItemId, boardId) {
+function loadChecklistItemFormAddMember(checkListItemId) {
     $.ajax({
         url: `/tasks/checklist/checklistItem/getFormAddMember/${checkListItemId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        data: {
-            boardId: boardId,
-        },
+        data: {},
         success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
@@ -734,6 +851,7 @@ function loadTaskFormAddDateCheckListItem(checkListItemId) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-date-check-list-item-' + checkListItemId).html(response.html);
+
             } else {
                 console.log('No HTML returned');
             }
@@ -744,11 +862,7 @@ function loadTaskFormAddDateCheckListItem(checkListItemId) {
     });
 }
 
-function onclickAddMemberCheckListItem(memberId, memberName, check_list_item_id) {
-    addMemberToCheckListItem(memberId, memberName, check_list_item_id);
-}
-
-function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
+function onclickAddMemberCheckListItem(memberId, memberName, checklistItemId) {
     if (document.getElementById('card-member-' + memberId + '-' + checklistItemId)) {
         Swal.fire({
             icon: "error",
@@ -782,6 +896,7 @@ function addMemberToCheckListItem(memberId, memberName, checklistItemId) {
                     <i class="ri-close-line fs-20" onclick="removeMemberFromCard(${memberId}, ${checklistItemId})"></i>
                 </li>
             `;
+            let memberCheckListItem =document.getElementById();
             cardMembersListItem.innerHTML += listItem;
             console.log('Thành viên đã được thêm vào checkListMember thành công.');
         },
@@ -832,8 +947,9 @@ function removeCheckList(checklistId) {
     });
 }
 
-function removeCheckListItem(checklistItemId) {
+function removeCheckListItem(checklistItemId, check_list_id) {
     console.log(checklistItemId);
+    console.log(check_list_id);
     $.ajax({
         url: `/tasks/checklist/checklistItem/${checklistItemId}/delete`,
         type: 'POST',
@@ -841,8 +957,11 @@ function removeCheckListItem(checklistItemId) {
             id: checklistItemId
         },
         success: function (response) {
+
+
             $('.check-list-item-' + checklistItemId).remove();
             console.log('checklistItem đã được xóa thành công .');
+            updateProgressBar(check_list_id);
         },
         error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa thành viên.');
@@ -1082,12 +1201,6 @@ function addMemberToTask(user_id, name, task_id) {
             } else {
                 console.error('Element cardMembersList-' + task_id + ' not found.');
             }
-
-            // if (cardMembersTask) {
-            //     cardMembersTask.innerHTML += listTaskItem;
-            // } else {
-            //     console.error('Element list-member-task' + ' not found.');
-            // }
             console.log('Thành viên đã được thêm vào thẻ thành công.');
         },
         error: function (xhr) {
@@ -1124,11 +1237,12 @@ function removeMemberFromTask(user_id, task_id) {
 
 // ============= comment ===============
 function addTaskComment(taskId, user_id) {
-    let content = editors['comment_task_' + taskId] ? editors['comment_task_' + taskId].getData() : '';
+    let content = $('#comment_task_' + taskId).val();
     let formData = {
         content: content,
         user_id: user_id,
         task_id: taskId,
+        parent_id: ''
     };
     console.log(formData);
     $.ajax({
@@ -1158,9 +1272,52 @@ function addTaskComment(taskId, user_id) {
                     timeAgo = `${Math.floor(diffInMinutes / 60)} giờ trước`;
                 }
             } else {
-                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).
-                slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
+                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
                 ${createdAt.getFullYear()}`;
+            }
+            let btnThaoTac = ``;
+
+            if (response.auth === formData.user_id) {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Chỉnh sửa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-update-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted">Chỉnh sửa</div>
+                            <form class="flex-column"
+                                  id="comment_form_${response.comment.task_id}">
+                                  <textarea name="content" class="form-control"
+                                    id="update_comment_${response.comment.id}">${response.comment.content}
+                                    </textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="updateTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+            } else {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Trả lời</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-reply-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted"><i class=" ri-arrow-go-forward-fill"></i><h5 class="text-center text-muted ">${response.userName}</h5></div>
+                            <form class="flex-column"
+                                  id="comment_form_{{$task->id}}">
+                                  <textarea name="content" class="form-control"
+                                            id="reply_comment_${response.comment.id}"
+                                            placeholder="Trả lời bình luận"></textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="addReplyTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+
             }
             let btnXoa = '';
             if (response.userOwnerID === formData.user_id || response.userId === formData.user_id) {
@@ -1173,7 +1330,7 @@ function addTaskComment(taskId, user_id) {
                             <button class="btn btn-danger w-100" onclick="removeComment(${response.comment.id})">Xóa bình luận</button>
                         </div>
                     `;
-             }
+            }
 
 
             let taskComment2 = `
@@ -1185,9 +1342,10 @@ function addTaskComment(taskId, user_id) {
             <section class="ms-2 w-100">
                 <strong>${response.userName}</strong>
                 <span class="fs-11">${timeAgo}</span>
-                <div class="bg-info-subtle p-1 rounded ps-2">${content}</div>
-                <div class="fs-11">
-                    <span>Trả lời</span> ${btnXoa}
+                <div class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-${response.comment.id}">${content}</div>
+                <div class="fs-11 d-flex">
+                   <div class=""> ${btnThaoTac} </div>
+                    <div class=""> ${btnXoa}</div>
 
                 </div>
             </section>
@@ -1195,7 +1353,7 @@ function addTaskComment(taskId, user_id) {
          `;
 
             taskComment.innerHTML += taskComment2;
-        $(this).find('button[type="submit"]').prop('disabled', false);
+            $(this).find('button[type="submit"]').prop('disabled', false);
         },
         error: function (xhr) {
             alert('Đã xảy ra lỗi!');
@@ -1206,13 +1364,200 @@ function addTaskComment(taskId, user_id) {
 
     return false;
 }
+
+function addReplyTaskComment(taskId, user_id, commentId) {
+    let content = $('#reply_comment_' + commentId).val();
+    let formData = {
+        content: content,
+        user_id: user_id,
+        task_id: taskId,
+        parent_id: commentId
+    };
+    console.log(formData);
+    $.ajax({
+        url: `/tasks/comments/create`,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            console.log('taskComment đã được thêm thành công!', response);
+
+            let taskComment = document.getElementById('task-comment-' + taskId);
+            let createdAt = new Date(response.comment.created_at);
+            let content = response.comment.content; // Comment content
+
+            // Lấy thời gian hiện tại
+            let now = new Date();
+
+            // Tính số giờ chênh lệch giữa hiện tại và thời gian tạo comment
+            let diffInHours = Math.abs(now - createdAt) / 36e5;
+
+            // Tính toán "X giờ trước" hoặc định dạng đầy đủ
+            let timeAgo;
+            if (diffInHours < 24) {
+                let diffInMinutes = Math.floor((now - createdAt) / (1000 * 60)); // Tính phút chênh lệch
+                if (diffInMinutes < 60) {
+                    timeAgo = `${diffInMinutes} phút trước`;
+                } else {
+                    timeAgo = `${Math.floor(diffInMinutes / 60)} giờ trước`;
+                }
+            } else {
+                timeAgo = `${createdAt.getHours()}:${('0' + createdAt.getMinutes()).slice(-2)} ngày ${createdAt.getDate()} tháng ${createdAt.getMonth() + 1},
+                ${createdAt.getFullYear()}`;
+            }
+            let btnThaoTac = ``;
+
+            if (response.auth === formData.user_id) {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Chỉnh sửa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-update-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted">Chỉnh sửa</div>
+                            <form class="flex-column"
+                                  id="comment_form_${response.comment.task_id}">
+                                  <textarea name="content" class="form-control"
+                                    id="update_comment_${response.comment.id}">${response.comment.content}
+                                    </textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="updateTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+            } else {
+                btnThaoTac = `
+                     <span data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false">Trả lời</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-reply-comemnt-${response.comment.id} ">
+                            <div class="d-flex text-muted"><i class=" ri-arrow-go-forward-fill"></i><h5 class="text-center text-muted ">${response.userName}</h5></div>
+                            <form class="flex-column"
+                                  id="comment_form_{{$task->id}}">
+                                  <textarea name="content" class="form-control"
+                                            id="reply_comment_${response.comment.id}"
+                                            placeholder="Trả lời bình luận"></textarea>
+                                <button type="button"
+                                        class="btn btn-primary mt-2"
+                                        onclick="addReplyTaskComment(${response.comment.task_id},${response.auth},${response.comment.id})">
+                                    Lưu
+                                </button>
+                            </form>
+                        </div>
+                 `;
+
+            }
+            let btnXoa = '';
+            if (response.userOwnerID === formData.user_id || response.userId === formData.user_id) {
+                btnXoa = `
+                       <span class="mx-1">-</span>
+                        <span data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Xóa</span>
+                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
+                            <h5 class="text-center">Bạn có muốn xóa bình luận</h5>
+                            <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi phục</p>
+                            <button class="btn btn-danger w-100" onclick="removeComment(${response.comment.id})">Xóa bình luận</button>
+                        </div>
+                    `;
+            }
+
+
+            let taskComment2 = `
+        <div class="d-flex mt-2 conten-comment-${response.comment.id}">
+                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                     style="width: 40px;height: 40px">
+                    ${response.userName.charAt(0).toUpperCase()}
+                 </div>
+            <section class="ms-2 w-100">
+                <strong>${response.userName}</strong>
+                <span class="fs-11">${timeAgo}</span>
+                <div class="bg-info-subtle p-1 rounded ps-2 d-flex " id="1content-coment-${response.comment.id}">
+                    <div
+                        class="badge border rounded  align-items-center "
+                        style=" background-color:  #4A90E2">@
+                        ${response.replyUser}
+                        </div>
+                ${content}</div>
+                <div class="fs-11 d-flex">
+                    <div class=""> ${btnThaoTac}</div>
+                    <div class=""> ${btnXoa}</div>
+                </div>
+
+
+                </div>
+            </section>
+          </div>
+         `;
+
+            taskComment.innerHTML += taskComment2;
+            $('.dropdown-menu-reply-comemnt-' + commentId).dropdown('hide');
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        }
+    });
+
+    return false;
+}
+
+function updateTaskComment(taskId, user_id, commentId) {
+    let content = $('#update_comment_' + commentId).val();
+    let formData = {
+        content: content,
+        user_id: user_id,
+        task_id: taskId,
+        id: commentId
+    };
+    console.log(formData);
+    $.ajax({
+        url: `/tasks/comments/${commentId}/update`,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+            console.log('taskComment đã được thêm thành công!', response);
+
+            let taskComment = document.getElementById('1content-coment-' + commentId);
+            let repon = `
+            <div class="bg-info-subtle p-1 rounded ps-2 d-flex " id="1content-coment-${commentId}">
+                ${response.replyUser ? `
+                    <div class="badge border rounded align-items-center" style="background-color: #4A90E2;">
+                        @${response.replyUser}
+                    </div>
+                ` : ''}
+                ${response.comment.content}
+            </div>
+             `;
+
+            // Thay vì `textContent`, dùng `innerHTML` để thêm HTML vào phần tử
+            if (taskComment) {
+                taskComment.innerHTML = repon;
+            } else {
+                console.error("Không tìm thấy phần tử với id:", '1content-coment-' + commentId);
+            }
+
+            $('.dropdown-menu-update-comemnt-' + commentId).dropdown('hide');
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+            $(this).find('button[type="submit"]').prop('disabled', false);
+        }
+    });
+
+    return false;
+}
+
 function removeComment(commentId) {
     console.log(commentId);
     $.ajax({
         url: `/tasks/comments/{commentId}/destroy`,
         type: 'POST',
         data: {
-            id:commentId
+            id: commentId
         },
         success: function (response) {
             document.querySelector(`.conten-comment-${commentId}`).remove();
@@ -1221,6 +1566,23 @@ function removeComment(commentId) {
         error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa cmt.');
             console.log(xhr.responseText);
+        }
+    });
+}
+function loadAllTaskComment(taskId) {
+    $.ajax({
+        url: `/tasks/comments/${taskId}/getAllComment`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function (response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $(`#activity-${taskId}`).html(response.html).collapse('toggle');
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error);
         }
     });
 }
@@ -1274,8 +1636,3 @@ function removeComment(commentId) {
 //     // Lắng nghe các sự kiện thay đổi trên form (input, checkbox, select,...)
 //     $form.on('input change', debouncedHandleFormChange);
 // });
-
-
-
-
-

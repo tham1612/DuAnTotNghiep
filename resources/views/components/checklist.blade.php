@@ -36,12 +36,12 @@
                         0%
                     </div>
                 </div>
-                <div class="table-responsive table-hover table-card">
+                <div class="table-responsive table-hover table-card" >
                     <table class="table table-nowrap mt-4">
-                        <tbody id="check-list-{{ $checklist->id }}">
+                        <tbody id="check-list-{{ $checklist->id }}"class="checkList-section" style="display: block; max-height: 400px; overflow-y: auto; margin-right: -20px; width: 100% ">
                         @foreach ($checklist->check_list_items as $checklistItem)
                             @php  $checklistItem= json_decode(json_encode($checklistItem));  @endphp
-                            <tr class="cursor-pointer check-list-item-{{ $checklistItem->id }}">
+                            <tr class="cursor-pointer check-list-item-{{ $checklistItem->id }}" style="display: table; table-layout: fixed; width: 100%;">
                                 <td class="col-1">
                                     <div class="form-check">
                                         <input class="form-check-input-checkList" type="checkbox" name="is_complete"
@@ -51,11 +51,9 @@
                                                data-checklist-item-id="{{ $checklistItem->id }}"
                                                data-task-id="{{ $task->id }}"/>
                                     </div>
-
-
                                 </td>
                                 <td>
-                                    <p>{{ $checklistItem->name }}</p>
+                                    {{ $checklistItem->name }}
                                 </td>
                                 <td class=" d-flex justify-content-end">
                                     <div>
@@ -80,60 +78,58 @@
                                     </div>
 
 
-                                    <div class="d-flex ms-4">
+                                    <div class="avatar-group d-flex justify-content-center">
+                                        <div class="" id="member-add-checkListItem-{{ $checklistItem->id }}"></div>
                                         @if ($checklistItem->check_list_item_members)
-                                            <div style="margin-right: -15px">
-                                                @php
-                                                    // Đếm số lượng checkListItemMember
-                                                    $maxDisplay = 3;
-                                                    $count = 0;
-                                                @endphp
-
-                                                @foreach ($checklistItem->check_list_item_members as $checkListItemMember)
-                                                    @php  $checkListItemMember= json_decode(json_encode($checkListItemMember));  @endphp
-                                                    @if ($count < $maxDisplay)
-                                                        <a href="javascript: void(0);" class="avatar-group-item"
-                                                           data-bs-toggle="tooltip" data-bs-placement="top"
-                                                           title="{{ $checkListItemMember->user->name }}">
-                                                            @if ($checkListItemMember->user->image)
-                                                                <img
-                                                                    src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
-                                                                    alt=""
-                                                                    class="rounded-circle avatar-sm object-fit-cover"
-                                                                    style="width: 20px;height: 20px">
-                                                            @else
-                                                                <div class="avatar-sm">
-                                                                    <div
-                                                                        class="avatar-title rounded-circle bg-info-subtle text-primary"
-                                                                        style="width: 30px;height: 30px">
-                                                                        {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                        </a>
-                                                        @php $count++; @endphp
-                                                    @endif
-                                                @endforeach
-
-                                                @if (count($checklistItem->check_list_item_members) > $maxDisplay)
+                                            @php
+                                                // Đếm số lượng checkListItemMember
+                                                $maxDisplay = 2;
+                                                $count = 0;
+                                            @endphp
+                                            @foreach ($checklistItem->check_list_item_members as $checkListItemMember)
+                                                @php  $checkListItemMember= json_decode(json_encode($checkListItemMember));  @endphp
+                                                @if ($count < $maxDisplay)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                                       title="{{ count($checklistItem->check_list_item_members) - $maxDisplay }} more">
-                                                        <div class="avatar-sm">
-                                                            <div class="avatar-title rounded-circle">
-                                                                +{{ count($checklistItem->check_list_item_members) - $maxDisplay }}
+                                                       title="{{ $checkListItemMember->user->name }}">
+                                                        @if ($checkListItemMember->user->image)
+                                                            <img
+                                                                src="{{ asset('storage/' . $checkListItemMember->user->image) }}"
+                                                                alt=""
+                                                                class="rounded-circle avatar-xxs  object-fit-cover">
+                                                        @else
+                                                            <div class="avatar-xxs">
+                                                                <div
+                                                                    class="bg-info-subtle rounded-circle avatar-xxs d-flex
+                                                                    justify-content-center align-items-center">
+                                                                    {{ strtoupper(substr($checkListItemMember->user->name, 0, 1)) }}
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        @endif
                                                     </a>
+                                                    @php $count++; @endphp
                                                 @endif
-                                            </div>
+                                            @endforeach
+
+                                            @if (count($checklistItem->check_list_item_members) > $maxDisplay)
+                                                <a href="javascript: void(0);" class="avatar-group-item"
+                                                   data-bs-toggle="tooltip" data-bs-placement="top"
+                                                   title="{{ count($checklistItem->check_list_item_members) - $maxDisplay }} more">
+                                                    <div class="avatar-xxs">
+                                                        <div class="avatar-title rounded-circle avatar-xxs bg-info-subtle d-flex justify-content-center align-items-center text-black">
+                                                            +{{ count($checklistItem->check_list_item_members) - $maxDisplay }}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @endif
+
                                         @endif
                                         <i class="ri-user-add-line fs-20" data-bs-toggle="dropdown"
                                            aria-haspopup="true" aria-expanded="false"
-                                           onclick="loadChecklistItemFormAddMember({{ $checklistItem->id }},{{ $board->id }})"
+                                           onclick="loadChecklistItemFormAddMember({{ $checklistItem->id }})"
                                            id="dropdownToggle_{{ $checklistItem->id }}"></i>
                                         <div id="dropdown-content-add-member-check-list-{{ $checklistItem->id }}"
-                                             class="dropdown-menu dropdown-menu-md p-3 w-50">
+                                             class="dropdown-menu dropdown-menu-md p-3 w-50 ">
                                             {{--                                        @include('dropdowns.memberCheckList', ['checklistItem' => $checklistItem]) --}}
                                         </div>
                                     </div>
@@ -147,7 +143,7 @@
                                                 mục</h5>
                                             <p class="mt-2">Chuyển sang thẻ</p>
                                             <p class="cursor-pointer text-danger"
-                                               onclick="removeCheckListItem({{ $checklistItem->id }})">
+                                               onclick="removeCheckListItem({{ $checklistItem->id }},{{ $checklist->id }})">
                                                 Xóa</p>
 
                                         </div>
@@ -156,6 +152,9 @@
                             </tr>
                         @endforeach
 
+
+                        </tbody>
+                        <tfoot>
                         <tr class="cursor-pointer addOrUpdate-checklist d-none">
                             <td colspan="2">
                                 <form class="formItem">
@@ -179,10 +178,10 @@
 
                             </td>
                         </tr>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
-                <button class="btn btn-outline-dark ms-3 mt-2 display-checklist" type="button" id="">
+                <button class="btn btn-outline-dark ms-3 mt-2 display-checklist" >
                     Thêm mục
                 </button>
             </div>
