@@ -314,16 +314,17 @@ class BoardController extends Controller
 
         switch ($viewType) {
             case 'dashboard':
-                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
 
             case 'list':
-                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
                 return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'tasks', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
+
             case 'table':
-                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'calendar':
                 $listEvent = array();
@@ -358,10 +359,10 @@ class BoardController extends Controller
                         'end' => Carbon::parse($event->end_date)->toIso8601String(),
                     ];
                 }
-                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             default:
-                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
         }
     }
 
@@ -468,8 +469,8 @@ class BoardController extends Controller
         $user = User::find($request->user_id);
         $board = Board::find($request->board_id);
         $checkUser = WorkspaceMember::where('user_id', $request->user_id)
-        ->where('Workspace_id', $board->workspace_id)
-        ->first();
+            ->where('Workspace_id', $board->workspace_id)
+            ->first();
         if (empty($checkUser)) {
             try {
                 BoardMember::query()

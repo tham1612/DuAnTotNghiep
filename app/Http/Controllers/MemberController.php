@@ -101,10 +101,13 @@ class MemberController extends Controller
     {
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
-        CheckListItemMember::create($data);
+        $checkListItemMember=CheckListItemMember::create($data);
+        $userImage = $checkListItemMember->user->image ?? null;
         return response()->json([
             'success' => "them CheckListItemMember thành công",
-            'msg' => true
+            'msg' => true,
+            'userImage'=>$userImage,
+            'userName'=>$checkListItemMember->user->name
         ]);
     }
 
