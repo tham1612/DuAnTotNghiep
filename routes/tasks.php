@@ -39,7 +39,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
 
-        Route::get('/tasks/getFormChekList/{id}', [ChecklistController::class, 'getFormCheckList'])
+        Route::get('/tasks/getFormCheckList/{id}', [ChecklistController::class, 'getFormCheckList'])
             ->name('tasks.getFormCheckList');
 
 
@@ -66,8 +66,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/checklist/checklistItem/{id}/getFormDate', [ChecklistController::class, 'getFormDate'])
             ->name('checklist.getFormDate');
 
-        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'destroy'])
-            ->name('checklist.destroy');
+        Route::post('/tasks/{checklist}/deleteChecklist', [ChecklistController::class, 'deleteChecklist'])
+            ->name('checklist.deleteChecklist');
 
 
         // member
@@ -89,7 +89,14 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/checklist/checklistItem/getFormAddMember/{id}', [\App\Http\Controllers\MemberController::class, 'getFormMemberChecklistItem'])
             ->name('tasks.getFormMemberChecklistItem');
 
+
         //       tag
+        Route::get('/tasks/getListTagTaskBoard/{id}', [\App\Http\Controllers\TagController::class, 'getListTagTaskBoard'])
+            ->name('tasks.getListTagTaskBoard');
+
+        Route::get('/tasks/getFormCreateTag/{id}', [\App\Http\Controllers\TagController::class, 'getFormCreateTag'])
+            ->name('tasks.getFormCreateTag');
+
         Route::post('/tasks/tag/create', [\App\Http\Controllers\TagController::class, 'store'])
             ->name('tags.create');
 

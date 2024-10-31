@@ -79,7 +79,9 @@
 
 
                                     <div class="avatar-group d-flex justify-content-center">
-                                        <div class="" id="member-add-checkListItem-{{ $checklistItem->id }}"></div>
+                                        <div class="d-flex justify-content-center" id="member-add-checkListItem-{{ $checklistItem->id }}">
+
+                                        </div>
                                         @if ($checklistItem->check_list_item_members)
                                             @php
                                                 // Đếm số lượng checkListItemMember
@@ -91,6 +93,7 @@
                                                 @if ($count < $maxDisplay)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                                       id="member-checklist-{{$checkListItemMember->user_id}}-{{$checkListItemMember->check_list_item_id}}"
                                                        title="{{ $checkListItemMember->user->name }}">
                                                         @if ($checkListItemMember->user->image)
                                                             <img
