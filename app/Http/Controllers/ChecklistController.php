@@ -94,17 +94,6 @@ class ChecklistController extends Controller
             'msg' => true
         ]);
     }
-////    public function getProgress( Request $request )
-////    {
-////        $checklistItem = CheckListItemMember::where('check_list_item_id',$request->check_list_item_id)
-////            ->where('user_id',$request->user_id)
-////            ->first();
-////        $checklistItem->delete();
-////        return response()->json([
-////            'success' => "xoas CheckListItemMember thành công",
-////            'msg' => true
-////        ]);
-//    }
 
     public function getFormDateChecklistItem( $checkListItemId)
     {

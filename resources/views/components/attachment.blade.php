@@ -1,6 +1,6 @@
-@if(!empty($task->attachments) && !empty($task))
+
     <!-- tệp -->
-    <div class="row mt-3">
+    <div class="row mt-3" id="attachment-section-{{$task->id}}" style="{{ count($task->attachments) ? '' : 'display: none;' }}">
         <section class="d-flex">
             <i class="ri-link-m fs-22"></i>
             <p class="fs-18 ms-2 mt-1">Tệp đính kèm</p>
@@ -115,29 +115,26 @@
 
             </div>
         @endif
-        @if(!empty($task->attachments))
             <div class="ps-4">
                 <strong>Tệp </strong>
                 <div
                     class="table-responsive table-hover table-card attachments-container"
                     style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-nowrap mt-4">
-                        <tbody>
+                        <tbody id="list-attachment-task-{{$task->id}}">
                         @foreach($task->attachments as $attachment)
-                            <tr class="cursor-pointer attachment_{{$attachment->id}}">
+                            <tr class="cursor-pointer attachment_{{$attachment->id}} ">
                                 <td class="col-1" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal">
                                     <img
                                         src="{{ asset('storage/' . $attachment->file_name) }}"
                                         alt="Attachment Image"
                                         style="
-                                                                     width: 100px;
-                                                                     height: auto;
-                                                                     object-fit: cover;
-                                                                     border-radius: 8px;
-                                                                 ">
-
-
+                                             width: 100px;
+                                             height: auto;
+                                             object-fit: cover;
+                                             border-radius: 8px;
+                                         ">
                                 </td>
                                 <td class="text-start name_attachment"
                                     id="name_display_{{ $attachment->id }}">
@@ -158,7 +155,7 @@
 
                                         <p id="attachment_id_{{ $attachment->id }}"
                                            class="cursor-pointer text-danger"
-                                           onclick="deleteTaskAttachment({{ $attachment->id }})">
+                                           onclick="deleteTaskAttachment({{ $attachment->id }},{{$task->id}})">
                                             Xóa</p>
 
                                     </div>
@@ -170,6 +167,4 @@
                     </table>
                 </div>
             </div>
-        @endif
     </div>
-@endif
