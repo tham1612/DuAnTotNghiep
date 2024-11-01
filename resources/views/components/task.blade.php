@@ -335,7 +335,7 @@
                                                         <div
                                                             class="bg-info-subtle p-1 rounded ps-2">{!! $comment->content !!}
                                                         </div>
-                                                        
+
                                                         <div class="fs-11"><span>Trả lời</span>
                                                                 @php $userOwner = $board->members->firstWhere('pivot.authorize', 'Owner');  @endphp
                                                                 @if(auth()->id()===$comment->user->id || auth()->id()=== $userOwner->id )
