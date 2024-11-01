@@ -54,7 +54,7 @@
                        data-bs-offset="-40,10">
                         Sao chép bảng</p>
                     <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
-{{--                        @include('dropdowns.copyBoard')--}}
+                        {{--                        @include('dropdowns.copyBoard')--}}
                     </div>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
@@ -70,7 +70,9 @@
                     <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
                         <h5 class="text-center">Đóng bảng?</h5>
                         <p>Bạn có thể tìm và mở lại các bảng đã đóng ở cài đặt tài khoản</p>
-                        <button class="btn btn-danger w-100">Đóng</button>
+                        <button class="btn btn-danger w-100"
+                                onclick="archiverBoard({{request()->route('id')}})">Đóng
+                        </button>
                     </div>
                 </li>
             </ul>
@@ -213,65 +215,78 @@
 
             <div class="tab-content text-muted">
                 <div class="tab-pane active" id="storageCatalog" role="tabpanel">
-                    <form action="" method="post">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
 
-                        <div class="row p-3 ">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
+
+                    <div class="row p-3 ">
+                        @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
                             <div
-                                class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle">
-                                <p class="fs-16 text-danger mt-3">Teen danh sach</p>
-                                <button class="btn btn-outline-dark">
-                                    Khôi phục
-                                </button>
-                                <button class="btn btn-outline-dark">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                            </div>
+                                class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle mt-2">
+                                <p class="fs-16 text-danger mt-3">{{$archiverCatalog->name}}</p>
+                                <div>
+                                    <button class="btn btn-outline-dark"
+                                            onclick="restoreCatalog({{ $archiverCatalog->id }})">
+                                        Khôi phục
+                                    </button>
+                                    <button class="btn btn-outline-dark"
+                                            onclick="destroyCatalog({{ $archiverCatalog->id }})">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
 
-                        </div>
-                    </form>
+                            </div>
+                        @endforeach
+                    </div>
+
                 </div>
                 <div class="tab-pane" id="storageTask" role="tabpanel">
-                    <form action="" method="post">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
 
-                        <div class="row p-3 ">
-                            <div class="bg-warning-subtle border rounded">
-                                <p class="fs-16 mt-2 text-danger">Teen ther</p>
-                                <ul class="link-inline" style="margin-left: -32px">
-                                    <!-- theo dõi -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-eye-line align-bottom"></i>
-                                            04</a>
-                                    </li>
-                                    <!-- bình luận -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-question-answer-line align-bottom"></i>
-                                            19</a>
-                                    </li>
-                                    <!-- tệp đính kèm -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-attachment-2 align-bottom"></i>
-                                            02</a>
-                                    </li>
-                                    <!-- checklist -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-checkbox-line align-bottom"></i>
-                                            2/4</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p class="fs-13 fw-bold">
-                                <a href="" class="text-primary">Khôi phục</a>
-                                -
-                                <a href="" class="text-danger">Xóa</a>
-                            </p>
-                        </div>
-                    </form>
+                    <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
+
+                    <div class="row p-3 ">
+                        @foreach($board->catalogs as $catalog)
+                            @foreach($catalog->tasks()->onlyTrashed()->get() as $archiverTask)
+                                <div class="bg-warning-subtle border rounded mt-2">
+                                    <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
+                                    <ul class="link-inline" style="margin-left: -32px">
+                                        <!-- theo dõi -->
+                                        <li class="list-inline-item">
+                                            <a href="javascript:void(0)" class="text-muted">
+                                                <i class="ri-eye-line align-bottom"></i>
+                                                04</a>
+                                        </li>
+                                        <!-- bình luận -->
+                                        <li class="list-inline-item">
+                                            <a href="javascript:void(0)" class="text-muted">
+                                                <i class="ri-question-answer-line align-bottom"></i>
+                                                19</a>
+                                        </li>
+                                        <!-- tệp đính kèm -->
+                                        <li class="list-inline-item">
+                                            <a href="javascript:void(0)" class="text-muted">
+                                                <i class="ri-attachment-2 align-bottom"></i>
+                                                02</a>
+                                        </li>
+                                        <!-- checklist -->
+                                        <li class="list-inline-item">
+                                            <a href="javascript:void(0)" class="text-muted">
+                                                <i class="ri-checkbox-line align-bottom"></i>
+                                                2/4</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="fs-13 fw-bold d-flex">
+                                         <span class="text-primary cursor-pointer"
+                                               onclick="restoreTask({{$archiverTask->id}})">Khôi phục</span>
+                                    -
+                                    <span class="text-danger cursor-pointer"
+                                          onclick="destroyTask({{$archiverTask->id}})">Xóa</span>
+                                </div>
+                            @endforeach
+                        @endforeach
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -340,8 +355,8 @@
                         @foreach($board->tags as $tag)
                             <li class="mt-1 d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center w-100">
-{{--                                    <input type="checkbox" name="" id="danger_tags"--}}
-{{--                                           class="form-check-input"/>--}}
+                                    {{--                                    <input type="checkbox" name="" id="danger_tags"--}}
+                                    {{--                                           class="form-check-input"/>--}}
                                     <span class=" mx-2 rounded p-2 col-11 text-white"
                                           style="background-color: {{$tag->color_code}}">{{$tag->name}}  </span>
                                 </div>
@@ -361,7 +376,8 @@
                                             <label class="fs-14">Chọn màu</label>
                                             <div class="d-flex flex-wrap gap-2 select-color">
                                                 @foreach($colors as $color)
-                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                         data-bs-placement="top"
                                                          title="{{$color->name}}">
                                                         <div
                                                             class="color-box border rounded @if($color->code == $tag->color_code) selected-tag @endif"
@@ -392,7 +408,7 @@
                         </p>
                         <!--dropdown nhãn-->
                         <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-{{--                            @include('dropdowns.createTag')--}}
+                            {{--                            @include('dropdowns.createTag')--}}
                         </div>
                     </div>
                 </div>

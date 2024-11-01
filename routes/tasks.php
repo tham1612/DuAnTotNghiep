@@ -35,6 +35,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
 
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
+
         Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
 
         Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);
@@ -42,6 +43,13 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/getFormCheckList/{id}', [ChecklistController::class, 'getFormCheckList'])
             ->name('tasks.getFormCheckList');
 
+
+//        hoàn tác + xóa vĩnh viễn
+        Route::post('/tasks/destroyTask/{id}', [TaskController::class, 'destroyTask'])
+            ->name('tasks.destroyTask');
+
+        Route::post('/tasks/restoreTask/{id}', [TaskController::class, 'restoreTask'])
+            ->name('tasks.restoreTask');
 
         //  checklist
         Route::post('/tasks/checklist/create', [ChecklistController::class, 'create'])
@@ -55,7 +63,6 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::put('/tasks/checklist/checklistItem/{id}/update', [ChecklistController::class, 'updateChecklistItem'])
             ->name('checklist.updateChecklistItem');
-
 
         Route::get('/tasks/checklist/getProgress', [ChecklistController::class, 'getProgress'])
             ->name('checklist.getProgress');

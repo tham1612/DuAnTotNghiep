@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('edit_workspace')->default(true)->comment('quyền sửa');
             $table->string('link_invite');
             $table->integer('complete')->default(0);
+            $table->softDeletes();
 
             $table->timestamps();
         });
