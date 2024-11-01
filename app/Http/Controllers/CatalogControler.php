@@ -63,10 +63,12 @@ class CatalogControler extends Controller
             $activity->workspace_id = $board->workspace_id;
         })
         ->log('danh sách đã được thêm:'.$catalog->name);
-        return back()
-            ->with('success', 'Thêm mới danh sách thành công vào bảng');
-
-
+        session(['msg' => 'đã thêm ' . $data['name'] . '  thành công!']);
+        session(['action' => 'success']);
+        return response()->json([
+            'message' => 'catalog  đã được thêm thành công',
+            'success' => true
+        ]);
     }
 
     /**

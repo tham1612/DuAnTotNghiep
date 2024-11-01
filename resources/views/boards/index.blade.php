@@ -11,7 +11,6 @@
 
     {{--        @dd($board->catalogs->first()->tasks) --}}
     <div class="tasks-board mb-3" id="kanbanboard">
-
         @foreach ($board->catalogs as $data)
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $data->id }}">
                 <div class="d-flex mb-3 d-flex align-items-center">
@@ -228,9 +227,6 @@
                             </div>
                         @endforeach
                     </div>
-                    <!--end card-->
-
-                    <!--end tasks-->
                 </div>
                 <div class="my-3">
                     <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
@@ -257,8 +253,6 @@
                 </div>
             </div>
         @endforeach
-
-
         <div class="rounded-3 p-2 bg-info-subtle" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
                 aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px">
@@ -268,19 +262,16 @@
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                <form action="{{ route('catalogs.store') }}" method="post" class="formItem"
-                    onsubmit="return disableButtonOnSubmit()">
-                    @csrf
+                <form >
                     <div class="mb-2">
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                             id="nameCatalog" value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <input type="hidden" name="board_id" value="{{ $board->id }}">
                     </div>
                     <div class="mb-2 d-flex align-items-center">
-                        <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
+                        <button type="button" id="btnSubmitCatalog" class="btn btn-primary"onclick="submitAddCatalog({{ $board->id }})">
                             Thêm danh sách
                         </button>
                         <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
