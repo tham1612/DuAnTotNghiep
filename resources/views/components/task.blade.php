@@ -268,13 +268,16 @@
                                             </div>
 
                                             @if(!empty($task->task_comments))
-                                            <div class="hstack gap-2 flex-wrap mb-3">
-                                                <button class="btn btn-outline-dark" type="button" onclick="loadAllTaskComment({{ $task->id }})"
-                                                        data-bs-toggle="collapse" data-bs-target="#activity-{{ $task->id }}" aria-expanded="false"
-                                                        aria-controls="collapseExample">
-                                                    Xem chi tiết
-                                                </button>
-                                            </div>
+                                                <div class="hstack gap-2 flex-wrap mb-3">
+                                                    <button class="btn btn-outline-dark" type="button"
+                                                            onclick="loadAllTaskComment({{ $task->id }})"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#activity-{{ $task->id }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseExample">
+                                                        Xem chi tiết
+                                                    </button>
+                                                </div>
                                             @endif
                                         </section>
                                         <div class="comments-container w-100" id="task-comment-{{$task->id}}">
@@ -313,7 +316,7 @@
 
                                             </div>
                                             <div class="collapse show" id="activity-{{$task->id}}">
-{{--                                            @include('components.comment');--}}
+                                                {{--                                            @include('components.comment');--}}
                                             </div>
 
                                         </div>
@@ -447,7 +450,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d"
+                                            onclick="archiverTask({{$task->id}})">
                                             <i class="ri-archive-line fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -460,7 +464,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d"
+                                            onclick="restoreTask({{$task->id}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -473,7 +478,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: red">
+                                            style=" height: 30px; background-color: red"
+                                            onclick="destroyTask({{$task->id}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
