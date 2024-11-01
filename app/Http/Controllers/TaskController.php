@@ -11,14 +11,19 @@ use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Catalog;
+use App\Models\CheckList;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Task;
+use App\Models\TaskAttachment;
+use App\Models\TaskComment;
 use App\Models\TaskMember;
+use App\Models\TaskTag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -45,8 +50,10 @@ class TaskController extends Controller
         session()->forget('view_only');
         $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
         if (isset($data['start']) || isset($data['end'])) {
-            $data['start_date'] = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $data['start_date'] = empty($data['start']) ? $data['end'] : $data['start'];
             $data['end_date'] = $data['end'];
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
+            $data['start_date'] = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
         }
 
         $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
@@ -74,12 +81,16 @@ class TaskController extends Controller
                 $activity->board_id = $task->catalog->board_id;
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
-        if (isset($data['start_date']) || isset($data['end_date'])) {
-            $this->googleApiClient->createEvent($data);
+        if (Auth::user()->access_token) {
+            if (isset($data['start_date']) || isset($data['end_date'])) {
+                $this->googleApiClient->createEvent($data);
+            }
         }
-        session(['msg' => 'Thêm task ' . $data['text'] . ' thành công!']);
-        session(['action' => 'success']);
         return back();
+//        return response()->json([
+//            'action' => 'success',
+//            'msg' => 'Tạo task thành công!!'
+//        ]);
     }
 
 
@@ -109,16 +120,21 @@ class TaskController extends Controller
                 Storage::delete($task->image);
             }
         }
+
+        $task->update($data);
         $data['id'] = $id;
         $data['text'] = $task->text;
+        $data['description'] = $task->description;
         $data['id_gg_calendar'] = $task->id_google_calendar;
-        $task->update($data);
-
+        $data['start_date'] = $task->start_date;
+        $data['end_date'] = $task->end_date;
 // xử lý thêm vào gg calendar
-        if ($task->id_google_calendar) {
-            $this->googleApiClient->updateEvent($data);
-        } else {
-            $this->googleApiClient->createEvent($data);
+        if (Auth::user()->access_token) {
+            if ($task->id_google_calendar) {
+                $this->googleApiClient->updateEvent($data);
+            } else {
+                $this->googleApiClient->createEvent($data);
+            }
         }
 
 
@@ -288,9 +304,57 @@ class TaskController extends Controller
 
     }
 
-    public function destroy(Request $request)
+    public function destroy(string $id)
     {
+        $task = Task::query()->findOrFail($id);
+        $task->delete();
+    }
 
+    public function restoreTask(string $id)
+    {
+        $task = Task::withTrashed()->findOrFail($id);
+        $task->restore();
+    }
+
+    public function destroyTask(string $id)
+    {
+        Log::debug('task work');
+        $task = Task::withTrashed()->findOrFail($id);
+        try {
+            // Bắt đầu transaction
+            DB::beginTransaction();
+
+            // đơn
+            Follow_member::query()->where('task_id', $id)->delete();
+            TaskMember::query()->where('task_id', $id)->delete();
+            TaskTag::query()->where('task_id', $id)->delete();
+            TaskAttachment::query()->where('task_id', $id)->delete();
+
+            foreach ($task->checkLists as $checklist) {
+                // Lặp qua các checklist item của mỗi checklist và xóa các item members
+                foreach ($checklist->checkListItems as $checklistItem) {
+                    $checklistItem->checkListItemMembers()->delete();
+                }
+                // Xóa tất cả các checklist items của checklist
+                $checklist->checkListItems()->delete();
+            }
+
+            TaskComment::query()->where('task_id', $id)->forceDelete();
+
+            //  kết hợp
+            CheckList::query()->where('task_id', $id)->delete();
+
+            $task->forceDelete();
+
+            // Nếu mọi thứ thành công, commit các thay đổi
+            DB::commit();
+
+        } catch (\Exception $e) {
+            // Nếu xảy ra lỗi, rollback các thay đổi
+            DB::rollBack();
+            dd($e->getMessage());
+            // Xử lý lỗi (ghi log, trả về thông báo lỗi, ...)
+        }
     }
 
 // call giao diện
