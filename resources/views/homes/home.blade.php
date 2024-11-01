@@ -502,7 +502,7 @@
                                                         class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 20) }}</a>
                                                 </h5>
                                                 <h5 class="text-muted mt-0 mb-1 fs-13">
-                                                    {{ \Carbon\Carbon::parse($task->created_at)->format('d/m/Y') }}
+                                                    {{ \Carbon\Carbon::parse($board->created_at)->format('d/m/Y') }}
                                                 </h5>
                                             </div>
                                             <div class="">
@@ -576,7 +576,7 @@
                                                         class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                                 </h5>
                                                 <h5 class="text-muted mt-0 mb-1 fs-13">
-                                                    {{ \Carbon\Carbon::parse($task->created_at)->format('d/m/Y') }}
+                                                    {{ \Carbon\Carbon::parse($board->created_at)->format('d/m/Y') }}
                                                 </h5>
                                             </div>
 

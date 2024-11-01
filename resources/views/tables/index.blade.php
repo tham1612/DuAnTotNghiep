@@ -8,16 +8,6 @@
     {{ session('error') }}
 </div>
 @endif
-
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -52,24 +42,22 @@
                                         </td>
                                         <td class="col-2">
                                             @if ($task->tags->isNotEmpty())
-                                                <div class="flex-grow-1 d-flex align-items-center">
-                                                    <div class="d-flex flex-wrap gap-2">
-                                                        @foreach($task->tags as $tag)
-                                                            <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                 data-bs-placement="top"
-                                                                 title="{{$tag->name}}">
-                                                                <div
-                                                                    class="text-white border rounded d-flex align-items-center justify-content-center"
-                                                                    style="width: 40px;height: 20px; background-color: {{$tag->color_code}}">{{$tag->name}}
-                                                                </div>
+                                                <div class="flex-grow-1 d-flex flex-wrap align-items-center" >
+                                                    @foreach($task->tags as $tag)
+                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                             data-bs-placement="top"
+                                                             title="{{$tag->name}}">
+                                                            <div
+                                                                class="badge border rounded d-flex align-items-center justify-content-center"
+                                                                style=" background-color: {{$tag->color_code}}">{{$tag->name}}
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
                                             @endif
                                         </td>
                                         <td class="col-1">
-                                            <div id="member1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            <div id="member1"
                                                  class="member cursor-pointer">
                                                 <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                     @if ($task->members->isNotEmpty())
@@ -118,10 +106,7 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <div class="dropdown-menu dropdown-menu-end p-3"
-                                                     aria-labelledby="member1">
-{{--                                                    @include('dropdowns.member')--}}
-                                                </div>
+
                                             </div>
                                         </td>
                                         <form id="updateTaskForm{{ $task->id }}">
@@ -268,6 +253,13 @@
 
 @section('style')
     <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
         .no-arrow {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -310,8 +302,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 @endsection
 @section('script')
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <!-- DataTables Buttons JS -->

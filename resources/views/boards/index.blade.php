@@ -128,9 +128,9 @@
                                                                     title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
                                                                         <img src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                            alt="" class="rounded-circle avatar-sm">
+                                                                            alt="" class="rounded-circle avatar-xss">
                                                                     @else
-                                                                        <div class="avatar-sm">
+                                                                        <div class="avatar-xss">
                                                                             <div class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
@@ -146,8 +146,8 @@
                                                             <a href="javascript: void(0);" class="avatar-group-item"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                <div class="avatar-sm">
-                                                                    <div class="avatar-title rounded-circle">
+                                                                <div class="avatar-xss">
+                                                                    <div class="avatar-title rounded-circle" style="width: 35px;height: 35px">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
                                                                 </div>

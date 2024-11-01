@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\CreateGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
+use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Google_Client;
@@ -106,6 +107,11 @@ class GoogleApiClientController extends Controller
 
     public function updateEvent($data)
     {
+        $attendees = $eventData = [];
+        if (!isset($data['id_google_calendar']) && !isset($data['id_gg_calendar'])) {
+            $data['id_google_calendar'] = Task::query()->findOrFail($data['task_id'])->value('id_google_calendar');
+
+        }
         if (isset($data['start']) || isset($data['end'])) {
             $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
             $endDate = $data['end'];
@@ -113,7 +119,7 @@ class GoogleApiClientController extends Controller
             $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
             $endDate = $data['end_date'];
         }
-        $attendees = [];
+
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
@@ -129,28 +135,20 @@ class GoogleApiClientController extends Controller
                     'timeZone' => 'Asia/Ho_Chi_Minh',
                 ],
             ];
-        } else {
+        } else if (isset($data['text']) || isset($data['description'])) {
             $eventData = [
                 'summary' => $data['text'],
-//                'start' => ['dateTime' => Carbon::parse($data['start_date'], 'Asia/Ho_Chi_Minh')->toIso8601String()],
-//                'end' => ['dateTime' => Carbon::parse($data['end_date'], 'Asia/Ho_Chi_Minh')->toIso8601String()],
                 'description' => $data['description'],
             ];
         }
         // Thêm người tham gia (attendees)
-        if (!empty($data->attendees)) {
-            foreach ($data->attendees as $email) {
-                // Tách email nếu có nhiều
-                $emails = explode(',', $email);
-                foreach ($emails as $email) {
-                    $attendees[] = ['email' => trim($email)];
-                }
-            }
+        if (isset($data['user_id'])) {
+            $attendees[] = ['email' => User::query()->where('id', $data['user_id'])->value('email')];
         }
-//        }
+
         $userOrTaskId = [
             'user_id' => Auth::id(),
-            'task_id' => $data['id'],
+            'task_id' => isset($data['id']) ? $data['id'] : $data['task_id'],
         ];
         UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 

@@ -6,6 +6,7 @@ use App\Models\CheckList;
 use App\Models\TaskAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
 class AttachmentController extends Controller
 {
@@ -14,14 +15,25 @@ class AttachmentController extends Controller
     public function store(Request $request)
     {
         if ($request->hasFile('file_name')) {
+            $addedFiles = []; // Mảng lưu các tệp đã thêm thành công
+
             foreach ($request->file('file_name') as $index => $file) {
                 if ($uploadedFilePath = Storage::put(self::PATH_UPLOAD, $file)) {
                     $fileName = $request->input('name')[$index];
-                    TaskAttachment::create([
+                    $attachment = TaskAttachment::create([
                         'task_id' => $request->task_id,
                         'file_name' => $uploadedFilePath,
-                        'name'=>$fileName
+                        'name' => $fileName
                     ]);
+
+                    // Lưu thông tin tệp vào mảng $addedFiles
+                    $attachments[] = [
+                        'id' => $attachment->id,
+                        'task_id' => $attachment->task_id,
+                        'file_name' => $attachment->file_name,
+                        'name' => $attachment->name
+                    ];
+
                     session(['msg' => 'Hệ thống đã tải tệp thành công!']);
                     session(['action' => 'success']);
                 } else {
@@ -31,12 +43,19 @@ class AttachmentController extends Controller
                     ], 500);
                 }
             }
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'Tất cả tệp đã được thêm vào thành công',
+                'attachments' => json_decode(json_encode($attachments))
+            ]);
         }
 
         return response()->json([
-            'success' => true,
-            'msg' => 'Tất cả tệp đã được thêm vào thành công'
-        ]);
+            'success' => false,
+            'msg' => 'Không có tệp nào được tải lên'
+        ], 400);
+
 
     }
     public function update(Request $request, string $id)
@@ -66,5 +85,22 @@ class AttachmentController extends Controller
             'success' => false,
             'msg' => 'Tệp không tồn tại'
         ], 404);
+    }
+
+//    call giao diện
+    public function getFormAttach($taskId)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        if (!$taskId) {
+            return response()->json(['error' => 'Task ID is missing'], 400);
+        }
+
+        $htmlForm = View::make('dropdowns.attach', ['taskId' => $taskId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
     }
 }

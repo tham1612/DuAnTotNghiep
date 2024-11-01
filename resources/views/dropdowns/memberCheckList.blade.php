@@ -9,7 +9,7 @@
                     @php
                      $checkListItemMember = json_decode(json_encode($checkListItemMember));
                      @endphp
-                    <li id="card-member-{{$checkListItemMember->id}}-{{$checkListItemMember->id}}"
+                    <li id="card-member-{{$checkListItemMember->id}}-{{$checkListItemId}}"
                         class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <a href="javascript: void(0);" class="avatar-group-item"
@@ -30,7 +30,7 @@
                             <p class="ms-3 mt-3">{{strtoupper(substr($checkListItemMember->name, 0, 32))  }}</p>
                         </div>
                         <i class="ri-close-line fs-20"
-                           onclick="removeMemberFromCard({{$checkListItemMember->id}}, {{$checkListItemMember->id}})"></i>
+                           onclick="removeMemberFromCard({{$checkListItemMember->id}}, {{$checkListItemId}})"></i>
                     </li>
                 @endforeach
             @endif
@@ -43,7 +43,6 @@
     <div class="mt-3">
         <label class="fs-14">Thành viên của bảng</label>
         <ul class="" style="list-style: none; margin-left: -32px">
-
             @foreach ($boardMembers as $boardMember)
                 <li class="d-flex justify-content-between align-items-center checklist-member-item"
                     data-member-id="{{ $boardMember->id }}" data-check-list-item="{{$checkListItemId}}"
