@@ -219,7 +219,7 @@
                             <div class="nav-link menu-link d-flex text-center align-items-center"
                                 style="justify-content: space-between;">
                                 <a class=""
-                                    href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
+                                    href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
                                             <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"

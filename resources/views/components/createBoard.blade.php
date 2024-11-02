@@ -37,7 +37,7 @@
                     </div>
                     <div class="mt-3">
                         <label for="" class="form-label">Không gian làm việc</label>
-                        <select name="workspace_id" id="" class="form-select">
+                        <select name="workspace_id" id="" class="form-select" disabled>
                             @foreach ($workspace as $workspace1)
                                 <option value="{{ $workspace1->id }}">{{ $workspace1->name }}</option>
                             @endforeach
