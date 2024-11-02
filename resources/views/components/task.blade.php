@@ -80,37 +80,35 @@
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex mt-3 flex-wrap">
-                                            @if(count($task->members))
-                                                <div class="p-3 col-3">
+                                                <div class="p-3" id="member-section-{{$task->id}}" style="{{ count($task->members) ? '' : 'display: none;' }}">
                                                     <strong>Thành viên</strong>
                                                     <section class="d-flex">
                                                         <!-- thêm thành viên & chia sẻ link bảng -->
                                                         <div
                                                             class="d-flex justify-content-center align-items-center cursor-pointer ">
                                                             <div class="col-auto ms-sm-auto">
-                                                                <div class="avatar-group " id="list-member-task">
+                                                                <div class="avatar-group " id="list-member-task-{{$task->id}}">
                                                                     @if (count($task->members))
-
                                                                         @php
                                                                             // Đếm số lượng board members
                                                                             $maxDisplay = 3;
                                                                             $count = 0;
                                                                         @endphp
-
                                                                         @foreach ($task->members as $taskMember)
                                                                             @if ($count < $maxDisplay)
                                                                                 <a href="javascript: void(0);"
                                                                                    class="avatar-group-item"
                                                                                    data-bs-toggle="tooltip"
                                                                                    data-bs-placement="top"
+                                                                                   id="member-{{$taskMember->id}}-{{$task->id}}"
                                                                                    title="{{ $taskMember->name }}">
                                                                                     @if ($taskMember->image)
                                                                                         <img
                                                                                             src="{{ asset('storage/' . $taskMember->image) }}"
                                                                                             alt=""
-                                                                                            class="rounded-circle avatar-sm">
+                                                                                            class="rounded-circle avatar-xss">
                                                                                     @else
-                                                                                        <div class="avatar-sm">
+                                                                                        <div class="avatar-xss">
                                                                                             <div
                                                                                                 class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                                 style="width: 35px;height: 35px">
@@ -128,11 +126,11 @@
                                                                                class="avatar-group-item"
                                                                                data-bs-toggle="tooltip"
                                                                                data-bs-placement="top"
-                                                                               title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                                <div class="avatar-sm">
+                                                                               title="{{ count($task->members) - $maxDisplay }} more">
+                                                                                <div class="avatar-xss">
                                                                                     <div
-                                                                                        class="avatar-title rounded-circle">
-                                                                                        +{{ $task->members->count() - $maxDisplay }}
+                                                                                        class="avatar-title rounded-circle" style="width: 35px;height: 35px">
+                                                                                        +{{ count($task->members) - $maxDisplay }}
                                                                                     </div>
                                                                                 </div>
                                                                             </a>
@@ -144,7 +142,6 @@
                                                         </div>
                                                     </section>
                                                 </div>
-                                            @endif
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
                                                 @php
@@ -211,27 +208,24 @@
 
                                                 </div>
                                             </div>
+                                            <div class="p-3" id="tag-section-{{$task->id}}" style="{{ count($task->tags) ? '' : 'display: none;' }}">
+                                                <strong>Nhãn</strong>
+                                                <div class="d-flex flex-wrap gap-2" id="tag-task-{{$task->id}}">
+                                                    @foreach($task->tags as $tag)
+                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                             data-bs-placement="top" data-tag-id="{{$task->id}}-{{$tag->id}}"
+                                                             title="{{$tag->name}}">
+                                                            <div
 
-                                            @if(count($task->tags))
-                                                <div class="p-3">
-                                                    <strong>Nhãn</strong>
-                                                    <div class="d-flex flex-wrap gap-2">
-                                                        @foreach($task->tags as $tag)
-                                                            <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                 data-bs-placement="top"
-                                                                 title="{{$tag->name}}">
-                                                                <div
+                                                                class="badge border rounded d-flex align-items-center justify-content-center"
+                                                                style=" background-color: {{$tag->color_code}}">
 
-                                                                    class="badge border rounded d-flex align-items-center justify-content-center"
-                                                                    style=" background-color: {{$tag->color_code}}">
-
-                                                                    {{$tag->name}}
-                                                                </div>
+                                                                {{$tag->name}}
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- mô tả -->
@@ -274,13 +268,16 @@
                                             </div>
 
                                             @if(!empty($task->task_comments))
-                                            <div class="hstack gap-2 flex-wrap mb-3">
-                                                <button class="btn btn-outline-dark" type="button" onclick="loadAllTaskComment({{ $task->id }})"
-                                                        data-bs-toggle="collapse" data-bs-target="#activity-{{ $task->id }}" aria-expanded="false"
-                                                        aria-controls="collapseExample">
-                                                    Xem chi tiết
-                                                </button>
-                                            </div>
+                                                <div class="hstack gap-2 flex-wrap mb-3">
+                                                    <button class="btn btn-outline-dark" type="button"
+                                                            onclick="loadAllTaskComment({{ $task->id }})"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#activity-{{ $task->id }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseExample">
+                                                        Xem chi tiết
+                                                    </button>
+                                                </div>
                                             @endif
                                         </section>
                                         <div class="comments-container w-100" id="task-comment-{{$task->id}}">
@@ -319,7 +316,7 @@
 
                                             </div>
                                             <div class="collapse show" id="activity-{{$task->id}}">
-{{--                                            @include('components.comment');--}}
+                                                {{--                                            @include('components.comment');--}}
                                             </div>
 
                                         </div>
@@ -350,12 +347,14 @@
                                             style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-tag fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                               onclick="loadTaskTag({{ $task->id }},{{$board->id}})"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Nhãn
                                             </p>
                                             <!--dropdown nhãn-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                @include('dropdowns.tag')
+                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
+                                            id="dropdown-list-tag-task-board-{{ $task->id }}">
+                                                {{-- dropdowns.tag --}}
                                             </div>
                                         </div>
                                     </div>
@@ -451,7 +450,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d"
+                                            onclick="archiverTask({{$task->id}})">
                                             <i class="ri-archive-line fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -464,7 +464,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d"
+                                            onclick="restoreTask({{$task->id}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -477,7 +478,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: red">
+                                            style=" height: 30px; background-color: red"
+                                            onclick="destroyTask({{$task->id}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">

@@ -7,6 +7,7 @@ use App\Models\CheckListItemMember;
 use App\Models\Task;
 use App\Models\TaskMember;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
 class MemberController extends Controller
@@ -28,11 +29,16 @@ class MemberController extends Controller
         session()->forget('view_only');
 
         $data = $request->all();
+//        dd($data);
         $task = Task::query()->findOrFail($data['task_id']);
+//        dd($data, $task->start_date, $task->end_date);
+        $data['id'] = $task->id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
-        $existingMember = TaskMember::where('task_id', $request->task_id)
-            ->where('user_id', $request->user_id)
+        $data['start_date'] = $task->start_date;
+        $data['end_date'] = $task->end_date;
+        $existingMember = TaskMember::where('task_id', $data['task_id'])
+            ->where('user_id', $data['user_id'])
             ->first();
 
         if ($existingMember) {
@@ -47,7 +53,16 @@ class MemberController extends Controller
                 "user_id" => $data['user_id'],
                 "task_id" => $data['task_id']
             ]);
-            $this->googleApiClient->updateEvent($data); // cập nhật người được giao việc
+
+            if (Auth::user()->access_token) {
+                if ($task->id_google_calendar) {
+                    $this->googleApiClient->updateEvent($data);
+                } else {
+                    $this->googleApiClient->createEvent($data);
+                }
+            }
+
+
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }
@@ -71,9 +86,11 @@ class MemberController extends Controller
             ->where('task_id', $data['task_id'])
             ->where('user_id', $data['user_id'])
             ->first();
-        $task = Task::query()->where('id', $data['task_id'])->select('text', 'description')->first();
+        $task = Task::query()->where('id', $data['task_id'])->first();
         $data['text'] = $task->text;
         $data['description'] = $task->description;
+        $data['start_date'] = $task->start_date;
+        $data['end_date'] = $task->end_date;
         if (!$taskMember) {
             return response()->json([
                 'success' => false,
@@ -85,7 +102,15 @@ class MemberController extends Controller
                 ->where('task_id', $data['task_id'])
                 ->where('user_id', $data['user_id'])
                 ->delete();
-            $this->googleApiClient->updateEvent($data); // cập nhật người được giao việc
+
+            if (Auth::user()->access_token) {
+                if ($task->id_google_calendar) {
+                    $this->googleApiClient->updateEvent($data);
+                } else {
+                    $this->googleApiClient->createEvent($data);
+                }
+            }
+
         } catch (\Exception $exception) {
             dd($exception->getMessage());
         }
@@ -101,10 +126,13 @@ class MemberController extends Controller
     {
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
-        CheckListItemMember::create($data);
+        $checkListItemMember=CheckListItemMember::create($data);
+        $userImage = $checkListItemMember->user->image ?? null;
         return response()->json([
             'success' => "them CheckListItemMember thành công",
-            'msg' => true
+            'msg' => true,
+            'userImage'=>$userImage,
+            'userName'=>$checkListItemMember->user->name
         ]);
     }
 
@@ -146,11 +174,11 @@ class MemberController extends Controller
         return response()->json(['html' => $htmlForm]);
     }
 
-    public function getFormMemberChecklistItem( $checkListItemId)
+    public function getFormMemberChecklistItem($checkListItemId)
     {
         $checklistItem = CheckListItem::findOrFail($checkListItemId);
 //        dd( $checklistItem);
-        $boardMembers0=$checklistItem->checkList->task->catalog->board->members->unique('id');
+        $boardMembers0 = $checklistItem->checkList->task->catalog->board->members->unique('id');
         $boardMembers = json_decode(json_encode($boardMembers0));
         $htmlForm = View::make('dropdowns.memberCheckList', [
             'checkListItemId' => $checkListItemId,
