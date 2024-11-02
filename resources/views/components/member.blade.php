@@ -429,8 +429,6 @@
     </div>
 </div>
 
-</body>
-
 <script>
     function copyLink() {
         const link = '{{ $board->link_invite }}'; // Lấy link từ biến Laravel

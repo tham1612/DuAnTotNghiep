@@ -8,7 +8,9 @@ use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Catalog;
 use App\Models\Color;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
@@ -31,11 +33,15 @@ use Spatie\Activitylog\Models\Activity;
 class BoardController extends Controller
 {
     const PATH_UPLOAD = 'boards';
-    protected $googleApiClient;
+    public $googleApiClient;
+    public $catalogController;
+    public $taskController;
 
-    public function __construct(GoogleApiClientController $googleApiClient)
+    public function __construct(GoogleApiClientController $googleApiClient, CatalogControler $catalogController, TaskController $taskController)
     {
         $this->googleApiClient = $googleApiClient;
+        $this->catalogController = $catalogController;
+        $this->taskController = $taskController;
     }
 
     /**
@@ -53,8 +59,8 @@ class BoardController extends Controller
                 // Sửa điều kiện này để so sánh với trường lưu thông tin người tạo, ví dụ: 'created_by'
                 $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
+                        $query->where('user_id', $userId);
+                    });
             })
             ->with(['workspace', 'boardMembers', 'catalogs.tasks']) // Tải các tasks liên quan
             ->get()
@@ -642,7 +648,105 @@ class BoardController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $catalogsId = Catalog::query()
+            ->where('board_id', $id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+        try {
+            DB::beginTransaction();
+            foreach ($catalogsId as $catalogId) {
+                $this->catalogController->destroy($catalogId);
+            }
+            Board::query()->findOrFail($id)->delete();
+
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Lưu trữ bảng thành công!!'
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
+        }
+
+    }
+
+    public function destroyBoard(string $id)
+    {
+        Log::debug('board work');
+        $board = Board::withTrashed()->findOrFail($id);
+        $catalogsId = Catalog::withTrashed()
+            ->where('board_id', $id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        try {
+            DB::beginTransaction();
+
+            BoardMember::query()->where('board_id', $id)->delete();
+
+            foreach ($catalogsId as $catalogId) {
+                $this->catalogController->destroyCatalog($catalogId);
+            }
+
+            Tag::query()->where('board_id', $id)->delete();
+
+            $board->forceDelete();
+
+            DB::commit();
+
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Xóa bảng thành công!!'
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
+        }
+
+    }
+
+
+    public function restoreBoard(string $id)
+    {
+        $board = Board::withTrashed()->findOrFail($id);
+        $catalogsId = Catalog::withTrashed()
+            ->where('board_id', $id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($catalogsId as $catalogId) {
+                $this->catalogController->restoreCatalog($catalogId);
+            }
+
+            $board->restore();
+
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Hoàn tác bảng thành công!!',
+                'board' => $id,
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
+        }
+
     }
 
     // gửi mail thêm người vào bảng
