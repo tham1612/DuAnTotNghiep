@@ -50,12 +50,12 @@
                                     <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
                                         <div class="avatar-xxs">
                                             <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                 class="rounded-circle img-fluid userprofile" alt="">                                            
+                                                 class="rounded-circle img-fluid userprofile" alt="">
                                             <span class="user-status"></span>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-truncate mb-0">${user.name}</p>                                    
+                                        <p class="text-truncate mb-0">${user.name}</p>
                                     </div>
                                 </div>
                             </a>
@@ -106,6 +106,17 @@
             float: left;
             /* Căn về bên trái */
         }
+        .chat-leftsidebar {
+          max-width: 300px;
+          width: 100%;
+          overflow-x: hidden;
+       }
+        .user-chat{
+         max-width: 1000px;
+         width: 100%;
+         overflow-x: hidden;
+       }
+
     </style>
 </head>
 
@@ -202,21 +213,23 @@
                                                                                     <span class="user-status"></span>
                                                                                 </div>
                                                                             </div>
-                                                                            
+
                                                                             <div style="margin-left: -15px"
                                                                                 class="flex-grow-1 overflow-hidden">
                                                                                 <p class="text-truncate mb-0 mt-2">
                                                                                     {{ $user->name }}</p>
-                                                                                    <p>
-                                                                                        @if ($user->latest_sender_id == $currentUserId)
-                                                                                            Bạn: {{ $user->latest_message }}
-                                                                                        @else
-                                                                                            {{ $user->latest_message }}
-                                                                                        @endif
-                                                                                        <span style="float: right; font-size: 0.9em; color: gray;">
-                                                                                            {{ \Carbon\Carbon::parse($user->latest_message_time)->format('d-m-Y H:i') }}
-                                                                                        </span>
-                                                                                    </p>                                                                                                                                                                                                                           
+                                                                                <p>
+                                                                                    @if ($user->latest_sender_id == $currentUserId)
+                                                                                        Bạn:
+                                                                                        {{ $user->latest_message }}
+                                                                                    @else
+                                                                                        {{ $user->latest_message }}
+                                                                                    @endif
+                                                                                    <span
+                                                                                        style="float: right; font-size: 0.9em; color: gray;">
+                                                                                        {{ \Carbon\Carbon::parse($user->latest_message_time)->format('d-m-Y H:i') }}
+                                                                                    </span>
+                                                                                </p>
                                                                             </div>
                                                                         </div>
                                                                     </a>
@@ -242,7 +255,7 @@
                                                                 <div class="avatar-xxs"> <img
                                                                         src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
                                                                         class="rounded-circle img-fluid userprofile"
-                                                                        alt="">                                                                
+                                                                        alt="">
                                                                 </div>
                                                             </div>
                                                             <div class="flex-grow-1 overflow-hidden">

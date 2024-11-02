@@ -20,6 +20,9 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkList = CheckList::create($data);
+
+        
+
         return response()->json([
             'success' => "them thao tác thành công",
             'msg' => true,
