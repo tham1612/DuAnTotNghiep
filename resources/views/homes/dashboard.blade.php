@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="py-3">
-                                        <h5 class="fs-14 mb-3">
+                                        <h5 class="fs-16 mb-1">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
@@ -142,10 +142,8 @@
                                                 @endif
                                             </div>
                                         </div>
-
-
                                     </div>
-                                    <div class="d-flex mb-2">
+                                    <div class="d-flex mb-1">
                                         <div class="flex-grow-1">
                                             <div>Tiến độ</div>
                                         </div>
@@ -170,7 +168,6 @@
                     @endforeach
                 @endif
             @endif
-
         </div>
         <!-- end col -->
     </div>
@@ -209,19 +206,12 @@
                                                         <i class="ri-star-fill"></i>
                                                     </span>
                                                 </button>
-                                                {{--
-                                                <!-- Delete Button -->
-                                                <button type="button" class="btn avatar-xs p-0" data-bs-toggle="modal"
-                                                    data-bs-target="#removeProjectModal">
-                                                    <span class="avatar-title bg-transparent fs-15">
-                                                        <i class="ri-delete-bin-fill text-danger"></i>
-                                                    </span>
-                                                </button> --}}
+
                                             </div>
                                         </div>
                                     </div>
                                     <div class="py-3">
-                                        <h5 class="fs-14 mb-3">
+                                        <h5 class="fs-16 mb-1">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
@@ -297,7 +287,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex mb-2">
+                                    <div class="d-flex mb-1">
                                         <div class="flex-grow-1">
                                             <div>Tiến độ</div>
                                         </div>
