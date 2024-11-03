@@ -340,10 +340,47 @@
                     </div>
                 </div>
 
-                <a href="{{ route('b.requestToJoinWorkspace') }}" class="btn btn-primary mt-2 "
-                    style="width: 100%; text-align: center;">
+                <button id="requestJoinButton" class="btn btn-primary mt-2" style="width: 100%; text-align: center;">
                     Yêu cầu tham gia
-                </a>
+                </button>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const requestButton = document.getElementById('requestJoinButton');
+
+                        if (requestButton) {
+                            requestButton.addEventListener('click', function() {
+                                // Gửi yêu cầu AJAX
+                                fetch("{{ route('b.requestToJoinWorkspace') }}", {
+                                        method: 'GET',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Gửi token bảo mật CSRF
+                                        },
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Nếu yêu cầu thành công, cập nhật giao diện
+                                            document.querySelector('.guest-notice').innerHTML = `
+                            <div class="alert alert-info d-flex align-items-center" role="alert" style="background-color: #f0f4ff; border-radius: 8px;">
+                                <i class="ri-information-line me-2" style="font-size: 24px;"></i>
+                                <div>
+                                    <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
+                                        {{ \Str::limit($workspaceChecked->name, 25) }}
+                                    </strong><br> chờ quản trị viên duyệt
+                                </div>
+                            </div>
+                        `;
+                                        } else {
+                                            console.error('Request failed:', data);
+                                        }
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        }
+                    });
+                </script>
+
             </div>
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">

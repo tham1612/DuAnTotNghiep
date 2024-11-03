@@ -6,9 +6,14 @@ use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
 use App\Models\Task;
 use App\Models\TaskMember;
+use App\Notifications\AddMemberChecklistNotification;
+use App\Notifications\DeleteMemberChecklistNotification;
+use App\Notifications\TaskAddMemberNotification;
+use App\Notifications\TaskDeleteMemberNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Log;
 
 class MemberController extends Controller
 {
@@ -29,9 +34,9 @@ class MemberController extends Controller
         session()->forget('view_only');
 
         $data = $request->all();
-//        dd($data);
+        //        dd($data);
         $task = Task::query()->findOrFail($data['task_id']);
-//        dd($data, $task->start_date, $task->end_date);
+        //        dd($data, $task->start_date, $task->end_date);
         $data['id'] = $task->id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
@@ -40,7 +45,6 @@ class MemberController extends Controller
         $existingMember = TaskMember::where('task_id', $data['task_id'])
             ->where('user_id', $data['user_id'])
             ->first();
-
         if ($existingMember) {
             return response()->json([
                 'success' => false,
@@ -53,6 +57,12 @@ class MemberController extends Controller
                 "user_id" => $data['user_id'],
                 "task_id" => $data['task_id']
             ]);
+            //Thông báo
+            $taskMemberIsSend = TaskMember::with(['task.catalog.board', 'user'])->where('task_id', $data['task_id'])
+                ->where('user_id', $data['user_id'])
+                ->first();
+            $userName = Auth::user();
+            $taskMemberIsSend->user->notify(new TaskAddMemberNotification($taskMemberIsSend->task, $userName));
 
             if (Auth::user()->access_token) {
                 if ($task->id_google_calendar) {
@@ -98,6 +108,13 @@ class MemberController extends Controller
             ], 404);
         }
         try {
+            //Thông báo
+            $taskMemberIsSend = TaskMember::with(['task.catalog.board', 'user'])->where('task_id', $data['task_id'])
+                ->where('user_id', $data['user_id'])
+                ->first();
+            $userName = Auth::user();
+            $taskMemberIsSend->user->notify(new TaskDeleteMemberNotification($taskMemberIsSend->task, $userName));
+
             TaskMember::query()
                 ->where('task_id', $data['task_id'])
                 ->where('user_id', $data['user_id'])
@@ -126,22 +143,40 @@ class MemberController extends Controller
     {
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
-        $checkListItemMember=CheckListItemMember::create($data);
+        $checkListItemMember = CheckListItemMember::create($data);
+        //Thông báo
+        $checkListItemMemberIsSend = CheckListItemMember::with(['checkListItem.checkList.task.catalog.board', 'user'])->where('check_list_item_id', $data['check_list_item_id'])
+            ->where('user_id', $data['user_id'])
+            ->first();
+        $userName = Auth::user();
+        $checkListItemMemberIsSend->user->notify(new AddMemberChecklistNotification($checkListItemMemberIsSend, $userName));
+
         $userImage = $checkListItemMember->user->image ?? null;
         return response()->json([
             'success' => "them CheckListItemMember thành công",
             'msg' => true,
-            'userImage'=>$userImage,
-            'userName'=>$checkListItemMember->user->name
+            'userImage' => $userImage,
+            'userName' => $checkListItemMember->user->name
         ]);
     }
 
     public function deleteMemberChecklistItem(Request $request)
     {
+        Log::debug($request->all());
+
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
+
+        //Thông báo
+        $checkListItemMemberIsSend = CheckListItemMember::with(['checkListItem.checkList.task.catalog.board', 'user'])
+            ->where('check_list_item_id', $request->check_list_item_id)
+            ->where('user_id', $request->user_id)
+            ->first();
+        $userName = Auth::user();
+
+        $checkListItemMemberIsSend->user->notify(new DeleteMemberChecklistNotification($checkListItemMemberIsSend, $userName));
         $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
             ->where('user_id', $request->user_id)
             ->first();
@@ -163,7 +198,7 @@ class MemberController extends Controller
         $boardMembers = json_decode(json_encode($boardMembers0));
 
         $task = json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
-//        dd( $boardMembers);
+        //        dd( $boardMembers);
 
         $htmlForm = View::make('dropdowns.member', [
             'taskId' => $taskId,
@@ -177,7 +212,7 @@ class MemberController extends Controller
     public function getFormMemberChecklistItem($checkListItemId)
     {
         $checklistItem = CheckListItem::findOrFail($checkListItemId);
-//        dd( $checklistItem);
+        //        dd( $checklistItem);
         $boardMembers0 = $checklistItem->checkList->task->catalog->board->members->unique('id');
         $boardMembers = json_decode(json_encode($boardMembers0));
         $htmlForm = View::make('dropdowns.memberCheckList', [

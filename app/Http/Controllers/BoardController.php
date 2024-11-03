@@ -9,6 +9,7 @@ use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Catalog;
+use App\Models\CheckListItemMember;
 use App\Models\Color;
 use App\Models\Tag;
 use App\Models\Task;
@@ -17,7 +18,6 @@ use App\Models\Workspace;
 use App\Notifications\WorksaceNotification;
 use App\Notifications\BoardMemberNotification;
 use App\Notifications\BoardNotification;
-use App\Notifications\TaskDueNotification;
 use Carbon\Carbon;
 use Google\Service\Forms\FormResponse;
 use Illuminate\Support\Facades\Log;
@@ -163,7 +163,10 @@ class BoardController extends Controller
      */
     public function edit(Request $request, string $id)
     {
-
+        // $checkListItemMemberIsSend = CheckListItemMember::with(['checkListItem.checkList.task.catalog.board', 'user'])->where('check_list_item_id', 1)
+        //     ->where('user_id', 1)
+        //     ->first();
+        //     dd($checkListItemMemberIsSend);
         $board = Board::query()->findOrFail($id);
         $colors = Color::query()->get();
         session([
@@ -1007,7 +1010,8 @@ class BoardController extends Controller
 
         session(['msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc']);
         session(['action' => 'success']);
-        return redirect()->route('home');
+        // return redirect()->route('home');
+        return response()->json(['success' => true]);
     }
     //mời người dùng từ wsp vào bảng
     //thông báo done
