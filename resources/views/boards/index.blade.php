@@ -3,6 +3,7 @@
     Board - TaskFlow
 @endsection
 @section('main')
+@vite('resources/js/app.js')
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -11,7 +12,6 @@
 
     {{--        @dd($board->catalogs->first()->tasks) --}}
     <div class="tasks-board mb-3" id="kanbanboard">
-
         @foreach ($board->catalogs as $catalog)
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}">
                 <div class="d-flex mb-3 d-flex align-items-center">

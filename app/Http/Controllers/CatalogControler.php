@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CatalogCreated;
 use App\Http\Requests\StoreCatalogRequest;
 use App\Models\Board;
 use App\Models\Catalog;
@@ -43,6 +44,8 @@ class CatalogControler extends Controller
         $data['position'] = $maxPosition + 1;
 
         $catalog = Catalog::query()->create($data);
+        Log::info('Broadcasting CatalogCreated event for catalog ID: ' . $catalog->id);
+        broadcast(new CatalogCreated($catalog))->toOthers();
         // lấy thông tin board
         $board = Board::findOrFail($request->board_id);
         activity('thêm mới danh sách')
@@ -55,6 +58,7 @@ class CatalogControler extends Controller
                 $activity->workspace_id = $board->workspace_id;
             })
             ->log('danh sách đã được thêm:' . $catalog->name);
+
         return back()
             ->with('success', 'Thêm mới danh sách thành công vào bảng');
 

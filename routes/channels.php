@@ -19,9 +19,13 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 // Broadcast::channel('chat', function ($user) {
-//     return true; 
+//     return true;
 // });
 
 Broadcast::channel('chat.{roomId}', function (User $user, $roomId) {
     return ['id' => $user->id, 'name' => $user->name];
+});
+
+Broadcast::channel('catalog', function () {
+    return true; 
 });
