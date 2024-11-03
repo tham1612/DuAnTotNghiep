@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('social_id')->nullable();
             $table->string('social_name')->nullable();
+            $table->string('status')->default('off');
             $table->text('access_token')->nullable(); // google calendar
             $table->rememberToken();
             $table->timestamps();

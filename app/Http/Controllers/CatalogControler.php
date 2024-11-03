@@ -49,20 +49,22 @@ class CatalogControler extends Controller
         // lấy thông tin board
         $board = Board::findOrFail($request->board_id);
         activity('thêm mới danh sách')
-            ->performedOn($catalog)
-            ->causedBy(Auth::user())
-            ->withProperties(['catalog_name' => $catalog->name, 'board_id' => $request->board_id, 'workspace_id' => $board->workspace_id])
-            ->tap(function (Activity $activity) use ($board, $request, $catalog) {
-                $activity->board_id = $request->board_id;
-                $activity->catalog_id = $catalog->id;
-                $activity->workspace_id = $board->workspace_id;
-            })
-            ->log('danh sách đã được thêm:' . $catalog->name);
-
-        return back()
-            ->with('success', 'Thêm mới danh sách thành công vào bảng');
-
-
+        ->performedOn($catalog)
+        ->causedBy(Auth::user())
+        ->withProperties(['catalog_name' => $catalog->name,'board_id' => $request->board_id,'workspace_id' => $board->workspace_id])
+        ->tap(function (Activity $activity) use ($board,$request,$catalog){
+            $activity->board_id = $request->board_id;
+            $activity->catalog_id = $catalog->id;
+            $activity->workspace_id = $board->workspace_id;
+        })
+        ->log('danh sách đã được thêm:'.$catalog->name);
+        return response()->json([
+            'msg' => $catalog->name .'đã được thêm thành công',
+            'action' => 'success',
+            'success' => true,
+            'catalog'=>$catalog,
+            'task_count' => $catalog->tasks->count(),
+        ]);
     }
 
     public function update(Request $request, string $id)

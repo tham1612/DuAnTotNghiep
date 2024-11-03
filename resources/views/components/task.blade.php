@@ -30,7 +30,7 @@
                  aria-labelledby="detailCardModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content border-0 rounded-3">
+                    <div class="modal-content border-0 rounded-3 modal-task-{{ $task->id}}">
 
                         <div class="modal-header p-3"
                              style="

@@ -30,7 +30,8 @@ class User extends Authenticatable
         'password',
         'social_id',
         'social_name',
-        'access_token'
+        'status',
+        'access_token',
     ];
 
     /**

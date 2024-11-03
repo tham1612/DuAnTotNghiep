@@ -417,8 +417,8 @@ class BoardController extends Controller
         $board->update($data);
 
         return response()->json([
-            'message' => 'Board đã được cập nhật thành công',
-            'msg' => true,
+            'msg' =>$board['name'] . ' đã được cập nhật thành công!',
+            'action' => 'success',
             'board' => $board
         ]);
     }
