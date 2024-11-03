@@ -10,8 +10,7 @@
     @endif
 
     {{--        @dd($board->catalogs->first()->tasks) --}}
-    <div class="tasks-board mb-3" id="kanbanboard">
-
+    <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}">
                 <div class="d-flex mb-3 d-flex align-items-center">
@@ -56,13 +55,9 @@
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
                                         <h6 class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal{{ $task->id }}">
+                                            data-bs-target="#detailCardModal{{ $task->id }}" >
                                             {{ $task->text }}
                                         </h6>
-                                        {{--                                        <h6 class="fs-15 mb-0 flex-grow-1 task-title"--}}
-                                        {{--                                            data-task-id="{{ $task->id }}">--}}
-                                        {{--                                            {{ $task->text }}--}}
-                                        {{--                                        </h6>--}}
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
                                                data-bs-toggle="dropdown" aria-expanded="false"><i
@@ -240,9 +235,6 @@
                             </div>
                         @endforeach
                     </div>
-                    <!--end card-->
-
-                    <!--end tasks-->
                 </div>
                 <div class="my-3">
                     <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
@@ -250,28 +242,23 @@
                         Thêm thẻ
                     </button>
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        <form action="{{ route('tasks.store') }}" class="formItem" method="post"
-                              onsubmit="return disableButtonOnSubmit()">
-                            @csrf
+                        <form>
                             <div class="mb-2">
-                                <input type="text" class="form-control taskNameInput" name="text"
-                                       placeholder="Nhập tên thẻ..."/>
-                                <input type="hidden" name="catalog_id" value="{{ $catalog->id }}">
+                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control" name="text" placeholder="Nhập tên thẻ..."/>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-                                <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
+                                <button type="button" class="btn btn-primary" onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
                                     Thêm thẻ
                                 </button>
                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
                             </div>
                         </form>
                     </div>
+
                 </div>
             </div>
         @endforeach
-
-
-        <div class="rounded-3 p-2 bg-info-subtle" style="height: 40px;">
+        <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
                  aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px">
                 <i class="ri-add-line fs-15"></i>
@@ -280,19 +267,16 @@
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                <form action="{{ route('catalogs.store') }}" method="post" class="formItem"
-                      onsubmit="return disableButtonOnSubmit()">
-                    @csrf
+                <form >
                     <div class="mb-2">
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                                id="nameCatalog" value="{{ old('name') }}" placeholder="Nhập tên danh sách..."/>
                         @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <input type="hidden" name="board_id" value="{{ $board->id }}">
                     </div>
                     <div class="mb-2 d-flex align-items-center">
-                        <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
+                        <button type="button" id="btnSubmitCatalog" class="btn btn-primary"onclick="submitAddCatalog({{ $board->id }})">
                             Thêm danh sách
                         </button>
                         <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
@@ -301,7 +285,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 @endsection
 

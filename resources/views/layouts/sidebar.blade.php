@@ -222,11 +222,11 @@
                                     href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
-                                            <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                            <img id="image-board-{{ $board->id }}" class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                 src="{{ asset('storage/' . $board->image) }}"
                                                 style="width: 30px; height: 30px" alt="image" />
                                         @else
-                                            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                            <div id="image-board-{{ $board->id }}"class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                 style="width: 30px;height: 30px">
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>

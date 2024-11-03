@@ -86,11 +86,13 @@ class TaskController extends Controller
                 $this->googleApiClient->createEvent($data);
             }
         }
-        return back();
-//        return response()->json([
-//            'action' => 'success',
-//            'msg' => 'Tạo task thành công!!'
-//        ]);
+        return response()->json([
+            'msg' => $task->text .' đã được thêm thành công',
+            'action' => 'success',
+            'success' => true,
+            'task'=>$task,
+//            'task_count' => $catalog->tasks->count(),
+        ]);
     }
 
 
@@ -154,11 +156,12 @@ class TaskController extends Controller
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
 
 
-        session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
-        session(['action' => 'success']);
+//        session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
+//        session(['action' => 'success']);
         return response()->json([
-            'message' => 'Task đã được cập nhật thành công',
-            'success' => true
+            'msg' =>'Task ' . $data['text'] . ' đã được cập nhật thành công!',
+            'action' => 'success',
+            'task'=>$task
         ]);
 
     }
@@ -369,6 +372,17 @@ class TaskController extends Controller
 //        dd( $task);
 
         $htmlForm = View::make('dropdowns.date', [
+            'task' => $task
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
+    public function getModalTask( $taskId)
+    {
+        $task = Task::findOrFail($taskId);
+//        dd( $task);
+
+        $htmlForm = View::make('components.modalTask', [
             'task' => $task
         ])->render();
 

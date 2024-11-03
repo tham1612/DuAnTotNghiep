@@ -34,8 +34,8 @@ class AttachmentController extends Controller
                         'name' => $attachment->name
                     ];
 
-                    session(['msg' => 'Hệ thống đã tải tệp thành công!']);
-                    session(['action' => 'success']);
+//                    session(['msg' => 'Hệ thống đã tải tệp thành công!']);
+//                    session(['action' => 'success']);
                 } else {
                     return response()->json([
                         'success' => false,
@@ -46,7 +46,8 @@ class AttachmentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'msg' => 'Tất cả tệp đã được thêm vào thành công',
+                'msg' =>'Hệ thống đã tải tệp thành công!',
+                'action' => 'success',
                 'attachments' => json_decode(json_encode($attachments))
             ]);
         }
