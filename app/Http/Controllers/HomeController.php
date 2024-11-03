@@ -116,8 +116,9 @@ class HomeController extends Controller
         $incompleteTasks = $tasks->filter(fn($task) => $task->progress < 100);
 
         // Task quá hạn
-        $overdueTasks = $tasks->filter(fn($task) => $task->progress < 100 && Carbon::parse($task->end_date)->lt(now()));
-
+        $overdueTasks = $tasks->filter(function($task) {
+            return $task->progress < 100 && $task->start_date && $task->end_date && Carbon::parse($task->end_date)->lt(now());
+        });        
         // Lọc các task của riêng user chưa hoàn thành
         $myAssignedTasks = $userTasks->filter(fn($task) => $task->progress < 100);
 
