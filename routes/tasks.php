@@ -34,6 +34,8 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');
 
+        Route::get('/tasks/getModalTask/{id}', [TaskController::class, 'getModalTask']);
+
         Route::put('/tasks/{id}/updateFolow', [TaskController::class, 'updateFolow'])->name('tasks.updateFolow');
 
         Route::get('/tasks/{id}/getFormDateTask', [TaskController::class, 'getFormDateTask']);

@@ -72,6 +72,20 @@ function updateIsStar(boardId, userId, ) {
 //         });
 //     }
 // });
+function loadModalTaskDetails(taskId) {
+    $.ajax({
+        url: '/tasks/getModalTask/' + taskId, // Update the URL based on your route
+        method: 'GET',
+        success: function(response) {
+            // Populate the modal body with the fetched content
+            $('#modal-task-' + taskId).html(response);
+        },
+        error: function() {
+            alert('Unable to load task details.');
+        }
+    });
+}
+
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -172,6 +186,10 @@ function updateTask2(taskId) {
         processData: false, // Bắt buộc phải false để không xử lý FormData thành chuỗi
         contentType: false, // Bắt buộc phải false để đặt đúng 'multipart/form-data'
         success: function(response) {
+            if(response.task.image) {
+                $('#detailCardModalLabel').css('background-image', `url('/storage/${response.task.image}')`);
+            }
+            notificationWeb(response.action, response.msg);
             console.log('Task updated successfully:', response);
         },
         error: function(xhr) {
@@ -1125,6 +1143,7 @@ function uploadTaskAttachments(taskId) {
             if (listAttachments && listAttachments.children.length === 0) {
                 attachmentSection.style.display = 'none';
             }
+            notificationWeb(response.action, response.msg);
         },
         error: function(xhr) {
             console.log('Error occurred:', xhr.responseText);

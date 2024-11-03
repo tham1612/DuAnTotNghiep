@@ -253,12 +253,8 @@
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
     <script src="{{asset('js/ajax-board.js')}}"></script>
     <script src="{{asset('js/ajax-modal-task.js')}}"></script>
-@endif
-
-
     <script src="{{asset('js/task.js')}}"></script>
     <script src="{{asset('js/catalog.js')}}"></script>
-
 @endif
 <script src="{{asset('js/board.js')}}"></script>
 <script src="{{asset('js/home.js')}}"></script>

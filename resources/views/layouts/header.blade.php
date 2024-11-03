@@ -439,6 +439,7 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
             </div>
             <div class="modal-body">
                 <div class="row">
+                    @if(!empty(session('board')))
                     @foreach(session('board')->onlyTrashed()->get() as $archiverBoard)
                         <div
                             class="d-flex align-items-center justify-content-between  border rounded mt-2" style="background-color: #091e420f">
@@ -469,6 +470,7 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
 
                         </div>
                     @endforeach
+                    @endif
                 </div>
             </div>
 
