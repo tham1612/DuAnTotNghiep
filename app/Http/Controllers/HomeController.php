@@ -118,9 +118,8 @@ class HomeController extends Controller
         // Task quá hạn
         $overdueTasks = $tasks->filter(fn($task) => $task->progress < 100 && Carbon::parse($task->end_date)->lt(now()));
 
-        // Lọc các task của riêng user, chưa quá hạn và có end_date trong tương lai
-        $myAssignedTasks = $userTasks->filter(fn($task) => $task->end_date && Carbon::parse($task->end_date)->gte(now()))
-        ->sortBy('end_date');
+        // Lọc các task của riêng user chưa hoàn thành
+        $myAssignedTasks = $userTasks->filter(fn($task) => $task->progress < 100);
 
         // Task có ngày bắt đầu trong vòng 1 tuần
         $upcomingTasks = $tasks->filter(fn($task) => $task->start_date && Carbon::parse($task->start_date)->between(now(), now()->addWeek()))
