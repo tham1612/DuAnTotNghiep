@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    REGISTER
+    Đăng kí
 @endsection
 @section('content')
     <div class="auth-page-content">
@@ -25,8 +25,8 @@
 
                         <div class="card-body p-4">
                             <div class="text-center mt-2">
-                                <h5 class="text-primary">Tạo tài khoản mới</h5>
-                                <p class="text-muted">Get your free TaskFlow account now</p>
+                                <h5 class="text-primary">Tạo tài khoản mới.</h5>
+                                <p class="text-muted">Đăng kí tài khoản TaskFlow miễn phí ngay bây giờ.</p>
                             </div>
                             <div class="p-2 mt-4">
                                 <form method="POST" action="{{ route('register') }}">
@@ -36,7 +36,7 @@
                                                 class="text-danger">*</span></label>
                                         <input id="useremail" type="email"
                                             class="form-control @error('email') is-invalid @enderror" id="useremail"
-                                            placeholder="Enter email address" name="email" value="{{ old('email') }}"
+                                            placeholder="Nhập email" name="email" value="{{ old('email') }}"
                                             required autocomplete="email">
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
@@ -45,10 +45,10 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="username" class="form-label">Name <span
+                                        <label for="username" class="form-label">Tên đăng nhập <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                            id="username" placeholder="Enter username" name="name"
+                                            id="username" placeholder="Nhập tên đăng nhập" name="name"
                                             value="{{ old('name') }}" required autocomplete="name" autofocus>
                                         @error('name')
                                             <span class="invalid-feedback" role="alert">
@@ -58,11 +58,11 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label" for="password-input">Password</label>
+                                        <label class="form-label" for="password-input">Mật khẩu</label>
                                         <div class="position-relative auth-pass-inputgroup">
                                             <input type="password"
                                                 class="form-control pe-5 password-input @error('password') is-invalid @enderror"
-                                                onpaste="return false" placeholder="Enter password" id="password-input"
+                                                onpaste="return false" placeholder="Nhập mật khẩu" id="password-input"
                                                 aria-describedby="passwordInput" name="password" required
                                                 autocomplete="new-password">
 
@@ -80,9 +80,9 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label" for="confirm-password-input">Confirm Password</label>
+                                        <label class="form-label" for="confirm-password-input">Xác nhận mật khẩu</label>
                                         <div class="position-relative auth-pass-inputgroup">
-                                            <input type="password" placeholder="Enter Confirm Password"
+                                            <input type="password" placeholder="Nhập xác nhận mật khẩu"
                                                 class="form-control pe-5 password-input @error('password_confirmation') is-invalid @enderror"
                                                 id="confirm-password-input" aria-describedby="confirmPasswordInput"
                                                 name="password_confirmation" required autocomplete="new-password">
@@ -103,12 +103,10 @@
 
 
                                     <div class="mt-4">
-                                        <button class="btn btn-success w-100" type="submit">Sign Up</button>
+                                        <button class="btn btn-success w-100" type="submit">Đăng kí</button>
                                     </div>
-
+{{--
                                     <div class="mt-4 text-center">
-
-
                                         <div>
                                             <button type="button"
                                                 class="btn btn-primary btn-icon waves-effect waves-light"><i
@@ -121,7 +119,7 @@
                                             <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i
                                                     class="ri-twitter-fill fs-16"></i></button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </form>
 
                             </div>
@@ -131,11 +129,10 @@
                     <!-- end card -->
 
                     <div class="mt-4 text-center">
-                        <p class="mb-0">Already have an account ? <a href="{{ route('login') }}"
+                        <p class="mb-0">Bạn đã có tài khoản ? <a href="{{ route('login') }}"
                                 class="fw-semibold text-primary text-decoration-underline">
-                                Sign In </a></p>
+                                Đăng nhập</a></p>
                     </div>
-
                 </div>
             </div>
             <!-- end row -->

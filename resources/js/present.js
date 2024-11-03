@@ -17,9 +17,18 @@ window.Echo.join(`chat.${roomId}`)
 
         // Kiểm tra xem người nhận có online không
         let isReceiverOnline = users.some((user) => user.id === receiverId);
-        document.getElementById("user-status").textContent = isReceiverOnline
-            ? "Online"
-            : "Offline";
+
+        // Cập nhật trạng thái "Online" hoặc "Offline"
+        const userStatusElement = document.getElementById("user-status");
+        userStatusElement.textContent = isReceiverOnline ? "Online" : "Offline";
+
+        // Thêm hoặc xóa class "user-status" vào phần tử có id "check" dựa trên trạng thái
+        const checkElement = document.getElementById("check");
+        if (isReceiverOnline) {
+            checkElement.classList.add("user-status"); // Thêm class nếu online
+        } else {
+            checkElement.classList.remove("user-status"); // Xóa class nếu offline
+        }
     })
     .joining((user) => {
         console.log("==============joining============");
