@@ -231,8 +231,10 @@
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>
                                         @endif
-                                        <span id="name-board-{{ $board->id }}"
-                                            class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
+                                        <span id="name-board-{{ $board->id }}" class="text-white fs-15 text-nowrap">
+                                            {{ \Str::limit($board->name, 10) }}
+                                        </span>
+
                                     </div>
                                 </a>
                                 @php
