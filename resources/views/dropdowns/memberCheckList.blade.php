@@ -43,7 +43,6 @@
     <div class="mt-3">
         <label class="fs-14">Thành viên của bảng</label>
         <ul class="" style="list-style: none; margin-left: -32px">
-
             @foreach ($boardMembers as $boardMember)
                 <li class="d-flex justify-content-between align-items-center checklist-member-item"
                     data-member-id="{{ $boardMember->id }}" data-check-list-item="{{$checkListItemId}}"

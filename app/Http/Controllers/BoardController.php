@@ -8,7 +8,9 @@ use App\Enums\AuthorizeEnum;
 use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Catalog;
 use App\Models\Color;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
@@ -31,11 +33,15 @@ use Spatie\Activitylog\Models\Activity;
 class BoardController extends Controller
 {
     const PATH_UPLOAD = 'boards';
-    protected $googleApiClient;
+    public $googleApiClient;
+    public $catalogController;
+    public $taskController;
 
-    public function __construct(GoogleApiClientController $googleApiClient)
+    public function __construct(GoogleApiClientController $googleApiClient, CatalogControler $catalogController, TaskController $taskController)
     {
         $this->googleApiClient = $googleApiClient;
+        $this->catalogController = $catalogController;
+        $this->taskController = $taskController;
     }
 
     /**
@@ -53,8 +59,8 @@ class BoardController extends Controller
                 // Sửa điều kiện này để so sánh với trường lưu thông tin người tạo, ví dụ: 'created_by'
                 $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
+                        $query->where('user_id', $userId);
+                    });
             })
             ->with(['workspace', 'boardMembers', 'catalogs.tasks']) // Tải các tasks liên quan
             ->get()
@@ -315,16 +321,16 @@ class BoardController extends Controller
 
         switch ($viewType) {
             case 'dashboard':
-                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
+                return view('homes.dashboard_board', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked', 'id'));
 
             case 'list':
-                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'tasks', 'boardMemberChecked'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'tasks', 'boardMemberChecked'));
 
             case 'table':
-                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'calendar':
                 $listEvent = array();
@@ -360,10 +366,10 @@ class BoardController extends Controller
                         'end' => Carbon::parse($event->end_date)->toIso8601String(),
                     ];
                 }
-                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('calendars.index', compact('listEvent', 'board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             default:
-                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+                return view('boards.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
         }
     }
 
@@ -411,8 +417,8 @@ class BoardController extends Controller
         $board->update($data);
 
         return response()->json([
-            'message' => 'Board đã được cập nhật thành công',
-            'msg' => true,
+            'msg' =>$board['name'] . ' đã được cập nhật thành công!',
+            'action' => 'success',
             'board' => $board
         ]);
     }
@@ -470,8 +476,8 @@ class BoardController extends Controller
         $user = User::find($request->user_id);
         $board = Board::find($request->board_id);
         $checkUser = WorkspaceMember::where('user_id', $request->user_id)
-        ->where('Workspace_id', $board->workspace_id)
-        ->first();
+            ->where('Workspace_id', $board->workspace_id)
+            ->first();
         if (empty($checkUser)) {
             try {
                 BoardMember::query()
@@ -643,7 +649,105 @@ class BoardController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $catalogsId = Catalog::query()
+            ->where('board_id', $id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+        try {
+            DB::beginTransaction();
+            foreach ($catalogsId as $catalogId) {
+                $this->catalogController->destroy($catalogId);
+            }
+            Board::query()->findOrFail($id)->delete();
+
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Lưu trữ bảng thành công!!'
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
+        }
+
+    }
+
+    public function destroyBoard(string $id)
+    {
+        Log::debug('board work');
+        $board = Board::withTrashed()->findOrFail($id);
+        $catalogsId = Catalog::withTrashed()
+            ->where('board_id', $id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        try {
+            DB::beginTransaction();
+
+            BoardMember::query()->where('board_id', $id)->delete();
+
+            foreach ($catalogsId as $catalogId) {
+                $this->catalogController->destroyCatalog($catalogId);
+            }
+
+            Tag::query()->where('board_id', $id)->delete();
+
+            $board->forceDelete();
+
+            DB::commit();
+
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Xóa bảng thành công!!'
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
+        }
+
+    }
+
+
+    public function restoreBoard(string $id)
+    {
+        $board = Board::withTrashed()->findOrFail($id);
+        $catalogsId = Catalog::withTrashed()
+            ->where('board_id', $id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($catalogsId as $catalogId) {
+                $this->catalogController->restoreCatalog($catalogId);
+            }
+
+            $board->restore();
+
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Hoàn tác bảng thành công!!',
+                'board' => $id,
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
+        }
+
     }
 
     // gửi mail thêm người vào bảng

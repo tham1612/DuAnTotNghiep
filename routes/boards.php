@@ -62,6 +62,13 @@ Route::middleware(['auth', 'isWorkspace'])
 
                     Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
 
+//                    lưu trữ + hoàn tác + xóa vĩnh viễn
+                    Route::post('{id}', [BoardController::class, 'destroy'])->name('destroy');
+
+                    Route::post('/restoreBoard/{id}', [BoardController::class, 'restoreBoard'])->name('restoreBoard');
+
+                    Route::post('/destroyBoard/{id}', [BoardController::class, 'destroyBoard'])->name('destroyBoard');
+
                 });
         });
 
@@ -70,4 +77,13 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::resource('catalogs', CatalogControler::class);
 
+        // hoàn tác + xóa vĩnh viễn
+        Route::post('/catalogs/destroyCatalog/{id}', [CatalogControler::class, 'destroyCatalog'])
+            ->name('catalogs.destroyCatalog');
+
+        Route::post('/catalogs/restoreCatalog/{id}', [CatalogControler::class, 'restoreCatalog'])
+            ->name('catalogs.restoreCatalog');
+
+        Route::post('/catalogs/archiverAllTasks/{id}', [CatalogControler::class, 'archiverAllTasks'])
+            ->name('catalogs.archiverAllTasks');
     });

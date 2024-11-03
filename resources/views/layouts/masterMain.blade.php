@@ -44,6 +44,7 @@
             min-height: 100px !important;
             /* Đảm bảo chiều cao giới hạn 150px */
         }
+
         .comment-section {
             scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
         }
@@ -51,7 +52,6 @@
         .comment-section::-webkit-scrollbar {
             display: none; /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
         }
-
 
 
     </style>
@@ -76,6 +76,7 @@
             .attachments-container::-webkit-scrollbar {
                 display: none; /* Chrome, Safari, Opera */
             }
+
             .checkList-section {
                 max-height: 400px; /* Đặt chiều cao tối đa để tạo scroll khi cần */
                 overflow-y: auto; /* Cho phép cuộn dọc khi vượt quá chiều cao */
@@ -250,13 +251,33 @@
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
-
     <script src="{{asset('js/ajax-board.js')}}"></script>
+    <script src="{{asset('js/ajax-modal-task.js')}}"></script>
+    <script src="{{asset('js/task.js')}}"></script>
+    <script src="{{asset('js/catalog.js')}}"></script>
 @endif
-
+<script src="{{asset('js/board.js')}}"></script>
 <script src="{{asset('js/home.js')}}"></script>
 @yield('script')
-
+<script !src="">
+    function notificationWeb(action, title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: action,
+            title: title
+        });
+    }
+</script>
 </body>
 
 </html>

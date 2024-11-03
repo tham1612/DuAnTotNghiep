@@ -4,21 +4,21 @@
 @endsection
 @section('main')
 
-@if(session('error'))
-<div class="alert alert-danger custom-alert">
-    {{ session('error') }}
-</div>
-@endif
+    @if(session('error'))
+        <div class="alert alert-danger custom-alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
+    <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
 
     @if(!\Illuminate\Support\Facades\Auth::user()->access_token)
         <a href="{{route('google.redirect')}}" class="btn btn-ghost-danger">Liên kết Google Calendar</a>
@@ -40,7 +40,7 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Danh sách</label>
                         <select name="catalog_id" id="catalog_id" class="form-select">
-                            <option hidden="">---Lựa chọn---</option>
+                            <option hidden="" value="">---Lựa chọn---</option>
                             @foreach ($board->catalogs as $catalog)
                                 <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                             @endforeach
@@ -51,26 +51,15 @@
                         <label for="exampleInputPassword1" class="form-label">Ngày bắt đầu</label>
                         <section class="d-flex align-items-center">
                             <input type="checkbox" class="form-check-input me-1" id="active_checkbox">
-                            <input type="datetime-local" class="form-control" name="start">
+                            <input type="datetime-local" class="form-control" name="start_date">
                         </section>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Ngày kết thúc</label>
-                        <input type="datetime-local" class="form-control" name="end">
+                        <input type="datetime-local" class="form-control" name="end_date">
                     </div>
-                    {{--                    <div class="mb-3">--}}
-                    {{--                        <label for="exampleInputPassword1" class="form-label">Giao viec</label>--}}
-                    {{--                        <input type="text" class="form-control" name="attendees[]" id="attendees">--}}
-                    {{--                    </div>--}}
-                    {{--                    <div class="mb-3">--}}
-                    {{--                        <label for="exampleInputPassword1" class="form-label">Ghi chu</label>--}}
-                    {{--                        <textarea name="description" id="description" cols="30" rows="5"--}}
-                    {{--                                  class="form-control"></textarea>--}}
-                    {{--                    </div>--}}
+                    <button class="btn btn-primary">Tạo mới</button>
 
-                    <button type="submit" class="btn btn-primary" id="createEvent">Tạo mới</button>
-
-                    {{--                    <button class="btn btn-danger" id="deteleEvent">Xóa</button>--}}
                 </form>
             </div>
         </div>
@@ -88,8 +77,8 @@
     <script src="https://momentjs.com/downloads/moment-timezone-with-data.min.js"></script>
 
     <script>
-        let startDateInput = document.querySelector('input[name="start"]');
-        let endDateInput = document.querySelector('input[name="end"]');
+        let startDateInput = document.querySelector('input[name="start_date"]');
+        let endDateInput = document.querySelector('input[name="end_date"]');
         let text = document.querySelector('#text');
         let active_checkbox = document.querySelector('#active_checkbox');
         let deteleEvent = document.getElementById('deteleEvent');
@@ -129,32 +118,50 @@
                             'YYYY-MM-DDTHH:mm'));
                     startDateInput.disabled = false;
                 }
+
                 handleDate();
                 text.value = '';
+                catalog_id.value = '';
                 active_checkbox.checked = false; // Reset checkbox
                 $('#exampleModal').modal('toggle'); // Hiển thị modal
+                $('form').on('submit', function (e) {
+                    e.preventDefault(); // Ngăn không cho form gửi đi
 
-                createEvent.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    text = text.value;
-                    catalog_id = catalog_id.value;
-                    start = moment(startDateInput.value).format('YYYY-MM-DD HH:mm:00');
-                    end = moment(endDateInput.value).format('YYYY-MM-DD HH:mm:00');
+                    // Lấy giá trị của các trường Tiêu đề và Danh sách
+                    var title = $('#text').val().trim();
+                    var catalog = $('#catalog_id').val();
+
+                    // Kiểm tra nếu Tiêu đề để trống hoặc chưa chọn Danh sách
+                    if (title === '') {
+                        notificationWeb('error', 'Vui lòng nhập tên')
+                        return;
+                    }
+
+                    if (catalog === '') {
+                        notificationWeb('error', 'Vui lòng chọn danh mục')
+                        return;
+                    }
+
+                    // Nếu không có lỗi, tiến hành gửi AJAX
                     $.ajax({
-                        url: `/tasks`,
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            text,
-                            catalog_id,
-                            start,
-                            end
-                        },
+                        url: '/tasks', // Đổi thành đường dẫn bạn muốn gửi form tới
+                        method: 'POST',
+                        data: $(this).serialize(),
                         success: function (response) {
-                            $('#detailCardModal6').modal('toggle');
+                            $('#exampleModal').modal('toggle');
+                            notificationWeb(response.action, response.msg)
+                            text.value = '';
+                            catalog_id.value = '';
+                            startDateInput.value = '';
+                            endDateInput.value = '';
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Có lỗi xảy ra khi gửi form!');
+                            // Xử lý lỗi nếu có
                         }
-                    })
-                })
+                    });
+                });
+
             },
             editable: true,
             // update kéo thả
@@ -182,9 +189,12 @@
                         end,
                     },
                     success: function (response) {
-                        isAllowedToDrag(event) ? alert(response.message) :
-                            alert('Bạn không có quyền thay đổi');
-
+                        isAllowedToDrag(event)
+                            ? notificationWeb('success', 'Cập nhật ngày thành công!')
+                            : notificationWeb('error', 'Bạn không có quyền thay đổi!');
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
                     }
                 })
             },

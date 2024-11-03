@@ -53,8 +53,9 @@ class GoogleApiClientController extends Controller
 
     public function createEvent($data)
     {
+//        dd($data);
         if (isset($data['start']) || isset($data['end'])) {
-            $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
+            $startDate = empty($data['start']) ? $data['end'] : $data['start'];
             $endDate = $data['end'];
         } else {
             $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
@@ -89,13 +90,10 @@ class GoogleApiClientController extends Controller
 
         // Thêm người tham gia (attendees)
         $attendees = [];
-        if (!empty($data['attendees'])) {
-            // Tách email nếu có nhiều
-            $emails = explode(',', $data['attendees']);
-            foreach ($emails as $email) {
-                $attendees[] = ['email' => trim($email)];
-            }
+        if (isset($data['user_id'])) {
+            $attendees[] = ['email' => User::query()->where('id', $data['user_id'])->value('email')];
         }
+
         $userOrTaskId = [
             'user_id' => Auth::id(),
             'task_id' => $data['id'],
@@ -112,54 +110,41 @@ class GoogleApiClientController extends Controller
         if (!isset($data['id_google_calendar']) && !isset($data['id_gg_calendar'])) {
             $data['id_google_calendar'] = Task::query()->findOrFail($data['task_id'])->value('id_google_calendar');
         }
-        if (isset($data['start']) || isset($data['end'])) {
-            $startDate = $data['start'] == 'Invalid date' ? $data['end'] : $data['start'];
-            $endDate = $data['end'];
-        } else if (isset($data['start_date']) || isset($data['end_date'])) {
-            $startDate = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
-            $endDate = $data['end_date'];
-        }
+        $startDate = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
+        $endDate = $data['end_date'];
 
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
         $eventId = isset($data['id_google_calendar']) ? $data['id_google_calendar'] : $data['id_gg_calendar'];
-        if (isset($startDate) || isset($endDate)) {
-            $eventData = [
-                'start' => [
-                    'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
-                    'timeZone' => 'Asia/Ho_Chi_Minh',
-                ],
-                'end' => [
-                    'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
-                    'timeZone' => 'Asia/Ho_Chi_Minh',
-                ],
-            ];
-        } else if (isset($data['text']) || isset($data['description'])) {
-            $eventData = [
-                'summary' => $data['text'],
-//                'start' => ['dateTime' => Carbon::parse($data['start_date'], 'Asia/Ho_Chi_Minh')->toIso8601String()],
-//                'end' => ['dateTime' => Carbon::parse($data['end_date'], 'Asia/Ho_Chi_Minh')->toIso8601String()],
-                'description' => $data['description'],
-            ];
-        }
+//        if (isset($startDate) || isset($endDate)) {
+        $eventData = [
+            'summary' => $data['text'],
+            'description' => $data['description'],
+            'start' => [
+                'dateTime' => Carbon::parse($startDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                'timeZone' => 'Asia/Ho_Chi_Minh',
+            ],
+            'end' => [
+                'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
+                'timeZone' => 'Asia/Ho_Chi_Minh',
+            ],
+        ];
+//        } else if (isset($data['text']) || isset($data['description'])) {
+//            $eventData = [
+//
+//            ];
+//        }
         // Thêm người tham gia (attendees)
         if (isset($data['user_id'])) {
-//            foreach ($data->attendees as $email) {
-//                // Tách email nếu có nhiều
-//                $emails = explode(',', $email);
-//                foreach ($emails as $email) {
-//                    $attendees[] = ['email' => trim($email)];
             $attendees[] = ['email' => User::query()->where('id', $data['user_id'])->value('email')];
-//        $attendees[] = ['email' => 'vinhpqph37185@fpt.edu.vn'];
-//                }
-//            }
-//        }
         }
+
         $userOrTaskId = [
             'user_id' => Auth::id(),
             'task_id' => isset($data['id']) ? $data['id'] : $data['task_id'],
         ];
+
         UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 
     }

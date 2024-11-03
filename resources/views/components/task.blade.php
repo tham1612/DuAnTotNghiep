@@ -30,7 +30,7 @@
                  aria-labelledby="detailCardModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content border-0 rounded-3">
+                    <div class="modal-content border-0 rounded-3 modal-task-{{ $task->id}}">
 
                         <div class="modal-header p-3"
                              style="
@@ -80,37 +80,35 @@
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex mt-3 flex-wrap">
-                                            @if(count($task->members))
-                                                <div class="p-3 col-3">
+                                                <div class="p-3" id="member-section-{{$task->id}}" style="{{ count($task->members) ? '' : 'display: none;' }}">
                                                     <strong>Thành viên</strong>
                                                     <section class="d-flex">
                                                         <!-- thêm thành viên & chia sẻ link bảng -->
                                                         <div
                                                             class="d-flex justify-content-center align-items-center cursor-pointer ">
                                                             <div class="col-auto ms-sm-auto">
-                                                                <div class="avatar-group " id="list-member-task">
+                                                                <div class="avatar-group " id="list-member-task-{{$task->id}}">
                                                                     @if (count($task->members))
-
                                                                         @php
                                                                             // Đếm số lượng board members
                                                                             $maxDisplay = 3;
                                                                             $count = 0;
                                                                         @endphp
-
                                                                         @foreach ($task->members as $taskMember)
                                                                             @if ($count < $maxDisplay)
                                                                                 <a href="javascript: void(0);"
                                                                                    class="avatar-group-item"
                                                                                    data-bs-toggle="tooltip"
                                                                                    data-bs-placement="top"
+                                                                                   id="member-{{$taskMember->id}}-{{$task->id}}"
                                                                                    title="{{ $taskMember->name }}">
                                                                                     @if ($taskMember->image)
                                                                                         <img
                                                                                             src="{{ asset('storage/' . $taskMember->image) }}"
                                                                                             alt=""
-                                                                                            class="rounded-circle avatar-sm">
+                                                                                            class="rounded-circle avatar-xss">
                                                                                     @else
-                                                                                        <div class="avatar-sm">
+                                                                                        <div class="avatar-xss">
                                                                                             <div
                                                                                                 class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                                 style="width: 35px;height: 35px">
@@ -128,11 +126,11 @@
                                                                                class="avatar-group-item"
                                                                                data-bs-toggle="tooltip"
                                                                                data-bs-placement="top"
-                                                                               title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                                <div class="avatar-sm">
+                                                                               title="{{ count($task->members) - $maxDisplay }} more">
+                                                                                <div class="avatar-xss">
                                                                                     <div
-                                                                                        class="avatar-title rounded-circle">
-                                                                                        +{{ $task->members->count() - $maxDisplay }}
+                                                                                        class="avatar-title rounded-circle" style="width: 35px;height: 35px">
+                                                                                        +{{ count($task->members) - $maxDisplay }}
                                                                                     </div>
                                                                                 </div>
                                                                             </a>
@@ -144,7 +142,6 @@
                                                         </div>
                                                     </section>
                                                 </div>
-                                            @endif
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
                                                 @php
@@ -211,27 +208,24 @@
 
                                                 </div>
                                             </div>
+                                            <div class="p-3" id="tag-section-{{$task->id}}" style="{{ count($task->tags) ? '' : 'display: none;' }}">
+                                                <strong>Nhãn</strong>
+                                                <div class="d-flex flex-wrap gap-2" id="tag-task-{{$task->id}}">
+                                                    @foreach($task->tags as $tag)
+                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                             data-bs-placement="top" data-tag-id="{{$task->id}}-{{$tag->id}}"
+                                                             title="{{$tag->name}}">
+                                                            <div
 
-                                            @if(count($task->tags))
-                                                <div class="p-3">
-                                                    <strong>Nhãn</strong>
-                                                    <div class="d-flex flex-wrap gap-2">
-                                                        @foreach($task->tags as $tag)
-                                                            <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                                 data-bs-placement="top"
-                                                                 title="{{$tag->name}}">
-                                                                <div
+                                                                class="badge border rounded d-flex align-items-center justify-content-center"
+                                                                style=" background-color: {{$tag->color_code}}">
 
-                                                                    class="badge border rounded d-flex align-items-center justify-content-center"
-                                                                    style=" background-color: {{$tag->color_code}}">
-
-                                                                    {{$tag->name}}
-                                                                </div>
+                                                                {{$tag->name}}
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- mô tả -->
@@ -273,17 +267,20 @@
                                                 <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                                             </div>
 
-
-                                            <div class="hstack gap-2 flex-wrap mb-3">
-                                                <button class="btn btn-outline-dark" type="button"
-                                                        data-bs-toggle="collapse"
-                                                        data-bs-target="#activity-{{$task->id}}" aria-expanded="false"
-                                                        aria-controls="collapseExample">
-                                                    Ẩn chi tiết
-                                                </button>
-                                            </div>
+                                            @if(!empty($task->task_comments))
+                                                <div class="hstack gap-2 flex-wrap mb-3">
+                                                    <button class="btn btn-outline-dark" type="button"
+                                                            onclick="loadAllTaskComment({{ $task->id }})"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#activity-{{ $task->id }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseExample">
+                                                        Xem chi tiết
+                                                    </button>
+                                                </div>
+                                            @endif
                                         </section>
-                                        <div class=" w-100" id="task-comment-{{$task->id}}">
+                                        <div class="comments-container w-100" id="task-comment-{{$task->id}}">
                                             <div class="d-flex">
                                                 @if (auth()->user()->image)
                                                     <img class="rounded header-profile-user object-fit-cover"
@@ -318,122 +315,8 @@
                                                 </div>
 
                                             </div>
-
                                             <div class="collapse show" id="activity-{{$task->id}}">
-                                                  @foreach($task->task_comments as $comment)
-                                                    @php
-                                                        $comment = json_decode(json_encode($comment)) ;
-                                                      $replyUser = collect($task->task_comments)->where('id', $comment->parent_id)->first();
-                                                    @endphp
-
-                                                    <div class="d-flex mt-2 conten-comment-{{$comment->id}}">
-                                                        @if ($comment->user->image)
-                                                            <img class="rounded header-profile-user object-fit-cover"
-                                                                 src="{{ asset('storage/' . $comment->user->image) }}"
-                                                                 alt="Avatar"/>
-                                                        @else
-                                                            <div
-                                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                                style="width: 40px;height: 40px">
-                                                                {{ strtoupper(substr($comment->user->name, 0, 1)) }}
-                                                            </div>
-                                                        @endif
-                                                        <section class="ms-2 w-100">
-                                                            <strong>{{$comment->user->name}}</strong>
-                                                            @php
-                                                                $createdAt = \Carbon\Carbon::parse($comment->created_at);
-                                                                $now = \Carbon\Carbon::now();
-                                                                $diffInHours = $createdAt->diffInHours($now);
-                                                                \Carbon\Carbon::setLocale('vi');
-
-
-                                                            @endphp
-
-                                                            @if ($diffInHours < 24)
-                                                                <span class="fs-11">{{ $createdAt->diffForHumans() }}</span>
-
-                                                            @else
-                                                                <span
-                                                                    class="fs-11">{{ $createdAt->format('H:i j \t\h\g m, Y') }}</span>
-                                                            @endif
-                                                            <div
-
-                                                                class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-{{$comment->id}}">
-                                                                @if(!empty($replyUser))
-                                                                <div
-                                                                    class="badge border rounded  align-items-center "
-                                                                    style=" background-color:  #4A90E2">@
-                                                                    {{$replyUser->user->name}}
-                                                                </div>
-                                                                @endif
-                                                                {!! $comment->content !!}
-                                                            </div>
-                                                            <div class="">
-                                                                <div class="fs-11 d-flex">
-                                                                    @if($comment->user->id === Auth::id())
-                                                                    <div class="">
-                                                                        <span data-bs-toggle="dropdown"
-                                                                              aria-haspopup="true"
-                                                                              aria-expanded="false">Chỉnh sửa</span>
-                                                                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-update-comemnt-{{$comment->id}} ">
-                                                                            <div class="d-flex text-muted">Chỉnh sửa</div>
-                                                                            <form class="flex-column"
-                                                                                  id="comment_form_{{$task->id}}}">
-                                                                                  <textarea name="content" class="form-control"
-                                                                                            id="update_comment_{{$comment->id}}">{!! $comment->content !!}
-                                                                                    </textarea>
-                                                                                <button type="button"
-                                                                                        class="btn btn-primary mt-2"
-                                                                                        onclick="updateTaskComment({{$task->id}},{{Auth::id()}},{{$comment->id}})">
-                                                                                    Lưu
-                                                                                </button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                        @else
-                                                                    <div class="">
-                                                                    <span data-bs-toggle="dropdown"
-                                                                          aria-haspopup="true"
-                                                                          aria-expanded="false">Trả lời</span>
-                                                                        <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-reply-comemnt-{{$comment->id}} ">
-                                                                            <div class="d-flex text-muted"><i class=" ri-arrow-go-forward-fill"></i><h5 class="text-center text-muted "> {{$comment->user->name}}</h5></div>
-                                                                            <form class="flex-column"
-                                                                                  id="comment_form_{{$task->id}}">
-                                                                          <textarea name="content" class="form-control"
-                                                                                    id="reply_comment_{{$comment->id}}"
-                                                                                    placeholder="Trả lời bình luận"></textarea>
-                                                                                <button type="button"
-                                                                                        class="btn btn-primary mt-2"
-                                                                                        onclick="addReplyTaskComment({{$task->id}},{{Auth::id()}},{{$comment->id}})">
-                                                                                    Lưu
-                                                                                </button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                        @endif
-                                                                    @php $userOwner = $board->members->firstWhere('pivot.authorize', 'Owner');  @endphp
-                                                                    @if(auth()->id()===$comment->user->id || auth()->id()=== $userOwner->id )
-                                                                        <span class="mx-1">-</span>
-                                                                        <span data-bs-toggle="dropdown"
-                                                                              aria-haspopup="true"
-                                                                              aria-expanded="false">Xóa</span>
-                                                                        <div class="dropdown-menu dropdown-menu-md p-3 w-50">
-                                                                            <h5 class="text-center">Bạn có muốn xóa bình
-                                                                                luận</h5>
-                                                                            <p>Bình luận sẽ bị xóa vĩnh viễn và không thể khôi
-                                                                                phục</p>
-                                                                            <button class="btn btn-danger w-100"
-                                                                                    onclick="removeComment({{$comment->id}})">
-                                                                                Xóa bình luận
-                                                                            </button>
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                        </section>
-                                                    </div>
-
-                                                @endforeach
+                                                {{--                                            @include('components.comment');--}}
                                             </div>
 
                                         </div>
@@ -464,12 +347,14 @@
                                             style=" height: 30px; background-color: #091e420f; color: #172b4d">
                                             <i class="las la-tag fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                               onclick="loadTaskTag({{ $task->id }},{{$board->id}})"
                                                aria-expanded="false" data-bs-offset="-40,10">
                                                 Nhãn
                                             </p>
                                             <!--dropdown nhãn-->
-                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                @include('dropdowns.tag')
+                                            <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
+                                            id="dropdown-list-tag-task-board-{{ $task->id }}">
+                                                {{-- dropdowns.tag --}}
                                             </div>
                                         </div>
                                     </div>
@@ -565,7 +450,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d"
+                                            onclick="archiverTask({{$task->id}})">
                                             <i class="ri-archive-line fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -578,7 +464,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: #091e420f; color: #172b4d">
+                                            style=" height: 30px; background-color: #091e420f; color: #172b4d"
+                                            onclick="restoreTask({{$task->id}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -591,7 +478,8 @@
                                     <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                                            style=" height: 30px; background-color: red">
+                                            style=" height: 30px; background-color: red"
+                                            onclick="destroyTask({{$task->id}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
