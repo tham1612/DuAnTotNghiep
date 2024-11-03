@@ -19,11 +19,13 @@ class UserController extends Controller
         if ($request->input('query')) {
             $query = $request->input('query'); // Nhận tham số từ request
             $users = [];
+            
             if ($query) {
-                // Truy vấn cơ sở dữ liệu
-                $users = User::where('email', 'LIKE', "%{$query}%")->get();
-            }
-
+                // Truy vấn cơ sở dữ liệu và loại trừ người dùng hiện tại
+                $users = User::where('email', 'LIKE', "%{$query}%")
+                             ->where('id', '!=', auth()->id())
+                             ->get();
+            }            
             return response()->json($users); // Trả về dữ liệu dưới dạng JSON
         } else {
             $currentUserId = auth()->id(); // Lấy ID của người dùng hiện tại
@@ -35,10 +37,10 @@ class UserController extends Controller
                 })
                 ->where(function ($query) use ($currentUserId) {
                     $query->where('messages.sender_id', $currentUserId)
-                          ->orWhere('messages.receiver_id', $currentUserId);
+                        ->orWhere('messages.receiver_id', $currentUserId);
                 })
                 ->select(
-                    'users.*', 
+                    'users.*',
                     DB::raw('(SELECT m.message FROM messages AS m 
                               WHERE (m.sender_id = users.id OR m.receiver_id = users.id) 
                               AND (m.sender_id = ' . $currentUserId . ' OR m.receiver_id = ' . $currentUserId . ') 
@@ -57,10 +59,6 @@ class UserController extends Controller
                 )
                 ->distinct()
                 ->get();
-            
-            
-        
-        
             $rooms = DB::table('room_chat')
                 ->select('id', 'name', 'members_hash')
                 ->get()->toArray();
@@ -114,6 +112,40 @@ class UserController extends Controller
         return redirect()->route('chat', ['roomId' => $newRoomId, 'receiverId' => $id]);
     }
 
+
+    public function updateStatus(Request $request)
+    {
+        $userId = auth()->id(); // Lấy ID của người dùng hiện tại
+        $status = $request->input('status'); // Lấy trạng thái từ yêu cầu
+
+        // Cập nhật trực tiếp bằng Query Builder
+        DB::table('users')->where('id', $userId)->update(['status' => $status]);
+
+        return response()->json(['success' => true]);
+    }
+    // UserController.php
+    public function checkStatus($id)
+    {
+        $user = User::find($id);
+        return response()->json(['status' => $user->status]);
+    }
+    public function getLatestMessage($currentUserId, $otherUserId) {
+        $latestMessage = DB::table('messages')
+            ->where(function($query) use ($currentUserId, $otherUserId) {
+                $query->where('sender_id', $currentUserId)
+                      ->where('receiver_id', $otherUserId);
+            })
+            ->orWhere(function($query) use ($currentUserId, $otherUserId) {
+                $query->where('sender_id', $otherUserId)
+                      ->where('receiver_id', $currentUserId);
+            })
+            ->orderBy('created_at', 'desc') // sắp xếp theo thời gian tạo, mới nhất trước
+            ->limit(1) // giới hạn 1 kết quả
+            ->first(); // lấy bản ghi đầu tiên
+    
+        return response()->json($latestMessage);
+    }
+    
     public function edit(string $id)
     {
         $user = User::query()->findOrFail($id);
