@@ -177,6 +177,7 @@ class MemberController extends Controller
         $userName = Auth::user();
 
         $checkListItemMemberIsSend->user->notify(new DeleteMemberChecklistNotification($checkListItemMemberIsSend, $userName));
+        
         $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
             ->where('user_id', $request->user_id)
             ->first();

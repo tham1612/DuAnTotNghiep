@@ -193,9 +193,12 @@
                     <a class="nav-link menu-link" href="{{ route('inbox') }}">
                         <i class=" ri-notification-3-line"></i> <span data-key="">Thông Báo</span>
                         @if (!empty($allNotifications))
-                            @if ($allNotifications->count() > 0)
+                            @if ($allNotifications->count() <= 9)
                                 <span
                                     class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
+                            @elseif ($allNotifications->count() > 9)
+                            <span
+                                    class="badge rounded-circle bg-danger text-white">9+</span>
                             @endif
                         @endif
                     </a>
