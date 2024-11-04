@@ -175,11 +175,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        <h5 class="text-muted mt-0 mb-1 fs-13">
-                                                            {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
-                                                            -
-                                                            {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
-                                                        </h5>
+                                                        @if($task->start_date)
+                                                            <h5 class="text-muted mt-0 mb-1 fs-13">
+                                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
+                                                                @if($task->end_date)
+                                                                    - {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                                                @endif
+                                                            </h5>
+                                                        @endif                                                       
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -278,11 +281,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        <h5 class="text-muted mt-0 mb-1 fs-13">
-                                                            {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
-                                                            -
-                                                            {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
-                                                        </h5>
+                                                        @if($task->start_date && $task->end_date)
+                                                            <h5 class="text-muted mt-0 mb-1 fs-13">
+                                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
+                                                                -
+                                                                {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                                            </h5>
+                                                        @endif
+                                                    
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
