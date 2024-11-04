@@ -424,23 +424,24 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
             <div class="modal-body">
                 <div class="row">
                     @if(!empty(session('board')))
-                        @foreach(session('board')->onlyTrashed()->get() as $archiverBoard)
-                            <div
-                                class="d-flex align-items-center justify-content-between  border rounded mt-2"
-                                style="background-color: #091e420f">
-                                <div class="d-flex align-items-center ">
-                                    @if ($archiverBoard->image)
-                                        <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
-                                             class="rounded-circle avatar-sm">
-                                    @else
-                                        <div
-                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center border rounded"
-                                            style="width: 40px;height: 40px">
-                                            {{ strtoupper(substr($archiverBoard->name, 0, 1)) }}
-                                        </div>
-                                    @endif
-                                    <p class="fs-16 mt-3 ms-2">{{$archiverBoard->name}}</p>
-                                </div>
+
+                    @foreach(session('board')->onlyTrashed()->get() as $archiverBoard)
+                        <div
+                            class="d-flex align-items-center justify-content-between  border rounded mt-2" style="background-color: #091e420f">
+                            <div class="d-flex align-items-center ">
+                                @if ($archiverBoard->image)
+                                    <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
+                                         class="rounded-circle avatar-sm">
+                                @else
+                                    <div
+                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center border rounded"
+                                        style="width: 40px;height: 40px">
+                                        {{ strtoupper(substr($archiverBoard->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                                <p class="fs-16 mt-3 ms-2">{{$archiverBoard->name}}</p>
+                            </div>
+
 
                                 <div>
                                     <button class="btn btn-outline-primary"
@@ -453,8 +454,10 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
                                     </button>
                                 </div>
 
-                            </div>
-                        @endforeach
+
+                        </div>
+                    @endforeach
+
                     @endif
                 </div>
             </div>

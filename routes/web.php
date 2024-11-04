@@ -47,7 +47,6 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
-
     });
 
 Route::middleware('auth')->get('inboxs', function () {
@@ -69,3 +68,8 @@ Route::controller(LoginGoogleController::class)->group(function () {
 });
 
 Route::get('/check-user/{id?}', [UserController::class, 'check'])->name('check.user');
+Route::post('/update-status', [UserController::class, 'updateStatus']);
+
+Route::get('/user/status/{id}', [UserController::class, 'checkStatus']);
+Route::get('/latest-message/{currentUserId}/{otherUserId}', [UserController::class, 'getLatestMessage']);
+
