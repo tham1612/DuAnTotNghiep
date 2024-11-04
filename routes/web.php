@@ -47,7 +47,6 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::put('/user/{id}', [UserController::class, 'update'])
             ->name('users.update');
-
     });
 
 Route::middleware('auth')->get('inboxs', function () {
