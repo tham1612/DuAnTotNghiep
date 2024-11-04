@@ -12,6 +12,7 @@ use App\Models\Catalog;
 use App\Models\Color;
 use App\Models\Tag;
 use App\Models\Task;
+use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Notifications\WorksaceNotification;
@@ -750,8 +751,119 @@ class BoardController extends Controller
 
     }
 
-    // gửi mail thêm người vào bảng
-    public function inviteUserBoard(Request $request)
+    public function copyBoard(Request $request)
+    {
+        $data = $request->all();
+
+        $uuid = Str::uuid();
+        $token = Str::random(40);
+        $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
+        try {
+            DB::beginTransaction();
+            $boardNew = Board::query()->create($data);
+
+            BoardMember::query()->create([
+                'user_id' => auth()->id(),
+                'board_id' => $boardNew->id,
+                'authorize' => 'Owner',
+                'invite' => now(),
+            ]);
+
+            if ($data['isCatalog']) {
+                $catalogOld = Catalog::query()->where('board_id', $data['id'])->get();
+                foreach ($catalogOld as $catalog) {
+                    $catalogNew = Catalog::query()->create([
+                        'board_id' => $boardNew->id,
+                        'name' => $catalog['name'],
+                        'image' => $catalog['image'],
+                        'position' => $catalog['position'],
+                    ]);
+                    $taskOld = Task::query()->where('catalog_id', $catalog['id'])->get();
+                    if ($taskOld->isNotEmpty()) {
+                        foreach ($taskOld as $task) {
+                            $taskNew = Task::query()->create([
+                                'catalog_id' => $catalogNew->id,
+                                'text' => $task['text'],
+                                'description' => $task['description'],
+                                'position' => $task['position'],
+                                'image' => $task['image'],
+                                'priority' => $task['priority'],
+                                'risk' => $task['risk'],
+                                'progress' => $task['progress'],
+                                'start_date' => $task['start_date'],
+                                'end_date' => $task['end_date'],
+                                'parent' => $task['parent'],
+                                'sortorder' => $task['sortorder'],
+                                'id_google_calendar' => $task['id_google_calendar'],
+                                'creator_email' => Auth::user()->email,
+                            ]);
+
+//                            xử lý thêm tag vào từng task
+                            if ($data['isTag']) {
+                                $tagOld = TaskTag::query()->where('task_id', $task['id'])->get();
+
+                                foreach ($tagOld as $tag) {
+                                    TaskTag::query()->create([
+                                        'task_id' => $taskNew->id,
+                                        'tag_id' => $tag['tag_id'],
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            if ($data['isTag']) {
+                $tagOld = Tag::query()->where('board_id', $data['id'])->get();
+                foreach ($tagOld as $tag) {
+                    Tag::query()->create([
+                        'board_id' => $boardNew->id,
+                        'color_code' => $tag['color_code'],
+                        'name' => $tag['name'],
+                    ]);
+                }
+            }
+            // ghi lại hoạt động của bảng
+            activity('Người dùng đã tạo bảng ')
+                ->performedOn($boardNew) // đối tượng liên quan là bảng vừa tạo
+                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+                ->withProperties(['workspace_id' => $boardNew->workspace_id]) // Lưu trữ workspace_id vào properties
+                ->log('Đã tạo bảng mới: ' . $boardNew->name); // Nội dung ghi log
+
+
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Sao chép bảng thành công!!',
+                'board_id' => $boardNew->id
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json(['action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!']);
+        }
+    }
+
+    public function getDataBoard(Request $request)
+    {
+        $boardId = $request->board_id;
+
+        $board = Board::with('catalogs.tasks')->findOrFail($boardId);
+
+        $catalogs = $board->catalogs->map(function ($catalog) {
+            return [
+                'id' => $catalog->id,
+                'name' => $catalog->name,
+                'task_count' => $catalog->tasks->count(),
+            ];
+        });
+        return response()->json(['catalogs' => $catalogs]);
+    }
+
+// gửi mail thêm người vào bảng
+    public
+    function inviteUserBoard(Request $request)
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
@@ -776,9 +888,10 @@ class BoardController extends Controller
         return back();
     }
 
-    //người dùng tham gia vào bảng
-    //thông báo done
-    public function acceptInviteBoard($uuid, $token, Request $request)
+//người dùng tham gia vào bảng
+//thông báo done
+    public
+    function acceptInviteBoard($uuid, $token, Request $request)
     {
         //xử lý khi admin gửi link invite cho người dùng
         if (session('view_only', false)) {
@@ -970,9 +1083,10 @@ class BoardController extends Controller
         }
     }
 
-    //người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
-    //thông báo done
-    public function requestToJoinWorkspace()
+//người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
+//thông báo done
+    public
+    function requestToJoinWorkspace()
     {
 
         $workspace_member = WorkspaceMember::where('user_id', Auth::id())
@@ -1010,9 +1124,11 @@ class BoardController extends Controller
         session(['action' => 'success']);
         return redirect()->route('home');
     }
-    //mời người dùng từ wsp vào bảng
-    //thông báo done
-    public function inviteMemberWorkspace($userId, $boardId)
+
+//mời người dùng từ wsp vào bảng
+//thông báo done
+    public
+    function inviteMemberWorkspace($userId, $boardId)
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
@@ -1032,8 +1148,9 @@ class BoardController extends Controller
     }
 
 
-    //thông báo người dùng tham gia vào bảng
-    protected function notificationMemberInviteBoard($boardID, $userName)
+//thông báo người dùng tham gia vào bảng
+    protected
+    function notificationMemberInviteBoard($boardID, $userName)
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
@@ -1057,8 +1174,9 @@ class BoardController extends Controller
         }
     }
 
-    //thông báo nhượng quyền
-    protected function notificationManagementfranchiseBoard($boardID, $userName)
+//thông báo nhượng quyền
+    protected
+    function notificationManagementfranchiseBoard($boardID, $userName)
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
@@ -1082,8 +1200,9 @@ class BoardController extends Controller
         }
     }
 
-    //thông báo thăng cấp thành viên
-    protected function notificationUpgradeMemberShipBoard($boardID, $userName)
+//thông báo thăng cấp thành viên
+    protected
+    function notificationUpgradeMemberShipBoard($boardID, $userName)
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
@@ -1107,8 +1226,9 @@ class BoardController extends Controller
         }
     }
 
-    //thông báo thăng cấp thành viên
-    protected function notificationAcceptMemberBoard($boardID, $userName)
+//thông báo thăng cấp thành viên
+    protected
+    function notificationAcceptMemberBoard($boardID, $userName)
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([

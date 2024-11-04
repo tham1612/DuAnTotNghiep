@@ -54,7 +54,7 @@
                        data-bs-offset="-40,10">
                         Sao chép bảng</p>
                     <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
-                        {{--                        @include('dropdowns.copyBoard')--}}
+                        @include('dropdowns.copyBoard')
                     </div>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">

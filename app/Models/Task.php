@@ -20,7 +20,6 @@ class Task extends Model
         'image',
         'priority',
         'risk',
-        'duration',
         'progress',
         'start_date',
         'end_date',
