@@ -21,13 +21,13 @@
         }
     </style>
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">
             <div class="page-title-box">
                 <h4 class="mb-sm-0">Bảng điều khiển</h4>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="row" id="highlighted-boards">
         <div class="d-flex">
