@@ -42,7 +42,7 @@
 
     // Lọc danh sách các task quá hạn
     $task_over = $tasks->filter(function ($task) use ($current_time) {
-        return $task->end_date < $current_time && $task->progress < 100;
+        return $task->end_date && $task->end_date < $current_time && $task->progress < 100;
     });
 
     // Lọc danh sách các task mà người dùng hiện tại là thành viên
@@ -64,13 +64,13 @@
     Dashbroad_board
 @endsection
 @section('main')
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0">Dashboard_board</h4>
@@ -83,7 +83,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
+
     <div class="row">
         <div class="d-flex">
             <h5 class="card-title fs-18 mb-1"></h5>
@@ -186,6 +187,7 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div><!-- end row -->
+
     <div class="row">
         <div class="col-xl-4">
             <div class="card">
@@ -271,6 +273,7 @@
             </div><!-- end card -->
         </div>
     </div><!-- end row -->
+
     <div class="row">
         <div class="col-6">
             <div class="card">
@@ -341,15 +344,12 @@
                                             </td>
                                             <!-- Ngày bắt đầu -->
                                             <td class="text-muted">
-                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
-
+                                                {{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d H:i') : '' }}
                                             </td>
                                             <!-- Ngày kết thúc -->
                                             <td class="text-muted">
-                                                {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
-
+                                                {{ $task->end_date ? \Carbon\Carbon::parse($task->end_date)->format('Y-m-d H:i') : '' }}
                                             </td>
-
                                             <!-- Độ ưu tiên -->
                                             <td>
                                                 <span
@@ -375,6 +375,7 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
+
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -428,7 +429,6 @@
                                                             @php $count++; @endphp
                                                         @endif
                                                     @endforeach
-
                                                     @if ($task->members->count() > $maxDisplay)
                                                         <a href="javascript: void(0);" class="avatar-group-item"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
@@ -444,7 +444,8 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td> {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                        <td>
+                                            {{ $task->end_date ? \Carbon\Carbon::parse($task->end_date)->format('Y-m-d H:i') : '' }}
                                         </td>
 
                                         <!-- Hiển thị tên danh sách -->
@@ -469,6 +470,7 @@
             </div>
         </div><!--end col-->
     </div><!--end row-->
+    
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

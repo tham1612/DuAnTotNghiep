@@ -1,6 +1,5 @@
 @php
-    $chats = \App\Models\ChatAI::where('user_id', Auth::id())->get()
-
+    $chats = \App\Models\ChatAI::where('user_id', Auth::id())->get();
 @endphp
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="chatAi" aria-labelledby="offcanvasRightLabel">
@@ -84,23 +83,22 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Listen for the offcanvas open event
-    const chatOffcanvas = document.getElementById('chatAi');
-    chatOffcanvas.addEventListener('shown.bs.offcanvas', function() {
-        // Scroll to the bottom of the chat conversation on open
-        const chatConversation = document.getElementById('chat-conversation');
-        chatConversation.scrollTop = chatConversation.scrollHeight;
+        // Listen for the offcanvas open event
+        const chatOffcanvas = document.getElementById('chatAi');
+        chatOffcanvas.addEventListener('shown.bs.offcanvas', function() {
+            // Scroll to the bottom of the chat conversation on open
+            const chatConversation = document.getElementById('chat-conversation');
+            chatConversation.scrollTop = chatConversation.scrollHeight;
+        });
+
     });
-
-});
-
 </script>
 <style>
-#chat-conversation {
-    height: 550px; /* Adjust as needed */
-    overflow-y: auto;
-}
-
+    #chat-conversation {
+        height: 550px;
+        /* Adjust as needed */
+        overflow-y: auto;
+    }
 </style>
 
 <!-- Modal xác nhận xóa -->
