@@ -176,9 +176,8 @@ class TaskController extends Controller
         $positionOldSameCatalog = Task::query()
             ->select('position', 'id')
             ->findOrFail($id);
-        //        dd($positionOldSameCatalog->position);
 
-        if ($request['catalog_id_old'] != $data['catalog_id']) {
+        if ($model->catalog_id != $data['catalog_id']) {
             //            dd($data['position']);
             $positionChangeNew = Task::query()
                 ->whereNotBetween('position', [1, $data['position'] - 1])
@@ -187,7 +186,7 @@ class TaskController extends Controller
 
             $positionChangeOld = Task::query()
                 ->where('position', '>', $positionOldSameCatalog->position)
-                ->where('catalog_id', $data['catalog_id_old'])
+                ->where('catalog_id', $model->catalog_id)
                 ->get();
 
             //            dd($positionChangeOld->toArray());
@@ -225,7 +224,7 @@ class TaskController extends Controller
                 ->causedBy(Auth::user())
                 ->withProperties([
                     'task_id' => $id,
-                    'catalog_id_old' => $data['catalog_id_old'],
+                    'catalog_id_old' => $model->catalog_id,
                     'board_id' => $model->catalog->board_id,
                     'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
                 ])
@@ -354,6 +353,80 @@ class TaskController extends Controller
             DB::rollBack();
             dd($e->getMessage());
             // Xử lý lỗi (ghi log, trả về thông báo lỗi, ...)
+        }
+    }
+
+    public function copyTask(Request $request)
+    {
+        $data = $request->all();
+        $task = Task::query()->findOrFail($data['id']);
+        $catalog = Catalog::query()->findOrFail($data['catalog_id']);
+
+        try {
+            DB::beginTransaction();
+            $taskNew = Task::query()->create([
+                'catalog_id' => $data['catalog_id'],
+                'text' => $data['text'],
+                'description' => $task['description'],
+                'position' => $catalog->tasks()->count() + 1,
+                'image' => $task['image'],
+                'priority' => $task['priority'],
+                'risk' => $task['risk'],
+                'progress' => $task['progress'],
+                'start_date' => $task['start_date'],
+                'end_date' => $task['end_date'],
+                'parent' => $task['parent'],
+                'sortorder' => $task['sortorder'],
+                'id_google_calendar' => $task['id_google_calendar'],
+                'creator_email' => Auth::user()->email,
+            ]);
+
+            if ($data['isAttachment']) {
+                $attachmentOld = TaskAttachment::query()->where('task_id', $task['id'])->get();
+
+                foreach ($attachmentOld as $attachment) {
+                    TaskTag::query()->create([
+                        'task_id' => $taskNew->id,
+                        'file_name' => $attachment['file_name'],
+                        'name' => $attachment['name'],
+                    ]);
+                }
+            }
+
+            if ($data['isCheckList']) {
+                $checklistOld = CheckList::query()->where('task_id', $task['id'])->get();
+
+                foreach ($checklistOld as $checklist) {
+                    $checklistNew = CheckList::query()->create([
+                        'task_id' => $taskNew->id,
+                        'name' => $checklist['name'],
+                    ]);
+
+                    $checklistItemOld = CheckListItem::query()->where('check_list_id', $checklist['id'])->get();
+
+                    foreach ($checklistItemOld as $checklistItem) {
+                        CheckListItem::query()->create([
+                            'check_list_id' => $checklistNew->check_list_id,
+                            'name' => $checklistItem['name'],
+                            'parent_id' => $checklistItem['parent_id'],
+                            'is_complete' => $checklistItem['is_complete'],
+                            'start_date' => $checklistItem['start_date'],
+                            'end_date' => $checklistItem['end_date'],
+                            'reminder_date' => $checklistItem['reminder_date'],
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Sao chép thẻ thành công!!',
+                'board_id' => $data['toBoard']
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json(['action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!']);
         }
     }
 

@@ -33,13 +33,13 @@
                             <!--                    setting list-->
                             <div class="dropdown-menu dropdown-menu-end">
                                 <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog({{ $catalog->id }})">Thêm thẻ</span>
+                                      onclick="({{ $catalog->id }})">Thêm thẻ</span>
                                 <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog({{ $catalog->id }})">Sao chép danh sách</span>
+                                      onclick="({{ $catalog->id }})">Sao chép danh sách</span>
                                 <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog({{ $catalog->id }})">Di chuyển danh sách</span>
+                                      onclick="({{ $catalog->id }})">Di chuyển danh sách</span>
                                 <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog({{ $catalog->id }})">Theo dõi</span>
+                                      onclick="({{ $catalog->id }})">Theo dõi</span>
                                 <span class="dropdown-item cursor-pointer"
                                       onclick="archiverCatalog({{ $catalog->id }})">Lưu Trữ danh sách</span>
                                 <span class="dropdown-item cursor-pointer"
@@ -59,29 +59,26 @@
                                             data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{ $task->text }}
                                         </h6>
-                                        {{--                                        <h6 class="fs-15 mb-0 flex-grow-1 task-title"--}}
-                                        {{--                                            data-task-id="{{ $task->id }}">--}}
-                                        {{--                                            {{ $task->text }}--}}
-                                        {{--                                        </h6>--}}
+
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
                                                data-bs-toggle="dropdown" aria-expanded="false"><i
                                                     class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                <li>
-                                                    <span class="dropdown-item" href="#"><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Mở thẻ</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" href="#"><i
-                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa nhãn</span>
-                                                </li>
+                                                {{--                                                <li>--}}
+                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
+                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>--}}
+                                                {{--                                                        Mở thẻ</span>--}}
+                                                {{--                                                </li>--}}
+                                                {{--                                                <li>--}}
+                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
+                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>--}}
+                                                {{--                                                        Chỉnh sửa nhãn</span>--}}
+                                                {{--                                                </li>--}}
                                                 <li>
                                                     <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                             class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Thay đổi thành viên</span>
+                                                        Chỉnh sửa</span>
                                                 </li>
                                                 <li>
                                                     <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
@@ -135,11 +132,13 @@
                                                                    title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
 
-                                                                        <img src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                        <img
+                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
                                                                             alt="" class="rounded-circle avatar-xss">
                                                                     @else
-                                                                        <div class="avatar-xss">
-                                                                            <div class="avatar-title rounded-circle bg-info-subtle text-primary"
+                                                                        <div class="avatar-sm">
+                                                                            <div
+                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
 
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
@@ -154,10 +153,11 @@
                                                         @if ($task->members->count() > $maxDisplay)
                                                             <a href="javascript: void(0);" class="avatar-group-item"
 
-                                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                title="{{ $task->members->count() - $maxDisplay }} more">
+                                                               data-bs-toggle="tooltip" data-bs-placement="top"
+                                                               title="{{ $task->members->count() - $maxDisplay }} more">
                                                                 <div class="avatar-xss">
-                                                                    <div class="avatar-title rounded-circle" style="width: 35px;height: 35px">
+                                                                    <div class="avatar-title rounded-circle"
+                                                                         style="width: 35px;height: 35px">
 
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>

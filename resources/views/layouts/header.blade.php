@@ -159,6 +159,7 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
                          aria-labelledby="page-header-cart-dropdown">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
+
                                 @if (!empty($boardIsStars))
                                     @foreach ($boardIsStars as $boardIsStar)
                                         <div
@@ -407,23 +408,6 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
     </div>
 </header>
 
-{{--@if (!empty(session('msg')) && !empty(session('action')))--}}
-{{--    <div class="bg-light" aria-live="polite" aria-atomic="true"--}}
-{{--         style="position: fixed; top: 70px;right: 10px; z-index: 100">--}}
-{{--        <div class="toast fade show bg-{{ session('action') }}-subtle" role="alert" aria-live="assertive"--}}
-{{--             aria-atomic="true" data-bs-toggle="toast" id="notification-messenger">--}}
-{{--            <div class="toast-header">--}}
-{{--                <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."--}}
-{{--                     height="20">--}}
-{{--                <span class="fw-semibold me-auto">Task Flow.</span>--}}
-{{--                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>--}}
-{{--            </div>--}}
-{{--            <div class="toast-body fw-bolder text-{{ session('action') }}">--}}
-{{--                {{ session('msg') }}--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--@endif--}}
 
 {{--bảng lưu trữ--}}
 <div class="modal fade" id="archiverBoard-member" tabindex="-1" aria-labelledby="addmemberModalLabel"
@@ -439,36 +423,39 @@ $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->wher
             </div>
             <div class="modal-body">
                 <div class="row">
-                    @foreach(session('board')->onlyTrashed()->get() as $archiverBoard)
-                        <div
-                            class="d-flex align-items-center justify-content-between  border rounded mt-2" style="background-color: #091e420f">
-                            <div class="d-flex align-items-center ">
-                                @if ($archiverBoard->image)
-                                    <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
-                                         class="rounded-circle avatar-sm">
-                                @else
-                                    <div
-                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center border rounded"
-                                        style="width: 40px;height: 40px">
-                                        {{ strtoupper(substr($archiverBoard->name, 0, 1)) }}
-                                    </div>
-                                @endif
-                                <p class="fs-16 mt-3 ms-2">{{$archiverBoard->name}}</p>
-                            </div>
+                    @if(!empty(session('board')))
+                        @foreach(session('board')->onlyTrashed()->get() as $archiverBoard)
+                            <div
+                                class="d-flex align-items-center justify-content-between  border rounded mt-2"
+                                style="background-color: #091e420f">
+                                <div class="d-flex align-items-center ">
+                                    @if ($archiverBoard->image)
+                                        <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
+                                             class="rounded-circle avatar-sm">
+                                    @else
+                                        <div
+                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center border rounded"
+                                            style="width: 40px;height: 40px">
+                                            {{ strtoupper(substr($archiverBoard->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <p class="fs-16 mt-3 ms-2">{{$archiverBoard->name}}</p>
+                                </div>
 
-                            <div>
-                                <button class="btn btn-outline-primary"
-                                        onclick="restoreBoard({{ $archiverBoard->id }})">
-                                    Khôi phục
-                                </button>
-                                <button class="btn btn-outline-danger"
-                                        onclick="destroyBoard({{ $archiverBoard->id }})">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                            </div>
+                                <div>
+                                    <button class="btn btn-outline-primary"
+                                            onclick="restoreBoard({{ $archiverBoard->id }})">
+                                        Khôi phục
+                                    </button>
+                                    <button class="btn btn-outline-danger"
+                                            onclick="destroyBoard({{ $archiverBoard->id }})">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
 
-                        </div>
-                    @endforeach
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 

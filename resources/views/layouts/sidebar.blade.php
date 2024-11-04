@@ -17,6 +17,7 @@
         ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
+        ->with('boards')
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
@@ -73,19 +74,23 @@
             // Kiểm tra xem trường `readed` có tồn tại và giá trị là false
             return isset($data['readed']) && $data['readed'] == false;
         });
+session([
+    'workspaces'=>$workspaceChecked
+    ]);
 
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
-    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
-        aria-expanded="false" data-bs-offset="0,20">
+    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
+         data-bs-toggle="dropdown"
+         aria-expanded="false" data-bs-offset="0,20">
 
         @if ($workspaceChecked)
             @if ($workspaceChecked->image)
                 <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt="" class="rounded avatar-sm"
-                    style="width: 25px;height: 25px">
+                     style="width: 25px;height: 25px">
             @else
                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                    style="width: 25px;height: 25px">
+                     style="width: 25px;height: 25px">
                     {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                 </div>
             @endif
@@ -100,10 +105,10 @@
                 <li class="d-flex">
                     @if ($workspaceChecked->image)
                         <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt=""
-                            class="rounded avatar-sm">
+                             class="rounded avatar-sm">
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                            style="width: 40px;height: 40px">
+                             style="width: 40px;height: 40px">
                             {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                         </div>
                     @endif
@@ -128,7 +133,7 @@
                 </li> --}}
                 <li class="d-flex">
                     <a href="{{ route('showFormEditWorkspace') }}"
-                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                       onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
                         việc</a>
                 </li>
                 <li class="border mb-3"></li>
@@ -137,16 +142,16 @@
                     <li class="d-flex">
                         @if ($workspace->image)
                             <img src="{{ asset('storage/' . $workspace->image) }}" alt=""
-                                class="rounded-circle avatar-sm">
+                                 class="rounded-circle avatar-sm">
                         @else
                             <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                style="width: 40px;height: 40px">
+                                 style="width: 40px;height: 40px">
                                 {{ strtoupper(substr($workspace->name, 0, 1)) }}
                             </div>
                         @endif
                         <section class=" ms-2">
                             <p class="fs-15 fw-bolder"
-                                onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
+                               onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
                                 {{ \Str::limit($workspace->name, 25) }}
                             </p>
                             <p class="fs-10" style="margin-top: -10px">
@@ -202,7 +207,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link"
-                        href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
+                       href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>
@@ -217,22 +222,24 @@
                     @foreach ($workspaceBoards->boards as $board)
                         <li class="nav-item">
                             <div class="nav-link menu-link d-flex text-center align-items-center"
-                                style="justify-content: space-between;">
+                                 style="justify-content: space-between;">
                                 <a class=""
-                                    href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
+                                   href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
-                                            <img class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                            <img
+                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                 src="{{ asset('storage/' . $board->image) }}"
-                                                style="width: 30px; height: 30px" alt="image" />
+                                                style="width: 30px; height: 30px" alt="image"/>
                                         @else
-                                            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                            <div
+                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                 style="width: 30px;height: 30px">
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>
                                         @endif
                                         <span id="name-board-{{ $board->id }}"
-                                            class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
+                                              class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
                                     </div>
                                 </a>
                                 @php
@@ -249,21 +256,21 @@
                                 @endphp
                                 <div class="d-flex justify-content-flex-end align-items-center ms-1">
                                     <button type="button"
-                                        class="btn avatar-xs mt-n1 p-0 favourite-btn
-                                        @if ($memberIsStar == 1) active @endif"
-                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                        id="is_star_{{ $board->id }}">
-                                        <button type="button"
                                             class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if ($memberIsStar == 1) active @endif"
                                             onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                            id="2_is_star_{{ $board->id }}">
+                                            id="is_star_{{ $board->id }}">
+                                        <button type="button"
+                                                class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                        @if ($memberIsStar == 1) active @endif"
+                                                onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                id="2_is_star_{{ $board->id }}">
                                             <span class="avatar-title bg-transparent fs-15">
                                                 <i class="ri-star-fill fs-20 mx-2"></i>
                                             </span>
                                         </button>
                                         <a class="text-reset dropdown-btn" data-bs-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
+                                           aria-haspopup="true" aria-expanded="false">
                                             <span class="fw-medium text-muted fs-12">
                                                 <i class="ri-more-fill fs-20" title=""></i>
                                             </span>
@@ -271,25 +278,26 @@
                                         <div class="dropdown-menu dropdown-menu-start">
                                             <a class="dropdown-item">
                                                 <input type="text" name="name"
-                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
-                                                    onchange="updateBoard({{ $board->id }})" />
+                                                       class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
+                                                       id="name_board_{{ $board->id }}" value="{{ $board->name }}"
+                                                       onchange="updateBoard({{ $board->id }})"/>
                                             </a>
                                             <div class="dropdown-item ms-2 me-2">
                                                 <div class="mb-2">
                                                     <label for="">Ảnh của bảng</label>
 
                                                     <input type="file" class="form-control" name="image"
-                                                        id="image_board_{{ $board->id }}"
-                                                        value="{{ $board->image }}"
-                                                        onchange="updateBoard({{ $board->id }})" />
+                                                           id="image_board_{{ $board->id }}"
+                                                           value="{{ $board->image }}"
+                                                           onchange="updateBoard({{ $board->id }})"/>
                                                 </div>
                                             </div>
 
                                             <!-- Đóng bảng -->
                                             <div
                                                 class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
-                                                <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
                                                     style="height: 30px; background-color: #c7c7c7;"
                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="ri-archive-line"></i>
@@ -323,7 +331,7 @@
         </div>
 
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-            id="vertical-hover">
+                id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
 
@@ -332,7 +340,7 @@
         @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                    style="background-color: #f0f4ff; border-radius: 8px;">
+                     style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đang là khách</strong> trong không gian làm việc này.
@@ -341,14 +349,14 @@
                 </div>
 
                 <a href="{{ route('b.requestToJoinWorkspace') }}" class="btn btn-primary mt-2 "
-                    style="width: 100%; text-align: center;">
+                   style="width: 100%; text-align: center;">
                     Yêu cầu tham gia
                 </a>
             </div>
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                    style="background-color: #f0f4ff; border-radius: 8px;">
+                     style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>

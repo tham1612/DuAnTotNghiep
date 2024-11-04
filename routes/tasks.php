@@ -43,6 +43,9 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/getFormCheckList/{id}', [ChecklistController::class, 'getFormCheckList'])
             ->name('tasks.getFormCheckList');
 
+//        sao chep
+        Route::post('/tasks/copyTask', [TaskController::class, 'copyTask'])
+            ->name('tasks.copyTask');
 
 //        hoàn tác + xóa vĩnh viễn
         Route::post('/tasks/destroyTask/{id}', [TaskController::class, 'destroyTask'])
