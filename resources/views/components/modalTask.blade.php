@@ -297,7 +297,7 @@
                     <i class="las la-user fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false" data-bs-offset="-40,10"
-                       onclick="loadTaskFormAddMember({{ $task->id }},{{$board->id}})">
+                       onclick="loadTaskFormAddMember({{ $task->id }},{{$boardId}})">
                         Thành viên
                     </p>
                     <!--dropdown thành viên-->
@@ -313,7 +313,7 @@
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-tag fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
-                       onclick="loadTaskTag({{ $task->id }},{{$board->id}})"
+                       onclick="loadTaskTag({{ $task->id }},{{$boardId}})"
                        aria-expanded="false" data-bs-offset="-40,10">
                         Nhãn
                     </p>
