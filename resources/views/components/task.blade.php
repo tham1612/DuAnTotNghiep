@@ -30,7 +30,7 @@
                  aria-labelledby="detailCardModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content border-0 rounded-3">
+                    <div class="modal-content border-0 rounded-3 modal-task-{{ $task->id}}">
 
                         <div class="modal-header p-3"
                              style="
@@ -80,68 +80,71 @@
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex mt-3 flex-wrap">
-                                                <div class="p-3" id="member-section-{{$task->id}}" style="{{ count($task->members) ? '' : 'display: none;' }}">
-                                                    <strong>Thành viên</strong>
-                                                    <section class="d-flex">
-                                                        <!-- thêm thành viên & chia sẻ link bảng -->
-                                                        <div
-                                                            class="d-flex justify-content-center align-items-center cursor-pointer ">
-                                                            <div class="col-auto ms-sm-auto">
-                                                                <div class="avatar-group " id="list-member-task-{{$task->id}}">
-                                                                    @if (count($task->members))
-                                                                        @php
-                                                                            // Đếm số lượng board members
-                                                                            $maxDisplay = 3;
-                                                                            $count = 0;
-                                                                        @endphp
-                                                                        @foreach ($task->members as $taskMember)
-                                                                            @if ($count < $maxDisplay)
-                                                                                <a href="javascript: void(0);"
-                                                                                   class="avatar-group-item"
-                                                                                   data-bs-toggle="tooltip"
-                                                                                   data-bs-placement="top"
-                                                                                   id="member-{{$taskMember->id}}-{{$task->id}}"
-                                                                                   title="{{ $taskMember->name }}">
-                                                                                    @if ($taskMember->image)
-                                                                                        <img
-                                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                                            alt=""
-                                                                                            class="rounded-circle avatar-xss">
-                                                                                    @else
-                                                                                        <div class="avatar-xss">
-                                                                                            <div
-                                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
-                                                                                                style="width: 35px;height: 35px">
-                                                                                                {{ strtoupper(substr($taskMember->name, 0, 1)) }}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @endif
-                                                                                </a>
-                                                                                @php $count++; @endphp
-                                                                            @endif
-                                                                        @endforeach
-
-                                                                        @if (count($task->members) > $maxDisplay)
+                                            <div class="p-3" id="member-section-{{$task->id}}"
+                                                 style="{{ count($task->members) ? '' : 'display: none;' }}">
+                                                <strong>Thành viên</strong>
+                                                <section class="d-flex">
+                                                    <!-- thêm thành viên & chia sẻ link bảng -->
+                                                    <div
+                                                        class="d-flex justify-content-center align-items-center cursor-pointer ">
+                                                        <div class="col-auto ms-sm-auto">
+                                                            <div class="avatar-group "
+                                                                 id="list-member-task-{{$task->id}}">
+                                                                @if (count($task->members))
+                                                                    @php
+                                                                        // Đếm số lượng board members
+                                                                        $maxDisplay = 3;
+                                                                        $count = 0;
+                                                                    @endphp
+                                                                    @foreach ($task->members as $taskMember)
+                                                                        @if ($count < $maxDisplay)
                                                                             <a href="javascript: void(0);"
                                                                                class="avatar-group-item"
                                                                                data-bs-toggle="tooltip"
                                                                                data-bs-placement="top"
-                                                                               title="{{ count($task->members) - $maxDisplay }} more">
-                                                                                <div class="avatar-xss">
-                                                                                    <div
-                                                                                        class="avatar-title rounded-circle" style="width: 35px;height: 35px">
-                                                                                        +{{ count($task->members) - $maxDisplay }}
+                                                                               id="member-{{$taskMember->id}}-{{$task->id}}"
+                                                                               title="{{ $taskMember->name }}">
+                                                                                @if ($taskMember->image)
+                                                                                    <img
+                                                                                        src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                                        alt=""
+                                                                                        class="rounded-circle avatar-xss">
+                                                                                @else
+                                                                                    <div class="avatar-xss">
+                                                                                        <div
+                                                                                            class="avatar-title rounded-circle bg-info-subtle text-primary"
+                                                                                            style="width: 35px;height: 35px">
+                                                                                            {{ strtoupper(substr($taskMember->name, 0, 1)) }}
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                @endif
                                                                             </a>
+                                                                            @php $count++; @endphp
                                                                         @endif
-                                                                    @endif
+                                                                    @endforeach
 
-                                                                </div>
+                                                                    @if (count($task->members) > $maxDisplay)
+                                                                        <a href="javascript: void(0);"
+                                                                           class="avatar-group-item"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-placement="top"
+                                                                           title="{{ count($task->members) - $maxDisplay }} more">
+                                                                            <div class="avatar-xss">
+                                                                                <div
+                                                                                    class="avatar-title rounded-circle"
+                                                                                    style="width: 35px;height: 35px">
+                                                                                    +{{ count($task->members) - $maxDisplay }}
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    @endif
+                                                                @endif
+
                                                             </div>
                                                         </div>
-                                                    </section>
-                                                </div>
+                                                    </div>
+                                                </section>
+                                            </div>
                                             <div class="p-3">
                                                 <strong>Thông báo</strong>
                                                 @php
@@ -208,12 +211,14 @@
 
                                                 </div>
                                             </div>
-                                            <div class="p-3" id="tag-section-{{$task->id}}" style="{{ count($task->tags) ? '' : 'display: none;' }}">
+                                            <div class="p-3" id="tag-section-{{$task->id}}"
+                                                 style="{{ count($task->tags) ? '' : 'display: none;' }}">
                                                 <strong>Nhãn</strong>
                                                 <div class="d-flex flex-wrap gap-2" id="tag-task-{{$task->id}}">
                                                     @foreach($task->tags as $tag)
                                                         <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top" data-tag-id="{{$task->id}}-{{$tag->id}}"
+                                                             data-bs-placement="top"
+                                                             data-tag-id="{{$task->id}}-{{$tag->id}}"
                                                              title="{{$tag->name}}">
                                                             <div
 
@@ -353,7 +358,7 @@
                                             </p>
                                             <!--dropdown nhãn-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
-                                            id="dropdown-list-tag-task-board-{{ $task->id }}">
+                                                 id="dropdown-list-tag-task-board-{{ $task->id }}">
                                                 {{-- dropdowns.tag --}}
                                             </div>
                                         </div>
@@ -441,7 +446,7 @@
                                             </p>
                                             <!--  dropdown sao chép-->
                                             <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                                                {{--                                                @include('dropdowns.copyTask')--}}
+                                                @include('dropdowns.copyTask')
                                             </div>
                                         </div>
                                     </div>
@@ -505,16 +510,6 @@
                             </div>
 
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal ảnh (phóng to ảnh) -->
-            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true"
-                 style="z-index: 1060">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content d-flex justify-content-center align-items-center bg-warning">
-                        <img id="modalImage" style="width: 180vh; height: 90vh" src="" alt="Phóng to ảnh">
                     </div>
                 </div>
             </div>
@@ -673,7 +668,7 @@
         // Lấy tất cả các ảnh có class thumbnail
         var thumbnails = document.querySelectorAll('.thumbnail');
         var modalImage = document.getElementById('modalImage');
-        var imageModal = document.getElementById('imageModal');
+        var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
 
         // Lặp qua tất cả các ảnh thu nhỏ
         thumbnails.forEach(function (thumbnail) {
@@ -681,6 +676,8 @@
                 // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
                 modalImage.src = thumbnail.src;
 
+                // Hiển thị modal ảnh
+                imageModal.show();
 
                 // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
                 var taskModalId = thumbnail.getAttribute('data-modal-id');
@@ -690,11 +687,11 @@
                 function handleModalClose() {
                     taskModal.show();
                     // Gỡ bỏ sự kiện này để nó không bị gọi lại khi đóng modal ảnh
-                    imageModal.removeEventListener('hidden.bs.modal', handleModalClose);
+                    document.getElementById('imageModal').removeEventListener('hidden.bs.modal', handleModalClose);
                 }
 
                 // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
-                imageModal.addEventListener('hidden.bs.modal', handleModalClose);
+                document.getElementById('imageModal').addEventListener('hidden.bs.modal', handleModalClose);
             });
         });
     });

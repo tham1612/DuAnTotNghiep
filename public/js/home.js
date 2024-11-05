@@ -192,6 +192,25 @@ function updateBoard(boardId) {
                 var limitedName = response.board.name.length > 10 ? response.board.name.substring(0, 10) + '...' : response.board.name;
                 nameboard.textContent =nameboard2.textContent= limitedName;  // Cập nhật tên mới vào thẻ span
             }
+            if (response.board.image) {
+                let imageElement = $('#image-board-' + boardId);
+
+                if (imageElement.is('img')) {
+                    // Nếu phần tử là <img>, cập nhật src với URL mới
+                    imageElement.attr('src', `/storage/${response.board.image}?t=${new Date().getTime()}`);
+                } else {
+                    // Nếu phần tử là <div>, thay thế bằng thẻ <img> mới
+                    imageElement.replaceWith(`
+                 <img id="image-board-${boardId}" class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                 src="/storage/${response.board.image}?t=${new Date().getTime()}"
+                 style="width: 30px; height: 30px" alt="image" />
+        `);
+                }
+            }
+
+            console.log(response.board.image)
+            notificationWeb(response.action, response.msg);
+            $('.dropdown-menu').hide()
             console.log('Đã cập nhật bảng:', response);
         },
         error: function (xhr) {

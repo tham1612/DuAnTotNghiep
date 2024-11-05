@@ -20,6 +20,7 @@
     $userId = Auth::id();
     $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
 @endphp
+
 <header id="page-topbar">
     <div class="layout-width">
         <div class="navbar-header">
@@ -33,8 +34,6 @@
                         <span></span>
                     </span>
                 </button>
-
-                <!-- App Search-->
                 <!-- Form tìm kiếm -->
                 <form class="app-search d-none d-md-block">
                     <div class="position-relative">
@@ -51,8 +50,6 @@
                         </div>
                     </div>
                 </form>
-
-
                 {{--  Bảng hoạt động gần đây              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
@@ -158,6 +155,7 @@
                         aria-labelledby="page-header-cart-dropdown">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
+
                                 @if (!empty($boardIsStars))
                                     @foreach ($boardIsStars as $boardIsStar)
                                         <div
@@ -311,10 +309,7 @@
                     </div>
 
                 </div>
-
-
             </div>
-
             <div class="d-flex align-items-center">
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" type="button"
@@ -352,8 +347,6 @@
                         <i class="bx bx-moon fs-22"></i>
                     </button>
                 </div>
-
-
                 <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -406,24 +399,6 @@
     </div>
 </header>
 
-{{-- @if (!empty(session('msg')) && !empty(session('action'))) --}}
-{{--    <div class="bg-light" aria-live="polite" aria-atomic="true" --}}
-{{--         style="position: fixed; top: 70px;right: 10px; z-index: 100"> --}}
-{{--        <div class="toast fade show bg-{{ session('action') }}-subtle" role="alert" aria-live="assertive" --}}
-{{--             aria-atomic="true" data-bs-toggle="toast" id="notification-messenger"> --}}
-{{--            <div class="toast-header"> --}}
-{{--                <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..." --}}
-{{--                     height="20"> --}}
-{{--                <span class="fw-semibold me-auto">Task Flow.</span> --}}
-{{--                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> --}}
-{{--            </div> --}}
-{{--            <div class="toast-body fw-bolder text-{{ session('action') }}"> --}}
-{{--                {{ session('msg') }} --}}
-{{--            </div> --}}
-{{--        </div> --}}
-{{--    </div> --}}
-{{-- @endif --}}
-
 {{-- bảng lưu trữ --}}
 <div class="modal fade" id="archiverBoard-member" tabindex="-1" aria-labelledby="addmemberModalLabel"
     aria-hidden="true">
@@ -468,6 +443,7 @@
 
                             </div>
                         @endforeach
+
                     @endif
                 </div>
             </div>
@@ -499,6 +475,7 @@
 </div>
 
 {{-- tìm kiếm --}}
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('search-options');

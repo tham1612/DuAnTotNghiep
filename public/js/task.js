@@ -66,4 +66,26 @@ function destroyTask(taskId) {
 
 }
 
+// copy task
+$('.submitFormCopyTask').on('submit', function (e) {
+    e.preventDefault();
 
+    var name = $(this).find('.nameCopyTask').val().trim();
+    if (name === '') {
+        notificationWeb('error', 'Vui lòng nhập tiêu đề')
+        return;
+    }
+
+    $.ajax({
+        url: '/tasks/copyTask',
+        type: 'POST',
+        data: $(this).serialize(),       // Lấy dữ liệu từ form
+        success: function (response) {
+            notificationWeb('success', 'Sao chép thẻ thành công');
+            window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
+        },
+        error: function (xhr, status, error) {
+            notificationWeb('error', 'Có lỗi xảy ra!!')
+        }
+    });
+});
