@@ -3,21 +3,21 @@
     Home - TaskFlow
 @endsection
 @section('main')
-@if(session('error'))
-<div class="alert alert-danger custom-alert">
-    {{ session('error') }}
-</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger custom-alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
+    <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
 
     @php
         // Đếm tổng số thành viên của workspace
@@ -30,20 +30,16 @@
             })
             ->count();
     @endphp
-    <div class="row" style="padding-top: -2px">
+    
+    {{-- <div class="row" style="padding-top: -2px">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0">Trang chủ</h4>
 
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Trang chủ</a></li>
-                    </ol>
-                </div>
-
             </div>
         </div>
-    </div>
+    </div> --}}
+
     <div class="row row-cols-xxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1">
         <div class="col">
             <div class="card">
@@ -140,6 +136,7 @@
         <!--end col-->
     </div>
     <!--end row-->
+
     <div class="card">
         <div class="row">
             <div class="col-xl-4">
@@ -148,7 +145,7 @@
                         <h4 class="card-title mb-0 flex-grow-1 fs-17">Công việc sắp tới</h4>
                     </div><!-- end card header -->
                     <div class="card-body p-0">
-                        <div data-simplebar style="max-height: 260px;" >
+                        <div data-simplebar style="max-height: 260px;">
                             <ul class="list-group list-group-flush border-dashed px-3">
                                 @if (!empty($upcomingTasks))
                                     @if ($upcomingTasks->isEmpty())
@@ -175,11 +172,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        <h5 class="text-muted mt-0 mb-1 fs-13">
-                                                            {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
-                                                            -
-                                                            {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
-                                                        </h5>
+                                                        @if($task->start_date)
+                                                            <h5 class="text-muted mt-0 mb-1 fs-13">
+                                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
+                                                                @if($task->end_date)
+                                                                    - {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                                                @endif
+                                                            </h5>
+                                                        @endif                                                       
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -278,11 +278,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        <h5 class="text-muted mt-0 mb-1 fs-13">
-                                                            {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
-                                                            -
-                                                            {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
-                                                        </h5>
+                                                        @if($task->start_date && $task->end_date)
+                                                            <h5 class="text-muted mt-0 mb-1 fs-13">
+                                                                {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
+                                                                -
+                                                                {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                                            </h5>
+                                                        @endif
+                                                    
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -380,10 +383,11 @@
                                                 @endif
                                             </div>
                                             <div class="flex-grow-1 ms-3">
-                                                <h5 >{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
+                                                <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                 <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
                                                     <p><span>{{ Str::limit($task->catalog_name, 10) }}</span> -
-                                                        <span>{{ Str::limit($task->board_name, 10) }}</span></p>
+                                                        <span>{{ Str::limit($task->board_name, 10) }}</span>
+                                                    </p>
                                                 </a>
                                                 <h5 class="text-muted mt-0 mb-1 fs-13">
                                                     {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }} -
@@ -440,7 +444,8 @@
                                                 <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                 <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
                                                     <p><span>{{ Str::limit($task->catalog_name, 10) }}</span> -
-                                                        <span>{{ Str::limit($task->board_name, 10) }}</span></p>
+                                                        <span>{{ Str::limit($task->board_name, 10) }}</span>
+                                                    </p>
 
                                                 </a>
                                                 <h5 class="text-muted mt-0 mb-1 fs-13">
@@ -614,7 +619,9 @@
         </div>
     </div>
     <!--end row-->
+
 @endsection
+
 @section('script')
     <!-- apexcharts -->
     <script src="{{ asset('theme/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
@@ -631,6 +638,7 @@
     <!-- project list init -->
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
 @endsection
+
 @section('styles')
     <!-- jsvectormap css -->
     <link href="{{ asset('theme/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet"

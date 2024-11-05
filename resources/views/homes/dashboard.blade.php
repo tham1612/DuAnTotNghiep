@@ -5,95 +5,29 @@
 @endsection
 
 @section('main')
-@if(session('error'))
-<div class="alert alert-danger custom-alert">
-    {{ session('error') }}
-</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger custom-alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
+    <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Dashboard</h4>
-
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
-                </div>
-
+            <div class="page-title-box">
+                <h4 class="mb-sm-0">Bảng điều khiển</h4>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card card-height-100">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Phần trăn công việc hoàn thành</h5>
-                    <div class="progress animated-progress custom-progress mb-1">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 38%" aria-valuenow="38"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="text-muted mb-2">You used 215 of 2000 of your API
-                    </p>
-
-                </div>
-            </div>
-        </div><!--end col-->
-
-        <div class="col-lg-4">
-            <div class="card card-animate card-height-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <p class="fw-medium text-muted mb-0">Số task hoàn thành</p>
-                            <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="50"></span>
-                            </h2>
-                        </div>
-                        <div>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-success-subtle rounded-circle fs-2">
-                                    <i data-feather="check-circle" class="text-success"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div>
-        </div><!--end col-->
-        <div class="col-lg-4">
-            <div class="card card-animate card-height-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <p class="fw-medium text-muted mb-0">Số task quá hạn</p>
-                            <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="8"></span>
-                            </h2>
-                        </div>
-                        <div>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-danger-subtle rounded-circle fs-2">
-                                    <i data-feather="alert-octagon" class="text-danger"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div>
-        </div><!--end col-->
-    </div>
+    </div> --}}
 
     <div class="row" id="highlighted-boards">
         <div class="d-flex">
@@ -110,91 +44,30 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
-                                        @if ($board && $board->image && \Storage::exists($board->image))
-                                            <div class="image-container position-relative"
-                                                style="width: 100%; height: 100px; overflow: hidden;">
+                                        <div class="image-container position-relative"
+                                            style="width: 100%; height: 70px; overflow: visible;">
+                                            @if ($board && $board->image && \Storage::exists($board->image))
                                                 <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
                                                     style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
-                                                <div class="position-absolute top-0 end-0 p-1">
-                                                    <button type="button"
-                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
-                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                        id="is_star_{{ $board->id }}">
-                                                        <span class="avatar-title bg-transparent fs-15">
-                                                            <i class="ri-star-fill"></i>
-                                                        </span>
-                                                    </button>
-
-                                                    <div class="dropdown d-inline-block">
-                                                        <button
-                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="true">
-                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
-                                                        </button>
-
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                                                role="tab"
-                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                                class="dropdown-item"><i
-                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
-
-                                                            <a class="dropdown-item" href=""><i
-                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                                data-bs-target="#removeProjectModal"><i
-                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            @else
+                                                <div class="text-center pb-3" style="height: 70px;"></div>
+                                            @endif
+                                            <div class="position-absolute top-0 end-0 p-1">
+                                                <!-- Favorite Button -->
+                                                <button type="button"
+                                                    class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                    onclick="updateIsStar2({{ $board->id }}, {{ auth()->id() }})"
+                                                    id="is_star_{{ $board->id }}">
+                                                    <span class="avatar-title bg-transparent fs-15">
+                                                        <i class="ri-star-fill"></i>
+                                                    </span>
+                                                </button>
                                             </div>
-                                        @else
-                                            <div class="text-center pb-3" style="height:100px;">
-                                                <div class="position-absolute top-0 end-0 p-1">
-                                                    <button type="button"
-                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
-                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                        id="is_star_{{ $board->id }}">
-                                                        <span class="avatar-title bg-transparent fs-15">
-                                                            <i class="ri-star-fill"></i>
-                                                        </span>
-                                                    </button>
-
-                                                    <div class="dropdown d-inline-block">
-                                                        <button
-                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="true">
-                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
-                                                        </button>
-
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                                                role="tab"
-                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                                class="dropdown-item"><i
-                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
-
-                                                            <a class="dropdown-item" href=""><i
-                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item" href="#"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#removeProjectModal"><i
-                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
+                                        </div>
                                     </div>
                                     <div class="py-3">
-                                        <h5 class="fs-14 mb-3">
+                                        <h5 class="fs-16 mb-1">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
@@ -269,31 +142,24 @@
                                                 @endif
                                             </div>
                                         </div>
-
-
                                     </div>
-                                    <div>
-                                        <div class="d-flex mb-2">
-                                            <div class="flex-grow-1">
-                                                <div>Tiến độ</div>
-                                            </div>
-                                            <div class="flex-shrink-0">
-                                                <div>
-                                                    <i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                                    {{ $board->complete }}% / 100% <!-- Hiển thị phần trăm hoàn thành -->
-                                                </div>
+                                    <div class="d-flex mb-1">
+                                        <div class="flex-grow-1">
+                                            <div>Tiến độ</div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <div>
+                                                <i class="ri-list-check align-bottom me-1 text-muted"></i>
+                                                {{ $board->complete }}% / 100% <!-- Hiển thị phần trăm hoàn thành -->
                                             </div>
                                         </div>
-
-
-                                        <div class="progress progress-sm animated-progress">
-                                            <div class="progress-bar bg-success" role="progressbar"
-                                                aria-valuenow="{{ $board->complete }}" aria-valuemin="0"
-                                                aria-valuemax="100" style="width: {{ $board->complete }}%;"></div>
-                                            <!-- Sử dụng trường complete -->
-                                        </div><!-- /.progress -->
                                     </div>
-
+                                    <div class="progress progress-sm animated-progress">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            aria-valuenow="{{ $board->complete }}" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ $board->complete }}%;"></div>
+                                        <!-- Sử dụng trường complete -->
+                                    </div><!-- /.progress -->
                                 </div>
                                 <!-- end card body -->
                             </div>
@@ -302,7 +168,6 @@
                     @endforeach
                 @endif
             @endif
-
         </div>
         <!-- end col -->
     </div>
@@ -321,100 +186,32 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
-                                        @if ($board && $board->image && \Storage::exists($board->image))
-                                            <div class="image-container position-relative"
-                                                style="width: 100%; height: 100px; overflow: hidden;">
+                                        <div class="image-container position-relative"
+                                            style="width: 100%; height: 70px; overflow: visible;">
+                                            @if ($board && $board->image && \Storage::exists($board->image))
                                                 <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
                                                     style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
-                                                <!-- Các nút tương tác với ảnh -->
-                                                <div class="position-absolute top-0 end-0 p-1">
-                                                    <button type="button"
-                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
-                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                        id="is_star_{{ $board->id }}">
-                                                        <span class="avatar-title bg-transparent fs-15">
-                                                            <i class="ri-star-fill"></i>
-                                                        </span>
-                                                    </button>
+                                            @else
+                                                <div class="text-center pb-3" style="height: 70px;"></div>
+                                            @endif
 
-                                                    <div class="dropdown d-inline-block">
-                                                        <button
-                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="true">
-                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
-                                                        </button>
+                                            <div class="position-absolute top-0 end-0 p-1">
+                                                <!-- Favorite Button -->
+                                                <button type="button"
+                                                    class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                    onclick="updateIsStar2({{ $board->id }}, {{ auth()->id() }})"
+                                                    id="is_star_{{ $board->id }}">
+                                                    <span class="avatar-title bg-transparent fs-15">
+                                                        <i class="ri-star-fill"></i>
+                                                    </span>
+                                                </button>
 
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                                                role="tab"
-                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                                class="dropdown-item">
-                                                                <i
-                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View
-                                                            </a>
-                                                            <a class="dropdown-item" href="">
-                                                                <i
-                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit
-                                                            </a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item" href="#"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#removeProjectModal">
-                                                                <i
-                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
-                                        @else
-                                            <div class="text-center pb-3" style="height:100px;">
-                                                <div class="position-absolute top-0 end-0 p-1">
-                                                    <button type="button"
-                                                        class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
-                                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                        id="is_star_{{ $board->id }}">
-                                                        <span class="avatar-title bg-transparent fs-15">
-                                                            <i class="ri-star-fill"></i>
-                                                        </span>
-                                                    </button>
-
-                                                    <div class="dropdown d-inline-block">
-                                                        <button
-                                                            class="btn btn-link text-muted p-1 mt-n1 py-0 text-decoration-none fs-15"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="true">
-                                                            <i data-feather="more-horizontal" class="icon-sm"></i>
-                                                        </button>
-
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
-                                                                role="tab"
-                                                                aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
-                                                                aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
-                                                                class="dropdown-item"><i
-                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>View</a>
-
-                                                            <a class="dropdown-item" href=""><i
-                                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i>Edit</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item" href="#"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#removeProjectModal"><i
-                                                                    class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>Remove</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
+                                        </div>
                                     </div>
-
-
                                     <div class="py-3">
-                                        <h5 class="fs-14 mb-3">
+                                        <h5 class="fs-16 mb-1">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
@@ -449,7 +246,6 @@
                                                     $maxDisplay = 2;
                                                     $count = 0;
                                                 @endphp
-
 
                                                 @foreach ($board->boardMembers as $member)
                                                     @if ($count < $maxDisplay)
@@ -491,27 +287,23 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div class="d-flex mb-2">
-                                            <div class="flex-grow-1">
-                                                <div>Tiến độ</div>
-                                            </div>
-                                            <div class="flex-shrink-0">
-                                                <div>
-                                                    <i class="ri-list-check align-bottom me-1 text-muted"></i>
-                                                    {{ $board->complete }}% / 100% <!-- Hiển thị phần trăm hoàn thành -->
-                                                </div>
+                                    <div class="d-flex mb-1">
+                                        <div class="flex-grow-1">
+                                            <div>Tiến độ</div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <div>
+                                                <i class="ri-list-check align-bottom me-1 text-muted"></i>
+                                                {{ $board->complete }}% / 100% <!-- Hiển thị phần trăm hoàn thành -->
                                             </div>
                                         </div>
-
-
-                                        <div class="progress progress-sm animated-progress">
-                                            <div class="progress-bar bg-success" role="progressbar"
-                                                aria-valuenow="{{ $board->complete }}" aria-valuemin="0"
-                                                aria-valuemax="100" style="width: {{ $board->complete }}%;"></div>
-                                            <!-- Sử dụng trường complete -->
-                                        </div><!-- /.progress -->
                                     </div>
+                                    <div class="progress progress-sm animated-progress">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            aria-valuenow="{{ $board->complete }}" aria-valuemin="0" aria-valuemax="100"
+                                            style="width: {{ $board->complete }}%;"></div>
+                                        <!-- Sử dụng trường complete -->
+                                    </div><!-- /.progress -->
                                 </div>
                                 <!-- end card body -->
                             </div>
