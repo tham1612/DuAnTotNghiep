@@ -75,7 +75,7 @@
                                                                         <img
                                                                             src="{{ asset('storage/' . $member->image) }}"
                                                                             alt=""
-                                                                            class="rounded-circle avatar-xs"/>
+                                                                            class="rounded-circle avatar-xxs"/>
                                                                     @else
                                                                         <div
                                                                             class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">

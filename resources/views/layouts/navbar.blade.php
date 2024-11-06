@@ -235,11 +235,10 @@
                                             title="{{ $boardMember['name'] }}">
                                             @if ($boardMember['image'])
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                    alt="" class="rounded-circle avatar-xs object-fit-cover"
-                                                    style="width: 40px;height: 40px">
+                                                    alt="" class="rounded-circle avatar-xs object-fit-cover">
                                             @else
                                                 <div class="avatar-xs">
-                                                    <div class="avatar-title rounded-circle bg-light text-primary">
+                                                    <div class="avatar-title rounded-circle avatar-xs bg-light text-primary">
                                                         {{ strtoupper(substr($boardMember['name'], 0, 1)) }}
                                                     </div>
                                                 </div>
