@@ -47,44 +47,32 @@ function updateIsStar(boardId, userId, ) {
 
 
 // ================ task ==================
+function getModalTaskEvents() {
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(trigger) {
+        trigger.addEventListener('click', function() {
+            const taskId = trigger.getAttribute('data-task-id');
+            // Gọi AJAX để tải dữ liệu vào modal
+            $.ajax({
+                url: '/tasks/getModalTask/' + taskId,
+                type: 'GET',
+                success: function(response) {
+                    $('#detailCardModal').modal('show');
+                    $('.modal-task').html(response.html);
+                },
+                error: function(xhr) {
+                    console.error("Không thể tải dữ liệu task:", xhr);
+                }
+            });
+        });
 
-// Lắng nghe sự kiện click cho các phần tử có class 'task-title'
-// document.addEventListener('click', function(event) {
-//     if (event.target.classList.contains('task-title')) {
-//         // Lấy task ID từ thuộc tính data-task-id
-//         let taskId = event.target.getAttribute('data-task-id');
-//
-//         // Gọi AJAX để lấy nội dung modal
-//         $.ajax({
-//             url: `/tasks/${taskId}/detail`,  // API để lấy thông tin chi tiết task
-//             type: 'GET',
-//             success: function(response) {
-//                 // Giả sử máy chủ trả về dữ liệu modal dưới dạng HTML
-//                 $('#modal-content').html(response); // Gắn nội dung modal vào phần tử chứa modal
-//
-//                 // Hiển thị modal
-//                 $('#detailCardModal' + taskId ).modal('show');
-//             },
-//             error: function(xhr) {
-//                 alert('Có lỗi xảy ra khi tải nội dung.');
-//                 console.log(xhr.responseText);
-//             }
-//         });
-//     }
-// });
-function loadModalTaskDetails(taskId) {
-    $.ajax({
-        url: '/tasks/getModalTask/' + taskId, // Update the URL based on your route
-        method: 'GET',
-        success: function(response) {
-            // Populate the modal body with the fetched content
-            $('#modal-task-' + taskId).html(response);
-        },
-        error: function() {
-            alert('Unable to load task details.');
-        }
     });
 }
+
+// Khởi tạo sự kiện modal khi trang được tải
+document.addEventListener("DOMContentLoaded", function() {
+    getModalTaskEvents();
+});
+
 
 
 
@@ -186,7 +174,7 @@ function updateTask2(taskId) {
         processData: false, // Bắt buộc phải false để không xử lý FormData thành chuỗi
         contentType: false, // Bắt buộc phải false để đặt đúng 'multipart/form-data'
         success: function(response) {
-            if(response.task.image) {
+            if (response.task.image) {
                 $('#detailCardModalLabel').css('background-image', `url('/storage/${response.task.image}')`);
             }
             notificationWeb(response.action, response.msg);
@@ -220,11 +208,11 @@ function updateTaskMember(taskId, userId) {
 
 
 // ============= tag  ==============
-function loadTaskTag(taskId,boardId) {
+function loadTaskTag(taskId, boardId) {
     $.ajax({
         url: `/tasks/getListTagTaskBoard/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        data:{board_id:boardId},
+        data: { board_id: boardId },
         success: function(response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
@@ -238,6 +226,7 @@ function loadTaskTag(taskId,boardId) {
         }
     });
 }
+
 function loadFormCreateTag(taskId) {
     $.ajax({
         url: `/tasks/getFormCreateTag/${taskId}`, // Đường dẫn API hoặc route để lấy form
@@ -463,6 +452,8 @@ function FormCheckListItem(checkListId) {
                     </div>
                 </div>
                 <div class="avatar-group d-flex justify-content-center">
+                     <div class="d-flex justify-content-center" id="member-add-checkListItem-${response.id}">
+                                        </div>
                 `;
             if (Array.isArray(response.checkListItem.members)) {
                 response.checkListMembers.forEach((checkListItemMember, index) => {
@@ -623,8 +614,9 @@ function submitAddCheckList(taskId) {
         url: `/tasks/checklist/create`,
         type: 'POST',
         data: formData,
+
         success: function(response) {
-            let checkList = document.getElementById('checkListCreate');
+            let checkList = document.getElementById('checkListCreate-' + taskId);
             let listItem = `
                 <div class="row mt-3 list-checklist-${response.checkListId}" >
         <section class="d-flex justify-content-between">
@@ -937,7 +929,7 @@ function removeMemberFromCard(memberId, checklistItemId) {
         },
         success: function(response) {
             let memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
-            let memberElement1 = document.getElementById('member-checklist-' +  memberId + '-' + checklistItemId);
+            let memberElement1 = document.getElementById('member-checklist-' + memberId + '-' + checklistItemId);
             if (memberElement1) {
                 memberElement1.remove();
             }
@@ -1176,7 +1168,7 @@ function updateTaskAttachment(attachmentId) {
     });
 }
 
-function deleteTaskAttachment(attachmentId,taskId) {
+function deleteTaskAttachment(attachmentId, taskId) {
     $.ajax({
         url: `/tasks/attachments/${attachmentId}/destroy`,
         method: 'DELETE',
@@ -1344,7 +1336,7 @@ function addTaskComment(taskId, user_id) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            console.log('taskComment đã được thêm thành công!', response);
+            notificationWeb(response.action, response.msg)
 
             let taskComment = document.getElementById('task-comment-' + taskId);
             let createdAt = new Date(response.comment.created_at);
@@ -1663,6 +1655,7 @@ function removeComment(commentId) {
         }
     });
 }
+
 function loadAllTaskComment(taskId) {
     $.ajax({
         url: `/tasks/comments/${taskId}/getAllComment`, // Đường dẫn API hoặc route để lấy form

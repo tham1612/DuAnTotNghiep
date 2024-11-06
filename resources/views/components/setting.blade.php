@@ -54,7 +54,7 @@
                        data-bs-offset="-40,10">
                         Sao chép bảng</p>
                     <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
-                        {{--                        @include('dropdowns.copyBoard')--}}
+                        @include('dropdowns.copyBoard')
                     </div>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
@@ -306,30 +306,59 @@
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
             <div class="p-2">
-                <p class="fw-bold fs-15">Quyền</p>
+                <p class="fw-bold fs-16">Quyền</p>
 
-                <div class="row mt-2">
-                    <label for="">Nhận xét</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Thành viên</option>
-                        <option value="">Chỉ có quản trị viên</option>
-                        <option value="">Tất cả mọi người trong không gian làm việc</option>
+                <div class="row my-2">
+                    <label class="fs-16">Nhận xét</label>
+                    <select class="form-select border-0 cursor-pointer" id="commentPermission"
+                            onchange="updatePermission('commentPermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->comment_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                        <option value="board" @selected($board->comment_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                        <option value="workspace" @selected($board->comment_permission === 'workspace')>Tất cả mọi người
+                            trong không
+                            gian làm
+                            việc
+                        </option>
                     </select>
                 </div>
-                <div class="row mt-2">
-                    <label for="">Thêm và xóa thành viên</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Thành viên</option>
-                        <option value="">Chỉ có quản trị viên</option>
+                <div class="row my-2">
+                    <label class="fs-16">Thêm và xóa thành viên</label>
+                    <select class="form-select border-0 cursor-pointer" id="memberPermission"
+                            onchange="updatePermission('memberPermission', this.value,{{$board->id}})">
+                        <option value="board" @selected($board->member_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                        <option value="owner" @selected($board->member_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
                     </select>
                 </div>
-                <div class="row mt-2">
-                    <label for="">Chỉnh sửa Không gian làm việc</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Mọi người trong không gian</option>
-                        <option value="">Chỉ có thành viên trong bảng</option>
+                <div class="row my-2">
+                    <label class="fs-16">Chỉnh sửa bảng</label>
+                    <select class="form-select border-0 cursor-pointer" id="workspaceEditPermission"
+                            onchange="updatePermission('boardEditPermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->edit_board === 'owner')>Chỉ có quản trị viên</option>
+                        <option value="board" @selected($board->edit_board === 'board')>Chỉ có thành viên trong bảng
+                        </option>
+                        <option value="workspace" @selected($board->edit_board === 'workspace')>Mọi người trong không
+                            gian
+                        </option>
                     </select>
                 </div>
+                <div class="row my-2">
+                    <label class="fs-16">Lưu trữ</label>
+                    <select class="form-select border-0 cursor-pointer" id="archivePermission"
+                            onchange="updatePermission('archivePermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->archiver_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                        <option value="board" @selected($board->archiver_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                    </select>
+                </div>
+
             </div>
         </div>
     </div>
@@ -368,7 +397,7 @@
                                     <form>
                                         <input type="hidden" name="board_id" value="{{$tag->board_id}}">
                                         <div class="mt-3">
-                                            <label for="">Tiêu đề</label>
+                                            <label class="fs-16">Tiêu đề</label>
                                             <input type="text" name="name" class="form-control border-1"
                                                    placeholder="Nhập tên nhãn" value="{{$tag->name}}"/>
                                         </div>

@@ -110,22 +110,22 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             console.log('vị trí được thả', position)
 
             // $(document).ready(function () {
-                $.ajax({
-                    url: `/tasks/updatePosition/${taskId}` ,
-                    type: "PUT",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: "json",
-                    data: {
-                        position,
-                        catalog_id_old,
-                        catalog_id
-                    },
-                    success: function (response) {
-                        console.log(response);
-                    }
-                })
+            $.ajax({
+                url: `/tasks/updatePosition/${taskId}`,
+                type: "PUT",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                data: {
+                    position,
+                    catalog_id_old,
+                    catalog_id
+                },
+                success: function (response) {
+                    notificationWeb(response.action, response.msg)
+                }
+            })
             // })
             e.className += " ex-moved";
         })

@@ -17,6 +17,7 @@
         ->get();
 
     $workspaceChecked = \App\Models\Workspace::query()
+        ->with('boards')
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
@@ -73,6 +74,9 @@
             // Kiểm tra xem trường `readed` có tồn tại và giá trị là false
             return isset($data['readed']) && $data['readed'] == false;
         });
+    session([
+        'workspaces' => $workspaceChecked,
+    ]);
 
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
@@ -94,7 +98,6 @@
                 {{ \Str::limit($workspaceChecked->name, 16) }}
                 <i class=" ri-arrow-drop-down-line fs-20"></i>
             </span>
-
 
             <ul class="dropdown-menu dropdown-menu-md p-3" data-simplebar style="max-height: 600px; width:300px">
                 <li class="d-flex">
@@ -222,7 +225,8 @@
                                     href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
                                     <div class="d-flex justify-content-flex-start align-items-center">
                                         @if ($board->image)
-                                            <img id="image-board-{{ $board->id }}" class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                            <img id="image-board-{{ $board->id }}"
+                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                 src="{{ asset('storage/' . $board->image) }}"
                                                 style="width: 30px; height: 30px" alt="image" />
                                         @else
@@ -231,8 +235,10 @@
                                                 {{ strtoupper(substr($board->name, 0, 1)) }}
                                             </div>
                                         @endif
-                                        <span id="name-board-{{ $board->id }}"
-                                            class="text-white fs-16">{{ \Str::limit($board->name, 10) }}</span>
+                                        <span id="name-board-{{ $board->id }}" class="text-white fs-15 text-nowrap"
+                                            style="width: 20px">
+                                            {{ \Str::limit($board->name, 10) }}
+                                        </span>
                                     </div>
                                 </a>
                                 @php

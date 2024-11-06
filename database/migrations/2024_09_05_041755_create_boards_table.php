@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,13 +13,14 @@ return new class extends Migration
         Schema::create('boards', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Workspace::class)->constrained();
-            $table->enum('access',\App\Enums\AccessEnum::getValues());
+            $table->enum('access', \App\Enums\AccessEnum::getValues());
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->boolean('comment_rights')->default(true)->comment('có quyền cmt');
-            $table->boolean('add_delete_rights')->default(true)->comment('quyền thêm , xóa');
-            $table->boolean('edit_workspace')->default(true)->comment('quyền sửa');
+            $table->enum('comment_permission', ['owner', 'board', 'workspace'])->default('owner')->comment('có quyền cmt');
+            $table->enum('member_permission', ['owner', 'board'])->default('owner')->comment('quyền thêm , xóa');
+            $table->enum('archiver_permission', ['owner', 'board'])->default('owner')->comment('quyền lưu trữ');
+            $table->enum('edit_board', ['owner', 'board', 'workspace'])->default('owner')->comment('quyền sửa bảng');
             $table->string('link_invite');
             $table->integer('complete')->default(0);
             $table->softDeletes();

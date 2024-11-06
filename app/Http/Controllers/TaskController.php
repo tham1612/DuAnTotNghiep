@@ -20,6 +20,7 @@ use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use App\Models\TaskMember;
 use App\Models\TaskTag;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,9 +37,13 @@ class TaskController extends Controller
     protected $googleApiClient;
     const PATH_UPLOAD = 'tasks';
 
-    public function __construct(GoogleApiClientController $googleApiClient)
+    public function __construct(
+        GoogleApiClientController $googleApiClient,
+        AuthorizeWeb              $authorizeWeb
+    )
     {
         $this->googleApiClient = $googleApiClient;
+        $this->authorizeWeb = $authorizeWeb;
     }
 
 
@@ -48,6 +53,14 @@ class TaskController extends Controller
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
+        $catalog = Catalog::query()->findOrFail($request->catalog_id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
         if (isset($data['start']) || isset($data['end'])) {
             $data['start_date'] = empty($data['start']) ? $data['end'] : $data['start'];
@@ -89,10 +102,10 @@ class TaskController extends Controller
             }
         }
         return response()->json([
-            'msg' => $task->text .' đã được thêm thành công',
+            'msg' => $task->text . ' đã được thêm thành công',
             'action' => 'success',
             'success' => true,
-            'task'=>$task,
+            'task' => $task,
 //            'task_count' => $catalog->tasks->count(),
         ]);
     }
@@ -100,14 +113,20 @@ class TaskController extends Controller
 
     public function update(string $id, UpdateTaskRequest $request)
     {
-
+        $task = Task::query()->findOrFail($id);
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
 
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
 
-        $task = Task::query()->findOrFail($id);
 
         $data = $request->except(['image']);
         if (isset($data['start']) || isset($data['end'])) {
@@ -157,13 +176,10 @@ class TaskController extends Controller
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
 
-
-//        session(['msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!']);
-//        session(['action' => 'success']);
         return response()->json([
-            'msg' =>'Task ' . $data['text'] . ' đã được cập nhật thành công!',
+            'msg' => 'Task ' . $data['text'] . ' đã được cập nhật thành công!',
             'action' => 'success',
-            'task'=>$task
+            'task' => $task
         ]);
 
     }
@@ -174,16 +190,25 @@ class TaskController extends Controller
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
+
+        $task = Task::query()->findOrFail($id);
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         $data = $request->all();
-        $model = Task::query()->findOrFail($id);
+
         $data['position'] = $request->position + 1;
 
         $positionOldSameCatalog = Task::query()
             ->select('position', 'id')
             ->findOrFail($id);
-        //        dd($positionOldSameCatalog->position);
 
-        if ($request['catalog_id_old'] != $data['catalog_id']) {
+        if ($task->catalog_id != $data['catalog_id']) {
             //            dd($data['position']);
             $positionChangeNew = Task::query()
                 ->whereNotBetween('position', [1, $data['position'] - 1])
@@ -192,7 +217,7 @@ class TaskController extends Controller
 
             $positionChangeOld = Task::query()
                 ->where('position', '>', $positionOldSameCatalog->position)
-                ->where('catalog_id', $data['catalog_id_old'])
+                ->where('catalog_id', $task->catalog_id)
                 ->get();
 
             //            dd($positionChangeOld->toArray());
@@ -209,13 +234,13 @@ class TaskController extends Controller
                 ->withProperties([
                     'task_id' => $id,
                     'catalog_id_new' => $data['catalog_id'],
-                    'board_id' => $model->catalog->board_id,
+                    'board_id' => $task->catalog->board_id,
                     'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
                 ])
-                ->tap(function (Activity $activity) use ($model) {
-                    $activity->catalog_id = $model->catalog_id;
-                    $activity->task_id = $model->id;
-                    $activity->board_id = $model->catalog->board_id;
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
                 })
                 ->log('vị trí các task trong catalog mới đã thay đổi.');
             // cap nhat lai vi tri o catalog cu
@@ -230,14 +255,14 @@ class TaskController extends Controller
                 ->causedBy(Auth::user())
                 ->withProperties([
                     'task_id' => $id,
-                    'catalog_id_old' => $data['catalog_id_old'],
-                    'board_id' => $model->catalog->board_id,
+                    'catalog_id_old' => $task->catalog_id,
+                    'board_id' => $task->catalog->board_id,
                     'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
                 ])
-                ->tap(function (Activity $activity) use ($model) {
-                    $activity->catalog_id = $model->catalog_id;
-                    $activity->task_id = $model->id;
-                    $activity->board_id = $model->catalog->board_id;
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
                 })
                 ->log('Vị trí các task trong catalog cũ đã thay đổi.');
         } else {
@@ -260,17 +285,17 @@ class TaskController extends Controller
                 ->withProperties([
                     'task_id' => $id,
                     'catalog_id' => $data['catalog_id'],
-                    'board_id' => $model->catalog->board_id,
+                    'board_id' => $task->catalog->board_id,
                     'tasks_affected' => $positionChange->pluck('id')->toArray(),
                 ])
-                ->tap(function (Activity $activity) use ($model) {
-                    $activity->catalog_id = $model->catalog_id;
-                    $activity->task_id = $model->id;
-                    $activity->board_id = $model->catalog->board_id;
+                ->tap(function (Activity $activity) use ($task) {
+                    $activity->catalog_id = $task->catalog_id;
+                    $activity->task_id = $task->id;
+                    $activity->board_id = $task->catalog->board_id;
                 })
                 ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }
-        $model->update($data);
+        $task->update($data);
     }
 
     public function updateFolow(Request $request, string $id)
@@ -312,19 +337,60 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         $task = Task::query()->findOrFail($id);
+        $authorize = $this->authorizeWeb->authorizeArchiver($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $task->delete();
+        return response()->json([
+            'action' => 'success',
+            'msg' => 'Lưu trữ thẻ thành công!!',
+            'taskId' => $id
+        ]);
     }
 
     public function restoreTask(string $id)
     {
         $task = Task::withTrashed()->findOrFail($id);
+        $boardId = Task::withTrashed()
+            ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
+            ->join('boards', 'catalogs.board_id', '=', 'boards.id')
+            ->where('tasks.id', $task->id)
+            ->value('boards.id');
+        $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         $task->restore();
+        return response()->json([
+            'action' => 'success',
+            'msg' => 'Hoàn tác task thành công!!',
+        ]);
     }
 
     public function destroyTask(string $id)
     {
-        Log::debug('task work');
         $task = Task::withTrashed()->findOrFail($id);
+        $boardId = Task::withTrashed()
+            ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
+            ->join('boards', 'catalogs.board_id', '=', 'boards.id')
+            ->where('tasks.id', $task->id)
+            ->value('boards.id');
+        $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         try {
             // Bắt đầu transaction
             DB::beginTransaction();
@@ -353,12 +419,96 @@ class TaskController extends Controller
 
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
-
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Xóa vĩnh viễn task thành công!!',
+            ]);
         } catch (\Exception $e) {
             // Nếu xảy ra lỗi, rollback các thay đổi
             DB::rollBack();
             dd($e->getMessage());
             // Xử lý lỗi (ghi log, trả về thông báo lỗi, ...)
+        }
+    }
+
+    public function copyTask(Request $request)
+    {
+        $data = $request->all();
+        $task = Task::query()->findOrFail($data['id']);
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        $catalog = Catalog::query()->findOrFail($data['catalog_id']);
+
+        try {
+            DB::beginTransaction();
+            $taskNew = Task::query()->create([
+                'catalog_id' => $data['catalog_id'],
+                'text' => $data['text'],
+                'description' => $task['description'],
+                'position' => $catalog->tasks()->count() + 1,
+                'image' => $task['image'],
+                'priority' => $task['priority'],
+                'risk' => $task['risk'],
+                'progress' => $task['progress'],
+                'start_date' => $task['start_date'],
+                'end_date' => $task['end_date'],
+                'parent' => $task['parent'],
+                'sortorder' => $task['sortorder'],
+                'id_google_calendar' => $task['id_google_calendar'],
+                'creator_email' => Auth::user()->email,
+            ]);
+
+            if ($data['isAttachment']) {
+                $attachmentOld = TaskAttachment::query()->where('task_id', $task['id'])->get();
+
+                foreach ($attachmentOld as $attachment) {
+                    TaskTag::query()->create([
+                        'task_id' => $taskNew->id,
+                        'file_name' => $attachment['file_name'],
+                        'name' => $attachment['name'],
+                    ]);
+                }
+            }
+
+            if ($data['isCheckList']) {
+                $checklistOld = CheckList::query()->where('task_id', $task['id'])->get();
+
+                foreach ($checklistOld as $checklist) {
+                    $checklistNew = CheckList::query()->create([
+                        'task_id' => $taskNew->id,
+                        'name' => $checklist['name'],
+                    ]);
+
+                    $checklistItemOld = CheckListItem::query()->where('check_list_id', $checklist['id'])->get();
+
+                    foreach ($checklistItemOld as $checklistItem) {
+                        CheckListItem::query()->create([
+                            'check_list_id' => $checklistNew->check_list_id,
+                            'name' => $checklistItem['name'],
+                            'parent_id' => $checklistItem['parent_id'],
+                            'is_complete' => $checklistItem['is_complete'],
+                            'start_date' => $checklistItem['start_date'],
+                            'end_date' => $checklistItem['end_date'],
+                            'reminder_date' => $checklistItem['reminder_date'],
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Sao chép thẻ thành công!!',
+                'board_id' => $data['toBoard']
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json(['action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!']);
         }
     }
 
@@ -379,13 +529,18 @@ class TaskController extends Controller
 
         return response()->json(['html' => $htmlForm]);
     }
-    public function getModalTask( $taskId)
+
+    public function getModalTask($taskId)
     {
-        $task = Task::findOrFail($taskId);
+        $task = Task::with(['catalog','catalog.board'])->findOrFail($taskId);
 //        dd( $task);
 
         $htmlForm = View::make('components.modalTask', [
-            'task' => $task
+            'task' => $task,
+            'boardId'=>$task->catalog->board->id,
+            'board'=>$task->catalog->board,
+            'image' => $task->image ? asset('storage/' . $task->image) : asset('theme/assets/images/small/img-7.jpg'),
+            'userId'=>auth()->id()
         ])->render();
 
         return response()->json(['html' => $htmlForm]);
