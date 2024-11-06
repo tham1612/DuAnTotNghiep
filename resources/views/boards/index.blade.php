@@ -8,8 +8,6 @@
             {{ session('error') }}
         </div>
     @endif
-
-    {{--        @dd($board->catalogs->first()->tasks) --}}
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}">
@@ -55,7 +53,7 @@
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
                                         <h6 class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal{{ $task->id }}" >
+                                            data-bs-target="#detailCardModal{{ $task->id }}">
                                             {{ $task->text }}
                                         </h6>
 
@@ -248,10 +246,12 @@
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
                         <form>
                             <div class="mb-2">
-                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control" name="text" placeholder="Nhập tên thẻ..."/>
+                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control"
+                                       name="text" placeholder="Nhập tên thẻ..."/>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-                                <button type="button" class="btn btn-primary" onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
                                     Thêm thẻ
                                 </button>
                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
@@ -271,7 +271,7 @@
                 </h6>
             </div>
             <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                <form >
+                <form>
                     <div class="mb-2">
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                                id="nameCatalog" value="{{ old('name') }}" placeholder="Nhập tên danh sách..."/>
@@ -280,7 +280,8 @@
                         @enderror
                     </div>
                     <div class="mb-2 d-flex align-items-center">
-                        <button type="button" id="btnSubmitCatalog" class="btn btn-primary"onclick="submitAddCatalog({{ $board->id }})">
+                        <button type="button" id="btnSubmitCatalog" class="btn btn-primary"
+                                onclick="submitAddCatalog({{ $board->id }})">
                             Thêm danh sách
                         </button>
                         <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
