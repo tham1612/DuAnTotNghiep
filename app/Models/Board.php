@@ -17,9 +17,10 @@ class Board extends Model
         'name',
         'description',
         'image',
-        'comment_rights',
-        'add_delete_rights',
-        'edit_workspace',
+        'comment_permission',
+        'member_permission',
+        'archiver_permission',
+        'edit_board',
         'link_invite',
         'complete'
     ];

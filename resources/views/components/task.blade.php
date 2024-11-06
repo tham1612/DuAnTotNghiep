@@ -456,7 +456,7 @@
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                                             style=" height: 30px; background-color: #091e420f; color: #172b4d"
-                                            onclick="archiverTask({{$task->id}})">
+                                            onclick="archiverTask({{$task->id}},{{auth()->id()}})">
                                             <i class="ri-archive-line fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -470,7 +470,7 @@
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                                             style=" height: 30px; background-color: #091e420f; color: #172b4d"
-                                            onclick="restoreTask({{$task->id}})">
+                                            onclick="restoreTask({{$task->id}},{{auth()->id()}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -484,7 +484,7 @@
                                         <div
                                             class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                                             style=" height: 30px; background-color: red"
-                                            onclick="destroyTask({{$task->id}})">
+                                            onclick="destroyTask({{$task->id}},{{auth()->id()}})">
                                             <i class="las la-window-restore fs-20"></i>
                                             <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">

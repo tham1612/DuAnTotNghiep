@@ -14,10 +14,10 @@ function archiverCatalog(catalogId) {
                 url: `/catalogs/${catalogId}`,
                 type: 'DELETE',
                 success: function (response) {
-                    notificationWeb('success', 'Lưu trữ thành công')
+                    notificationWeb(response.action, response.msg)
                 },
                 error: function (xhr) {
-                    notificationWeb('danger', 'Đã có lỗi xảy ra!!')
+                    notificationWeb(response.action, response.msg)
                 }
             });
         }
@@ -45,7 +45,7 @@ function archiverAllTasks(catalogId) {
                     notificationWeb(response.action, response.msg)
                 },
                 error: function (xhr) {
-                    notificationWeb('danger', 'Đã có lỗi xảy ra!!')
+                    notificationWeb(response.action, response.msg)
                 }
             });
         }
@@ -57,10 +57,10 @@ function restoreCatalog(catalogId) {
         url: `/catalogs/restoreCatalog/${catalogId}`,
         type: 'POST',
         success: function (response) {
-            notificationWeb('success', 'Hoàn tác thành công')
+            notificationWeb(response.action, response.msg)
         },
         error: function (xhr) {
-            notificationWeb('danger', 'Đã có lỗi xảy ra!!')
+            notificationWeb(response.action, response.msg)
         }
     });
 }
@@ -70,10 +70,10 @@ function destroyCatalog(catalogId) {
         url: `/catalogs/destroyCatalog/${catalogId}`,
         type: 'POST',
         success: function (response) {
-            notificationWeb('success', 'Xóa vĩnh viễn task thành công')
+            notificationWeb(response.action, response.msg)
         },
         error: function (xhr) {
-            notificationWeb('danger', 'Đã có lỗi xảy ra!!')
+            notificationWeb(response.action, response.msg)
         }
     });
 }
