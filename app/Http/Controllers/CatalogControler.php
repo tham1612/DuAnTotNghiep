@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Spatie\Activitylog\Models\Activity;
 
 class CatalogControler extends Controller
@@ -27,7 +28,21 @@ class CatalogControler extends Controller
     }
 
     const PATH_UPLOAD = 'catalogs.';
+    public function getFormCreateCatalog($boardId)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        if (!$boardId) {
+            return response()->json(['error' => 'boardId is missing'], 400);
+        }
 
+        $htmlForm = View::make('dropdowns.createCatalog', ['boardId' => $boardId])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
     public function store(StoreCatalogRequest $request)
     {
 

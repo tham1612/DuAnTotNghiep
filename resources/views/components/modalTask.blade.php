@@ -1,15 +1,11 @@
-<div class="modal-header p-3"
+<div class="modal-header p-3 modal-header-{{$task->id}}"
      style="
-                             height: 150px;
-                             background-size: cover; /* Đảm bảo ảnh phủ đầy khung mà không bị móp */
-                             background-position: center; /* Đảm bảo ảnh được căn giữa */
-                             background-repeat: no-repeat; /* Không lặp lại ảnh */
-                             object-fit: cover;
-                             @if($task->image)
-                                 background-image: url('{{ asset('storage/' . $task->image) }}');
-                             @else
-                                 background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}');
-                             @endif
+         height: 150px;
+         background-size: cover; /* Đảm bảo ảnh phủ đầy khung mà không bị móp */
+         background-position: center; /* Đảm bảo ảnh được căn giữa */
+         background-repeat: no-repeat; /* Không lặp lại ảnh */
+         object-fit: cover;
+         background-image: url('{{$image}}');
          "
      id="detailCardModalLabel">
     <div class="">
@@ -24,7 +20,7 @@
             data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-<div class="modal-body">
+<div class="modal-body modal-body-{{$task->id}}">
     <div class="row">
         <div class="col-9 p-2">
             <div class="row">
@@ -112,9 +108,9 @@
                         <strong>Thông báo</strong>
                         @php
                             //                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
-                            //                                                        ->where('user_id', auth()->id())
+                            //                                                        ->where('user_id', $userId)
                             //                                                        ->value('follow');
-                         $memberFollow1 = collect($task->follow_members)->firstWhere('user_id', auth()->id());
+                         $memberFollow1 = collect($task->follow_members)->firstWhere('user_id', $userId);
                          $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
 
                         @endphp
@@ -122,7 +118,7 @@
                             class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                             style="height: 35px; background-color: #091e420f; color: #172b4d"
                             id="notification_{{$task->id}}"
-                            onclick="updateTaskMember({{ $task->id }}, {{ auth()->id() }})">
+                            onclick="updateTaskMember({{ $task->id }}, {{ $userId }})">
                             <i class="@if($memberFollow == 1)
                                                     ri-eye-line @else ri-eye-off-line @endif
                                                     fs-22" id="notification_icon_{{$task->id}}"></i>
@@ -224,8 +220,6 @@
 
             @include('components.attachment', ['attachment' => $task->attachments, 'task' => $task])
             @include('components.checklist', ['checklist' => $task->check_lists, 'task' => $task])
-
-
             <div class="row mt-4">
                 <section class="d-flex justify-content-between">
                     <div class="d-flex">
@@ -263,9 +257,9 @@
                         <div class="ms-2 w-100">
                             <form class="flex-column" id="comment_form_{{$task->id}}"
                                   style="display: none;" data-task-id="{{$task->id}}">
-                                                              <textarea name="content" class="form-control"
-                                                                        id="comment_task_{{$task->id}}"
-                                                                        placeholder="Viết bình luận"></textarea>
+                              <textarea name="content" class="form-control"
+                                        id="comment_task_{{$task->id}}"
+                                        placeholder="Viết bình luận"></textarea>
 
                                 <button type="button" class="btn btn-primary mt-2"
                                         onclick="addTaskComment({{$task->id}},{{Auth::id()}})">
@@ -297,7 +291,7 @@
                     <i class="las la-user fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false" data-bs-offset="-40,10"
-                       onclick="loadTaskFormAddMember({{ $task->id }},{{$board->id}})">
+                       onclick="loadTaskFormAddMember({{ $task->id }},{{$boardId}})">
                         Thành viên
                     </p>
                     <!--dropdown thành viên-->
@@ -313,7 +307,7 @@
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-tag fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
-                       onclick="loadTaskTag({{ $task->id }},{{$board->id}})"
+                       onclick="loadTaskTag({{ $task->id }},{{$boardId}})"
                        aria-expanded="false" data-bs-offset="-40,10">
                         Nhãn
                     </p>
@@ -407,7 +401,7 @@
                     </p>
                     <!--  dropdown sao chép-->
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                        {{--                                                @include('dropdowns.copyTask')--}}
+                        @include('dropdowns.copyTask')
                     </div>
                 </div>
             </div>
@@ -417,7 +411,7 @@
                 <div
                     class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d"
-                    onclick="archiverTask({{$task->id}})">
+                    onclick="archiverTask({{$task->id}},{{$userId}})">
                     <i class="ri-archive-line fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
@@ -431,7 +425,7 @@
                 <div
                     class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d"
-                    onclick="restoreTask({{$task->id}})">
+                    onclick="restoreTask({{$task->id}},{{$userId}})">
                     <i class="las la-window-restore fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
@@ -445,7 +439,7 @@
                 <div
                     class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: red"
-                    onclick="destroyTask({{$task->id}})">
+                    onclick="destroyTask({{$task->id}},{{$userId}})">
                     <i class="las la-window-restore fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">

@@ -34,35 +34,13 @@
                                href="#{{ $catalog->id }}">{{ $catalog->name }} </a>
                         @endforeach
                     @endif
-                    {{-- <a class="list-group-item list-group-item-action" href="#list-item-1">{{ $catalog->name }} </a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-2">Inprogress</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-3">To do</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-4">Completed</a> --}}
                 </div>
                 <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-offset="0,-50">
+                        aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddCatalog({{ $board->id }})">
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
-                    <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                        <form action="{{ route('catalogs.store') }}" method="post"
-                            class="formItem" onsubmit="return disableButtonOnSubmit()">
-                            @csrf
-                            <div class="mb-2">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
-                                    value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <input type="hidden" name="board_id" value="{{ $board->id }}">
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
-                                    Thêm danh sách
-                                </button>
-                                <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
-                                    aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
-                            </div>
-                        </form>
+                    <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px" aria-labelledby="addCatalog">
+                        {{--dropdown.createCatalog--}}
                     </div>
                 </div>
             </div>
