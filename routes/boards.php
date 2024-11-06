@@ -92,4 +92,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/catalogs/archiverAllTasks/{id}', [CatalogControler::class, 'archiverAllTasks'])
             ->name('catalogs.archiverAllTasks');
+
+        Route::get('/catalogs/getFormCreateCatalog/{id}', [CatalogControler::class, 'getFormCreateCatalog'])
+            ->name('catalogs.getFormCreateCatalog');
     });

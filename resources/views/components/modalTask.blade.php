@@ -1,15 +1,11 @@
-<div class="modal-header p-3"
+<div class="modal-header p-3 modal-header-{{$task->id}}"
      style="
-                             height: 150px;
-                             background-size: cover; /* Đảm bảo ảnh phủ đầy khung mà không bị móp */
-                             background-position: center; /* Đảm bảo ảnh được căn giữa */
-                             background-repeat: no-repeat; /* Không lặp lại ảnh */
-                             object-fit: cover;
-                             @if($task->image)
-                                 background-image: url('{{ asset('storage/' . $task->image) }}');
-                             @else
-                                 background-image: url('{{ asset('theme/assets/images/small/img-7.jpg') }}');
-                             @endif
+         height: 150px;
+         background-size: cover; /* Đảm bảo ảnh phủ đầy khung mà không bị móp */
+         background-position: center; /* Đảm bảo ảnh được căn giữa */
+         background-repeat: no-repeat; /* Không lặp lại ảnh */
+         object-fit: cover;
+         background-image: url('{{$image}}');
          "
      id="detailCardModalLabel">
     <div class="">
@@ -24,7 +20,7 @@
             data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-<div class="modal-body">
+<div class="modal-body modal-body-{{$task->id}}">
     <div class="row">
         <div class="col-9 p-2">
             <div class="row">

@@ -452,11 +452,13 @@ class TaskController extends Controller
     }
     public function getModalTask( $taskId)
     {
-        $task = Task::findOrFail($taskId);
+        $task = Task::with(['catalog','catalog.board'])->findOrFail($taskId);
 //        dd( $task);
 
         $htmlForm = View::make('components.modalTask', [
-            'task' => $task
+            'task' => $task,
+            'boardId'=>$task->catalog->board->id,
+            'image' => $task->image ? asset('storage/' . $task->image) : asset('theme/assets/images/small/img-7.jpg'),
         ])->render();
 
         return response()->json(['html' => $htmlForm]);
