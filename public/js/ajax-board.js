@@ -133,6 +133,7 @@ function submitAddTask( catalogId,catalogName) {
         type: 'POST',
         data: formData,
         success: function(response) {
+            notificationWeb(response.action, response.msg)
             let listTask  = document.getElementById(catalogName +'-' + catalogId);
             let task = `
             <div class="card tasks-box cursor-pointer" data-value="${response.task.id}">

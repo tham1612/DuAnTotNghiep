@@ -8,8 +8,6 @@
             {{ session('error') }}
         </div>
     @endif
-
-    {{--        @dd($board->catalogs->first()->tasks) --}}
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}">
@@ -247,10 +245,12 @@
                     <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
                         <form>
                             <div class="mb-2">
-                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control" name="text" placeholder="Nhập tên thẻ..."/>
+                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control"
+                                       name="text" placeholder="Nhập tên thẻ..."/>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-                                <button type="button" class="btn btn-primary" onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
                                     Thêm thẻ
                                 </button>
                                 <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>

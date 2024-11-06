@@ -25,9 +25,19 @@
         <div class="mt-2">
             <strong class="fs-16">Bảng thông tin</strong>
             <select name="toBoard" id="toBoard" class="form-select toBoard">
-                @foreach(session('workspaces')->boards as $boards)
+                @php
+                    $userId = \Illuminate\Support\Facades\Auth::id();
+                    $workspace = \App\Models\Workspace::query()
+                          ->with(['boards' => function ($query) use ($userId) {
+                              $query->whereHas('boardMembers', function ($q) use ($userId) {
+                                  $q->where('user_id', $userId);
+                              });
+                          }])
+                          ->findOrFail(session('board')->workspace_id);
+                @endphp
+                @foreach($workspace->boards as $boards)
                     <option value="{{ $boards->id }}"
-                        @selected($boards->id == request()->route('id'))
+                            @selected($boards->id === request()->route('id'))
                     >
                         {{ $boards->name }}</option>
                 @endforeach
@@ -39,21 +49,12 @@
                 <select name="catalog_id" id="toCatalog" class="form-select toCatalog">
                     @foreach ($board->catalogs as $catalogs)
                         <option value="{{ $catalogs->id }}" data-task-count="{{ $catalogs->tasks->count() }}"
-                            @selected($catalogs->id === $task->catalog_id)>
+                                @selected($catalogs->id === $task->catalog_id)>
                             {{ $catalogs->name }}
                         </option>
                     @endforeach
                 </select>
             </section>
-{{--            <section class="col-4">--}}
-{{--                <strong class="fs-16">Vị trí</strong>--}}
-{{--                <select name="position" id="toPosition" class="form-select toPosition">--}}
-{{--                    <!-- Tạo các vị trí có sẵn dựa trên số lượng tasks trong catalog -->--}}
-{{--                    @for ($i = 1; $i <= $catalog->tasks->count() + 1 ; $i++)--}}
-{{--                        <option value="{{ $i }}">{{ $i }}</option>--}}
-{{--                    @endfor--}}
-{{--                </select>--}}
-{{--            </section>--}}
         </div>
     </div>
     <input type="hidden" name="id" value="{{$task->id}}">

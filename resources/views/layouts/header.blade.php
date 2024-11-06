@@ -66,7 +66,7 @@
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
                                 <div
-                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
@@ -93,7 +93,7 @@
                                 </div>
 
                                 <div
-                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
@@ -116,7 +116,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
 
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
@@ -159,15 +159,17 @@
                                 @if (!empty($boardIsStars))
                                     @foreach ($boardIsStars as $boardIsStar)
                                         <div
-                                            class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                                class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                             <div class="d-flex align-items-center board-star-container">
                                                 @if ($boardIsStar['image'])
                                                     <img src="{{ asset('storage/' . $boardIsStar['board_image']) }}"
                                                         class="me-3 rounded-circle avatar-sm p-2 bg-light"
                                                         alt="user-pic" />
                                                 @else
+
                                                     <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                         style="width: 30px;height: 30px">
+
                                                         {{ strtoupper(substr($boardIsStar['board_name'], 0, 1)) }}
                                                     </div>
                                                 @endif
@@ -363,7 +365,7 @@
 
                             <span class="text-start ms-xl-2">
                                 <span
-                                    class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
+                                        class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
                             </span>
                         </span>
                     </button>
@@ -376,12 +378,14 @@
                         </a>
 
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
-                                class="ri-group-line text-muted fs-16 align-middle me-1"></i>
+                                    class="ri-group-line text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Tạo không gian làm việc</span></a>
 
                         <a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
+
                             data-bs-target="#archiverBoard-member"><i
                                 class="ri-archive-line text-muted fs-16 align-middle me-1"></i>
+
                             <span class="align-middle">Lưu trữ</span></a>
 
                         <form id="logoutForm" action="{{ route('logout') }}" method="post" class="dropdown-item">
@@ -413,6 +417,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+
                     @if (!empty(session('board')))
                         @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
                             <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
@@ -439,6 +444,7 @@
                                         <i class="ri-delete-bin-line"></i>
                                     </button>
                                 </div>
+
                             </div>
                         @endforeach
 

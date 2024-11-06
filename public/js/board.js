@@ -5,7 +5,7 @@ function archiverBoard(boardId) {
         type: 'POST',
         success: function (response) {
             notificationWeb(response.action, response.msg)
-            window.location.href = 'http://127.0.0.1:8000/home';
+            if (response.action === 'success') window.location.href = 'http://127.0.0.1:8000/home';
         },
         error: function (xhr) {
             notificationWeb(response.action, response.msg)
@@ -22,7 +22,7 @@ function restoreBoard(boardId) {
         success: function (response) {
             console.log(response)
             notificationWeb(response.action, response.msg)
-            window.location.href = `http://127.0.0.1:8000/b/${response.board}/edit?viewType=dashboard`;
+            if (response.action === 'success') window.location.href = `http://127.0.0.1:8000/b/${response.board}/edit?viewType=board`;
         },
         error: function (xhr) {
             notificationWeb(response.action, response.msg)
@@ -38,7 +38,6 @@ function destroyBoard(boardId) {
         type: 'POST',
         success: function (response) {
             notificationWeb(response.action, response.msg)
-            window.location.href = 'http://127.0.0.1:8000/home';
         },
         error: function (xhr) {
             notificationWeb(response.action, response.msg)
@@ -63,7 +62,7 @@ $('.submitFormCopyBoard').on('submit', function (e) {
         data: $(this).serialize(),       // Lấy dữ liệu từ form
         success: function (response) {
             notificationWeb('success', 'Sao chép bảng thành công');
-            window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=dashboard`;
+            window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
         },
         error: function (xhr, status, error) {
             notificationWeb('error', 'Có lỗi xảy ra!!')
@@ -121,3 +120,21 @@ $('.toCatalog').change(function () {
         toPositionSelect.append('<option value="' + i + '">' + i + '</option>');
     }
 });
+
+// quyền của bảng
+function updatePermission(permissionType, value, boardId) {
+    $.ajax({
+        url: `/b/settingBoard/${boardId}`,
+        type: 'POST',
+        data: {
+            permissionType: permissionType,
+            value: value,
+        },
+        success: function (response) {
+            notificationWeb(response.action, response.msg)
+        },
+        error: function (error) {
+            notificationWeb(response.action, response.msg)
+        }
+    });
+}
