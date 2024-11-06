@@ -27,5 +27,8 @@ Broadcast::channel('chat.{roomId}', function (User $user, $roomId) {
 });
 
 Broadcast::channel('catalog', function () {
-    return true; 
+    return true;
+});
+Broadcast::channel('tasks', function () {
+    return true;
 });

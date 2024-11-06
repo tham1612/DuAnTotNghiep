@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Events\TaskCreate;
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -68,7 +68,9 @@ class TaskController extends Controller
 //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
-
+        Log::info('Bắt đầu phát sự kiện TaskCreated');
+        broadcast(new TaskCreate($task))->toOthers();
+        Log::info('Đã phát sự kiện TaskCreated');
 
         // ghi lại hoạt động khi thêm
         activity('thêm mới task')

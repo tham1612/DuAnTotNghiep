@@ -10,13 +10,13 @@ Echo.channel('catalog')
         }
     });
 
-// Hàm để thêm catalog vào Kanban board
+
 function addCatalogToKanbanBoard(kanbanBoard, catalog) {
     const newCatalogDiv = document.createElement("div");
     newCatalogDiv.classList.add("tasks-list", "rounded-3", "p-2", "border");
     newCatalogDiv.setAttribute("data-value", catalog.id);
     newCatalogDiv.innerHTML = `
-        <div class="tasks-list rounded-3 p-2 border" data-value="${response.catalog.id}">
+        <div class="d-flex mb-3 align-items-center">
             <div class="flex-grow-1">
                 <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                     ${catalog.name}
@@ -63,10 +63,8 @@ function addCatalogToKanbanBoard(kanbanBoard, catalog) {
             </div>
         </div>
     `;
-    if (kanbanBoard.firstChild) {
-        kanbanBoard.insertBefore(newCatalogDiv, kanbanBoard.firstChild);
-    } else {
-        kanbanBoard.appendChild(newCatalogDiv);
-    }
+    // Chèn catalog mới vào Kanban board
+    kanbanBoard.insertBefore(newCatalogDiv, kanbanBoard.firstChild);
 }
+
 
