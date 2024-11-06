@@ -30,7 +30,7 @@
             })
             ->count();
     @endphp
-    
+
     {{-- <div class="row" style="padding-top: -2px">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -179,7 +179,7 @@
                                                                     - {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
                                                                 @endif
                                                             </h5>
-                                                        @endif                                                       
+                                                        @endif
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -285,7 +285,7 @@
                                                                 {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
                                                             </h5>
                                                         @endif
-                                                    
+
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -511,8 +511,14 @@
                                                 </h5>
                                             </div>
                                             <div class="">
-                                                <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
-                                                </h6>
+                                                <button type="button"
+                                                    class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                    onclick="updateIsStar2({{ $board->id }}, {{ auth()->id() }})"
+                                                    id="is_star_{{ $board->id }}">
+                                                    <span class="avatar-title bg-transparent fs-15">
+                                                        <i class="ri-star-fill"></i>
+                                                    </span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -575,6 +581,7 @@
                                                     </div>
                                                 @endif
                                             </div>
+
                                             <div class="flex-grow-1 ms-3">
                                                 <h5 class="fs-16 mb-1"><a
                                                         href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
@@ -584,9 +591,19 @@
                                                     {{ \Carbon\Carbon::parse($board->created_at)->format('d/m/Y') }}
                                                 </h5>
                                             </div>
-
+                                            <div class="">
+                                                <button type="button"
+                                                    class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                    onclick="updateIsStar2({{ $board->id }}, {{ auth()->id() }})"
+                                                    id="is_star_{{ $board->id }}">
+                                                    <span class="avatar-title bg-transparent fs-15">
+                                                        <i class="ri-star-fill"></i>
+                                                    </span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div class="card-body border-top border-top-dashed">
                                         <div class="d-flex" style="justify-content: space-between;">
                                             <div class="d-flex mb-2">
