@@ -218,22 +218,28 @@
                                                 @endif
                                                 <!-- checklist -->
                                                 @php
-                                                    $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems;
-                                                    });
+                                                    // Chuyển đổi $task->checklists sang mảng để dễ thao tác
+                                                       $checklistsArray = json_decode(json_encode($task->check_lists), true);
 
-                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems->where('is_complete', true);
-                                                    });
+                                                       // Đếm tổng số checklist items
+                                                       $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                           return count($checklist['checklistItems']);
+                                                       });
+
+                                                       // Đếm số checklist items đã hoàn thành
+                                                       $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                           return collect($checklist['checklistItems'])->where('is_complete', true)->count();
+                                                       });
                                                 @endphp
-                                                @if($task->checkLists->isNotEmpty())
+
+                                                @if($totalChecklistItems > 0)
                                                     <li class="list-inline-item">
-                                                        <a href="javascript:void(0)" class="text-muted"><i
-                                                                class="ri-checkbox-line align-bottom"></i>
-                                                            {{$inProgressItems->count().'/'.$allChecklistItems->count()}}
+                                                        <a href="javascript:void(0)" class="text-muted"><i class="ri-checkbox-line align-bottom"></i>
+                                                            {{ $completedChecklistItems . '/' . $totalChecklistItems }}
                                                         </a>
                                                     </li>
                                                 @endif
+
                                             </ul>
                                         </div>
                                     </div>

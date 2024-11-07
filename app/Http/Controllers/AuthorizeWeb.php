@@ -93,13 +93,13 @@ class AuthorizeWeb extends Controller
 
         $authorize = Board::query()
             ->where('id', $boardId)
-            ->get()
+            ->first()
             ? Board::query()
                 ->where('id', $boardId)
-                ->get()
+                ->first()
             : Board::withTrashed()
                 ->where('id', $boardId)
-                ->get();
+                ->first();
 
         if ($authorize->archiver_permission == 'board') {
 //            tất cả thành viên trong bảng
