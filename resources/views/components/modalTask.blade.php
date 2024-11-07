@@ -137,12 +137,21 @@
                     </div>
 
 
-                    <div class="p-3 ">
-                        <strong>Ngày hết hạn</strong>
+                    <div class="p-3" id="date-section-{{$task->id}}" style="{{ !(empty($task->end_date))||!(empty($task->start_date)) ? '' : 'display: none;' }}">
                         @php
                             $now = \Carbon\Carbon::now();
                             $endDate = \Carbon\Carbon::parse($task->end_date);
                         @endphp
+                        @if($task->start_date && empty($task->end_date))
+                            <strong>Ngày bắt đầu</strong>
+                            <div
+                                class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                                style="height: 35px; background-color: #091e420f; color: #172b4d">
+                                    <p class="ms-2 mt-3">{{ $task->start_date }}</p>
+                            </div>
+                        @endif
+                        @if($task->end_date || $task->end_date && $task->start_date)
+                        <strong>Ngày hết hạn</strong>
                         <div
                             class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                             style="height: 35px; background-color: #091e420f; color: #172b4d">
@@ -152,9 +161,9 @@
                                    @if($task->progress == 100 ) checked @endif />
                             <input type="hidden" id="task_end_date_{{ $task->id }}"
                                    value="{{ $task->end_date }}">
-                            @if(!empty($task->end_date) || !empty($task->start_date))
-                                <p class="ms-2 mt-3">{{ $task->end_date }}</p>
-                            @endif
+                                <p class="ms-2 mt-3">
+                                @if($task->start_date){{$task->start_date}}- @endif
+                                    {{ $task->end_date }}</p>
                             @if($task->progress == 100 )
                                 <span
                                     class="badge bg-success ms-2  d-none}"
@@ -169,6 +178,7 @@
                             @endif
 
                         </div>
+                        @endif
                     </div>
                     <div class="p-3" id="tag-section-{{$task->id}}" style="{{ count($task->tags) ? '' : 'display: none;' }}">
                         <strong>Nhãn</strong>
@@ -227,7 +237,7 @@
                         <p class="fs-18 ms-2 mt-1">Hoạt động</p>
                     </div>
 
-                    @if(!empty($task->task_comments))
+                    @if(!empty($task->taskComments))
                         <div class="hstack gap-2 flex-wrap mb-3">
                             <button class="btn btn-outline-dark" type="button"
                                     onclick="loadAllTaskComment({{ $task->id }})"
@@ -262,7 +272,7 @@
                                         placeholder="Viết bình luận"></textarea>
 
                                 <button type="button" class="btn btn-primary mt-2"
-                                        onclick="addTaskComment({{$task->id}},{{Auth::id()}})">
+                                        onclick="addTaskComment({{$task->id}},{{$userId}})">
                                     Lưu
 
                                 </button>

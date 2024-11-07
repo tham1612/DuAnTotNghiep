@@ -239,23 +239,11 @@
                 </div>
                 <div class="my-3">
                     <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
-                            aria-expanded="false" data-bs-offset="0,-50">
+                            aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask({{ $catalog->id }})">
                         Thêm thẻ
                     </button>
-                    <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        <form>
-                            <div class="mb-2">
-                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control"
-                                       name="text" placeholder="Nhập tên thẻ..."/>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <button type="button" class="btn btn-primary"
-                                        onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
-                                    Thêm thẻ
-                                </button>
-                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                            </div>
-                        </form>
+                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{$catalog->id }}" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
+                        {{--dropdown.createTask--}}
                     </div>
 
                 </div>
