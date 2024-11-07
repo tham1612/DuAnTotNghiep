@@ -259,7 +259,7 @@ class BoardController extends Controller
         }
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
-            ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
+            ->select('users.name', 'users.fullName', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
             ->where('board_members.board_id', $board->id)
             ->get();
 
@@ -910,6 +910,16 @@ class BoardController extends Controller
         if ($request->permissionType === 'boardEditPermission') {
             $board->update([
                 'edit_board' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'access') {
+            $board->update([
+                'access' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'name') {
+            $board->update([
+                'name' => $request->value
             ]);
         }
 

@@ -1690,11 +1690,8 @@ function updateTaskComment(taskId, user_id, commentId) {
 function removeComment(commentId) {
     console.log(commentId);
     $.ajax({
-        url: `/tasks/comments/{commentId}/destroy`,
+        url: `/tasks/comments/${commentId}/destroy`,
         type: 'POST',
-        data: {
-            id: commentId
-        },
         success: function (response) {
             document.querySelector(`.conten-comment-${commentId}`).remove();
             console.log('cmt đã được xóa thành công .');
