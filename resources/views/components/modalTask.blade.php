@@ -67,7 +67,8 @@
                                                         title="{{ $taskMember->name }}">
                                                         @if ($taskMember->image)
                                                             <img src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                alt="" class="rounded-circle avatar-xss"  style="width: 35px;height: 35px">
+                                                                alt="" class="rounded-circle avatar-xss"
+                                                                style="width: 35px;height: 35px">
                                                         @else
                                                             <div class="avatar-xss">
                                                                 <div class="avatar-title rounded-circle bg-info-subtle text-primary"
@@ -132,22 +133,35 @@
                     </div>
 
 
-                    <div class="p-3 ">
-                        <strong>Ngày hết hạn</strong>
+                    <div class="p-3" id="date-section-{{ $task->id }}"
+                        style="{{ !empty($task->end_date) || !empty($task->start_date) ? '' : 'display: none;' }}">
                         @php
                             $now = \Carbon\Carbon::now();
                             $endDate = \Carbon\Carbon::parse($task->end_date);
                         @endphp
                         <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                            @if ($task->start_date && empty($task->end_date)) <strong>Ngày bắt đầu</strong>
+                            <div
+                                class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                                style="height: 35px; background-color: #091e420f; color: #172b4d">
+                                    <p class="ms-2 mt-3">{{ $task->start_date }}</p>
+                            </div> @endif
+                            @if ($task->end_date || ($task->end_date && $task->start_date)) <strong>Ngày hết hạn</strong>
+                        <div
+                            class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                             style="height: 35px; background-color: #091e420f; color: #172b4d">
                             <input type="checkbox" id="due_date_checkbox_{{ $task->id }}" class="form-check-input"
                                 onchange="updateTask2({{ $task->id }})" name="progress"
-                                @if ($task->progress == 100) checked @endif />
+                                ___inline_directive__________________________4___ />
                             <input type="hidden" id="task_end_date_{{ $task->id }}"
                                 value="{{ $task->end_date }}">
                             @if (!empty($task->end_date) || !empty($task->start_date))
-                                <p class="ms-2 mt-3">{{ $task->end_date }}</p>
-                            @endif
+                                <p class="ms-2 mt-3">{{ $task->end_date }}</p> @endif
+                            @if ($task->progress == 100) <span class="badge bg-success ms-2  d-none}"
+                                   value="{{ $task->end_date }}">
+                                <p class="ms-2 mt-3">
+                                @if ($task->start_date){{ $task->start_date }}- @endif
+                            {{ $task->end_date }}</p>
                             @if ($task->progress == 100)
                                 <span class="badge bg-success ms-2  d-none}"
                                     id="due_date_success_{{ $task->id }}">Hoàn tất</span>
@@ -159,6 +173,7 @@
                             @endif
 
                         </div>
+                        @endif
                     </div>
                     <div class="p-3" id="tag-section-{{ $task->id }}"
                         style="{{ count($task->tags) ? '' : 'display: none;' }}">
@@ -214,15 +229,16 @@
                     </div>
 
                     @if (!empty($task->task_comments))
-                        <div class="hstack gap-2 flex-wrap mb-3">
-                            <button class="btn btn-outline-dark" type="button"
-                                onclick="loadAllTaskComment({{ $task->id }})" data-bs-toggle="collapse"
-                                data-bs-target="#activity-{{ $task->id }}" aria-expanded="false"
-                                aria-controls="collapseExample">
-                                Xem chi tiết
-                            </button>
-                        </div>
-                    @endif
+                        @if (!empty($task->taskComments))
+                            <div class="hstack gap-2 flex-wrap mb-3">
+                                <button class="btn btn-outline-dark" type="button"
+                                    onclick="loadAllTaskComment({{ $task->id }})" data-bs-toggle="collapse"
+                                    data-bs-target="#activity-{{ $task->id }}" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                    Xem chi tiết
+                                </button>
+                            </div>
+                        @endif
                 </section>
                 <div class="comments-container w-100" id="task-comment-{{ $task->id }}">
                     <div class="d-flex">
@@ -243,6 +259,7 @@
 
                                 <button type="button" class="btn btn-primary mt-2"
                                     onclick="addTaskComment({{ $task->id }},{{ Auth::id() }})">
+                                    onclick="addTaskComment({{ $task->id }},{{ $userId }})">
                                     Lưu
 
                                 </button>
@@ -312,7 +329,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="d-flex mt-3 mb-3 cursor-pointer">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">

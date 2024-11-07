@@ -85,7 +85,19 @@ class CatalogControler extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
+        $catalog = Catalog::query()->findOrFail($id);
+        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        $catalog->update($request->all());
+        return response()->json([
+            'action' => 'success',
+            'msg' => 'Chỉnh sửa danh sách thành công!!'
+        ]);
     }
 
     public function destroy(string $id)
@@ -130,7 +142,7 @@ class CatalogControler extends Controller
                 })
                 ->log('Người dùng đã xóa danh sách khỏi bảng');
             return response()->json([
-                'action' => 'sucess',
+                'action' => 'success',
                 'msg' => 'Lưu trữ danh sách thành công!!'
             ]);
         } catch (\Exception $e) {
@@ -255,5 +267,105 @@ class CatalogControler extends Controller
             'action' => 'success',
             'msg' => 'Lưu trữ tất cả task thành công',
         ]);
+    }
+
+    public function copyCatalog(Request $request)
+    {
+        $catalog = Catalog::query()->findOrFail($request->id);
+        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        try {
+            DB::beginTransaction();
+            $catalogNew = Catalog::query()->create([
+                'board_id' => $catalog->board_id,
+                'name' => $request->name,
+                'image' => $catalog->image,
+                'position' => $catalog->board->count() + 1,
+            ]);
+
+            $taskOld = Task::query()->where('catalog_id', $catalog->id)->get();
+            foreach ($taskOld as $task) {
+                Task::query()->create([
+                    'catalog_id' => $catalogNew->id,
+                    'text' => $task->text,
+                    'description' => $task->description,
+                    'position' => $task->position,
+                    'image' => $task->image,
+                    'priority' => $task->priority,
+                    'risk' => $task->risk,
+                    'progress' => $task->progress,
+                    'start_date' => $task->start_date,
+                    'end_date' => $task->end_date,
+                    'parent' => $task->parent,
+                    'sortorder' => $task->sortorder,
+                    'id_google_calendar' => $task->id_google_calendar,
+                    'creator_email' => $task->creator_email,
+                ]);
+            }
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Sao chép danh sách thành công!!'
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
+    }
+
+    public function moveCatalog(Request $request)
+    {
+        $catalog = Catalog::query()->findOrFail($request->id);
+        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        try {
+            DB::beginTransaction();
+            $positionCatalog = Board::query()->findOrFail($request->board_id);
+            $catalogNew = Catalog::query()->create([
+                'board_id' => $request->board_id,
+                'name' => $request->name,
+                'image' => $catalog->image,
+                'position' => $positionCatalog->catalogs->count() + 1,
+            ]);
+
+            $taskOld = Task::query()->where('catalog_id', $catalog->id)->get();
+            foreach ($taskOld as $task) {
+                Task::query()->create([
+                    'catalog_id' => $catalogNew->id,
+                    'text' => $task->text,
+                    'description' => $task->description,
+                    'position' => $task->position,
+                    'image' => $task->image,
+                    'priority' => $task->priority,
+                    'risk' => $task->risk,
+                    'progress' => $task->progress,
+                    'start_date' => $task->start_date,
+                    'end_date' => $task->end_date,
+                    'parent' => $task->parent,
+                    'sortorder' => $task->sortorder,
+                    'id_google_calendar' => $task->id_google_calendar,
+                    'creator_email' => $task->creator_email,
+                ]);
+            }
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Sao chép danh sách thành công!!',
+                'boardId' => $request->board_id
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
     }
 }

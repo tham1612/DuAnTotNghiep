@@ -19,6 +19,8 @@ use App\Http\Controllers\GoogleApiClientController;
 
 Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
+        Route::get('/tasks/getFormCreateTask/{id}', [TaskController::class, 'getFormCreateTask'])
+            ->name('catalogs.getFormCreateTask');
 
         Route::resource('tasks', TaskController::class);
 
