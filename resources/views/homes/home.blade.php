@@ -30,7 +30,7 @@
             })
             ->count();
     @endphp
-    
+
     {{-- <div class="row" style="padding-top: -2px">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -172,14 +172,15 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        @if($task->start_date)
+                                                        @if ($task->start_date)
                                                             <h5 class="text-muted mt-0 mb-1 fs-13">
                                                                 {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
-                                                                @if($task->end_date)
-                                                                    - {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
+                                                                @if ($task->end_date)
+                                                                    -
+                                                                    {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
                                                                 @endif
                                                             </h5>
-                                                        @endif                                                       
+                                                        @endif
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -278,14 +279,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        @if($task->start_date && $task->end_date)
+                                                        @if ($task->start_date && $task->end_date)
                                                             <h5 class="text-muted mt-0 mb-1 fs-13">
                                                                 {{ \Carbon\Carbon::parse($task->start_date)->format('d/m/Y') }}
                                                                 -
                                                                 {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y') }}
                                                             </h5>
                                                         @endif
-                                                    
+
                                                         <h5>{{ \Illuminate\Support\Str::limit($task->text, 20) }}</h5>
                                                         {{-- <p>Danh sách: {{ $task->catalog_name }}</p> --}}
                                                         <a href="{{ route('b.edit', ['id' => $task->board_id]) }}">
@@ -510,10 +511,14 @@
                                                     {{ \Carbon\Carbon::parse($board->created_at)->format('d/m/Y') }}
                                                 </h5>
                                             </div>
-                                            <div class="">
-                                                <h6 class="mb-0"><i class="ri-star-fill align-bottom text-warning"></i>
-                                                </h6>
-                                            </div>
+                                            <button type="button"
+                                                class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                                onclick="updateIsStar2({{ $board->id }}, {{ auth()->id() }})"
+                                                id="is_star_{{ $board->id }}">
+                                                <span class="avatar-title bg-transparent fs-15">
+                                                    <i class="ri-star-fill"></i>
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="card-body border-top border-top-dashed">
@@ -584,9 +589,17 @@
                                                     {{ \Carbon\Carbon::parse($board->created_at)->format('d/m/Y') }}
                                                 </h5>
                                             </div>
-
+                                            <button type="button"
+                                            class="btn avatar-xs p-0 favourite-btn {{ $board->is_star ? 'active' : '' }}"
+                                            onclick="updateIsStar2({{ $board->id }}, {{ auth()->id() }})"
+                                            id="is_star_{{ $board->id }}">
+                                            <span class="avatar-title bg-transparent fs-15">
+                                                <i class="ri-star-fill"></i>
+                                            </span>
+                                        </button>
                                         </div>
                                     </div>
+
                                     <div class="card-body border-top border-top-dashed">
                                         <div class="d-flex" style="justify-content: space-between;">
                                             <div class="d-flex mb-2">

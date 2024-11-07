@@ -3,7 +3,7 @@
     Board - TaskFlow
 @endsection
 @section('main')
-    @if(session('error'))
+    @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
@@ -22,7 +22,7 @@
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
                             <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
-                               data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
+                                data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
@@ -36,26 +36,26 @@
                         @foreach ($catalog->tasks as $task)
                             <div class="card tasks-box cursor-pointer" data-value="{{ $task->id }}">
                                 <div class="card-body">
-                                    <div class="d-flex mb-2">
+                                    <div class="d-flex">
                                         <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
                                             data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}">
-                                            {{ $task->text }}
+                                            {{ \Str::limit($task->text, 20) }}
                                         </h6>
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i
                                                     class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Mở thẻ</span>--}}
-                                                {{--                                                </li>--}}
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Chỉnh sửa nhãn</span>--}}
-                                                {{--                                                </li>--}}
+                                                {{--                                                <li> --}}
+                                                {{--                                                    <span class="dropdown-item" href="#"><i --}}
+                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i> --}}
+                                                {{--                                                        Mở thẻ</span> --}}
+                                                {{--                                                </li> --}}
+                                                {{--                                                <li> --}}
+                                                {{--                                                    <span class="dropdown-item" href="#"><i --}}
+                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i> --}}
+                                                {{--                                                        Chỉnh sửa nhãn</span> --}}
+                                                {{--                                                </li> --}}
                                                 <li>
                                                     <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                             class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
@@ -73,18 +73,18 @@
                                                 </li>
                                                 <li>
                                                     <span class="dropdown-item" data-bs-toggle="modal"
-                                                          onclick="archiverTask({{$task->id}})"><i
+                                                        onclick="archiverTask({{ $task->id }})"><i
                                                             class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
                                                         Lưu trữ</span>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
+                                    <div class="mt-2" data-bs-toggle="modal" data-bs-target="#detailCardModal">
                                         <!-- Ảnh bìa -->
                                         @if ($task->image)
                                             <div class="tasks-img rounded"
-                                                 style="
+                                                style="
                                                      background-image: url('{{ asset('storage/' . $task->image) }}');
                                                      background-size: cover;
                                                      background-position: center;
@@ -96,9 +96,9 @@
                                         @endif
                                         <!-- giao việc cho thành viên-->
                                         @if ($task->members->count() >= 1)
-                                            <div class="flex-grow-1 d-flex align-items-center" style="height: 30px">
-                                                <i class="ri-account-circle-line fs-20 me-2"></i>
-                                                <div class="avatar-group mt-3">
+                                            <div class="flex-grow-1 d-flex align-items-center">
+                                                <i class="ri-account-circle-line fs-24 me-2"></i>
+                                                <div class="avatar-group">
                                                     @if ($task->members->isNotEmpty())
                                                         @php
                                                             // Đếm số lượng board members
@@ -108,20 +108,16 @@
                                                         @foreach ($task->members as $taskMember)
                                                             @if ($count < $maxDisplay)
                                                                 <a href="javascript: void(0);"
-                                                                   class="avatar-group-item border-0"
-                                                                   data-bs-toggle="tooltip" data-bs-placement="top"
-                                                                   title="{{ $taskMember['name'] }}">
+                                                                    class="avatar-group-item border-0"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
-
-                                                                        <img
-                                                                            src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                            alt=""
-                                                                            class="rounded-circle avatar-xss">
+                                                                        <img src="{{ asset('storage/' . $taskMember->image) }}"
+                                                                            alt="" class="rounded-circle avatar-xs"
+                                                                            style="width: 30px;height: 30px">
                                                                     @else
-                                                                        <div class="avatar-sm">
-                                                                            <div
-                                                                                class="avatar-title rounded-circle bg-info-subtle text-primary"
-
+                                                                        <div class="avatar-xs">
+                                                                            <div class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                             </div>
@@ -134,12 +130,11 @@
 
                                                         @if ($task->members->count() > $maxDisplay)
                                                             <a href="javascript: void(0);" class="avatar-group-item"
-
-                                                               data-bs-toggle="tooltip" data-bs-placement="top"
-                                                               title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                <div class="avatar-xss">
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="{{ $task->members->count() - $maxDisplay }} more">
+                                                                <div class="avatar-xs">
                                                                     <div class="avatar-title rounded-circle"
-                                                                         style="width: 35px;height: 35px">
+                                                                        style="width: 30px;height: 30px">
 
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
@@ -174,9 +169,8 @@
                                                 <div class="d-flex flex-wrap gap-2">
                                                     @foreach ($task->tags as $tag)
                                                         <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top" title="{{ $tag->name }}">
-                                                            <div
-                                                                class="text-white border rounded d-flex align-items-center justify-content-center"
+                                                            data-bs-placement="top" title="{{ $tag->name }}">
+                                                            <div class="text-white border rounded d-flex align-items-center justify-content-center"
                                                                 style="width: 40px;height: 15px; background-color: {{ $tag->color_code }}">
                                                             </div>
                                                         </div>
@@ -191,7 +185,7 @@
                                         <div class="flex-shrink-0">
                                             <ul class="link-inline mb-0">
                                                 <!-- theo dõi -->
-                                                @if($task->followMembers->contains('user_id', auth()->id()))
+                                                @if ($task->followMembers->contains('user_id', auth()->id()))
                                                     <li class="list-inline-item">
                                                         <a href="javascript:void(0)" class="text-muted"><i
                                                                 class="ri-eye-line align-bottom"></i>
@@ -199,41 +193,41 @@
                                                     </li>
                                                 @endif
                                                 <!-- bình luận -->
-                                                @if($task->taskComments->isNotEmpty())
+                                                @if ($task->taskComments->isNotEmpty())
                                                     <li class="list-inline-item">
                                                         <a href="javascript:void(0)" class="text-muted"><i
                                                                 class="ri-question-answer-line align-bottom"></i>
-                                                            {{ $task->taskComments->count() < 10
-                                                            ? '0'.$task->taskComments->count()
-                                                             : $task->taskComments->count() }}
+                                                            {{ $task->taskComments->count() < 10 ? '0' . $task->taskComments->count() : $task->taskComments->count() }}
                                                         </a>
                                                     </li>
                                                 @endif
                                                 <!-- tệp đính kèm -->
-                                                @if($task->attachments->isNotEmpty())
+                                                @if ($task->attachments->isNotEmpty())
                                                     <li class="list-inline-item">
                                                         <a href="javascript:void(0)" class="text-muted"><i
                                                                 class="ri-attachment-2 align-bottom"></i>
-                                                            {{ $task->attachments->count() < 10
-                                                               ? '0'.$task->attachments->count()
-                                                                : $task->attachments->count() }}</a>
+                                                            {{ $task->attachments->count() < 10 ? '0' . $task->attachments->count() : $task->attachments->count() }}</a>
                                                     </li>
                                                 @endif
                                                 <!-- checklist -->
                                                 @php
-                                                    $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
+                                                    $allChecklistItems = $task->checklists->flatMap(function (
+                                                        $checklist,
+                                                    ) {
                                                         return $checklist->checklistItems;
                                                     });
 
-                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
+                                                    $inProgressItems = $task->checklists->flatMap(function (
+                                                        $checklist,
+                                                    ) {
                                                         return $checklist->checklistItems->where('is_complete', true);
                                                     });
                                                 @endphp
-                                                @if($task->checkLists->isNotEmpty())
+                                                @if ($task->checkLists->isNotEmpty())
                                                     <li class="list-inline-item">
                                                         <a href="javascript:void(0)" class="text-muted"><i
                                                                 class="ri-checkbox-line align-bottom"></i>
-                                                            {{$inProgressItems->count().'/'.$allChecklistItems->count()}}
+                                                            {{ $inProgressItems->count() . '/' . $allChecklistItems->count() }}
                                                         </a>
                                                     </li>
                                                 @endif
@@ -248,11 +242,12 @@
                 </div>
                 <div class="my-3">
                     <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
-                            aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask({{ $catalog->id }})">
+                        aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask({{ $catalog->id }})">
                         Thêm thẻ
                     </button>
-                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{$catalog->id }}" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        {{--dropdown.createTask--}}
+                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}" style="width: 285px"
+                        aria-labelledby="dropdownMenuOffset2">
+                        {{-- dropdown.createTask --}}
                     </div>
 
                 </div>
@@ -260,17 +255,18 @@
 
             @include('components.settingCatalog')
         @endforeach
-        <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
+        <div class="rounded-3 p-2 bg-info-subtle board-{{ $board->id }}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
-                 aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px"
-                 onclick="loadFormAddCatalog({{ $board->id }})">
+                aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px"
+                onclick="loadFormAddCatalog({{ $board->id }})">
                 <i class="ri-add-line fs-15"></i>
                 <h6 class="fs-14 text-uppercase fw-semibold mb-0">
                     Thêm danh sách
                 </h6>
             </div>
-            <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px" aria-labelledby="addCatalog">
-                        {{--dropdown.createCatalog--}}
+            <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{ $board->id }}" style="width: 300px"
+                aria-labelledby="addCatalog">
+                {{-- dropdown.createCatalog --}}
             </div>
         </div>
     </div>
@@ -278,13 +274,13 @@
 
 @section('style')
     <!-- Dragula css -->
-    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
 @endsection
 @section('script')
     <script>
         var tasks_list = [
             @foreach ($board->catalogs as $catalog)
-            document.getElementById("{{ $catalog->name . '-' . $catalog->id }}"),
+                document.getElementById("{{ $catalog->name . '-' . $catalog->id }}"),
             @endforeach
         ]
     </script>

@@ -103,20 +103,21 @@
                                                     $count = 0;
                                                 @endphp
 
-                                                @foreach ($board->boardMembers as $member)
+                                                @foreach ($board->members as $boardMember)
                                                     @if ($count < $maxDisplay)
                                                         <a href="javascript: void(0);" class="avatar-group-item"
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                            data-bs-placement="top" title="{{ $member->user->name }}">
-                                                            <div class="avatar-xxs">
-                                                                @if ($member->user->avatar_url)
-                                                                    <img src="{{ $member->user->avatar_url }}"
-                                                                        alt="{{ $member->user->name }}"
-                                                                        class="rounded-circle" width="16">
+                                                            data-bs-placement="top" title="{{ $boardMember->name }}">
+                                                            <div class="avatar-xs">
+                                                                @if ($boardMember->image)
+                                                                    <img src="{{ asset('storage/' . $boardMember->image) }}"
+                                                                        alt="{{ $boardMember->name }}"
+                                                                        class="rounded-circle"
+                                                                        style="width: 30px;height: 30px">
                                                                 @else
-                                                                    <div
-                                                                        class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
-                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                        style="width: 30px;height: 30px">
+                                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                     </div>
                                                                 @endif
 
@@ -127,15 +128,15 @@
                                                 @endforeach
 
                                                 <!-- Nút hiển thị số thành viên còn lại -->
-                                                @if ($board->boardMembers->count() > $maxDisplay)
+                                                @if ($board->members->count() > $maxDisplay)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                         data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                         data-bs-placement="top"
-                                                        title="{{ $board->boardMembers->count() - $maxDisplay }} more members">
-                                                        <div class="avatar-xxs">
-                                                            <div
-                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
-                                                                +{{ $board->boardMembers->count() - $maxDisplay }}
+                                                        title="{{ $board->members->count() - $maxDisplay }} more members">
+                                                        <div class="avatar-xs">
+                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary"
+                                                                style="width: 30px;height: 30px">
+                                                                +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
                                                         </div>
                                                     </a>
@@ -247,20 +248,21 @@
                                                     $count = 0;
                                                 @endphp
 
-                                                @foreach ($board->boardMembers as $member)
+                                                @foreach ($board->members as $boardMember)
                                                     @if ($count < $maxDisplay)
                                                         <a href="javascript: void(0);" class="avatar-group-item"
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                            data-bs-placement="top" title="{{ $member->user->name }}">
-                                                            <div class="avatar-xxs">
-                                                                @if ($member->user->avatar_url)
-                                                                    <img src="{{ $member->user->avatar_url }}"
-                                                                        alt="{{ $member->user->name }}"
-                                                                        class="rounded-circle" width="16">
+                                                            data-bs-placement="top" title="{{ $boardMember->name }}">
+                                                            <div class="avatar-xs">
+                                                                @if ($boardMember->image)
+                                                                    <img src="{{ asset('storage/' . $boardMember->image) }}"
+                                                                        alt="{{ $boardMember->name }}"
+                                                                        class="rounded-circle"
+                                                                        style="width: 30px;height: 30px">
                                                                 @else
-                                                                    <div
-                                                                        class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
-                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
+                                                                        style="width: 30px;height: 30px">
+                                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                     </div>
                                                                 @endif
 
@@ -271,15 +273,15 @@
                                                 @endforeach
 
                                                 <!-- Nút hiển thị số thành viên còn lại -->
-                                                @if ($board->boardMembers->count() > $maxDisplay)
+                                                @if ($board->members->count() > $maxDisplay)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                         data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                         data-bs-placement="top"
-                                                        title="{{ $board->boardMembers->count() - $maxDisplay }} more members">
-                                                        <div class="avatar-xxs">
-                                                            <div
-                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
-                                                                +{{ $board->boardMembers->count() - $maxDisplay }}
+                                                        title="{{ $board->members->count() - $maxDisplay }} more members">
+                                                        <div class="avatar-xs">
+                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary"
+                                                                style="width: 30px;height: 30px">
+                                                                +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
                                                         </div>
                                                     </a>
