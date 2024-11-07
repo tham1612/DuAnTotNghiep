@@ -31,7 +31,7 @@
 
     <div class="row" id="highlighted-boards">
         <div class="d-flex">
-            <h5 class="card-title fs-18 mb-2">Bảng nổi bật</h5>
+            <h5 class="card-title fs-18 mb-3">Bảng nổi bật </h5>
         </div>
         <div class="row">
             @if (!empty($board_star))
@@ -45,13 +45,13 @@
                                 <div class="card-body">
                                     <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
                                         <div class="image-container position-relative"
-                                            style="width: 100%; height: 70px; overflow: visible;">
+                                            style="width: 100%; height: 80px; overflow: visible;">
                                             @if ($board && $board->image && \Storage::exists($board->image))
                                                 <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
                                                     style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                                             @else
-                                                <div class="text-center pb-3" style="height: 70px;"></div>
+                                                <div class="text-center pb-3" style="height: 80px;"></div>
                                             @endif
                                             <div class="position-absolute top-0 end-0 p-1">
                                                 <!-- Favorite Button -->
@@ -66,34 +66,34 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="py-3">
-                                        <h5 class="fs-16 mb-1">
+                                    <div>
+                                        <h5 class="fs-16 mt-3">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
-                                        <div class="row gy-3">
-                                            <div class="col-6">
-                                                <p class="text-muted mb-1">Theo dõi</p>
-                                                <button class="btn btn-primary px-2 py-1 fs-12"
+                                        <div class="row">
+                                            <div class="col-5 pe-0">
+
+                                                <button class="btn btn-light px-1 py-1"
                                                     onclick="updateFollow({{ $board->id }}, {{ auth()->id() }})"
                                                     id="follow_{{ $board->id }}">
-                                                    <i id="followIcon_{{ $board->id }}"
-                                                        class="{{ $board->follow ? 'ri-eye-line' : 'ri-eye-off-line' }} "></i>
+                                                    <span>
+                                                        <i id="followIcon_{{ $board->id }}"
+                                                            class="{{ $board->follow ? 'ri-eye-line' : 'ri-eye-off-line' }} "></i>Theo
+                                                        dõi
+                                                    </span>
                                                 </button>
                                             </div>
 
-                                            <div class="col-6">
-                                                <div>
-                                                    <p class="text-muted mb-1">Ngày tạo</p>
-                                                    <h5 class="fs-14">{{ $board->created_at->format('d-m-Y') }}</h5>
-                                                </div>
+                                            <div class="col-7 ps-0">
+                                                <p class="btn btn-light px-1 py-1 ">Ngày
+                                                    tạo:{{ $board->created_at->format('d-m-Y') }}</p>
                                             </div>
                                         </div>
-
-                                        <div class="d-flex align-items-center mt-3">
+                                        <div class="d-flex align-items-center mb-3">
                                             <p class="text-muted mb-0 me-2">Team
                                             </p>
                                             <div class="avatar-group">
@@ -103,20 +103,21 @@
                                                     $count = 0;
                                                 @endphp
 
-                                                @foreach ($board->boardMembers as $member)
+                                                @foreach ($board->members as $boardMember)
                                                     @if ($count < $maxDisplay)
                                                         <a href="javascript: void(0);" class="avatar-group-item"
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                            data-bs-placement="top" title="{{ $member->user->name }}">
-                                                            <div class="avatar-xxs">
-                                                                @if ($member->user->avatar_url)
-                                                                    <img src="{{ $member->user->avatar_url }}"
-                                                                        alt="{{ $member->user->name }}"
-                                                                        class="rounded-circle" width="16">
+                                                            data-bs-placement="top" title="{{ $boardMember->name }}">
+                                                            <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                                @if ($boardMember->image)
+                                                                    <img src="{{ asset('storage/' . $boardMember->image) }}"
+                                                                        alt="{{ $boardMember->name }}"
+                                                                        class="rounded-circle"
+                                                                        style="width: 30px;height: 30px">
                                                                 @else
-                                                                    <div
-                                                                        class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
-                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    <div class="bg-info-subtle rounded-circle avatar-xs d-flex justify-content-center align-items-center"
+                                                                        style="width: 30px;height: 30px">
+                                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                     </div>
                                                                 @endif
 
@@ -127,15 +128,15 @@
                                                 @endforeach
 
                                                 <!-- Nút hiển thị số thành viên còn lại -->
-                                                @if ($board->boardMembers->count() > $maxDisplay)
+                                                @if ($board->members->count() > $maxDisplay)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                         data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                         data-bs-placement="top"
-                                                        title="{{ $board->boardMembers->count() - $maxDisplay }} more members">
-                                                        <div class="avatar-xxs">
-                                                            <div
-                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
-                                                                +{{ $board->boardMembers->count() - $maxDisplay }}
+                                                        title="{{ $board->members->count() - $maxDisplay }} more members">
+                                                        <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-light"
+                                                                style="width: 30px;height: 30px">
+                                                                +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
                                                         </div>
                                                     </a>
@@ -174,7 +175,7 @@
 
     <div class="row">
         <div class="d-flex">
-            <h5 class="card-title fs-18 mb-2">Bảng của bạn</h5>
+            <h5 class="card-title fs-18 mb-3">Bảng của bạn</h5>
         </div>
         <div class="row">
             @if (!empty($boards))
@@ -187,13 +188,13 @@
                                 <div class="card-body">
                                     <div class="p-0 mt-n3 mx-n3 bg-secondary-subtle rounded-top position-relative">
                                         <div class="image-container position-relative"
-                                            style="width: 100%; height: 70px; overflow: visible;">
+                                            style="width: 100%; height: 80px; overflow: visible;">
                                             @if ($board && $board->image && \Storage::exists($board->image))
                                                 <img src="{{ asset('storage/' . $board->image) }}"
                                                     alt="{{ $board->name }}'s image" class="img-fluid"
                                                     style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                                             @else
-                                                <div class="text-center pb-3" style="height: 70px;"></div>
+                                                <div class="text-center pb-3" style="height: 80px;"></div>
                                             @endif
 
                                             <div class="position-absolute top-0 end-0 p-1">
@@ -210,34 +211,33 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="py-3">
-                                        <h5 class="fs-16 mb-1">
+                                    <div>
+                                        <h5 class="fs-16 mt-3">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
-
-                                        <div class="row gy-3">
-                                            <div class="col-6">
-                                                <p class="text-muted mb-1">Theo dõi</p>
-                                                <button class="btn btn-primary px-2 py-1 fs-12"
+                                        <div class="row mt-3">
+                                            <div class="col-5 pe-0">
+                                                <button class="btn btn-light px-1 py-1"
                                                     onclick="updateFollow({{ $board->id }}, {{ auth()->id() }})"
                                                     id="follow_{{ $board->id }}">
-                                                    <i id="followIcon_{{ $board->id }}"
-                                                        class="{{ $board->follow ? 'ri-eye-line' : 'ri-eye-off-line' }} "></i>
+                                                    <span>
+                                                        <i id="followIcon_{{ $board->id }}"
+                                                            class="{{ $board->follow ? 'ri-eye-line' : 'ri-eye-off-line' }} "></i>Theo
+                                                        dõi
+                                                    </span>
                                                 </button>
 
                                             </div>
-                                            <div class="col-6">
-                                                <div>
-                                                    <p class="text-muted mb-1">Ngày tạo</p>
-                                                    <h5 class="fs-14">{{ $board->created_at->format('d-m-Y') }}</h5>
-                                                </div>
+                                            <div class="col-7 ps-0">
+                                                <p class="btn btn-light px-1 py-1 ">Ngày
+                                                    tạo:{{ $board->created_at->format('d-m-Y') }}</p>
                                             </div>
                                         </div>
-                                        <div class="d-flex align-items-center mt-3">
+                                        <div class="d-flex align-items-center mb-3">
                                             <p class="text-muted mb-0 me-2">Team
                                             </p>
                                             <div class="avatar-group">
@@ -247,20 +247,21 @@
                                                     $count = 0;
                                                 @endphp
 
-                                                @foreach ($board->boardMembers as $member)
+                                                @foreach ($board->members as $boardMember)
                                                     @if ($count < $maxDisplay)
                                                         <a href="javascript: void(0);" class="avatar-group-item"
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                            data-bs-placement="top" title="{{ $member->user->name }}">
-                                                            <div class="avatar-xxs">
-                                                                @if ($member->user->avatar_url)
-                                                                    <img src="{{ $member->user->avatar_url }}"
-                                                                        alt="{{ $member->user->name }}"
-                                                                        class="rounded-circle" width="16">
+                                                            data-bs-placement="top" title="{{ $boardMember->name }}">
+                                                            <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                                @if ($boardMember->image)
+                                                                    <img src="{{ asset('storage/' . $boardMember->image) }}"
+                                                                        alt="{{ $boardMember->name }}"
+                                                                        class="rounded-circle"
+                                                                        style="width: 30px;height: 30px">
                                                                 @else
-                                                                    <div
-                                                                        class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
-                                                                        {{ strtoupper(substr($member->user->name, 0, 1)) }}
+                                                                    <div class="bg-info-subtle rounded-circle avatar-xs d-flex justify-content-center align-items-center"
+                                                                        style="width: 30px;height: 30px">
+                                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                     </div>
                                                                 @endif
 
@@ -271,15 +272,15 @@
                                                 @endforeach
 
                                                 <!-- Nút hiển thị số thành viên còn lại -->
-                                                @if ($board->boardMembers->count() > $maxDisplay)
+                                                @if ($board->members->count() > $maxDisplay)
                                                     <a href="javascript: void(0);" class="avatar-group-item"
                                                         data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                         data-bs-placement="top"
-                                                        title="{{ $board->boardMembers->count() - $maxDisplay }} more members">
-                                                        <div class="avatar-xxs">
-                                                            <div
-                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary">
-                                                                +{{ $board->boardMembers->count() - $maxDisplay }}
+                                                        title="{{ $board->members->count() - $maxDisplay }} more members">
+                                                        <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary"
+                                                                style="width: 30px;height: 30px">
+                                                                +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
                                                         </div>
                                                     </a>
