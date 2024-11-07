@@ -8,14 +8,19 @@
          background-image: url('{{ $image }}');
          "
     id="detailCardModalLabel">
+    id="detailCardModalLabel">
     <div class="">
         <label for="file-upload" class="custom-file-upload">
             <i class=" ri-image-add-line fs-24"></i>
             <input type="file" class="file-upload" onchange="updateTask2({{ $task->id }})"
                 id="image_task_{{ $task->id }}">
+            <input type="file" class="file-upload" onchange="updateTask2({{ $task->id }})"
+                id="image_task_{{ $task->id }}">
         </label>
     </div>
 
+    <button type="button" class="btn-close bg-white" style="margin: -100px -5px 0px 0px" data-bs-dismiss="modal"
+        aria-label="Close"></button>
     <button type="button" class="btn-close bg-white" style="margin: -100px -5px 0px 0px" data-bs-dismiss="modal"
         aria-label="Close"></button>
 </div>
@@ -33,9 +38,13 @@
                                 class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
                                 id="text_{{ $task->id }}" value="{{ $task->text }}"
                                 onchange="updateTask2({{ $task->id }})" />
+                                class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
+                                id="text_{{ $task->id }}" value="{{ $task->text }}"
+                                onchange="updateTask2({{ $task->id }})" />
 
                         </section>
 
+                        <span class="ms-4">trong danh sách : <strong>{{ $task->catalog->name }}</strong> </span>
                         <span class="ms-4">trong danh sách : <strong>{{ $task->catalog->name }}</strong> </span>
 
                     </div>
@@ -43,9 +52,12 @@
                 <div class="col-12 d-flex mt-3 flex-wrap">
                     <div class="p-3" id="member-section-{{ $task->id }}"
                         style="{{ count($task->members) ? '' : 'display: none;' }}">
+                    <div class="p-3" id="member-section-{{ $task->id }}"
+                        style="{{ count($task->members) ? '' : 'display: none;' }}">
                         <strong>Thành viên</strong>
                         <section class="d-flex">
                             <!-- thêm thành viên & chia sẻ link bảng -->
+                            <div class="d-flex justify-content-center align-items-center cursor-pointer ">
                             <div class="d-flex justify-content-center align-items-center cursor-pointer ">
                                 <div class="col-auto ms-sm-auto">
                                     <div class="avatar-group " id="list-member-task-{{ $task->id }}">
@@ -101,12 +113,13 @@
                         <strong>Thông báo</strong>
                         @php
                             //                                                     $memberFollow = \App\Models\Follow_member::where('task_id', $task->id)
-                            //                                                        ->where('user_id', $userId)
+                            //                                                        ->where('user_id', auth()->id())
                             //                                                        ->value('follow');
                             $memberFollow1 = collect($task->follow_members)->firstWhere('user_id', $userId);
                             $memberFollow = $memberFollow1 ? $memberFollow1->follow : 0;
 
                         @endphp
+                        <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                         <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                             style="height: 35px; background-color: #091e420f; color: #172b4d"
                             id="notification_{{ $task->id }}"
@@ -124,11 +137,18 @@
                             <div @if ($memberFollow == 0) class="d-none" @endif
                                 id="notification_follow_{{ $task->id }}">
                                 <i class="ri-check-line fs-22 bg-light ms-2 rounded" style="color: black"></i>
+                                @endif
+                            </p>
+                            <div @if ($memberFollow == 0) class="d-none" @endif
+                                id="notification_follow_{{ $task->id }}">
+                                <i class="ri-check-line fs-22 bg-light ms-2 rounded" style="color: black"></i>
                             </div>
                         </div>
                     </div>
 
 
+                    <div class="p-3" id="date-section-{{ $task->id }}"
+                        style="{{ !empty($task->end_date) || !empty($task->start_date) ? '' : 'display: none;' }}">
                     <div class="p-3" id="date-section-{{ $task->id }}"
                         style="{{ !empty($task->end_date) || !empty($task->start_date) ? '' : 'display: none;' }}">
                         @php
@@ -172,6 +192,8 @@
                     </div>
                     <div class="p-3" id="tag-section-{{ $task->id }}"
                         style="{{ count($task->tags) ? '' : 'display: none;' }}">
+                    <div class="p-3" id="tag-section-{{ $task->id }}"
+                        style="{{ count($task->tags) ? '' : 'display: none;' }}">
                         <strong>Nhãn</strong>
                         <div class="d-flex flex-wrap gap-2" id="tag-task-{{ $task->id }}">
                             @foreach ($task->tags as $tag)
@@ -180,7 +202,15 @@
                                     title="{{ $tag->name }}">
                                     <div class="badge border rounded d-flex align-items-center justify-content-center"
                                         style=" background-color: {{ $tag->color_code }}">
+                        <div class="d-flex flex-wrap gap-2" id="tag-task-{{ $task->id }}">
+                            @foreach ($task->tags as $tag)
+                                <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                    data-tag-id="{{ $task->id }}-{{ $tag->id }}"
+                                    title="{{ $tag->name }}">
+                                    <div class="badge border rounded d-flex align-items-center justify-content-center"
+                                        style=" background-color: {{ $tag->color_code }}">
 
+                                        {{ $tag->name }}
                                         {{ $tag->name }}
                                     </div>
                                 </div>
@@ -200,10 +230,15 @@
                         <textarea name="description" id="description_{{ $task->id }}" cols="25" rows="5"
                             class="form-control bg-light editor" placeholder="Thêm mô tả chi tiết"
                             onchange="updateTask2({{ $task->id }})">{{ $task->description }}</textarea>
+                        <textarea name="description" id="description_{{ $task->id }}" cols="25" rows="5"
+                            class="form-control bg-light editor" placeholder="Thêm mô tả chi tiết"
+                            onchange="updateTask2({{ $task->id }})">{{ $task->description }}</textarea>
                     </div>
 
                     <!-- Khối hiển thị mô tả chi tiết hoặc thông báo nếu không có mô tả -->
                     <div class="bg-info-subtle rounded pt-2 ps-2 d-flex align-items-start"
+                        id="description_display_{{ $task->id }}" style="height: 80px; cursor: pointer;"
+                        data-task-id="{{ $task->id }}" onclick="toggleDescriptionForm(this)">
                         id="description_display_{{ $task->id }}" style="height: 80px; cursor: pointer;"
                         data-task-id="{{ $task->id }}" onclick="toggleDescriptionForm(this)">
                         {!! $task->description ? $task->description : 'Thêm mô tả chi tiết hơn' !!}
@@ -214,6 +249,8 @@
 
             @include('components.attachment', ['attachment' => $task->attachments, 'task' => $task])
             @include('components.checklist', ['checklist' => $task->check_lists, 'task' => $task])
+
+
             <div class="row mt-4">
                 <section class="d-flex justify-content-between">
                     <div class="d-flex">
@@ -233,11 +270,14 @@
                     @endif
                 </section>
                 <div class="comments-container w-100" id="task-comment-{{ $task->id }}">
+                <div class="comments-container w-100" id="task-comment-{{ $task->id }}">
                     <div class="d-flex">
                         @if (auth()->user()->image)
                             <img class="rounded header-profile-user object-fit-cover"
                                 src="{{ asset('storage/' . auth()->user()->image) }}" alt="Avatar" />
+                                src="{{ asset('storage/' . auth()->user()->image) }}" alt="Avatar" />
                         @else
+                            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                             <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                 style="width: 40px;height: 40px">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
@@ -245,6 +285,9 @@
                         @endif
 
                         <div class="ms-2 w-100">
+                            <form class="flex-column" id="comment_form_{{ $task->id }}" style="display: none;"
+                                data-task-id="{{ $task->id }}">
+                                <textarea name="content" class="form-control" id="comment_task_{{ $task->id }}" placeholder="Viết bình luận"></textarea>
                             <form class="flex-column" id="comment_form_{{ $task->id }}" style="display: none;"
                                 data-task-id="{{ $task->id }}">
                                 <textarea name="content" class="form-control" id="comment_task_{{ $task->id }}" placeholder="Viết bình luận"></textarea>
@@ -258,11 +301,15 @@
 
                             <div class="bg-info-subtle p-2 rounded ps-2" data-task-id="{{ $task->id }}"
                                 onclick="toggleCommentForm(this)">
+                            <div class="bg-info-subtle p-2 rounded ps-2" data-task-id="{{ $task->id }}"
+                                onclick="toggleCommentForm(this)">
                                 Viết bình luận
                             </div>
                         </div>
 
                     </div>
+                    <div class="collapse show" id="activity-{{ $task->id }}">
+                        {{--                                            @include('components.comment'); --}}
                     <div class="collapse show" id="activity-{{ $task->id }}">
                         {{--                                            @include('components.comment'); --}}
                     </div>
@@ -273,6 +320,7 @@
         <div class="col-3">
             <h5 class="mt-3 mb-3"><strong>Thêm vào thẻ</strong></h5>
             <div class="d-flex mt-3 mb-3 cursor-pointer">
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-user fs-20"></i>
@@ -285,10 +333,13 @@
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
                         id="dropdown-content-add-member-task-{{ $task->id }}">
                         {{--                                              dropdowns.member --}}
+                        id="dropdown-content-add-member-task-{{ $task->id }}">
+                        {{--                                              dropdowns.member --}}
                     </div>
                 </div>
             </div>
             <div class="d-flex mt-3 mb-3 cursor-pointer">
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-tag fs-20"></i>
@@ -300,14 +351,18 @@
                     <!--dropdown nhãn-->
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
                         id="dropdown-list-tag-task-board-{{ $task->id }}">
+                        id="dropdown-list-tag-task-board-{{ $task->id }}">
                         {{-- dropdowns.tag --}}
                     </div>
                 </div>
             </div>
             <div class="d-flex mt-3 mb-3 cursor-pointer">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-check-square fs-20"></i>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-offset="-40,10" onclick="loadTaskFormAddCheckList({{ $task->id }})">
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-offset="-40,10" onclick="loadTaskFormAddCheckList({{ $task->id }})">
                         Việc cần làm
@@ -316,16 +371,19 @@
                     <!-- dropdown việc cần làm-->
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
                         id="dropdown-content-add-checkList-{{ $task->id }}">
+                        id="dropdown-content-add-checkList-{{ $task->id }}">
                         <!-- Nội dung form sẽ được chèn vào đây bằng AJAX -->
                     </div>
                 </div>
             </div>
-
             <div class="d-flex mt-3 mb-3 cursor-pointer">
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-clock fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true"
+                        onclick="loadFormAddDateTask({{ $task->id }})" aria-expanded="false"
+                        data-bs-offset="-40,10" id="dropdownToggle_{{ $task->id }}">
                         onclick="loadFormAddDateTask({{ $task->id }})" aria-expanded="false"
                         data-bs-offset="-40,10" id="dropdownToggle_{{ $task->id }}">
                         Ngày
@@ -334,19 +392,26 @@
                     <div class="dropdown-menu dropdown-menu-md p-3"
                         id="dropdown-content-add-date-task-{{ $task->id }}" style="width: 150%">
                         {{--                                                @include('dropdowns.date', ['task' => $task]) --}}
+                        id="dropdown-content-add-date-task-{{ $task->id }}" style="width: 150%">
+                        {{--                                                @include('dropdowns.date', ['task' => $task]) --}}
                     </div>
                 </div>
             </div>
             <div class="d-flex mt-3 mb-3 cursor-pointer">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-paperclip fs-20"></i>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-offset="-40,10" onclick="loadTaskFormAddAttach({{ $task->id }})">
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-offset="-40,10" onclick="loadTaskFormAddAttach({{ $task->id }})">
                         Đính kèm
                     </p>
                     <!--                                    dropdown tệp đính kèm-->
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%"
+                        id="dropdown-content-add-attach-{{ $task->id }}">
+                        {{--                                                @include('dropdowns.attach') --}}
                         id="dropdown-content-add-attach-{{ $task->id }}">
                         {{--                                                @include('dropdowns.attach') --}}
                     </div>
@@ -356,8 +421,11 @@
             <h5 class="mt-3 mb-3"><strong>Thao tác</strong></h5>
             <div class="d-flex mt-3 mb-3 cursor-pointer">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style="height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-arrow-circle-right fs-20"></i>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-offset="-40,10">
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-offset="-40,10">
                         Di chuyển
@@ -370,15 +438,18 @@
             </div>
             <div class="d-flex mt-3 mb-3 cursor-pointer">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las la-copy fs-20"></i>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-offset="-40,10">
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-offset="-40,10">
                         Sao chép
                     </p>
                     <!--  dropdown sao chép-->
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                        @include('dropdowns.copyTask')
+                        {{--                                                @include('dropdowns.copyTask') --}}
                     </div>
                 </div>
             </div>
@@ -386,9 +457,11 @@
             <!-- lưu trữ-->
             <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d"
                     onclick="archiverTask({{ $task->id }},{{ $userId }})">
                     <i class="ri-archive-line fs-20"></i>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Lưu trữ
                     </p>
@@ -398,9 +471,11 @@
             <!--                            hoàn tác-->
             <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d"
                     onclick="restoreTask({{ $task->id }},{{ $userId }})">
                     <i class="las la-window-restore fs-20"></i>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Khôi phục
                     </p>
@@ -414,6 +489,7 @@
                     onclick="destroyTask({{ $task->id }},{{ $userId }})">
                     <i class="las la-window-restore fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Xóa
                     </p>
                     <div></div>
@@ -422,11 +498,15 @@
 
             <div class="d-flex mt-3 mb-3 cursor-pointer">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
+                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
                     <i class="las ri-share-line fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-offset="-40,10">Chia sẻ</p>
+                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-offset="-40,10">Chia sẻ</p>
                     <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
+                        {{--                                                @include('dropdowns.share') --}}
                         {{--                                                @include('dropdowns.share') --}}
                     </div>
                 </div>

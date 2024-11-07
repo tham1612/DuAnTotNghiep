@@ -110,13 +110,11 @@
                                                             data-bs-placement="top" title="{{ $boardMember->name }}">
                                                             <div class="avatar-xs">
                                                                 @if ($boardMember->image)
-                                                                    <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                                        alt="{{ $boardMember->name }}"
-                                                                        class="rounded-circle"
-                                                                        style="width: 30px;height: 30px">
+                                                                    <img src="{{asset('storage/' . $boardMember->image) }}"
+                                                                        alt="{{ $boardMember->name }}" class="rounded-circle"  style="width: 30px;height: 30px">
                                                                 @else
-                                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                                        style="width: 30px;height: 30px">
+                                                                    <div
+                                                                        class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center" style="width: 30px;height: 30px">
                                                                         {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                     </div>
                                                                 @endif
@@ -134,8 +132,8 @@
                                                         data-bs-placement="top"
                                                         title="{{ $board->members->count() - $maxDisplay }} more members">
                                                         <div class="avatar-xs">
-                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary"
-                                                                style="width: 30px;height: 30px">
+                                                            <div
+                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary" style="width: 30px;height: 30px">
                                                                 +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
                                                         </div>
@@ -253,20 +251,21 @@
                                                         <a href="javascript: void(0);" class="avatar-group-item"
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                             data-bs-placement="top" title="{{ $boardMember->name }}">
-                                                            <div class="avatar-xs">
-                                                                @if ($boardMember->image)
-                                                                    <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                                        alt="{{ $boardMember->name }}"
-                                                                        class="rounded-circle"
-                                                                        style="width: 30px;height: 30px">
-                                                                @else
-                                                                    <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                                        style="width: 30px;height: 30px">
+
+                                                            @if ($boardMember['image'])
+                                                                <img src="{{asset('storage/' . $boardMember->image) }}"
+                                                                    alt="{{ $boardMember->name }}"
+                                                                    class="rounded-circle"  style="width: 30px;height: 30px">
+                                                            @else
+                                                                <div class="avatar-xs">
+                                                                    <div
+                                                                        class="bg-info-subtle rounded-circle  d-flex justify-content-center align-items-center" style="width: 30px;height: 30px">
                                                                         {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                     </div>
-                                                                @endif
 
-                                                            </div>
+                                                                </div>
+                                                            @endif
+
                                                         </a>
                                                         @php $count++; @endphp
                                                     @endif
@@ -279,8 +278,8 @@
                                                         data-bs-placement="top"
                                                         title="{{ $board->members->count() - $maxDisplay }} more members">
                                                         <div class="avatar-xs">
-                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary"
-                                                                style="width: 30px;height: 30px">
+                                                            <div
+                                                                class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary" style="width: 30px;height: 30px">
                                                                 +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
                                                         </div>

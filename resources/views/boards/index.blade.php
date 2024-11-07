@@ -4,6 +4,7 @@
 @endsection
 @section('main')
     @if (session('error'))
+    @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
@@ -44,8 +45,19 @@
                                         <div class="dropdown">
                                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
                                                 data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i
                                                     class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                                {{--                                                <li> --}}
+                                                {{--                                                    <span class="dropdown-item" href="#"><i --}}
+                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i> --}}
+                                                {{--                                                        Mở thẻ</span> --}}
+                                                {{--                                                </li> --}}
+                                                {{--                                                <li> --}}
+                                                {{--                                                    <span class="dropdown-item" href="#"><i --}}
+                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i> --}}
+                                                {{--                                                        Chỉnh sửa nhãn</span> --}}
+                                                {{--                                                </li> --}}
                                                 {{--                                                <li> --}}
                                                 {{--                                                    <span class="dropdown-item" href="#"><i --}}
                                                 {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i> --}}
@@ -74,6 +86,7 @@
                                                 <li>
                                                     <span class="dropdown-item" data-bs-toggle="modal"
                                                         onclick="archiverTask({{ $task->id }})"><i
+                                                        onclick="archiverTask({{ $task->id }})"><i
                                                             class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
                                                         Lưu trữ</span>
                                                 </li>
@@ -81,9 +94,11 @@
                                         </div>
                                     </div>
                                     <div class="mt-2" data-bs-toggle="modal" data-bs-target="#detailCardModal">
+                                    <div class="mt-2" data-bs-toggle="modal" data-bs-target="#detailCardModal">
                                         <!-- Ảnh bìa -->
                                         @if ($task->image)
                                             <div class="tasks-img rounded"
+                                                style="
                                                 style="
                                                      background-image: url('{{ asset('storage/' . $task->image) }}');
                                                      background-size: cover;
@@ -111,11 +126,16 @@
                                                                     class="avatar-group-item border-0"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     title="{{ $taskMember['name'] }}">
+                                                                    class="avatar-group-item border-0"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
                                                                         <img src="{{ asset('storage/' . $taskMember->image) }}"
                                                                             alt="" class="rounded-circle avatar-xs"
                                                                             style="width: 30px;height: 30px">
                                                                     @else
+                                                                        <div class="avatar-xs">
+                                                                            <div class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                         <div class="avatar-xs">
                                                                             <div class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                 style="width: 30px;height: 30px">
@@ -155,7 +175,7 @@
                                                     $start_date->format('d') . ' tháng ' . $start_date->format('m');
                                                 $end = $end_date->format('d') . ' tháng ' . $end_date->format('m');
                                             @endphp
-                                            <div class="flex-grow-1 d-flex align-items-center">
+                                            <div class="flex-grow-1 d-flex align-items-center my-1">
                                                 <i class="ri-calendar-event-line fs-20 me-2"></i>
                                                 <span class="badge bg-success text-whites-12"> {{ $start }} -
                                                     {{ $end }}
@@ -169,6 +189,8 @@
                                                 <div class="d-flex flex-wrap gap-2">
                                                     @foreach ($task->tags as $tag)
                                                         <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                            data-bs-placement="top" title="{{ $tag->name }}">
+                                                            <div class="text-white border rounded d-flex align-items-center justify-content-center"
                                                             data-bs-placement="top" title="{{ $tag->name }}">
                                                             <div class="text-white border rounded d-flex align-items-center justify-content-center"
                                                                 style="width: 40px;height: 15px; background-color: {{ $tag->color_code }}">
@@ -256,7 +278,10 @@
             @include('components.settingCatalog')
         @endforeach
         <div class="rounded-3 p-2 bg-info-subtle board-{{ $board->id }}" style="height: 40px;">
+        <div class="rounded-3 p-2 bg-info-subtle board-{{ $board->id }}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
+                aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px"
+                onclick="loadFormAddCatalog({{ $board->id }})">
                 aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px"
                 onclick="loadFormAddCatalog({{ $board->id }})">
                 <i class="ri-add-line fs-15"></i>
@@ -264,6 +289,9 @@
                     Thêm danh sách
                 </h6>
             </div>
+            <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{ $board->id }}" style="width: 300px"
+                aria-labelledby="addCatalog">
+                {{-- dropdown.createCatalog --}}
             <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{ $board->id }}" style="width: 300px"
                 aria-labelledby="addCatalog">
                 {{-- dropdown.createCatalog --}}
@@ -275,11 +303,13 @@
 @section('style')
     <!-- Dragula css -->
     <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/assets/libs/dragula/dragula.min.css') }}" />
 @endsection
 @section('script')
     <script>
         var tasks_list = [
             @foreach ($board->catalogs as $catalog)
+                document.getElementById("{{ $catalog->name . '-' . $catalog->id }}"),
                 document.getElementById("{{ $catalog->name . '-' . $catalog->id }}"),
             @endforeach
         ]

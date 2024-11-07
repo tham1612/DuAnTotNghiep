@@ -235,8 +235,7 @@
                                             title="{{ $boardMember['name'] }}">
                                             @if ($boardMember['image'])
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                    alt="" class="rounded-circle avatar-xs object-fit-cover"
-                                                    style="width: 40px;height: 40px">
+                                                    alt="" class="rounded-circle avatar-xs object-fit-cover">
                                             @else
                                                 <div class="avatar-xs"  style="width: 40px;height: 40px">
                                                     <div class="avatar-title rounded-circle bg-light text-primary"  style="width: 40px;height: 40px">

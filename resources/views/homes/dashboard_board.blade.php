@@ -418,7 +418,7 @@
                                                                 data-bs-placement="top" title="{{ $member->name }}">
                                                                 @if ($member->image)
                                                                     <img src="{{ asset('storage/' . $member->image) }}"
-                                                                        alt="" class="rounded-circle avatar-xs" />
+                                                                        alt="" class="rounded-circle" style="width: 40px;height: 40px"/>
                                                                 @else
                                                                     <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
                                                                         style="width: 40px;height: 40px">
@@ -470,7 +470,7 @@
             </div>
         </div><!--end col-->
     </div><!--end row-->
-    
+
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
