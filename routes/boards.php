@@ -95,4 +95,12 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/catalogs/archiverAllTasks/{id}', [CatalogControler::class, 'archiverAllTasks'])
             ->name('catalogs.archiverAllTasks');
+
+//         sao chép danh sách
+        Route::post('/catalogs/copyCatalog', [CatalogControler::class, 'copyCatalog'])
+            ->name('catalogs.copyCatalog');
+
+        //         di chuyển danh sách
+        Route::post('/catalogs/moveCatalog', [CatalogControler::class, 'moveCatalog'])
+            ->name('catalogs.moveCatalog');
     });

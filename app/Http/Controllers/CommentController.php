@@ -30,6 +30,7 @@ class CommentController extends Controller
         session()->forget('view_only');
         $task = Task::query()->findOrFail($request->task_id);
         $authorize = $this->authorizeWeb->authorizeComment($task->catalog->board->id);
+//        dd($authorize,$task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -58,6 +59,7 @@ class CommentController extends Controller
 
         ]);
     }
+
     public function update(Request $request, string $id)
     {
         if (session('view_only', false)) {
@@ -121,9 +123,10 @@ class CommentController extends Controller
     }
 
 
-    public function destroy(Request $request, string $id)
+    public function destroy(string $id)
     {
-        $task = Task::query()->findOrFail($id);
+        $comment = TaskComment::query()->findOrFail($id);
+        $task = Task::query()->findOrFail($comment->task_id);
         $authorize = $this->authorizeWeb->authorizeComment($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
@@ -131,7 +134,7 @@ class CommentController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        $comment = TaskComment::where('id', $request->id)->first();
+
         $comment->delete();
         return response()->json([
             'success' => "Xóa cmt thành công",

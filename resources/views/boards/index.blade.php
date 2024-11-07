@@ -21,27 +21,12 @@
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
-                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false">
+                            <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                               data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
                             </a>
-                            <!--                    setting list-->
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Thêm thẻ</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Sao chép danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Di chuyển danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Theo dõi</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="archiverCatalog({{ $catalog->id }})">Lưu Trữ danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="archiverAllTasks({{ $catalog->id }})">Lưu trữ tất cả thẻ trong danh sách</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -131,7 +116,8 @@
 
                                                                         <img
                                                                             src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                            alt="" class="rounded-circle avatar-xss">
+                                                                            alt=""
+                                                                            class="rounded-circle avatar-xss">
                                                                     @else
                                                                         <div class="avatar-sm">
                                                                             <div
@@ -206,29 +192,52 @@
                                         <div class="flex-shrink-0">
                                             <ul class="link-inline mb-0">
                                                 <!-- theo dõi -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-eye-line align-bottom"></i>
-                                                        04</a>
-                                                </li>
+                                                @if($task->followMembers->contains('user_id', auth()->id()))
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-eye-line align-bottom"></i>
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <!-- bình luận -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-question-answer-line align-bottom"></i>
-                                                        19</a>
-                                                </li>
+                                                @if($task->taskComments->isNotEmpty())
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-question-answer-line align-bottom"></i>
+                                                            {{ $task->taskComments->count() < 10
+                                                            ? '0'.$task->taskComments->count()
+                                                             : $task->taskComments->count() }}
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <!-- tệp đính kèm -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-attachment-2 align-bottom"></i>
-                                                        02</a>
-                                                </li>
+                                                @if($task->attachments->isNotEmpty())
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-attachment-2 align-bottom"></i>
+                                                            {{ $task->attachments->count() < 10
+                                                               ? '0'.$task->attachments->count()
+                                                                : $task->attachments->count() }}</a>
+                                                    </li>
+                                                @endif
                                                 <!-- checklist -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-checkbox-line align-bottom"></i>
-                                                        2/4</a>
-                                                </li>
+                                                @php
+                                                    $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
+                                                        return $checklist->checklistItems;
+                                                    });
+
+                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
+                                                        return $checklist->checklistItems->where('is_complete', true);
+                                                    });
+                                                @endphp
+                                                @if($task->checkLists->isNotEmpty())
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-checkbox-line align-bottom"></i>
+                                                            {{$inProgressItems->count().'/'.$allChecklistItems->count()}}
+                                                        </a>
+                                                    </li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>
@@ -261,6 +270,8 @@
 
                 </div>
             </div>
+
+            @include('components.settingCatalog')
         @endforeach
         <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"

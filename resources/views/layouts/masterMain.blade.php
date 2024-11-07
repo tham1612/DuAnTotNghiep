@@ -230,7 +230,7 @@
 <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
 
 <!-- prismjs plugin -->
-{{--<script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>--}}
+<script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
 
 <!-- App js -->
 <script src="{{ asset('theme/assets/js/app.js') }}"></script>
