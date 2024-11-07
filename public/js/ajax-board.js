@@ -1,3 +1,20 @@
+function loadFormAddCatalog(boardId) {
+    $.ajax({
+        url: `/catalogs/getFormCreateCatalog/${boardId}`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function(response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('.dropdown-content-add-catalog-' + boardId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
 let isSubmittingCatalog = false;
 let isSubmittingTask = false;
 function submitAddCatalog( boardId) {
@@ -122,9 +139,9 @@ function submitAddTask( catalogId,catalogName) {
             <div class="card tasks-box cursor-pointer" data-value="${response.task.id}">
                 <div class="card-body">
                     <div class="d-flex mb-2">
-                        <h6 class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
-                            data-bs-target="#detailCardModal${response.task.id}">
-                           ${response.task.text}
+                            <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
+                                data-bs-target="#detailCardModal" data-task-id="${response.task.id}">
+                             ${response.task.text}
                         </h6>
                         <div class="dropdown">
                             <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
@@ -219,6 +236,7 @@ function submitAddTask( catalogId,catalogName) {
             $('#add-task-catalog-' + catalogId).val('');
             notificationWeb(response.action, response.msg);
             $('.dropdown-menu').dropdown('hide');
+            getModalTaskEvents();
             console.log('task đã được thêm thành công!', response);
         },
         error: function(xhr) {
@@ -235,15 +253,4 @@ function submitAddTask( catalogId,catalogName) {
     return false;
 }
 
-$(document).on('click', '.task-title', function() {
-    var targetModal = $(this).data('bs-target'); // Lấy ID của modal từ data-bs-target
 
-    // Kiểm tra xem modal có tồn tại không
-    if ($(targetModal).length) {
-        var modalElement = document.getElementById(targetModal.replace('#', ''));
-        var modalInstance = new bootstrap.Modal(modalElement);
-        modalInstance.show(); // Hiển thị modal
-    } else {
-        console.error("Modal không tồn tại.");
-    }
-});
