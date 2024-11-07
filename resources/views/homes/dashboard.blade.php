@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <h5 class="fs-16 mt-3">
+                                        <h5 class="fs-16 mb-2">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
