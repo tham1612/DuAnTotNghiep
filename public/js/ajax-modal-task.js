@@ -320,6 +320,56 @@ function submitUpdateDateTask(taskId, event) {
         contentType: false, // Để trình duyệt tự đặt Content-Type (multipart/form-data)
         data: formData,
         success: function(response) {
+            let dateSection = document.getElementById(`date-section-` + taskId);
+            let date = ''; // Khởi tạo biến date
+
+            const now = new Date();
+
+// Kiểm tra điều kiện cho start_date và end_date
+            if (response.task.start_date && !response.task.end_date) {
+                // Trường hợp chỉ có ngày bắt đầu
+                date = `
+                    <strong>Ngày bắt đầu</strong>
+                    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                         style="height: 35px; background-color: #091e420f; color: #172b4d">
+                        <p class="ms-2 mt-3">${response.task.start_date}</p>
+                    </div>
+                `;
+            } else if (response.task.end_date) {
+                // Trường hợp có ngày hết hạn hoặc có cả ngày bắt đầu và ngày hết hạn
+                const endDate = new Date(response.task.end_date);
+
+                date = `
+                    <strong>Ngày hết hạn</strong>
+                    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                         style="height: 35px; background-color: #091e420f; color: #172b4d">
+                        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
+                               class="form-check-input"
+                               onchange="updateTask2(${response.task.id})" name="progress"
+                               ${response.task.progress == 100 ? 'checked' : ''} />
+                        <input type="hidden" id="task_end_date_${response.task.id}"
+                               value="${response.task.end_date}">
+                        <p class="ms-2 mt-3">
+                        ${response.task.start_date ? `  ${response.task.start_date}-` : ''}
+                        ${response.task.end_date}</p>
+
+                        ${response.task.progress == 100
+                                ? `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`
+                                : `
+                            <span class="badge bg-success ms-2 ${now > endDate ? 'd-none' : ''}" id="due_date_success_${response.task.id}">Hoàn tất</span>
+                            <span class="badge bg-danger ms-2 ${now > endDate ? '' : 'd-none'}" id="due_date_due_${response.task.id}">Quá hạn</span>
+                        `}
+                    </div>
+                `;
+            }
+            if (dateSection) {
+                if (dateSection.style.display === 'none') {
+                    dateSection.style.display = 'block'; // Hiển thị lại phần tử nếu đang bị ẩn
+                }
+                dateSection.innerHTML = date; // Thay thế toàn bộ nội dung của `dateSection`
+            } else {
+                console.error(`Không tìm thấy phần tử với id date-section-${taskId}`);
+            }
             console.log('Task updated successfully:', response);
         },
         error: function(xhr) {
@@ -1176,7 +1226,7 @@ function deleteTaskAttachment(attachmentId, taskId) {
             if (response.success) {
                 console.log('Tệp đã được xóa thành công');
                 document.querySelector(`.attachment_${attachmentId}`).remove();
-                let attachmentSection = document.getElementById(`attachment-section-` + taskId);
+
             } else {
                 console.log('Có lỗi xảy ra khi xóa tệp:', response.msg);
             }

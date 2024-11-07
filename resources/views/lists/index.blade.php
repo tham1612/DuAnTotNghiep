@@ -27,7 +27,7 @@
                     <i class="ri-menu-line fs-20" id="menuIcon"></i>
                 </div>
                 <!-- Menu sẽ ẩn ban đầu -->
-                <div id="verticalMenu" class="list-group d-none" data-simplebar style="max-height: 400px; width:300px">
+                <div id="verticalMenu" class="list-group d-none menu-catalog-{{$board->id}}" data-simplebar style="max-height: 400px; width:300px">
                     @if (!empty($board))
                         @foreach ($board->catalogs as $catalog)
                             <a class="list-group-item list-group-item-action"
@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;" class=" me-3 ms-3">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"  class=" me-3 ms-3 list-catalog-{{$board->id }}" >
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
@@ -100,26 +100,13 @@
                                 </div>
                                 <div>
                                     <button class="btn btn-primary ms-3" id="dropdownMenuOffset{{ $catalog->id }}"
-                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50">
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
+                                            onclick="loadFormAddTask({{ $catalog->id }})">
                                         <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
                                     </button>
-                                    <div class="dropdown-menu p-3" style="width: 285px"
+                                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}" style="width: 285px"
                                          aria-labelledby="dropdownMenuOffset3">
-                                        <form action="{{ route('tasks.store') }}" method="post"
-                                        class="formItem" onsubmit="return disableButtonOnSubmit()">
-                                            @csrf
-                                            <div class="mb-2">
-                                                <input type="text" class="form-control taskNameInput" name="text"
-                                                       placeholder="Nhập tên thẻ..." />
-                                                <input type="hidden" name="catalog_id" value="{{ $catalog->id }}">
-                                            </div>
-                                            <div class="mb-2 d-flex align-items-center">
-                                                <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
-                                                    Thêm thẻ
-                                                </button>
-                                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                                            </div>
-                                        </form>
+                                        {{--dropdown.createTask--}}
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +129,7 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="body-catalog-{{$catalog->id}}">
                                     @foreach ($catalog->tasks as $task)
                                         <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                         <tr draggable="true">
@@ -276,31 +263,6 @@
 
                                                 </td>
                                             </form>
-                                            {{-- <td class="">
-                                                <a href="javascript: void(0);">
-                                                    <button class="btn ms-3" id="dropdownMenuOffset3"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"
-                                                            data-bs-offset="0,-50">
-                                                        <i class="ri-chat-1-line fs-20"></i></button>
-                                                    </button>
-                                                    <div class="dropdown-menu p-3" style="width: 285px"
-                                                         aria-labelledby="dropdownMenuOffset3">
-                                                        <form>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control"
-                                                                       id="exampleDropdownFormEmail"
-                                                                       placeholder="Nhập bình luận..."/>
-                                                            </div>
-                                                            <div class="mb-2 d-flex align-items-center">
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Gửi
-                                                                </button>
-                                                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </a>
-                                            </td> --}}
                                             <td class="">
                                                 <a href="javascript:void(0);" class="text-muted"
                                                    id="dropdownMenuLink1" data-bs-toggle="dropdown"
