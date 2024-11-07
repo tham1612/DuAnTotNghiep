@@ -127,20 +127,20 @@
                                                     @endif
                                                 @endforeach
 
-                                                <!-- Nút hiển thị số thành viên còn lại -->
-                                                @if ($board->members->count() > $maxDisplay)
-                                                    <a href="javascript: void(0);" class="avatar-group-item"
-                                                        data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                        data-bs-placement="top"
-                                                        title="{{ $board->members->count() - $maxDisplay }} more members">
-                                                        <div class="avatar-xs" style="width: 30px;height: 30px">
-                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-light"
-                                                                style="width: 30px;height: 30px">
-                                                                +{{ $board->members->count() - $maxDisplay }}
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                @endif
+                                               <!-- Nút hiển thị số thành viên còn lại -->
+                                               @if ($board->members->count() > $maxDisplay)
+                                               <a href="javascript: void(0);" class="avatar-group-item"
+                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                   data-bs-placement="top"
+                                                   title="{{ $board->members->count() - $maxDisplay }} more members">
+                                                   <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                       <div class="avatar-title fs-16 rounded-circle"
+                                                           style="width: 30px;height: 30px">
+                                                           +{{ $board->members->count() - $maxDisplay }}
+                                                       </div>
+                                                   </div>
+                                               </a>
+                                           @endif
                                             </div>
                                         </div>
                                     </div>
@@ -278,7 +278,7 @@
                                                         data-bs-placement="top"
                                                         title="{{ $board->members->count() - $maxDisplay }} more members">
                                                         <div class="avatar-xs" style="width: 30px;height: 30px">
-                                                            <div class="avatar-title fs-16 rounded-circle bg-light border-dashed border text-primary"
+                                                            <div class="avatar-title fs-16 rounded-circle"
                                                                 style="width: 30px;height: 30px">
                                                                 +{{ $board->members->count() - $maxDisplay }}
                                                             </div>
