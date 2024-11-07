@@ -47,6 +47,42 @@ function updateIsStar(boardId, userId, ) {
 
 
 // ================ task ==================
+// xử lý hiện ảnh ở tệp đính kèm
+function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
+    // Lấy tất cả các ảnh có class thumbnail
+    var thumbnails = document.querySelectorAll(thumbnailSelector);
+    var modalImage = document.getElementById(modalImageId);
+    var imageModal = new bootstrap.Modal(document.getElementById(imageModalId));
+
+    // Lặp qua tất cả các ảnh thu nhỏ
+    thumbnails.forEach(function (thumbnail) {
+        thumbnail.addEventListener('click', function () {
+            // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
+            modalImage.src = thumbnail.src;
+
+            // Hiển thị modal ảnh
+            imageModal.show();
+
+            // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
+            var taskModalId = thumbnail.getAttribute('data-modal-id');
+            var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+
+            // Hàm xử lý khi modal ảnh đóng
+            function handleModalClose() {
+                taskModal.show();
+                // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
+                document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+            }
+
+            // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
+            document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
+        });
+    });
+}
+
+// Gọi hàm với các tham số tùy chỉnh
+
+
 function getModalTaskEvents() {
     document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(trigger) {
         trigger.addEventListener('click', function() {
@@ -58,6 +94,13 @@ function getModalTaskEvents() {
                 success: function(response) {
                     $('#detailCardModal').modal('show');
                     $('.modal-task').html(response.html);
+                    initThumbnailModal('.thumbnail', 'modalImage', 'imageModal');
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.addEventListener('click', event => {
+                            event.stopPropagation();
+                        });
+                    });
+                    attachNotificationEvent();
                 },
                 error: function(xhr) {
                     console.error("Không thể tải dữ liệu task:", xhr);
@@ -75,14 +118,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    // thông báo
-    const notificationElements = document.querySelectorAll('[id^="notification_"]');
-
-    // Duyệt qua từng phần tử để thêm sự kiện click
-    notificationElements.forEach(notification => {
-        notification.addEventListener('click', function() {
+function attachNotificationEvent() {
+    document.querySelectorAll('[id^="notification_"]').forEach(notificationElement => {
+        notificationElement.addEventListener('click', function() {
             // Lấy taskId từ id của phần tử
             const taskId = this.id.split('_')[1];
 
@@ -91,54 +129,65 @@ document.addEventListener('DOMContentLoaded', function() {
             const contentElement = document.getElementById(`notification_content_${taskId}`);
             const iconElement = document.getElementById(`notification_icon_${taskId}`);
 
-            // Kiểm tra trạng thái hiện tại
-            if (followElement.classList.contains('d-none')) {
-                // Nếu đang ẩn (chưa theo dõi), bật theo dõi
-                followElement.classList.remove('d-none'); // Hiện icon dấu check
-                contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
-                iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon
-            } else {
-                // Nếu đang hiển thị (đang theo dõi), bỏ theo dõi
-                followElement.classList.add('d-none'); // Ẩn icon dấu check
-                contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
-
-                iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon về cũ
-            }
-
-            // In ra taskId để kiểm tra
-            console.log('Bạn đã click vào thông báo của task với ID:', taskId);
-        });
-    });
-
-    // check ngày hết hạn
-    document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const taskId = this.id.split('due_date_checkbox_')[1]; // Lấy taskId từ id của checkbox
-
-            const successBadge = document.getElementById(`due_date_success_${taskId}`);
-            const dueBadge = document.getElementById(`due_date_due_${taskId}`);
-            const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value); // Lấy endDate từ input hidden
-            const now = new Date(); // Lấy thời gian hiện tại từ client
-
-            if (this.checked) {
-                console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
-                successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
-                dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
-            } else {
-                console.log('Chuyển sang "Quá hạn" cho task:', taskId);
-
-                // Thêm kiểm tra nếu hiện tại đã quá hạn
-                if (now > endDate) {
-                    dueBadge.classList.remove('d-none'); // Hiện "Quá hạn" nếu đã hết hạn
-                    successBadge.classList.add('d-none'); // Ẩn "Hoàn tất"
+            // Kiểm tra và chuyển đổi trạng thái
+            if (followElement) {
+                if (followElement.classList.contains('d-none')) {
+                    // Đang ở trạng thái "Theo dõi", chuyển sang "Đang theo dõi"
+                    followElement.classList.remove('d-none'); // Hiện dấu check
+                    contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
+                    iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon
                 } else {
-                    dueBadge.classList.add('d-none'); // Ẩn "Quá hạn" nếu chưa quá hạn
-                    successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
+                    // Đang ở trạng thái "Đang theo dõi", chuyển sang "Theo dõi"
+                    followElement.classList.add('d-none'); // Ẩn dấu check
+                    contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
+                    iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon về cũ
                 }
             }
         });
     });
+}
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Hàm để cập nhật trạng thái hiển thị của các badge
+    function updateBadgeStatus(taskId) {
+        const checkbox = document.getElementById(`due_date_checkbox_${taskId}`);
+        const successBadge = document.getElementById(`due_date_success_${taskId}`);
+        const dueBadge = document.getElementById(`due_date_due_${taskId}`);
+        const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value);
+        const now = new Date();
+
+        if (checkbox.checked) {
+            // Nếu checkbox được chọn (Hoàn tất)
+            successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
+            dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
+        } else {
+            // Nếu checkbox chưa được chọn
+            if (now > endDate) {
+                // Hiện "Quá hạn" nếu đã quá hạn
+                dueBadge.classList.remove('d-none');
+                successBadge.classList.add('d-none');
+            } else {
+                // Ẩn cả "Hoàn tất" và "Quá hạn" nếu chưa quá hạn
+                dueBadge.classList.add('d-none');
+                successBadge.classList.add('d-none');
+            }
+        }
+    }
+
+    // Kiểm tra trạng thái ban đầu của tất cả checkbox khi tải trang
+    document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(function(checkbox) {
+        const taskId = checkbox.id.split('due_date_checkbox_')[1];
+        updateBadgeStatus(taskId);
+    });
+
+    // Lắng nghe sự kiện thay đổi của checkbox
+    document.addEventListener('change', function(event) {
+        if (event.target.matches('input[id^="due_date_checkbox_"]')) {
+            const taskId = event.target.id.split('due_date_checkbox_')[1];
+            updateBadgeStatus(taskId);
+        }
+    });
 });
 
 // cập nhật mô tả, ảnh, checkbox
@@ -227,11 +276,14 @@ function loadTaskTag(taskId, boardId) {
     });
 }
 
+
 function loadFormCreateTag(taskId) {
     $.ajax({
         url: `/tasks/getFormCreateTag/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
         success: function(response) {
+            // Biến lưu trữ mã màu được chọn, khởi tạo là null
+            let selectedColor = null;
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-create-tag-' + taskId).html(response.html);
@@ -303,7 +355,23 @@ function loadFormAddDateTask(taskId) {
 
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
+    const startDateInput = document.getElementById('start_date_task_' + taskId).value;
+    const endDateInput = document.getElementById('end_date_task_' + taskId).value;
 
+    // Chuyển đổi giá trị sang đối tượng Date để so sánh
+    const startDate = new Date(startDateInput);
+    const endDate = new Date(endDateInput);
+
+    // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
+    if (startDateInput && endDateInput && startDate >= endDate) {
+        // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+        });
+        return; // Dừng thực hiện hàm nếu có lỗi
+    }
     // Sử dụng FormData để linh hoạt trong việc thêm dữ liệu
     let formData = new FormData();
     formData.append('text', document.getElementById('text_' + taskId).value);
@@ -311,7 +379,6 @@ function submitUpdateDateTask(taskId, event) {
     formData.append('end_date', document.getElementById('end_date_task_' + taskId).value);
     formData.append('reminder_date', document.getElementById('reminder_date_task_' + taskId).value);
     formData.append('_method', 'PUT'); // Để giả lập method PUT với Laravel
-
     $.ajax({
         url: `/tasks/` + taskId,
         method: "POST", // Sử dụng POST với method spoofing PUT
@@ -1158,8 +1225,9 @@ function uploadTaskAttachments(taskId) {
             response.attachments.forEach((attachment) => {
                 let attachmentRow = `
                 <tr class="cursor-pointer attachment_${attachment.id}">
-                    <td class="col-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <img src="/storage/${attachment.file_name}" alt="Attachment Image"
+                    <td class="col-1" data-bs-toggle="modal" >
+                        <img src="/storage/${attachment.file_name}" alt="Attachment Image" class="thumbnail"
+                                data-modal-id="exampleModal"
                              style="width: 100px; height: auto; object-fit: cover; border-radius: 8px;">
                     </td>
                     <td class="text-start name_attachment" id="name_display_${attachment.id}">
