@@ -4,6 +4,7 @@
 @endsection
 @section('main')
 @vite('resources/js/app.js')
+@vite('resources/js/task.js')
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -62,16 +63,6 @@
                                                data-bs-toggle="dropdown" aria-expanded="false"><i
                                                     class="ri-more-fill"></i></a>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Mở thẻ</span>--}}
-                                                {{--                                                </li>--}}
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Chỉnh sửa nhãn</span>--}}
-                                                {{--                                                </li>--}}
                                                 <li>
                                                     <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                             class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
