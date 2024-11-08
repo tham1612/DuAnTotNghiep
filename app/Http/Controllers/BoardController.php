@@ -38,11 +38,17 @@ class BoardController extends Controller
     public $catalogController;
     public $taskController;
 
-    public function __construct(GoogleApiClientController $googleApiClient, CatalogControler $catalogController, TaskController $taskController)
+    public function __construct(
+        GoogleApiClientController $googleApiClient,
+        CatalogControler          $catalogController,
+        TaskController            $taskController,
+        AuthorizeWeb              $authorizeWeb
+    )
     {
         $this->googleApiClient = $googleApiClient;
         $this->catalogController = $catalogController;
         $this->taskController = $taskController;
+        $this->authorizeWeb = $authorizeWeb;
     }
 
     /**
@@ -256,7 +262,7 @@ class BoardController extends Controller
         }
         $boardMemberMain = BoardMember::query()
             ->join('users', 'users.id', '=', 'board_members.user_id')
-            ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
+            ->select('users.name', 'users.fullName', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
             ->where('board_members.board_id', $board->id)
             ->get();
         /*
@@ -406,6 +412,13 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $authorize = $this->authorizeWeb->authorizeEdit($id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $board = Board::query()->findOrFail($id);
         $data = $request->except(['_token', '_method', 'image']);
         if ($request->hasFile('image')) {
@@ -419,7 +432,7 @@ class BoardController extends Controller
         $board->update($data);
 
         return response()->json([
-            'msg' =>$board['name'] . ' đã được cập nhật thành công!',
+            'msg' => $board['name'] . ' đã được cập nhật thành công!',
             'action' => 'success',
             'board' => $board
         ]);
@@ -651,6 +664,13 @@ class BoardController extends Controller
      */
     public function destroy(string $id)
     {
+        $authorize = $this->authorizeWeb->authorizeArchiver($id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $catalogsId = Catalog::query()
             ->where('board_id', $id)
             ->get()
@@ -680,6 +700,14 @@ class BoardController extends Controller
 
     public function destroyBoard(string $id)
     {
+        $authorize = $this->authorizeWeb->authorizeArchiver($id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         Log::debug('board work');
         $board = Board::withTrashed()->findOrFail($id);
         $catalogsId = Catalog::withTrashed()
@@ -720,6 +748,14 @@ class BoardController extends Controller
 
     public function restoreBoard(string $id)
     {
+
+        $authorize = $this->authorizeWeb->authorizeArchiver($id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $board = Board::withTrashed()->findOrFail($id);
         $catalogsId = Catalog::withTrashed()
             ->where('board_id', $id)
@@ -844,6 +880,54 @@ class BoardController extends Controller
             return response()->json(['action' => 'error',
                 'msg' => 'Có lỗi xảy ra!!']);
         }
+    }
+
+    public function settingBoard(Request $request, string $id)
+    {
+        $authorize = $this->authorizeWeb->authorizeEditPermissionBoard($id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        $board = Board::query()->findOrFail($id);
+
+        if ($request->permissionType === 'commentPermission') {
+            $board->update([
+                'comment_permission' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'memberPermission') {
+            $board->update([
+                'member_permission' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'archivePermission') {
+            $board->update([
+                'archiver_permission' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'boardEditPermission') {
+            $board->update([
+                'edit_board' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'access') {
+            $board->update([
+                'access' => $request->value
+            ]);
+        }
+        if ($request->permissionType === 'name') {
+            $board->update([
+                'name' => $request->value
+            ]);
+        }
+
+        return response()->json([
+            'action' => 'success',
+            'msg' => 'Thay đổi quyền thành công!!'
+        ]);
     }
 
     public function getDataBoard(Request $request)

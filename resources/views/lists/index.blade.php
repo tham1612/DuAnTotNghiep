@@ -27,49 +27,27 @@
                     <i class="ri-menu-line fs-20" id="menuIcon"></i>
                 </div>
                 <!-- Menu sẽ ẩn ban đầu -->
-                <div id="verticalMenu" class="list-group d-none" data-simplebar style="max-height: 400px; width:300px">
+                <div id="verticalMenu" class="list-group d-none menu-catalog-{{$board->id}}" data-simplebar style="max-height: 400px; width:300px">
                     @if (!empty($board))
                         @foreach ($board->catalogs as $catalog)
                             <a class="list-group-item list-group-item-action"
                                href="#{{ $catalog->id }}">{{ $catalog->name }} </a>
                         @endforeach
                     @endif
-                    {{-- <a class="list-group-item list-group-item-action" href="#list-item-1">{{ $catalog->name }} </a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-2">Inprogress</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-3">To do</a>
-                    <a class="list-group-item list-group-item-action" href="#list-item-4">Completed</a> --}}
                 </div>
                 <button class="btn btn-primary ms-3" id="dropdownMenuOffset3" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-offset="0,-50">
+                        aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddCatalog({{ $board->id }})">
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
-                    <div class="dropdown-menu p-3" style="width: 300px" aria-labelledby="addCatalog">
-                        <form action="{{ route('catalogs.store') }}" method="post"
-                            class="formItem" onsubmit="return disableButtonOnSubmit()">
-                            @csrf
-                            <div class="mb-2">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="nameCatalog"
-                                    value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <input type="hidden" name="board_id" value="{{ $board->id }}">
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
-                                    Thêm danh sách
-                                </button>
-                                <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
-                                    aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
-                            </div>
-                        </form>
+                    <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px" aria-labelledby="addCatalog">
+                        {{--dropdown.createCatalog--}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0" style="height: 60vh;" class=" me-3 ms-3">
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"  class=" me-3 ms-3 list-catalog-{{$board->id }}" >
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
@@ -122,26 +100,13 @@
                                 </div>
                                 <div>
                                     <button class="btn btn-primary ms-3" id="dropdownMenuOffset{{ $catalog->id }}"
-                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50">
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
+                                            onclick="loadFormAddTask({{ $catalog->id }})">
                                         <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
                                     </button>
-                                    <div class="dropdown-menu p-3" style="width: 285px"
+                                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}" style="width: 285px"
                                          aria-labelledby="dropdownMenuOffset3">
-                                        <form action="{{ route('tasks.store') }}" method="post"
-                                        class="formItem" onsubmit="return disableButtonOnSubmit()">
-                                            @csrf
-                                            <div class="mb-2">
-                                                <input type="text" class="form-control taskNameInput" name="text"
-                                                       placeholder="Nhập tên thẻ..." />
-                                                <input type="hidden" name="catalog_id" value="{{ $catalog->id }}">
-                                            </div>
-                                            <div class="mb-2 d-flex align-items-center">
-                                                <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
-                                                    Thêm thẻ
-                                                </button>
-                                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                                            </div>
-                                        </form>
+                                        {{--dropdown.createTask--}}
                                     </div>
                                 </div>
                             </div>
@@ -164,14 +129,14 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="body-catalog-{{$catalog->id}}">
                                     @foreach ($catalog->tasks as $task)
                                         <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                         <tr draggable="true">
                                             <td class="col-2">
                                                 <div class="d-flex">
                                                     <div class="flex-grow-1" data-bs-toggle="modal"
-                                                         data-bs-target="#detailCardModal{{ $task->id }}">
+                                                         data-bs-target="#detailCardModal" data-task-id="{{$task->id}}">
                                                         {{ \Illuminate\Support\Str::limit($task->text, 20) }}
                                                     </div>
                                                 </div>
@@ -298,31 +263,6 @@
 
                                                 </td>
                                             </form>
-                                            {{-- <td class="">
-                                                <a href="javascript: void(0);">
-                                                    <button class="btn ms-3" id="dropdownMenuOffset3"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"
-                                                            data-bs-offset="0,-50">
-                                                        <i class="ri-chat-1-line fs-20"></i></button>
-                                                    </button>
-                                                    <div class="dropdown-menu p-3" style="width: 285px"
-                                                         aria-labelledby="dropdownMenuOffset3">
-                                                        <form>
-                                                            <div class="mb-2">
-                                                                <input type="text" class="form-control"
-                                                                       id="exampleDropdownFormEmail"
-                                                                       placeholder="Nhập bình luận..."/>
-                                                            </div>
-                                                            <div class="mb-2 d-flex align-items-center">
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Gửi
-                                                                </button>
-                                                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </a>
-                                            </td> --}}
                                             <td class="">
                                                 <a href="javascript:void(0);" class="text-muted"
                                                    id="dropdownMenuLink1" data-bs-toggle="dropdown"
@@ -480,6 +420,23 @@
                 });
 
                 function updateTaskList(taskId) {
+                    const startDateInput1 = document.getElementById('start_date_' + taskId).value;
+                    const endDateInput1 = document.getElementById('end_date_' + taskId).value;
+
+                    // Chuyển đổi giá trị sang đối tượng Date để so sánh
+                    const startDate1 = new Date(startDateInput1);
+                    const endDate1 = new Date(endDateInput1);
+
+                    // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
+                    if (startDateInput1 && endDateInput1 && startDate1 >= endDate1) {
+                        // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+                        })
+                        return; // Dừng thực hiện hàm nếu có lỗi
+                    }
                     var formData = {
                         catalog_id: $('#catalog_id_' + taskId).val(),
                         start_date: $('#start_date_' + taskId).val(),

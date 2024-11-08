@@ -96,20 +96,23 @@
                 <p class="fs-16 mt-3 ms-1">Quản trị viên của bảng</p>
             </div>
             <div class="d-flex flex-row">
-                @if(!empty($board_owner))
-                    @if ($board_owner->image)
-                        <img src="{{ Storage::url($board_owner->image) ? Storage::url($board_owner->image) : '' }}"
+                @if(!empty($boardOwner))
+                    @if ($boardOwner->image)
+                        <img src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
                              alt="" class="rounded-circle avatar-xs object-fit-cover" style="width: 60px;height: 60px"/>
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                              style="width: 40px;height: 40px">
-                            {{ strtoupper(substr($board_owner->name, 0, 1)) }}
+                            {{ strtoupper(substr($boardOwner->name, 0, 1)) }}
                         </div>
                     @endif
-                    <span class="fs-15 ms-2 d-flex flex-column">
-                          {{ \Illuminate\Support\Str::limit($board_owner->name, 16) }}
-                         <a href="{{route('user',Auth::id())}}">Sửa thông tin cá nhân</a>
-                    </span>
+                    <div class="fs-15 ms-2 d-flex flex-column">
+                        <p> {{ \Illuminate\Support\Str::limit($boardOwner->name, 16) }}</p>
+                        <p style="margin-top: -15px">  {{  $boardOwner->fullName
+                              ? '@' . $boardOwner->fullName
+                              : '@' . $boardOwner->name
+                              }}</p>
+                    </div>
                 @endif
             </div>
             <div>
@@ -244,8 +247,12 @@
                     <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
 
                     <div class="row p-3 ">
+                        @php $board->load(['catalogs.tasks' => function ($query) {
+                                $query->onlyTrashed(); // Chỉ lấy tasks đã xóa mềm
+                            }]);
+                        @endphp
                         @foreach($board->catalogs as $catalog)
-                            @foreach($catalog->tasks()->onlyTrashed()->get() as $archiverTask)
+                            @foreach($catalog->tasks as $archiverTask)
                                 <div class="bg-warning-subtle border rounded mt-2">
                                     <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
                                     <ul class="link-inline" style="margin-left: -32px">
@@ -306,30 +313,72 @@
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
             <div class="p-2">
-                <p class="fw-bold fs-15">Quyền</p>
+                <p class="fw-bold fs-16">Tên bảng</p>
+                <div class="row">
+                    <input type="text" name="" id="" class="border-0 form-control fs-18" value="{{$board->name}}"
+                           style="margin-top: -15px" onchange="updatePermission('name', this.value,{{$board->id}})">
+                </div>
+                <p class="fw-bold fs-16 mt-3">Chế độ</p>
+                <div class="row" style="margin-top: -15px">
+                    <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
+                            onchange="updatePermission('access', this.value,{{$board->id}})">
+                        <option value="public" @selected($board->access === 'public')>Công khai</option>
+                        <option value="private" @selected($board->access === 'private')>Riêng tư</option>
+                    </select>
+                </div>
+                <hr>
+                <p class="fw-bold fs-16 mt-3">Quyền</p>
+                <div class="row my-2">
+                    <label class="fs-16">Nhận xét</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
+                            onchange="updatePermission('commentPermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->comment_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                        <option value="board" @selected($board->comment_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                        <option value="workspace" @selected($board->comment_permission === 'workspace')>Tất cả mọi người
+                            trong không
+                            gian làm
+                            việc
+                        </option>
+                    </select>
+                </div>
+                <div class="row my-2">
+                    <label class="fs-16">Thêm và xóa thành viên</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="memberPermission"
+                            onchange="updatePermission('memberPermission', this.value,{{$board->id}})">
+                        <option value="board" @selected($board->member_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                        <option value="owner" @selected($board->member_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                    </select>
+                </div>
+                <div class="row my-2">
+                    <label class="fs-16">Chỉnh sửa bảng</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="workspaceEditPermission"
+                            onchange="updatePermission('boardEditPermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->edit_board === 'owner')>Chỉ có quản trị viên</option>
+                        <option value="board" @selected($board->edit_board === 'board')>Chỉ có thành viên trong bảng
+                        </option>
+                        <option value="workspace" @selected($board->edit_board === 'workspace')>Mọi người trong không
+                            gian
+                        </option>
+                    </select>
+                </div>
+                <div class="row my-2">
+                    <label class="fs-16">Lưu trữ</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="archivePermission"
+                            onchange="updatePermission('archivePermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->archiver_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                        <option value="board" @selected($board->archiver_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                    </select>
+                </div>
 
-                <div class="row mt-2">
-                    <label for="">Nhận xét</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Thành viên</option>
-                        <option value="">Chỉ có quản trị viên</option>
-                        <option value="">Tất cả mọi người trong không gian làm việc</option>
-                    </select>
-                </div>
-                <div class="row mt-2">
-                    <label for="">Thêm và xóa thành viên</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Thành viên</option>
-                        <option value="">Chỉ có quản trị viên</option>
-                    </select>
-                </div>
-                <div class="row mt-2">
-                    <label for="">Chỉnh sửa Không gian làm việc</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Mọi người trong không gian</option>
-                        <option value="">Chỉ có thành viên trong bảng</option>
-                    </select>
-                </div>
             </div>
         </div>
     </div>
@@ -368,7 +417,7 @@
                                     <form>
                                         <input type="hidden" name="board_id" value="{{$tag->board_id}}">
                                         <div class="mt-3">
-                                            <label for="">Tiêu đề</label>
+                                            <label class="fs-16">Tiêu đề</label>
                                             <input type="text" name="name" class="form-control border-1"
                                                    placeholder="Nhập tên nhãn" value="{{$tag->name}}"/>
                                         </div>
@@ -408,7 +457,7 @@
                         </p>
                         <!--dropdown nhãn-->
                         <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                            {{--                            @include('dropdowns.createTag')--}}
+                            {{--                                                        @include('dropdowns.createTag')--}}
                         </div>
                     </div>
                 </div>

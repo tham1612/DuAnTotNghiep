@@ -191,4 +191,4 @@
         </div>
     @endforeach
 @endif
-<div id="checkListCreate"></div>
+<div id="checkListCreate-{{$task->id}}"></div>

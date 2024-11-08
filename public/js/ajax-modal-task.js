@@ -47,54 +47,80 @@ function updateIsStar(boardId, userId, ) {
 
 
 // ================ task ==================
+// xử lý hiện ảnh ở tệp đính kèm
+function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
+    // Lấy tất cả các ảnh có class thumbnail
+    var thumbnails = document.querySelectorAll(thumbnailSelector);
+    var modalImage = document.getElementById(modalImageId);
+    var imageModal = new bootstrap.Modal(document.getElementById(imageModalId));
 
-// Lắng nghe sự kiện click cho các phần tử có class 'task-title'
-// document.addEventListener('click', function(event) {
-//     if (event.target.classList.contains('task-title')) {
-//         // Lấy task ID từ thuộc tính data-task-id
-//         let taskId = event.target.getAttribute('data-task-id');
-//
-//         // Gọi AJAX để lấy nội dung modal
-//         $.ajax({
-//             url: `/tasks/${taskId}/detail`,  // API để lấy thông tin chi tiết task
-//             type: 'GET',
-//             success: function(response) {
-//                 // Giả sử máy chủ trả về dữ liệu modal dưới dạng HTML
-//                 $('#modal-content').html(response); // Gắn nội dung modal vào phần tử chứa modal
-//
-//                 // Hiển thị modal
-//                 $('#detailCardModal' + taskId ).modal('show');
-//             },
-//             error: function(xhr) {
-//                 alert('Có lỗi xảy ra khi tải nội dung.');
-//                 console.log(xhr.responseText);
-//             }
-//         });
-//     }
-// });
-function loadModalTaskDetails(taskId) {
-    $.ajax({
-        url: '/tasks/getModalTask/' + taskId, // Update the URL based on your route
-        method: 'GET',
-        success: function(response) {
-            // Populate the modal body with the fetched content
-            $('#modal-task-' + taskId).html(response);
-        },
-        error: function() {
-            alert('Unable to load task details.');
-        }
+    // Lặp qua tất cả các ảnh thu nhỏ
+    thumbnails.forEach(function (thumbnail) {
+        thumbnail.addEventListener('click', function () {
+            // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
+            modalImage.src = thumbnail.src;
+
+            // Hiển thị modal ảnh
+            imageModal.show();
+
+            // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
+            var taskModalId = thumbnail.getAttribute('data-modal-id');
+            var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+
+            // Hàm xử lý khi modal ảnh đóng
+            function handleModalClose() {
+                taskModal.show();
+                // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
+                document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+            }
+
+            // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
+            document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
+        });
     });
 }
 
+// Gọi hàm với các tham số tùy chỉnh
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    // thông báo
-    const notificationElements = document.querySelectorAll('[id^="notification_"]');
+function getModalTaskEvents() {
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(trigger) {
+        trigger.addEventListener('click', function() {
+            const taskId = trigger.getAttribute('data-task-id');
+            // Gọi AJAX để tải dữ liệu vào modal
+            $.ajax({
+                url: '/tasks/getModalTask/' + taskId,
+                type: 'GET',
+                success: function(response) {
+                    $('#detailCardModal').modal('show');
+                    $('.modal-task').html(response.html);
+                    initThumbnailModal('.thumbnail', 'modalImage', 'imageModal');
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.addEventListener('click', event => {
+                            event.stopPropagation();
+                        });
+                    });
+                    attachNotificationEvent();
+                },
+                error: function(xhr) {
+                    console.error("Không thể tải dữ liệu task:", xhr);
+                }
+            });
+        });
 
-    // Duyệt qua từng phần tử để thêm sự kiện click
-    notificationElements.forEach(notification => {
-        notification.addEventListener('click', function() {
+    });
+}
+
+// Khởi tạo sự kiện modal khi trang được tải
+document.addEventListener("DOMContentLoaded", function() {
+    getModalTaskEvents();
+});
+
+
+
+function attachNotificationEvent() {
+    document.querySelectorAll('[id^="notification_"]').forEach(notificationElement => {
+        notificationElement.addEventListener('click', function() {
             // Lấy taskId từ id của phần tử
             const taskId = this.id.split('_')[1];
 
@@ -103,54 +129,65 @@ document.addEventListener('DOMContentLoaded', function() {
             const contentElement = document.getElementById(`notification_content_${taskId}`);
             const iconElement = document.getElementById(`notification_icon_${taskId}`);
 
-            // Kiểm tra trạng thái hiện tại
-            if (followElement.classList.contains('d-none')) {
-                // Nếu đang ẩn (chưa theo dõi), bật theo dõi
-                followElement.classList.remove('d-none'); // Hiện icon dấu check
-                contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
-                iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon
-            } else {
-                // Nếu đang hiển thị (đang theo dõi), bỏ theo dõi
-                followElement.classList.add('d-none'); // Ẩn icon dấu check
-                contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
-
-                iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon về cũ
-            }
-
-            // In ra taskId để kiểm tra
-            console.log('Bạn đã click vào thông báo của task với ID:', taskId);
-        });
-    });
-
-    // check ngày hết hạn
-    document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const taskId = this.id.split('due_date_checkbox_')[1]; // Lấy taskId từ id của checkbox
-
-            const successBadge = document.getElementById(`due_date_success_${taskId}`);
-            const dueBadge = document.getElementById(`due_date_due_${taskId}`);
-            const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value); // Lấy endDate từ input hidden
-            const now = new Date(); // Lấy thời gian hiện tại từ client
-
-            if (this.checked) {
-                console.log('Chuyển sang "Hoàn tất" cho task:', taskId);
-                successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
-                dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
-            } else {
-                console.log('Chuyển sang "Quá hạn" cho task:', taskId);
-
-                // Thêm kiểm tra nếu hiện tại đã quá hạn
-                if (now > endDate) {
-                    dueBadge.classList.remove('d-none'); // Hiện "Quá hạn" nếu đã hết hạn
-                    successBadge.classList.add('d-none'); // Ẩn "Hoàn tất"
+            // Kiểm tra và chuyển đổi trạng thái
+            if (followElement) {
+                if (followElement.classList.contains('d-none')) {
+                    // Đang ở trạng thái "Theo dõi", chuyển sang "Đang theo dõi"
+                    followElement.classList.remove('d-none'); // Hiện dấu check
+                    contentElement.innerText = 'Đang theo dõi'; // Thay đổi nội dung
+                    iconElement.classList.replace('ri-eye-off-line', 'ri-eye-line'); // Thay đổi icon
                 } else {
-                    dueBadge.classList.add('d-none'); // Ẩn "Quá hạn" nếu chưa quá hạn
-                    successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
+                    // Đang ở trạng thái "Đang theo dõi", chuyển sang "Theo dõi"
+                    followElement.classList.add('d-none'); // Ẩn dấu check
+                    contentElement.innerText = 'Theo dõi'; // Quay lại nội dung cũ
+                    iconElement.classList.replace('ri-eye-line', 'ri-eye-off-line'); // Thay đổi icon về cũ
                 }
             }
         });
     });
+}
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Hàm để cập nhật trạng thái hiển thị của các badge
+    function updateBadgeStatus(taskId) {
+        const checkbox = document.getElementById(`due_date_checkbox_${taskId}`);
+        const successBadge = document.getElementById(`due_date_success_${taskId}`);
+        const dueBadge = document.getElementById(`due_date_due_${taskId}`);
+        const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value);
+        const now = new Date();
+
+        if (checkbox.checked) {
+            // Nếu checkbox được chọn (Hoàn tất)
+            successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
+            dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
+        } else {
+            // Nếu checkbox chưa được chọn
+            if (now > endDate) {
+                // Hiện "Quá hạn" nếu đã quá hạn
+                dueBadge.classList.remove('d-none');
+                successBadge.classList.add('d-none');
+            } else {
+                // Ẩn cả "Hoàn tất" và "Quá hạn" nếu chưa quá hạn
+                dueBadge.classList.add('d-none');
+                successBadge.classList.add('d-none');
+            }
+        }
+    }
+
+    // Kiểm tra trạng thái ban đầu của tất cả checkbox khi tải trang
+    document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(function(checkbox) {
+        const taskId = checkbox.id.split('due_date_checkbox_')[1];
+        updateBadgeStatus(taskId);
+    });
+
+    // Lắng nghe sự kiện thay đổi của checkbox
+    document.addEventListener('change', function(event) {
+        if (event.target.matches('input[id^="due_date_checkbox_"]')) {
+            const taskId = event.target.id.split('due_date_checkbox_')[1];
+            updateBadgeStatus(taskId);
+        }
+    });
 });
 
 // cập nhật mô tả, ảnh, checkbox
@@ -186,7 +223,7 @@ function updateTask2(taskId) {
         processData: false, // Bắt buộc phải false để không xử lý FormData thành chuỗi
         contentType: false, // Bắt buộc phải false để đặt đúng 'multipart/form-data'
         success: function(response) {
-            if(response.task.image) {
+            if (response.task.image) {
                 $('#detailCardModalLabel').css('background-image', `url('/storage/${response.task.image}')`);
             }
             notificationWeb(response.action, response.msg);
@@ -220,11 +257,11 @@ function updateTaskMember(taskId, userId) {
 
 
 // ============= tag  ==============
-function loadTaskTag(taskId,boardId) {
+function loadTaskTag(taskId, boardId) {
     $.ajax({
         url: `/tasks/getListTagTaskBoard/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        data:{board_id:boardId},
+        data: { board_id: boardId },
         success: function(response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
@@ -238,11 +275,15 @@ function loadTaskTag(taskId,boardId) {
         }
     });
 }
+
+
 function loadFormCreateTag(taskId) {
     $.ajax({
         url: `/tasks/getFormCreateTag/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
         success: function(response) {
+            // Biến lưu trữ mã màu được chọn, khởi tạo là null
+            let selectedColor = null;
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-create-tag-' + taskId).html(response.html);
@@ -314,7 +355,23 @@ function loadFormAddDateTask(taskId) {
 
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
+    const startDateInput = document.getElementById('start_date_task_' + taskId).value;
+    const endDateInput = document.getElementById('end_date_task_' + taskId).value;
 
+    // Chuyển đổi giá trị sang đối tượng Date để so sánh
+    const startDate = new Date(startDateInput);
+    const endDate = new Date(endDateInput);
+
+    // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
+    if (startDateInput && endDateInput && startDate >= endDate) {
+        // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+        });
+        return; // Dừng thực hiện hàm nếu có lỗi
+    }
     // Sử dụng FormData để linh hoạt trong việc thêm dữ liệu
     let formData = new FormData();
     formData.append('text', document.getElementById('text_' + taskId).value);
@@ -322,7 +379,6 @@ function submitUpdateDateTask(taskId, event) {
     formData.append('end_date', document.getElementById('end_date_task_' + taskId).value);
     formData.append('reminder_date', document.getElementById('reminder_date_task_' + taskId).value);
     formData.append('_method', 'PUT'); // Để giả lập method PUT với Laravel
-
     $.ajax({
         url: `/tasks/` + taskId,
         method: "POST", // Sử dụng POST với method spoofing PUT
@@ -331,6 +387,56 @@ function submitUpdateDateTask(taskId, event) {
         contentType: false, // Để trình duyệt tự đặt Content-Type (multipart/form-data)
         data: formData,
         success: function(response) {
+            let dateSection = document.getElementById(`date-section-` + taskId);
+            let date = ''; // Khởi tạo biến date
+
+            const now = new Date();
+
+// Kiểm tra điều kiện cho start_date và end_date
+            if (response.task.start_date && !response.task.end_date) {
+                // Trường hợp chỉ có ngày bắt đầu
+                date = `
+                    <strong>Ngày bắt đầu</strong>
+                    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                         style="height: 35px; background-color: #091e420f; color: #172b4d">
+                        <p class="ms-2 mt-3">${response.task.start_date}</p>
+                    </div>
+                `;
+            } else if (response.task.end_date) {
+                // Trường hợp có ngày hết hạn hoặc có cả ngày bắt đầu và ngày hết hạn
+                const endDate = new Date(response.task.end_date);
+
+                date = `
+                    <strong>Ngày hết hạn</strong>
+                    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+                         style="height: 35px; background-color: #091e420f; color: #172b4d">
+                        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
+                               class="form-check-input"
+                               onchange="updateTask2(${response.task.id})" name="progress"
+                               ${response.task.progress == 100 ? 'checked' : ''} />
+                        <input type="hidden" id="task_end_date_${response.task.id}"
+                               value="${response.task.end_date}">
+                        <p class="ms-2 mt-3">
+                        ${response.task.start_date ? `  ${response.task.start_date}-` : ''}
+                        ${response.task.end_date}</p>
+
+                        ${response.task.progress == 100
+                                ? `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`
+                                : `
+                            <span class="badge bg-success ms-2 ${now > endDate ? 'd-none' : ''}" id="due_date_success_${response.task.id}">Hoàn tất</span>
+                            <span class="badge bg-danger ms-2 ${now > endDate ? '' : 'd-none'}" id="due_date_due_${response.task.id}">Quá hạn</span>
+                        `}
+                    </div>
+                `;
+            }
+            if (dateSection) {
+                if (dateSection.style.display === 'none') {
+                    dateSection.style.display = 'block'; // Hiển thị lại phần tử nếu đang bị ẩn
+                }
+                dateSection.innerHTML = date; // Thay thế toàn bộ nội dung của `dateSection`
+            } else {
+                console.error(`Không tìm thấy phần tử với id date-section-${taskId}`);
+            }
             console.log('Task updated successfully:', response);
         },
         error: function(xhr) {
@@ -463,6 +569,8 @@ function FormCheckListItem(checkListId) {
                     </div>
                 </div>
                 <div class="avatar-group d-flex justify-content-center">
+                     <div class="d-flex justify-content-center" id="member-add-checkListItem-${response.id}">
+                                        </div>
                 `;
             if (Array.isArray(response.checkListItem.members)) {
                 response.checkListMembers.forEach((checkListItemMember, index) => {
@@ -623,8 +731,9 @@ function submitAddCheckList(taskId) {
         url: `/tasks/checklist/create`,
         type: 'POST',
         data: formData,
+
         success: function(response) {
-            let checkList = document.getElementById('checkListCreate');
+            let checkList = document.getElementById('checkListCreate-' + taskId);
             let listItem = `
                 <div class="row mt-3 list-checklist-${response.checkListId}" >
         <section class="d-flex justify-content-between">
@@ -937,7 +1046,7 @@ function removeMemberFromCard(memberId, checklistItemId) {
         },
         success: function(response) {
             let memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
-            let memberElement1 = document.getElementById('member-checklist-' +  memberId + '-' + checklistItemId);
+            let memberElement1 = document.getElementById('member-checklist-' + memberId + '-' + checklistItemId);
             if (memberElement1) {
                 memberElement1.remove();
             }
@@ -1116,8 +1225,9 @@ function uploadTaskAttachments(taskId) {
             response.attachments.forEach((attachment) => {
                 let attachmentRow = `
                 <tr class="cursor-pointer attachment_${attachment.id}">
-                    <td class="col-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <img src="/storage/${attachment.file_name}" alt="Attachment Image"
+                    <td class="col-1" data-bs-toggle="modal" >
+                        <img src="/storage/${attachment.file_name}" alt="Attachment Image" class="thumbnail"
+                                data-modal-id="exampleModal"
                              style="width: 100px; height: auto; object-fit: cover; border-radius: 8px;">
                     </td>
                     <td class="text-start name_attachment" id="name_display_${attachment.id}">
@@ -1176,7 +1286,7 @@ function updateTaskAttachment(attachmentId) {
     });
 }
 
-function deleteTaskAttachment(attachmentId,taskId) {
+function deleteTaskAttachment(attachmentId, taskId) {
     $.ajax({
         url: `/tasks/attachments/${attachmentId}/destroy`,
         method: 'DELETE',
@@ -1184,7 +1294,7 @@ function deleteTaskAttachment(attachmentId,taskId) {
             if (response.success) {
                 console.log('Tệp đã được xóa thành công');
                 document.querySelector(`.attachment_${attachmentId}`).remove();
-                let attachmentSection = document.getElementById(`attachment-section-` + taskId);
+
             } else {
                 console.log('Có lỗi xảy ra khi xóa tệp:', response.msg);
             }
@@ -1344,7 +1454,7 @@ function addTaskComment(taskId, user_id) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            console.log('taskComment đã được thêm thành công!', response);
+            notificationWeb(response.action, response.msg)
 
             let taskComment = document.getElementById('task-comment-' + taskId);
             let createdAt = new Date(response.comment.created_at);
@@ -1648,11 +1758,8 @@ function updateTaskComment(taskId, user_id, commentId) {
 function removeComment(commentId) {
     console.log(commentId);
     $.ajax({
-        url: `/tasks/comments/{commentId}/destroy`,
+        url: `/tasks/comments/${commentId}/destroy`,
         type: 'POST',
-        data: {
-            id: commentId
-        },
         success: function (response) {
             document.querySelector(`.conten-comment-${commentId}`).remove();
             console.log('cmt đã được xóa thành công .');
@@ -1663,6 +1770,7 @@ function removeComment(commentId) {
         }
     });
 }
+
 function loadAllTaskComment(taskId) {
     $.ajax({
         url: `/tasks/comments/${taskId}/getAllComment`, // Đường dẫn API hoặc route để lấy form

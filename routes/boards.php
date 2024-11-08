@@ -62,12 +62,15 @@ Route::middleware(['auth', 'isWorkspace'])
 
                     Route::get('management-franchise/{owner_id}/{user_id}', [BoardController::class, 'managementfranchise'])->name('managementfranchise');
 
+                    //                    cài đặt bảng
+                    Route::post('/settingBoard/{id}', [BoardController::class, 'settingBoard'])->name('settingBoard');
+
                     //                    sao chép bảng
                     Route::post('/copyBoard', [BoardController::class, 'copyBoard'])->name('copyBoard');
 
                     Route::post('/getDataBoard', [BoardController::class, 'getDataBoard'])->name('getDataBoard');
 
-//                    lưu trữ + hoàn tác + xóa vĩnh viễn
+                    //                    lưu trữ + hoàn tác + xóa vĩnh viễn
                     Route::post('/{id}', [BoardController::class, 'destroy'])->name('destroy');
 
                     Route::post('/restoreBoard/{id}', [BoardController::class, 'restoreBoard'])->name('restoreBoard');
@@ -92,4 +95,17 @@ Route::middleware(['auth', 'isWorkspace'])
 
         Route::post('/catalogs/archiverAllTasks/{id}', [CatalogControler::class, 'archiverAllTasks'])
             ->name('catalogs.archiverAllTasks');
+
+
+//         sao chép danh sách
+        Route::post('/catalogs/copyCatalog', [CatalogControler::class, 'copyCatalog'])
+            ->name('catalogs.copyCatalog');
+
+        //         di chuyển danh sách
+        Route::post('/catalogs/moveCatalog', [CatalogControler::class, 'moveCatalog'])
+            ->name('catalogs.moveCatalog');
+
+        Route::get('/catalogs/getFormCreateCatalog/{id}', [CatalogControler::class, 'getFormCreateCatalog'])
+            ->name('catalogs.getFormCreateCatalog');
+
     });
