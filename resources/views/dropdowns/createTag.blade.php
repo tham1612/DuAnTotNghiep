@@ -68,8 +68,7 @@
         return `#${r}${g}${b}`.toUpperCase(); // Trả về mã màu HEX
     }
 
-    // Biến lưu trữ mã màu được chọn, khởi tạo là null
-    let selectedColor = null;
+
 
     // Gán sự kiện cho phần tử cha
     $('.select-color').on('click', 'div', function(e) {
@@ -115,7 +114,8 @@
             data: formData,
             success: function(response) {
                 // Đóng dropdown khi AJAX thành công
-                $('.dropdown-menu-creat-tag').hide();
+                $('input[name="name"]').val('');
+                $('.color-box').removeClass('selected-tag');
                 let tagSection = document.getElementById(`tag-section-${formData.task_id}`);
                 let tagTask = document.getElementById('tag-task-' + formData.task_id);
                 if (tagSection.style.display === 'none') {

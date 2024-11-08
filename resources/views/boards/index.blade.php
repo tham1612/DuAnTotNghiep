@@ -23,27 +23,12 @@
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
-                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false">
+                            <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                               data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
                             </a>
-                            <!--                    setting list-->
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Thêm thẻ</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Sao chép danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Di chuyển danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="({{ $catalog->id }})">Theo dõi</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="archiverCatalog({{ $catalog->id }})">Lưu Trữ danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="archiverAllTasks({{ $catalog->id }})">Lưu trữ tất cả thẻ trong danh sách</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,7 +90,7 @@
                                         @if ($task->members->count() >= 1)
                                             <div class="flex-grow-1 d-flex align-items-center" style="height: 30px">
                                                 <i class="ri-account-circle-line fs-20 me-2"></i>
-                                                <div class="avatar-group mt-3">
+                                                <div class="avatar-group">
                                                     @if ($task->members->isNotEmpty())
                                                         @php
                                                             // Đếm số lượng board members
@@ -119,15 +104,14 @@
                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
                                                                    title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
-
                                                                         <img
                                                                             src="{{ asset('storage/' . $taskMember->image) }}"
-                                                                            alt="" class="rounded-circle avatar-xss">
+                                                                            alt=""
+                                                                            class="rounded-circle avatar-xs" style="width: 30px;height: 30px">
                                                                     @else
-                                                                        <div class="avatar-sm">
+                                                                        <div class="avatar-xs" style="width: 30px;height: 30px">
                                                                             <div
                                                                                 class="avatar-title rounded-circle bg-info-subtle text-primary"
-
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                             </div>
@@ -143,10 +127,9 @@
 
                                                                data-bs-toggle="tooltip" data-bs-placement="top"
                                                                title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                <div class="avatar-xss">
+                                                                <div class="avatar-xs" style="width: 30px;height: 30px">
                                                                     <div class="avatar-title rounded-circle"
-                                                                         style="width: 35px;height: 35px">
-
+                                                                    style="width: 30px;height: 30px">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
                                                                 </div>
@@ -168,7 +151,7 @@
                                             @endphp
                                             <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-calendar-event-line fs-20 me-2"></i>
-                                                <span class="badge bg-success text-whites-12"> {{ $start }} -
+                                                <span class="badge bg-primary"> {{ $start }} -
                                                     {{ $end }}
                                                 </span>
                                             </div>
@@ -197,29 +180,58 @@
                                         <div class="flex-shrink-0">
                                             <ul class="link-inline mb-0">
                                                 <!-- theo dõi -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-eye-line align-bottom"></i>
-                                                        04</a>
-                                                </li>
+                                                @if($task->followMembers->contains('user_id', auth()->id()))
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-eye-line align-bottom"></i>
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <!-- bình luận -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-question-answer-line align-bottom"></i>
-                                                        19</a>
-                                                </li>
+                                                @if($task->taskComments->isNotEmpty())
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-question-answer-line align-bottom"></i>
+                                                            {{ $task->taskComments->count() < 10
+                                                            ? '0'.$task->taskComments->count()
+                                                             : $task->taskComments->count() }}
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <!-- tệp đính kèm -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-attachment-2 align-bottom"></i>
-                                                        02</a>
-                                                </li>
+                                                @if($task->attachments->isNotEmpty())
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i
+                                                                class="ri-attachment-2 align-bottom"></i>
+                                                            {{ $task->attachments->count() < 10
+                                                               ? '0'.$task->attachments->count()
+                                                                : $task->attachments->count() }}</a>
+                                                    </li>
+                                                @endif
                                                 <!-- checklist -->
-                                                <li class="list-inline-item">
-                                                    <a href="javascript:void(0)" class="text-muted"><i
-                                                            class="ri-checkbox-line align-bottom"></i>
-                                                        2/4</a>
-                                                </li>
+                                                @php
+                                                    // Chuyển đổi $task->checklists sang mảng để dễ thao tác
+                                                       $checklistsArray = json_decode(json_encode($task->check_lists), true);
+
+                                                       // Đếm tổng số checklist items
+                                                       $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                           return count($checklist['checklistItems']);
+                                                       });
+
+                                                       // Đếm số checklist items đã hoàn thành
+                                                       $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                           return collect($checklist['checklistItems'])->where('is_complete', true)->count();
+                                                       });
+                                                @endphp
+
+                                                @if($totalChecklistItems > 0)
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"><i class="ri-checkbox-line align-bottom"></i>
+                                                            {{ $completedChecklistItems . '/' . $totalChecklistItems }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+
                                             </ul>
                                         </div>
                                     </div>
@@ -231,27 +243,17 @@
                 </div>
                 <div class="my-3">
                     <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
-                            aria-expanded="false" data-bs-offset="0,-50">
+                            aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask({{ $catalog->id }})">
                         Thêm thẻ
                     </button>
-                    <div class="dropdown-menu p-3" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                        <form>
-                            <div class="mb-2">
-                                <input type="text" id="add-task-catalog-{{$catalog->id}}" class="form-control"
-                                       name="text" placeholder="Nhập tên thẻ..."/>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <button type="button" class="btn btn-primary"
-                                        onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
-                                    Thêm thẻ
-                                </button>
-                                <i class="ri-close-line fs-22 ms-2 cursor-pointer"></i>
-                            </div>
-                        </form>
+                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{$catalog->id }}" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
+                        {{--dropdown.createTask--}}
                     </div>
 
                 </div>
             </div>
+
+            @include('components.settingCatalog')
         @endforeach
         <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"

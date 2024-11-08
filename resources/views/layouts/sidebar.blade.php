@@ -94,7 +94,7 @@
                 </div>
             @endif
 
-            <span class="fs-15 ms-2 text-white" id="swicthWs">
+            <span class="fs-15 ms-2 text-white d-block" id="swicthWs">
                 {{ \Str::limit($workspaceChecked->name, 16) }}
                 <i class=" ri-arrow-drop-down-line fs-20"></i>
             </span>

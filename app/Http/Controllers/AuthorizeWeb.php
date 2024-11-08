@@ -15,16 +15,15 @@ class AuthorizeWeb extends Controller
             ->value('authorize');
 
         $authorize = Board::query()
-            ->findOrFail($boardId)
-            ->value('member_permission');
+            ->findOrFail($boardId);
 
-        if ($authorize == 'board') {
+        if ($authorize->member_permission == 'board') {
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Member'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
-        } else if ($authorize == 'owner') {
+        } else if ($authorize->member_permission == 'owner') {
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
@@ -39,22 +38,21 @@ class AuthorizeWeb extends Controller
             ->value('authorize');
 
         $authorize = Board::query()
-            ->findOrFail($boardId)
-            ->value('edit_board');
+            ->findOrFail($boardId);
 
-        if ($authorize == 'owner') {
+        if ($authorize->edit_board == 'owner') {
             //       chỉ có quản trị viên
             return ($checkAuthorize == 'Owner' || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
-        } else if ($authorize == 'board') {
+        } else if ($authorize->edit_board == 'board') {
             //       tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Member'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
-        } else if ($authorize == 'workspace') {
+        } else if ($authorize->edit_board == 'workspace') {
             //       tất cả thành viên trong workspace
             return true;
         }
@@ -67,23 +65,21 @@ class AuthorizeWeb extends Controller
             ->value('authorize');
 
         $authorize = Board::query()
-            ->findOrFail($boardId)
-            ->value('comment_permission');
+            ->findOrFail($boardId);
 
-
-        if ($authorize == 'owner') {
+        if ($authorize->comment_permission == 'owner') {
             //       chỉ có quản trị viên
             return ($checkAuthorize == 'Owner' || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
-        } else if ($authorize == 'board') {
+        } else if ($authorize->comment_permission == 'board') {
             //       tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Member'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
-        } else if ($authorize == 'workspace') {
+        } else if ($authorize->comment_permission == 'workspace') {
             //       tất cả thành viên trong workspace
             return true;
         }
@@ -97,22 +93,22 @@ class AuthorizeWeb extends Controller
 
         $authorize = Board::query()
             ->where('id', $boardId)
-            ->value('archiver_permission')
+            ->first()
             ? Board::query()
                 ->where('id', $boardId)
-                ->value('archiver_permission')
+                ->first()
             : Board::withTrashed()
                 ->where('id', $boardId)
-                ->value('archiver_permission');
+                ->first();
 
-        if ($authorize == 'board') {
+        if ($authorize->archiver_permission == 'board') {
 //            tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Member'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
-        } else if ($authorize == 'owner') {
+        } else if ($authorize->archiver_permission == 'owner') {
 //            chỉ có quản trị viên với phó quản trị viên
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Sub_Owner')
@@ -121,13 +117,13 @@ class AuthorizeWeb extends Controller
         }
     }
 
-    public function authorizeEditPermissionBoard()
+    public function authorizeEditPermissionBoard($boardId)
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
-            ->value('authorize');
-
-        return ($checkAuthorize == 'Owner' || $checkAuthorize == 'Sub_Owner')
+            ->where('board_id', $boardId)
+            ->first();
+        return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner')
             ? true
             : false;
     }

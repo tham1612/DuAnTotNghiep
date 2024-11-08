@@ -46,7 +46,24 @@ class TaskController extends Controller
         $this->authorizeWeb = $authorizeWeb;
     }
 
+    public function getFormCreateTask($catalogId)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        if (!$catalogId) {
+            return response()->json(['error' => 'catalogId is missing'], 400);
+        }
+        $catalog = Catalog::findOrFail($catalogId);
 
+        $htmlForm = View::make('dropdowns.createTask', [
+            'catalog' => $catalog,
+        ])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
     public function store(StoreTaskRequest $request)
     {
         if (session('view_only', false)) {
@@ -106,7 +123,8 @@ class TaskController extends Controller
             'action' => 'success',
             'success' => true,
             'task' => $task,
-//            'task_count' => $catalog->tasks->count(),
+            'catalogs'=>$task->catalog->board->catalogs,
+            'task_count' => count($catalog->tasks),
         ]);
     }
 
@@ -532,7 +550,20 @@ class TaskController extends Controller
 
     public function getModalTask($taskId)
     {
-        $task = Task::with(['catalog','catalog.board'])->findOrFail($taskId);
+        $task = Task::with(['catalog',
+            'catalog.board',
+            'members',
+            'checkLists',
+            'checkLists.checkListItems',
+            'checkLists.checkListItems.checkListItemMembers',
+            'checkLists.checkListItems.checkListItemMembers.user',
+            'checkLists.checkListItems.members',
+            'tags',
+            'followMembers',
+            'attachments',
+            'taskComments',
+            'taskComments.user'
+        ])->findOrFail($taskId);
 //        dd( $task);
 
         $htmlForm = View::make('components.modalTask', [
