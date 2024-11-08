@@ -259,7 +259,6 @@ class BoardController extends Controller
             ->select('users.name', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
             ->where('board_members.board_id', $board->id)
             ->get();
-
         /*
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
@@ -896,10 +895,6 @@ class BoardController extends Controller
     function acceptInviteBoard($uuid, $token, Request $request)
     {
         //xử lý khi admin gửi link invite cho người dùng
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             $user = User::query()->where('email', $request->email)->first();
@@ -907,20 +902,22 @@ class BoardController extends Controller
 
             //xử lý khi người dùng có tài khoản
             if ($user) {
-                $check_user_wsp = BoardMember::join('boards', 'boards.id', '=', 'board_members.board_id')
-                    ->join('workspace_members', 'workspace_members.workspace_id', 'boards.workspace_id')
-                    ->where('board_members.user_id', $user->id)
-                    ->where('boards.workspace_id', $board->workspace_id)
-                    ->where('workspace_members.workspace_id', $board->workspace_id)
+                // $check_user_wsp = BoardMember::join('boards', 'boards.id', '=', 'board_members.board_id')
+                //     ->join('workspace_members', 'workspace_members.workspace_id', 'boards.workspace_id')
+                //     ->where('board_members.user_id', $user->id)
+                //     ->where('boards.workspace_id', $board->workspace_id)
+                //     ->where('workspace_members.workspace_id', $board->workspace_id)
+                //     ->first();
+                $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $board->workspace_id)
                     ->first();
                 $check_user_board = BoardMember::where('user_id', $user->id)->where('board_id', $board->id)
                     ->first();
+
                 //Check xử lý người dùng có trong workspace
                 if ($check_user_wsp) {
 
                     //xử lý khi người dùng chưa có trong bảng đó
                     if (!$check_user_board) {
-
                         //xử lý khi người dùng đã có tài khoản và đang đăng nhập
                         if (Auth::check()) {
                             $user_check = Auth::user(); // Lấy thông tin người dùng hiện tại
@@ -973,17 +970,16 @@ class BoardController extends Controller
 
                     //xử lý khi người dùng đã có trong bảng đó rồi
                     else {
-
                         session(['msg' => 'Bạn đã ở trong bảng rồi!!']);
                         session(['action' => 'error']);
                         return redirect()->route('b.edit', $board->id);
                     }
-                } //check xử lý nếu người dùng chưa ở trong wsp
+                }
+                //check xử lý nếu người dùng chưa ở trong wsp
                 else {
 
                     //xử lý khi người dùng chưa có trong bảng đó
                     if (!$check_user_board) {
-
                         //xử lý khi người dùng đã có tài khoản và đang đăng nhập
                         if (Auth::check()) {
 
@@ -992,7 +988,6 @@ class BoardController extends Controller
                             //xử lý người dùng khi đã đăng nhập đúng người dùng
                             if ($user_check->email === $request->email) {
                                 try {
-
                                     //thêm người dùng vào workspace member
                                     WorkspaceMember::create([
                                         'user_id' => $user_check->id,
@@ -1121,11 +1116,7 @@ class BoardController extends Controller
             $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
         });
 
-
-        session(['msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc']);
-        session(['action' => 'success']);
-        // return redirect()->route('home');
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'msg'=>"Bạn dẫ gửi yêu cầu tham gia vào không gian làm việc", 'action'=> 'success']);
     }
 
 //mời người dùng từ wsp vào bảng

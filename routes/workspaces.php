@@ -32,7 +32,7 @@ Route::middleware(['auth', 'isWorkspace'])
                     ->withoutMiddleware('isWorkspace')
                     ->name('store');
 
-                Route::get('delete/{id}', [WorkspaceController::class, 'delete'])
+                Route::delete('delete/{id}', [WorkspaceController::class, 'delete'])
                     ->withoutMiddleware('isWorkspace')
                     ->name('delete');
 

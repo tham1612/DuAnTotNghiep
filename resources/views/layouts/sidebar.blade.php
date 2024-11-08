@@ -58,8 +58,14 @@
                 ->first();
         } else {
             $workspaceBoards = \App\Models\Workspace::query()
-                ->with('boards.boardMembers') // Lấy luôn boardMembers để kiểm tra
-                ->where('id', $workspaceChecked->workspace_id)
+                ->where('id', $workspaceChecked->workspace_id) // Lọc theo workspace cụ thể
+                ->with([
+                    'boards' => function ($query) {
+                        $query->whereHas('boardMembers', function ($query) {
+                            $query->where('user_id', Auth::id());
+                        });
+                    },
+                ])
                 ->first();
         }
     }
@@ -200,8 +206,7 @@
                                 <span
                                     class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
                             @elseif ($allNotifications->count() > 9)
-                            <span
-                                    class="badge rounded-circle bg-danger text-white">9+</span>
+                                <span class="badge rounded-circle bg-danger text-white">9+</span>
                             @endif
                         @endif
                     </a>
@@ -363,25 +368,26 @@
                                         method: 'GET',
                                         headers: {
                                             'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Gửi token bảo mật CSRF
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
                                         },
                                     })
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
-                                            // Nếu yêu cầu thành công, cập nhật giao diện
+                                            // Nếu yêu cầu thành công, cập nhật giao diện từ dữ liệu trả về
                                             document.querySelector('.guest-notice').innerHTML = `
-                            <div class="alert alert-info d-flex align-items-center" role="alert" style="background-color: #f0f4ff; border-radius: 8px;">
-                                <i class="ri-information-line me-2" style="font-size: 24px;"></i>
-                                <div>
-                                    <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
-                                        {{ \Str::limit($workspaceChecked->name, 25) }}
-                                    </strong><br> chờ quản trị viên duyệt
-                                </div>
-                            </div>
-                        `;
+                                                <div class="alert alert-info d-flex align-items-center" role="alert" style="background-color: #f0f4ff; border-radius: 8px;">
+                                                    <i class="ri-information-line me-2" style="font-size: 24px;"></i>
+                                                    <div>
+                                                        <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
+                                                            ${data.workspaceName}
+                                                        </strong><br> chờ quản trị viên duyệt
+                                                    </div>
+                                                </div>
+                                            `;
+                                            notificationWeb(data.action, data.msg);
                                         } else {
-                                            console.error('Request failed:', data);
+                                            console.error('Request failed:', data.message);
                                         }
                                     })
                                     .catch(error => console.error('Error:', error));
@@ -389,7 +395,6 @@
                         }
                     });
                 </script>
-
             </div>
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
