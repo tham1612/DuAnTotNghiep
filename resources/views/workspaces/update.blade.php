@@ -7,7 +7,8 @@
                     <div class="row">
 
                         <div class="col-lg-6">
-                            <form action="{{ route('editWorkspace') }}" method="POST" enctype="multipart/form-data">
+                            <form id="editWorkspaceForm" action="{{ route('editWorkspace') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="profile-user mx-auto mb-3">
                                     <label for="profile-img-file-input" class="d-block" tabindex="0">
@@ -50,9 +51,7 @@
                                             </div>
                                         </div>
                                         <div class="ms-3">
-                                            <h5 class="m-0">
-                                                {{ $workspaceChecked->wsp_name }}</h5>
-
+                                            <h5 class="m-0">{{ $workspaceChecked->wsp_name }}</h5>
                                             <span class="text-muted small"><i
                                                     class="bi bi-globe"></i>{{ $access }}</span>
                                         </div>
@@ -60,29 +59,27 @@
                                 </div>
 
                                 <div>
-                                    <div>
-                                        <label for="name">Tên không gian làm việc</label>
-                                    </div>
-
+                                    <div><label for="name">Tên không gian làm việc</label></div>
                                     <input type="text" name="name"
                                         class="form-control bg-light @error('name') is-invalid @enderror" id="name"
                                         value="{{ old('name', $workspaceChecked->name) }}" />
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-
                                 </div>
+
                                 <div>
                                     <label for="description">Mô tả</label>
                                 </div>
-                                <div>
-                                    <div class="mb-2">
-                                        <textarea name="description" class="form-control bg-light" id="description" rows="3" placeholder="Mô tả">{{ $workspaceChecked->description }}</textarea>
-
-                                    </div>
+                                <div class="mb-2">
+                                    <textarea name="description" class="form-control bg-light" id="description" rows="3" placeholder="Mô tả">{{ $workspaceChecked->description }}</textarea>
                                 </div>
+
                                 <button type="submit" class="btn btn-primary mt-2">Lưu</button>
                             </form>
+
+                            <div id="formResponse" class="mt-3"></div>
+
                         </div>
 
                         <!--end col-->
@@ -122,7 +119,8 @@
                                                                     name="email" />
                                                             </div>
                                                             <div class="col-4 ms-2">
-                                                                <select name="authorize" id="" class="form-select">
+                                                                <select name="authorize" id=""
+                                                                    class="form-select">
                                                                     <option value="Member">Thành Viên</option>
                                                                     @if ($workspaceChecked->authorize !== 'Member' && $workspaceChecked->authorize !== 'Viewer')
                                                                         <option value="Sub_Owner">Phó nhóm</option>
@@ -213,12 +211,12 @@
                                                                                         style="width: 25px;height: 25px">
                                                                                         {{ strtoupper(substr($wspOwner->name, 0, 1)) }}
                                                                                     </div>
-                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                    {{-- <span class="fs-15 ms-2 text-white"
                                                                                         id="swicthWs">
                                                                                         {{ \Illuminate\Support\Str::limit($wspOwner->name, 16) }}
                                                                                         <i
                                                                                             class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                    </span>
+                                                                                    </span> --}}
                                                                                 @endif
                                                                             @endif
                                                                         </a>
@@ -292,12 +290,12 @@
                                                                                         style="width: 25px;height: 25px">
                                                                                         {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                                     </div>
-                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                    {{-- <span class="fs-15 ms-2 text-white"
                                                                                         id="swicthWs">
                                                                                         {{ \Illuminate\Support\Str::limit($item->name, 16) }}
                                                                                         <i
                                                                                             class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                    </span>
+                                                                                    </span> --}}
                                                                                 @endif
                                                                             </a>
                                                                         </div>
@@ -379,12 +377,12 @@
                                                                                         style="width: 25px;height: 25px">
                                                                                         {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                                     </div>
-                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                    {{-- <span class="fs-15 ms-2 text-white"
                                                                                         id="swicthWs">
                                                                                         {{ \Illuminate\Support\Str::limit($item->name, 16) }}
                                                                                         <i
                                                                                             class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                    </span>
+                                                                                    </span> --}}
                                                                                 @endif
                                                                             </a>
                                                                         </div>
@@ -483,12 +481,12 @@
                                                                                             style="width: 25px;height: 25px">
                                                                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                                         </div>
-                                                                                        <span class="fs-15 ms-2 text-white"
+                                                                                        {{-- <span class="fs-15 ms-2 text-white"
                                                                                             id="swicthWs">
                                                                                             {{ \Illuminate\Support\Str::limit($item->name, 16) }}
                                                                                             <i
                                                                                                 class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                        </span>
+                                                                                        </span> --}}
                                                                                     @endif
                                                                                 </a>
                                                                             </div>
@@ -558,12 +556,12 @@
                                                                                         style="width: 25px;height: 25px">
                                                                                         {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                                     </div>
-                                                                                    <span class="fs-15 ms-2 text-white"
+                                                                                    {{-- <span class="fs-15 ms-2 text-white"
                                                                                         id="swicthWs">
                                                                                         {{ \Illuminate\Support\Str::limit($item->name, 16) }}
                                                                                         <i
                                                                                             class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                    </span>
+                                                                                    </span> --}}
                                                                                 @endif
                                                                             </a>
                                                                         </div>
@@ -624,8 +622,7 @@
                             aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <form onsubmit="disableButtonOnSubmit()" action="{{ route('update_ws_access') }}"
-                                        method="post">
+                                    <form id="updateAccessForm" action="{{ route('update_ws_access') }}" method="post">
                                         @csrf
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="customModalLabel">Chọn khả năng hiển thị trong
@@ -643,8 +640,7 @@
                                                     <i class="ri-lock-2-line fs-20 text-danger"></i>Riêng tư
                                                 </label>
                                                 <p class="option-description">
-                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không
-                                                    gian
+                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không gian
                                                     làm việc có thể truy cập hoặc nhìn thấy Không gian làm việc.
                                                 </p>
                                             </div>
@@ -657,10 +653,8 @@
                                                     <i class="ri-earth-line fs-20 text-success"></i>Công khai
                                                 </label>
                                                 <p class="option-description">
-                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới
-                                                    Không
-                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm
-                                                    việc.
+                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới Không
+                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm việc.
                                                 </p>
                                             </div>
                                         </div>
@@ -670,16 +664,46 @@
                                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                                         </div>
                                     </form>
+
+                                    <div id="formResponse" class="mt-2"></div>
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <a style="margin-left: 15px; padding-bottom:20px"
+                {{-- <a style="margin-left: 15px; padding-bottom:20px"
                     href="{{ route('workspaces.delete', $workspaceChecked->wm_id) }}"
                     onclick="return confirm('Bạn có chắc chắn muốn xóa bỏ không gian làm việc?')" class="text-danger">Xóa
                     Không gian
-                    làm việc này?</a>
+                    làm việc này?</a> --}}
+                <!-- Modal HTML -->
+                <a style="margin-left: 15px; padding-bottom:20px" href="#" class="text-danger"
+                    data-bs-toggle="modal" data-bs-target="#deleteWorkspaceModal"
+                    onclick="setDeleteAction('{{ route('workspaces.delete', $workspaceChecked->wm_id) }}')">
+                    Xóa Không gian làm việc này?
+                </a>
+                <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
+                    aria-labelledby="deleteWorkspaceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteWorkspaceModalLabel">Xác nhận xóa</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Bạn có chắc chắn muốn xóa không gian làm việc này? Hành động này không thể hoàn tác.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="button" id="confirmDeleteButton" class="btn btn-danger">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <!--end col-->
@@ -732,5 +756,121 @@
                 alert('Có lỗi xảy ra, vui lòng thử lại.');
             });
         }
+    </script>
+    {{-- update thông tin workspace --}}
+    <script>
+        $(document).ready(function() {
+            $('#editWorkspaceForm').on('submit', function(e) {
+                e.preventDefault(); // Ngăn chặn hành vi submit mặc định
+
+                $('#loading').show(); // Hiển thị loading
+                let formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'), // URL từ action của form
+                    method: $(this).attr('method'), // Phương thức từ form
+                    data: formData,
+                    processData: false, // Không xử lý dữ liệu
+                    contentType: false, // Không đặt kiểu content mặc định
+                    success: function(response) {
+                        notificationWeb(response.action, response.message);
+                    },
+                    error: function(xhr) {
+                        $('#loading').hide(); // Ẩn loading
+
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = '';
+                            $.each(errors, function(key, value) {
+                                errorMessages += '<div class="alert alert-danger">' +
+                                    value[0] + '</div>';
+                            });
+                            $('#formResponse').html(errorMessages);
+                        } else {
+                            $('#formResponse').html(
+                                '<div class="alert alert-danger">Có lỗi xảy ra!</div>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{-- ajax update access --}}
+    <script>
+        $(document).ready(function() {
+            $('#updateAccessForm').on('submit', function(e) {
+                e.preventDefault(); // Ngăn chặn hành vi submit mặc định
+
+                $('#loading').show(); // Hiển thị loading
+                $('#formResponse').html(''); // Xóa các thông báo cũ
+
+                let formData = $(this).serialize(); // Lấy dữ liệu từ form
+
+                $.ajax({
+                    url: $(this).attr('action'), // Lấy URL từ form
+                    method: $(this).attr('method'), // Lấy method từ form
+                    data: formData,
+                    success: function(response) {
+                        // $('#formResponse').html('<div class="alert alert-success">' + response.message + '</div>');
+                        notificationWeb(response.action, response.message);
+                        document.getElementById('access').innerText = "Riêng tư";
+                        setTimeout(function() {
+                            $('#formResponse').html('');
+                        }, 3000);
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = '';
+                            $.each(errors, function(key, value) {
+                                errorMessages += '<div class="alert alert-danger">' +
+                                    value[0] + '</div>';
+                            });
+                            notificationWeb(response.action, response.message);
+                        } else {
+                            // $('#formResponse').html('<div class="alert alert-danger">Có lỗi xảy ra: ' + xhr.responseJSON.message + '</div>');
+                            notificationWeb(response.action, response.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{-- delete workspace --}}
+    <script>
+        let deleteUrl = ''; // Biến toàn cục để lưu URL xóa
+
+        function setDeleteAction(actionUrl) {
+            deleteUrl = actionUrl; // Cập nhật URL xóa khi mở modal
+        }
+
+        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+            if (!deleteUrl) return;
+
+            fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}', // Gửi CSRF token
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        notificationWeb(response.action, response.message); // Thông báo thành công
+                        // Cập nhật giao diện hoặc redirect
+                    } else {
+                        notificationWeb(response.action, response.message); // Thông báo lỗi
+                    }
+                    // Đóng modal sau khi xử lý
+                    $('#deleteWorkspaceModal').modal('hide');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    notificationWeb('error', 'Có lỗi xảy ra, vui lòng thử lại.');
+                });
+        });
     </script>
 @endsection
