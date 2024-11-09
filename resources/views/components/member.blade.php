@@ -7,7 +7,7 @@
                     Chia sẻ bảng
                 </h5>
                 <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
@@ -62,6 +62,21 @@
                         </div>
 
                     </div>
+                    {{--                    chọn thành viên ở trong ws--}}
+                    <div class="d-flex justify-content-between">
+                        <select class="js-example-basic-single" name="state">
+                            <option value="AL">Alabama</option>
+                            <option value="MA">Madrid</option>
+                            <option value="TO">Toronto</option>
+                            <option value="LO">Londan</option>
+                            <option value="WY">Wyoming</option>
+                            <option value="AL">Alabama</option>
+                            <option value="MA">Madrid</option>
+                            <option value="TO">Toronto</option>
+                            <option value="LO">Londan</option>
+                            <option value="WY">Wyoming</option>
+                        </select>
+                    </div>
                     <!--end col-->
                     <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3" role="tablist">
                         <li class="nav-item d-flex align-items-center justify-content-between">
@@ -71,7 +86,7 @@
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
                                   style="border-radius: 100%; width: 20px ;height: 20px;">
                                 @if (!empty($boardMembers))
-                                    {{ $boardMembers->count() + 1 }}
+                                    {{ $boardMembers->count() + 1 +  $boardSubOwner->count() }}
                                 @endif
                             </span>
 
@@ -111,10 +126,10 @@
                                                         style="width: 25px;height: 25px">
                                                         {{ strtoupper(substr($boardOwner->name, 0, 1)) }}
                                                     </div>
-                                                    <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                        {{ \Illuminate\Support\Str::limit($boardOwner->name, 16) }}
-                                                        <i class=" ri-arrow-drop-down-line fs-20"></i>
-                                                    </span>
+                                                    {{--                                                    <span class="fs-15 ms-2 text-white" id="swicthWs">--}}
+                                                    {{--                                                        {{ \Illuminate\Support\Str::limit($boardOwner->name, 16) }}--}}
+                                                    {{--                                                        <i class=" ri-arrow-drop-down-line fs-20"></i>--}}
+                                                    {{--                                                    </span>--}}
                                                 @endif
                                             @endif
 
@@ -178,10 +193,10 @@
                                                             style="width: 25px;height: 25px">
                                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                                         </div>
-                                                        <span class="fs-15 ms-2 text-white" id="swicthWs">
-                                                            {{ \Illuminate\Support\Str::limit($item->name, 16) }}
-                                                            <i class=" ri-arrow-drop-down-line fs-20"></i>
-                                                        </span>
+                                                        {{--                                                        <span class="fs-15 ms-2 text-white" id="swicthWs">--}}
+                                                        {{--                                                            {{ \Illuminate\Support\Str::limit($item->name, 16) }}--}}
+                                                        {{--                                                            <i class=" ri-arrow-drop-down-line fs-20"></i>--}}
+                                                        {{--                                                        </span>--}}
                                                     @endif
                                                 </a>
                                             </div>
@@ -477,13 +492,13 @@
             const inviteUrl = `/b/invite-member-workspace/${memberId}/${boardId}`;
 
             fetch(inviteUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                            .getAttribute('content')
-                    }
-                })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');

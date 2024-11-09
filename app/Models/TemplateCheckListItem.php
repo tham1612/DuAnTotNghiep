@@ -19,8 +19,4 @@ class TemplateCheckListItem extends Model
         'is_complete'=> 'boolean',
 
     ];
-    public function templateDateable()
-    {
-        return $this->morphMany(TemplateDateable::class, ' dateable');
-    }
 }

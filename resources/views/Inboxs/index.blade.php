@@ -1,21 +1,21 @@
 @extends('layouts.masterMain')
 
 @section('main')
-@if(session('error'))
-<div class="alert alert-danger custom-alert">
-    {{ session('error') }}
-</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger custom-alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
+    <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
     <div class="email-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
         <!-- end email-menu-sidebar -->
 
@@ -123,8 +123,20 @@
                             </div>
 
                         </div>
+                        @php
+                            $allNotifications = Auth()->user()
+                                ->notifications()
+                                ->get()
+                                ->filter(function ($notification) {
+                                    // Truy cập trực tiếp đến mảng data, vì Laravel sẽ tự động chuyển đổi JSON thành mảng
+                                    $data = $notification->data;
+
+                                    // Kiểm tra xem trường `readed` có tồn tại và giá trị là false
+                                    return isset($data['readed']) && $data['readed'] == false;
+                                });
+                        @endphp
                         <div class="col-auto">
-                            <div class="text-muted mb-2">1-50 of 154</div>
+                            <div class="text-muted mb-2">{{ $allNotifications->count() }} thông báo hiện tại</div>
                         </div>
                     </div>
                 </div>
@@ -169,5 +181,4 @@
     </script>
     <!-- mailbox init -->
     <script src="{{ asset('theme/assets/js/pages/mailbox.init.js') }}"></script>
-
 @endsection

@@ -38,7 +38,7 @@ class TaskOverdueNotification extends Notification
         // Lưu thông báo vào database
         return [
             'task_id' => $this->task->id,
-            'description' => "Task \"{$this->task->name}\" đã quá hạn, hãy nhanh chóng hoàn thành!",
+            'description' => "🔔 Task \"{$this->task->name}\" đã quá hạn, hãy nhanh chóng hoàn thành!",
             'readed' => false,
             'name' => $this->task->board->name ?? 'N/A',
             'title' => 'Thông báo quá hạn',
