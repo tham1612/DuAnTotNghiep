@@ -195,7 +195,7 @@
 
                         @endif
                     </div>
-                    <div class="py-3" id="tag-section-{{ $task->id }}"
+                    <div class="ms-2 py-3" id="tag-section-{{ $task->id }}"
                         style="{{ count($task->tags) ? '' : 'display: none;' }}">
                         <strong>Nhãn</strong>
                         <div class="d-flex mt-1 flex-wrap gap-2" id="tag-task-{{ $task->id }}">

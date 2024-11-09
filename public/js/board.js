@@ -138,3 +138,30 @@ function updatePermission(permissionType, value, boardId) {
         }
     });
 }
+
+
+// tạo bảng mẫu
+// sao chép bảng
+$('.submitFormBoardTemplate').on('submit', function (e) {
+    e.preventDefault();
+
+    var form = $(this);
+    var name = form.find('.titleBoardTemplate').val().trim();
+    if (name === '') {
+        notificationWeb('error', 'Vui lòng nhập tiêu đề')
+        return;
+    }
+    console.log(name)
+    $.ajax({
+        url: '/boardTemplate/create',
+        type: 'POST',
+        data: $(this).serialize(),       // Lấy dữ liệu từ form
+        success: function (response) {
+            notificationWeb(response.action, response.msg)
+            window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
+        },
+        error: function (xhr, status, error) {
+            notificationWeb('error', 'Có lỗi xảy ra!!')
+        }
+    });
+});
