@@ -28,9 +28,8 @@ class TaskDueNotification extends Notification implements ShouldQueue
     {
         // Tạo email thông báox
         return (new MailMessage)
-            ->subject('Task sắp đến hạn')
-            ->line('Task "' . $this->task->text . '" này sắp đến hạn, hãy nhanh chóng hoàn thành!')
-            ->action('Xem Task', url("/b\"{$this->task->catalog->board->id}\"edit"));
+            ->view('emails.taskReminder', ['task' => $this->task])
+            ->subject('Task sắp đến hạn');
     }
 
     public function toDatabase($notifiable)
@@ -38,7 +37,7 @@ class TaskDueNotification extends Notification implements ShouldQueue
         // Lưu thông báo vào database
         return [
             'task_id' => $this->task->id,
-            'description' => 'Task "' . $this->task->text . '" này sắp đến hạn, hãy nhanh chóng hoàn thành!',
+            'description' => '🔔 Task "' . $this->task->text . '" này sắp đến hạn, hãy nhanh chóng hoàn thành!',
             'readed' => false,
             'name' => $this->task->catalog->board->name,
             'title' => 'Thông báo đến hạn',

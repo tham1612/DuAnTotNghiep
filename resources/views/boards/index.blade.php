@@ -98,7 +98,7 @@
                                         @if ($task->members->count() >= 1)
                                             <div class="flex-grow-1 d-flex align-items-center" style="height: 30px">
                                                 <i class="ri-account-circle-line fs-20 me-2"></i>
-                                                <div class="avatar-group mt-3">
+                                                <div class="avatar-group">
                                                     @if ($task->members->isNotEmpty())
                                                         @php
                                                             // Đếm số lượng board members
@@ -112,16 +112,14 @@
                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
                                                                    title="{{ $taskMember['name'] }}">
                                                                     @if ($taskMember['image'])
-
                                                                         <img
                                                                             src="{{ asset('storage/' . $taskMember->image) }}"
                                                                             alt=""
-                                                                            class="rounded-circle avatar-xss">
+                                                                            class="rounded-circle avatar-xs" style="width: 30px;height: 30px">
                                                                     @else
-                                                                        <div class="avatar-sm">
+                                                                        <div class="avatar-xs" style="width: 30px;height: 30px">
                                                                             <div
                                                                                 class="avatar-title rounded-circle bg-info-subtle text-primary"
-
                                                                                 style="width: 30px;height: 30px">
                                                                                 {{ strtoupper(substr($taskMember['name'], 0, 1)) }}
                                                                             </div>
@@ -137,10 +135,9 @@
 
                                                                data-bs-toggle="tooltip" data-bs-placement="top"
                                                                title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                <div class="avatar-xss">
+                                                                <div class="avatar-xs" style="width: 30px;height: 30px">
                                                                     <div class="avatar-title rounded-circle"
-                                                                         style="width: 35px;height: 35px">
-
+                                                                    style="width: 30px;height: 30px">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
                                                                 </div>
@@ -162,7 +159,7 @@
                                             @endphp
                                             <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-calendar-event-line fs-20 me-2"></i>
-                                                <span class="badge bg-success text-whites-12"> {{ $start }} -
+                                                <span class="badge bg-primary"> {{ $start }} -
                                                     {{ $end }}
                                                 </span>
                                             </div>
@@ -221,22 +218,28 @@
                                                 @endif
                                                 <!-- checklist -->
                                                 @php
-                                                    $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems;
-                                                    });
+                                                    // Chuyển đổi $task->checklists sang mảng để dễ thao tác
+                                                       $checklistsArray = json_decode(json_encode($task->check_lists), true);
 
-                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems->where('is_complete', true);
-                                                    });
+                                                       // Đếm tổng số checklist items
+                                                       $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                           return count($checklist['checklistItems']);
+                                                       });
+
+                                                       // Đếm số checklist items đã hoàn thành
+                                                       $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                           return collect($checklist['checklistItems'])->where('is_complete', true)->count();
+                                                       });
                                                 @endphp
-                                                @if($task->checkLists->isNotEmpty())
+
+                                                @if($totalChecklistItems > 0)
                                                     <li class="list-inline-item">
-                                                        <a href="javascript:void(0)" class="text-muted"><i
-                                                                class="ri-checkbox-line align-bottom"></i>
-                                                            {{$inProgressItems->count().'/'.$allChecklistItems->count()}}
+                                                        <a href="javascript:void(0)" class="text-muted"><i class="ri-checkbox-line align-bottom"></i>
+                                                            {{ $completedChecklistItems . '/' . $totalChecklistItems }}
                                                         </a>
                                                     </li>
                                                 @endif
+
                                             </ul>
                                         </div>
                                     </div>

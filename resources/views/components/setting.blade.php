@@ -247,8 +247,12 @@
                     <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
 
                     <div class="row p-3 ">
+                        @php $board->load(['catalogs.tasks' => function ($query) {
+                                $query->onlyTrashed(); // Chỉ lấy tasks đã xóa mềm
+                            }]);
+                        @endphp
                         @foreach($board->catalogs as $catalog)
-                            @foreach($catalog->tasks()->onlyTrashed()->get() as $archiverTask)
+                            @foreach($catalog->tasks as $archiverTask)
                                 <div class="bg-warning-subtle border rounded mt-2">
                                     <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
                                     <ul class="link-inline" style="margin-left: -32px">
