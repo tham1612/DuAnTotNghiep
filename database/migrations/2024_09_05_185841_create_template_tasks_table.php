@@ -14,14 +14,17 @@ return new class extends Migration
         Schema::create('template_tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\TemplateCatalog::class)->constrained();
-            $table->string('title');
+            $table->string('text');
             $table->text('description')->nullable();
             $table->integer('position');
             $table->string('image')->nullable();
-            $table->enum('priority',\App\Enums\IndexEnum::getValues());
-            $table->enum('risk',\App\Enums\IndexEnum::getValues());
-
-
+            $table->enum('priority', \App\Enums\IndexEnum::getValues());
+            $table->enum('risk', \App\Enums\IndexEnum::getValues());
+            $table->float('progress')->default(0);
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+            $table->integer('parent')->nullable();
+            $table->integer('sortorder')->default(0);
             $table->timestamps();
         });
     }

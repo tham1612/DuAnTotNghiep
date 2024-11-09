@@ -82,7 +82,7 @@ Route::middleware(['auth', 'isWorkspace'])
         });
 
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
-            ->withoutMiddleware('auth');
+            ->withoutMiddleware(['auth', 'isWorkspace']);
 
         Route::resource('catalogs', CatalogControler::class);
 

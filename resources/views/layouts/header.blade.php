@@ -415,6 +415,7 @@
                                     @endif
                                     <p class="fs-16 mt-3 ms-2">{{ $archiverBoard->name }}</p>
                                 </div>
+
                                 <div>
                                     <button class="btn btn-outline-primary"
                                             onclick="restoreBoard({{ $archiverBoard->id }})">
