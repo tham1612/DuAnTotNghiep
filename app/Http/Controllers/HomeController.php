@@ -127,7 +127,7 @@ class HomeController extends Controller
         // Task quá hạn
         $overdueTasks = $tasks->filter(function($task) {
             return $task->progress < 100 && $task->start_date && $task->end_date && Carbon::parse($task->end_date)->lt(now());
-        });        
+        });
         // Lọc các task của riêng user chưa hoàn thành
         $myAssignedTasks = $userTasks->filter(fn($task) => $task->progress < 100);
 
@@ -142,13 +142,13 @@ class HomeController extends Controller
 
 
         // hoạt động gần đây
-        $activities = Activity::whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
+        $activities = Activity::with('causer')->whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
             ->orderBy('created_at', 'desc')
             ->get();
-            
+
         $currentWorkspace = WorkspaceMember::where('user_id', $userId)
             ->where('is_active', 1)
-            ->first();    
+            ->first();
 
         // Truyền các biến này sang view
         return view('homes.home', compact(
