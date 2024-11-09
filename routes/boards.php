@@ -108,4 +108,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/catalogs/getFormCreateCatalog/{id}', [CatalogControler::class, 'getFormCreateCatalog'])
             ->name('catalogs.getFormCreateCatalog');
 
+//        tạo bảng mẫu
+        Route::post('/boardTemplate/create', [\App\Http\Controllers\TemplateController::class, 'createBoardTemplate'])
+            ->name('createBoardTemplate');
     });

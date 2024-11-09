@@ -14,9 +14,10 @@ class MemberController extends Controller
 {
     protected $googleApiClient;
 
-    public function __construct(GoogleApiClientController $googleApiClient)
+    public function __construct(GoogleApiClientController $googleApiClient, AuthorizeWeb $authorizeWeb)
     {
         $this->googleApiClient = $googleApiClient;
+        $this->authorizeWeb = $authorizeWeb;
     }
 
     // task
@@ -29,9 +30,15 @@ class MemberController extends Controller
         session()->forget('view_only');
 
         $data = $request->all();
-//        dd($data);
         $task = Task::query()->findOrFail($data['task_id']);
-//        dd($data, $task->start_date, $task->end_date);
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         $data['id'] = $task->id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
@@ -82,11 +89,20 @@ class MemberController extends Controller
         session()->forget('view_only');
         $data = $request->all();
 
+        $task = Task::query()->where('id', $data['task_id'])->first();
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         $taskMember = TaskMember::query()
             ->where('task_id', $data['task_id'])
             ->where('user_id', $data['user_id'])
             ->first();
-        $task = Task::query()->where('id', $data['task_id'])->first();
+
         $data['text'] = $task->text;
         $data['description'] = $task->description;
         $data['start_date'] = $task->start_date;
@@ -126,13 +142,13 @@ class MemberController extends Controller
     {
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
-        $checkListItemMember=CheckListItemMember::create($data);
+        $checkListItemMember = CheckListItemMember::create($data);
         $userImage = $checkListItemMember->user->image ?? null;
         return response()->json([
             'success' => "them CheckListItemMember thành công",
             'msg' => true,
-            'userImage'=>$userImage,
-            'userName'=>$checkListItemMember->user->name
+            'userImage' => $userImage,
+            'userName' => $checkListItemMember->user->name
         ]);
     }
 
