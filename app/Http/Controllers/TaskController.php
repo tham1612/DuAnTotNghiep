@@ -562,7 +562,7 @@ class TaskController extends Controller
             'taskComments',
             'taskComments.user'
         ])->findOrFail($taskId);
-//        dd( $task);
+    //    dd( $task);
 
         $htmlForm = View::make('components.modalTask', [
             'task' => $task,

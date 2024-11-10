@@ -774,6 +774,8 @@
                     contentType: false, // Không đặt kiểu content mặc định
                     success: function(response) {
                         notificationWeb(response.action, response.message);
+                        console.log('cật nhật thành công');
+
                     },
                     error: function(xhr) {
                         $('#loading').hide(); // Ẩn loading

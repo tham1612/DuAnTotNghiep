@@ -24,7 +24,7 @@ class WorkspaceMember extends Model
     protected $casts = [
         'authorize' => AuthorizeEnum::class,
         'is_active' => 'boolean',
-        'is_accept_invite' => 'boolean',
+        'is_accept_invite' => 'integer',
 
     ];
     public function user()

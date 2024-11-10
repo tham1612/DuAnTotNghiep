@@ -77,7 +77,7 @@ class Board extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id')// Nếu bảng `board_members` có cột `is_star`
-        ->withPivot('authorize', 'is_star', 'follow', 'invite')
+        ->withPivot('authorize', 'is_star', 'follow', 'invite', 'is_accept_invite')
             ->withTimestamps();    // Nếu bảng trung gian có các cột timestamps
     }
 }

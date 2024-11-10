@@ -35,39 +35,79 @@
         ->first();
 
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
+        // if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
+        //     $workspaceBoards = \App\Models\Workspace::query()
+        //         ->with('boards.boardMembers')
+        //         ->where('id', $workspaceChecked->workspace_id)
+        //         ->first();
+        // } elseif ($workspaceChecked->authorize == 'Member') {
+        //     $workspaceBoards = \App\Models\Workspace::query()
+        //         ->with([
+        //             'boards.boardMembers' => function ($query) use ($userId) {
+        //                 $query
+        //                     ->where('access', 'public') // Bảng công khai
+        //                     ->orWhere(function ($q) use ($userId) {
+        //                         $q->where('access', 'private') // Bảng riêng tư
+        //                             ->whereHas('boardMembers', function ($q) use ($userId) {
+        //                                 $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
+        //                             });
+        //                     });
+        //             },
+        //         ])
+        //         ->where('id', $workspaceChecked->workspace_id)
+        //         ->first();
+        // } else {
+        //     $workspaceBoards = \App\Models\Workspace::query()
+        //         ->where('id', $workspaceChecked->workspace_id) // Lọc theo workspace cụ thể
+        //         ->with([
+        //             'boards' => function ($query) {
+        //                 $query->whereHas('boardMembers', function ($query) {
+        //                     $query->where('user_id', Auth::id());
+        //                 });
+        //             },
+        //         ])
+        //         ->first();
+        // }
+
         if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
             $workspaceBoards = \App\Models\Workspace::query()
-                ->with('boards')
+                ->with(['boards.boardMembers.user']) // Load cả user trong boardMembers
                 ->where('id', $workspaceChecked->workspace_id)
                 ->first();
         } elseif ($workspaceChecked->authorize == 'Member') {
             $workspaceBoards = \App\Models\Workspace::query()
                 ->with([
                     'boards' => function ($query) use ($userId) {
-                        $query
-                            ->where('access', 'public') // Bảng công khai
-                            ->orWhere(function ($q) use ($userId) {
-                                $q->where('access', 'private') // Bảng riêng tư
-                                    ->whereHas('boardMembers', function ($q) use ($userId) {
-                                        $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
-                                    });
+                        $query->where(function ($q) use ($userId) {
+                            $q->where('access', 'public')->orWhere(function ($q) use ($userId) {
+                                $q->where('access', 'private')->whereHas('boardMembers', function ($q) use ($userId) {
+                                    $q->where('user_id', $userId);
+                                });
                             });
+                        });
                     },
+                    'boards.boardMembers.user', // Load user kèm trong boardMembers
                 ])
                 ->where('id', $workspaceChecked->workspace_id)
                 ->first();
         } else {
             $workspaceBoards = \App\Models\Workspace::query()
-                ->where('id', $workspaceChecked->workspace_id) // Lọc theo workspace cụ thể
+                ->where('id', $workspaceChecked->workspace_id)
                 ->with([
                     'boards' => function ($query) {
                         $query->whereHas('boardMembers', function ($query) {
                             $query->where('user_id', Auth::id());
                         });
                     },
+                    'boards.boardMembers.user', // Load user trong boardMembers
                 ])
                 ->first();
         }
+
+        // foreach ($workspaceBoards->boards as $board) {
+        //     $boardMembers = $board->members()->wherePivot('is_accept_invite', 0)->get()->unique('id');
+        //     // dd($board->members);
+        // }
     }
 
     $allNotifications = \App\Models\User::find($userId)
@@ -250,8 +290,10 @@
                                     </div>
                                 </a>
                                 @php
-                                    // Load tất cả các user duy nhất của board
                                     $boardMembers = $board->members->unique('id');
+
+                                    // $boardMembers = $board->boardMembers()->with('user')->get()->unique('user.id');
+
                                     $memberIsStar =
                                         $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
 
@@ -342,6 +384,7 @@
         </button>
 
     </div>
+
     @if (!empty($workspaceMemberChecked))
         @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
@@ -407,6 +450,59 @@
                         trị viên duyệt
                     </div>
                 </div>
+            </div>
+        @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 2)
+            <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
+                <div class="alert alert-info d-flex align-items-center" role="alert"
+                    style="background-color: #ffd9d7; border-radius: 8px;">
+                    <i class="ri-information-line me-2" style="font-size: 24px;"></i>
+                    <div>
+                        <strong>Bạn đã bị từ chối yêu cầu</strong> tham gia không gian làm việc: <strong>
+                            {{ \Str::limit($workspaceChecked->name, 25) }} </strong>
+                    </div>
+
+                </div>
+                <button id="requestJoinButton" class="btn btn-primary mt-2" style="width: 100%; text-align: center;">
+                    Yêu cầu tham gia lại
+                </button>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const requestButton = document.getElementById('requestJoinButton');
+
+                        if (requestButton) {
+                            requestButton.addEventListener('click', function() {
+                                // Gửi yêu cầu AJAX
+                                fetch("{{ route('b.requestToJoinWorkspace') }}", {
+                                        method: 'GET',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
+                                        },
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Nếu yêu cầu thành công, cập nhật giao diện từ dữ liệu trả về
+                                            document.querySelector('.guest-notice').innerHTML = `
+                                                <div class="alert alert-info d-flex align-items-center" role="alert" style="background-color: #f0f4ff; border-radius: 8px;">
+                                                    <i class="ri-information-line me-2" style="font-size: 24px;"></i>
+                                                    <div>
+                                                        <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
+                                                            ${data.workspaceName}
+                                                        </strong><br> chờ quản trị viên duyệt
+                                                    </div>
+                                                </div>
+                                            `;
+                                            notificationWeb(data.action, data.msg);
+                                        } else {
+                                            console.error('Request failed:', data.message);
+                                        }
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        }
+                    });
+                </script>
             </div>
         @endif
     @endif
