@@ -160,10 +160,11 @@
                 <div class="container-fluid">
 
                     @php
-                        $board = session('board');
+                        $workspaceChecked = session('workspaceChecked');
                     @endphp
                     @if (request()->is('b/*'))
                         @php
+                            $board = session('board');
                             $memberIsStar = session('memberIsStar');
                             $colors = session('colors');
                         @endphp
