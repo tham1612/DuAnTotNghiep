@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoardMember;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
 use App\Models\Task;
@@ -19,9 +20,10 @@ class MemberController extends Controller
 {
     protected $googleApiClient;
 
-    public function __construct(GoogleApiClientController $googleApiClient)
+    public function __construct(GoogleApiClientController $googleApiClient, AuthorizeWeb $authorizeWeb)
     {
         $this->googleApiClient = $googleApiClient;
+        $this->authorizeWeb = $authorizeWeb;
     }
 
     // task
@@ -34,9 +36,16 @@ class MemberController extends Controller
         session()->forget('view_only');
 
         $data = $request->all();
-        //        dd($data);
+
         $task = Task::query()->findOrFail($data['task_id']);
-        //        dd($data, $task->start_date, $task->end_date);
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         $data['id'] = $task->id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
@@ -92,11 +101,20 @@ class MemberController extends Controller
         session()->forget('view_only');
         $data = $request->all();
 
+        $task = Task::query()->where('id', $data['task_id'])->first();
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
         $taskMember = TaskMember::query()
             ->where('task_id', $data['task_id'])
             ->where('user_id', $data['user_id'])
             ->first();
-        $task = Task::query()->where('id', $data['task_id'])->first();
+
         $data['text'] = $task->text;
         $data['description'] = $task->description;
         $data['start_date'] = $task->start_date;
@@ -144,6 +162,7 @@ class MemberController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkListItemMember = CheckListItemMember::create($data);
+
         //Thông báo
         $checkListItemMemberIsSend = CheckListItemMember::with(['checkListItem.checkList.task.catalog.board', 'user'])->where('check_list_item_id', $data['check_list_item_id'])
             ->where('user_id', $data['user_id'])
@@ -177,7 +196,7 @@ class MemberController extends Controller
         $userName = Auth::user();
 
         $checkListItemMemberIsSend->user->notify(new DeleteMemberChecklistNotification($checkListItemMemberIsSend, $userName));
-        
+
         $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
             ->where('user_id', $request->user_id)
             ->first();

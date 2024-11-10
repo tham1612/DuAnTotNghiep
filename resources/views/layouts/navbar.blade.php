@@ -228,10 +228,10 @@
                                     $count = 0;
                                 @endphp
 
-                                @foreach ($boardMembers as $boardMember)
-                                    {{-- @php
+                                @foreach ($boardMembers as $boardMemberMain)
+                                    @php
                                         $boardMember = $boardMemberMain->user;
-                                    @endphp --}}
+                                    @endphp
                                     @if ($count < $maxDisplay)
                                         <a href="javascript: void(0);" class="avatar-group-item"
                                             data-bs-toggle="tooltip" data-bs-placement="top"

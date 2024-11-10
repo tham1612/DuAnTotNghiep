@@ -794,7 +794,6 @@ class BoardController extends Controller
     public function copyBoard(Request $request)
     {
         $data = $request->all();
-
         $uuid = Str::uuid();
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");

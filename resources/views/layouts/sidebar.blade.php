@@ -290,9 +290,9 @@
                                     </div>
                                 </a>
                                 @php
-                                    $boardMembers = $board->members->unique('id');
+                                    // $boardMembers = $board->members->unique('id');
 
-                                    // $boardMembers = $board->boardMembers()->with('user')->get()->unique('user.id');
+                                    $boardMembers = $board->boardMembers()->with('user')->get()->unique('user.id');
 
                                     $memberIsStar =
                                         $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;

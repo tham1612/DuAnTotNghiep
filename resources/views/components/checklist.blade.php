@@ -1,5 +1,5 @@
-@if (!empty($task->check_lists) && !empty($task))
-    @foreach ($task->check_lists as $checklist)
+@if (!empty($task->checkLists) )
+    @foreach ($task->checkLists as $checklist)
         @php $checklist = json_decode(json_encode($checklist)); @endphp
             <!-- việc cần làm -->
         <div class="row mt-3 list-checklist-{{ $checklist->id }}">

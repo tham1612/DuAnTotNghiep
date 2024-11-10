@@ -28,6 +28,7 @@ class CatalogControler extends Controller
     }
 
     const PATH_UPLOAD = 'catalogs.';
+
     public function getFormCreateCatalog($boardId)
     {
         if (session('view_only', false)) {
@@ -43,14 +44,20 @@ class CatalogControler extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
+
     public function store(StoreCatalogRequest $request)
     {
-
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-
+        $authorize = $this->authorizeWeb->authorizeEdit($request->board_id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $data = $request->except(['image', 'position']);
 
         if ($request->hasFile('image')) {
@@ -86,7 +93,7 @@ class CatalogControler extends Controller
     public function update(Request $request, string $id)
     {
         $catalog = Catalog::query()->findOrFail($id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -272,7 +279,7 @@ class CatalogControler extends Controller
     public function copyCatalog(Request $request)
     {
         $catalog = Catalog::query()->findOrFail($request->id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -321,7 +328,7 @@ class CatalogControler extends Controller
     public function moveCatalog(Request $request)
     {
         $catalog = Catalog::query()->findOrFail($request->id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
