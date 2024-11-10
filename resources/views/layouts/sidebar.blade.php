@@ -22,6 +22,7 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
         ->first();
+    Session::put('workspaceChecked', $workspaceChecked);
 
     if ($workspaceChecked) {
         // Đếm số thành viên trong workspace
@@ -428,6 +429,7 @@
                                                     </div>
                                                 </div>
                                             `;
+                                            console.log(data);
                                             notificationWeb(data.action, data.msg);
                                         } else {
                                             console.error('Request failed:', data.message);
