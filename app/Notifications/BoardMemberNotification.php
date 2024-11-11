@@ -13,7 +13,7 @@ class BoardMemberNotification extends Notification implements ShouldQueue
     protected $desciption;
     protected $title;
 
-    public function __construct( $title,$desciption)
+    public function __construct($title, $desciption)
     {
 
         $this->desciption = $desciption;

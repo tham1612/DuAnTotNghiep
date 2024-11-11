@@ -27,7 +27,7 @@
             <div class="d-flex">
                 <!--        ẩn hiện side-bar-->
                 <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
-                    id="topnav-hamburger-icon">
+                        id="topnav-hamburger-icon">
                     <span class="hamburger-icon">
                         <span></span>
                         <span></span>
@@ -39,10 +39,10 @@
                     <div class="position-relative">
                         <input type="hidden" id="workspace-id" value="{{ $currentWorkspace->workspace_id }}">
                         <input type="text" class="form-control" placeholder="Tìm kiếm" autocomplete="off"
-                            id="search-options" value="" />
+                               id="search-options" value=""/>
                         <span class="mdi mdi-magnify search-widget-icon"></span>
                         <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none"
-                            id="search-close-options"></span>
+                              id="search-close-options"></span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown" style="width: 50%">
                         <div data-simplebar style="max-height: 400px;">
@@ -53,8 +53,9 @@
                 {{--  Bảng hoạt động gần đây              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
-                        id="recently-home" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
-                        aria-expanded="false">
+                            id="recently-home" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            aria-haspopup="true"
+                            aria-expanded="false">
                         <p class="dropdown-item">
                             Gần đây
                             <i class=" ri-arrow-drop-down-line fs-20"></i>
@@ -62,19 +63,19 @@
 
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
-                        aria-labelledby="recently-home">
+                         aria-labelledby="recently-home">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
                                 <div
-                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
+                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
                                                 <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => 1]) }}"
-                                                    class="text-reset">Dự án
+                                                   class="text-reset">Dự án
                                                     tốt nghiệp</a>
                                             </h6>
                                             <p class="mb-0 fs-12 w-100 text-muted">
@@ -85,7 +86,7 @@
                                         </div>
                                         <div class="ps-2">
                                             <button type="button"
-                                                class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                 <i class="ri-star-fill fs-16"></i>
                                             </button>
                                         </div>
@@ -93,10 +94,10 @@
                                 </div>
 
                                 <div
-                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
+                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{--    Liên kết đến bảng                                            --}}
@@ -109,18 +110,18 @@
                                         </div>
                                         <div class="ps-2">
                                             <button type="button"
-                                                class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                 <i class="ri-star-fill fs-16"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div
-                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
 
                                         <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
+                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
 
                                         <div class="flex-grow-1">
                                             <h6 class="mt-0 mb-1 fs-14">
@@ -134,7 +135,7 @@
                                         </div>
                                         <div class="ps-2">
                                             <button type="button"
-                                                class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
+                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
                                                 <i class="ri-star-fill fs-16"></i>
                                             </button>
                                         </div>
@@ -147,27 +148,28 @@
                 {{--  bảng được đánh dấu sao              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3" style="width: 150px"
-                        id="page-header-cart-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                        aria-haspopup="true" aria-expanded="false">
+                            id="page-header-cart-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            aria-haspopup="true" aria-expanded="false">
                         <p>Đã đánh dấu sao <i class=" ri-arrow-drop-down-line fs-20"></i></p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
-                        aria-labelledby="page-header-cart-dropdown">
+                         aria-labelledby="page-header-cart-dropdown">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
 
                                 @if (!empty($boardIsStars))
                                     @foreach ($boardIsStars as $boardIsStar)
                                         <div
-                                                class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                            class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                             <div class="d-flex align-items-center board-star-container">
                                                 @if ($boardIsStar['image'])
                                                     <img src="{{ asset('storage/' . $boardIsStar['board_image']) }}"
-                                                        class="me-3 rounded-circle avatar-sm p-2 bg-light"
-                                                        alt="user-pic" />
+                                                         class="me-3 rounded-circle avatar-sm p-2 bg-light"
+                                                         alt="user-pic"/>
                                                 @else
 
-                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                    <div
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
                                                         style="width: 30px;height: 30px">
 
                                                         {{ strtoupper(substr($boardIsStar['board_name'], 0, 1)) }}
@@ -178,7 +180,7 @@
                                                     <h6 class="mt-0 mb-1 fs-14">
                                                         {{--    Liên kết đến bảng                                            --}}
                                                         <a href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardIsStar['board_id']]) }}"
-                                                            class="text-reset">
+                                                           class="text-reset">
                                                             {{ $boardIsStar['board_name'] }}
                                                         </a>
                                                     </h6>
@@ -188,10 +190,10 @@
                                                 </div>
                                                 <div class="ps-2">
                                                     <button type="button"
-                                                        data-value="{{ $boardIsStar['board_id'] }}"
-                                                        id="board_star_{{ $boardIsStar['board_id'] }}"
-                                                        class="btn btn-icon btn-sm btn-ghost-warning "
-                                                        onclick="updateIsStar3({{ $boardIsStar['board_id'] }}, {{ Auth::id() }})">
+                                                            data-value="{{ $boardIsStar['board_id'] }}"
+                                                            id="board_star_{{ $boardIsStar['board_id'] }}"
+                                                            class="btn btn-icon btn-sm btn-ghost-warning "
+                                                            onclick="updateIsStar3({{ $boardIsStar['board_id'] }}, {{ Auth::id() }})">
                                                         <i class="ri-star-fill fs-16"></i>
                                                     </button>
                                                 </div>
@@ -206,65 +208,43 @@
                 {{--  Mẫu              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary pt-3"
-                        style="width: 100px" id="template-home" data-bs-toggle="dropdown"
-                        data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                            style="width: 100px" id="template-home" data-bs-toggle="dropdown"
+                            data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                         <p class="">Mẫu <i class=" ri-arrow-drop-down-line fs-20"></i></p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart"
-                        aria-labelledby="template-home">
+                         aria-labelledby="template-home">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                {{--    Liên kết đến bảng                                            --}}
-                                                Dự án tốt nghiệp
-                                            </h6>
-                                            <p class="mb-0 fs-12 w-100 text-muted">
-                                                FPT Polytechnic workspace
-                                            </p>
+                                @php
+                                    $template_boards =   \Illuminate\Support\Facades\DB::table('template_boards')->get();
+                                @endphp
+                                @foreach($template_boards as $tplBoard)
+                                    <div
+                                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
+                                        data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal{{$tplBoard->id}}">
+                                        <div class="d-flex align-items-center">
+                                            @if ($tplBoard->image)
+                                                <img
+                                                    class="me-3 rounded-circle avatar-sm p-2 bg-light"
+                                                    src="{{asset('storage/' . $tplBoard->image)}}"
+                                                    alt="Avatar"/>
+                                            @else
+                                                <div
+                                                    class="me-3 rounded-circle avatar-sm p-2 bg-light rounded d-flex justify-content-center align-items-center"
+                                                    style="width: 50px;height: 50px">
+                                                    {{ strtoupper(substr($tplBoard->name, 0, 1)) }}
+                                                </div>
+                                            @endif
+                                            <div class="flex-grow-1">
+                                                <h6 class="mt-0 mb-1 fs-14">
+                                                    {{$tplBoard->name}}
+                                                </h6>
+                                            </div>
                                         </div>
-
                                     </div>
-                                </div>
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                {{--    Liên kết đến bảng                                            --}}
-                                                Dự án tốt nghiệp
-                                            </h6>
-                                            <p class="mb-0 fs-12 w-100 text-muted">
-                                                FPT Polytechnic workspace
-                                            </p>
-                                        </div>
 
-                                    </div>
-                                </div>
-                                <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                            class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic" />
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                {{--    Liên kết đến bảng                                            --}}
-                                                Dự án tốt nghiệp
-                                            </h6>
-                                            <p class="mb-0 fs-12 w-100 text-muted">
-                                                FPT Polytechnic workspace
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -272,16 +252,16 @@
                 {{--  Tạo bảng              --}}
                 <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn bg-info-subtle btn-icon btn-topbar btn-ghost-secondary pt-3"
-                        style="width: 100px" id="create-home" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                        aria-haspopup="true" aria-expanded="false">
+                            style="width: 100px" id="create-home" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            aria-haspopup="true" aria-expanded="false">
                         <p class="" style="color: var(--vz-heading-color)">Tạo mới</p>
                     </button>
                     <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end p-0 dropdown-menu-cart cursor-pointer"
-                        aria-labelledby="create-home">
+                         aria-labelledby="create-home">
                         <div data-simplebar>
                             <div class="p-2">
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                                    data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
+                                     data-bs-toggle="modal" data-bs-target="#create-board-home-modal">
                                     <div class="d-flex flex-column ">
                                         <section>
                                             <i class="ri-dashboard-line fs-15"></i>
@@ -295,7 +275,7 @@
                                     </div>
                                 </div>
                                 <div class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                                    data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal">
+                                     data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal1">
                                     <div class="d-flex flex-column ">
                                         <section>
                                             <i class="ri-dashboard-fill fs-15"></i>
@@ -315,7 +295,7 @@
             <div class="d-flex align-items-center">
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#chatAi" aria-controls="offcanvasRight">
+                            data-bs-toggle="offcanvas" data-bs-target="#chatAi" aria-controls="offcanvasRight">
                         {{--                        <i class=" ri-question-answer-line fs-22"></i> --}}
                         <i class="  ri-character-recognition-line fs-22"></i>
                     </button>
@@ -345,27 +325,27 @@
                 {{-- giao diện sáng tối --}}
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button"
-                        class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                            class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
                         <i class="bx bx-moon fs-22"></i>
                     </button>
                 </div>
                 <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                            aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             @if (auth()->user()->image)
                                 <img class="rounded header-profile-user object-fit-cover"
-                                    src="{{ asset('storage/' . auth()->user()->image) }}" alt="Avatar" />
+                                     src="{{ asset('storage/' . auth()->user()->image) }}" alt="Avatar"/>
                             @else
                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                    style="width: 40px;height: 40px">
+                                     style="width: 40px;height: 40px">
                                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                 </div>
                             @endif
 
                             <span class="text-start ms-xl-2">
                                 <span
-                                        class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
+                                    class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
                             </span>
                         </span>
                     </button>
@@ -378,12 +358,12 @@
                         </a>
 
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#workspaceModal"><i
-                                    class="ri-group-line text-muted fs-16 align-middle me-1"></i>
+                                class="ri-group-line text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Tạo không gian làm việc</span></a>
 
                         <a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
 
-                            data-bs-target="#archiverBoard-member"><i
+                           data-bs-target="#archiverBoard-member"><i
                                 class="ri-archive-line text-muted fs-16 align-middle me-1"></i>
 
                             <span class="align-middle">Lưu trữ</span></a>
@@ -392,7 +372,7 @@
                             @csrf
                             <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
                             <button type="button" class="bg-transparent border-0" data-bs-toggle="modal"
-                                data-bs-target="#topmodal">
+                                    data-bs-target="#topmodal">
                                 Đăng xuất
                             </button>
                         </form>
@@ -405,7 +385,7 @@
 
 {{-- bảng lưu trữ --}}
 <div class="modal fade" id="archiverBoard-member" tabindex="-1" aria-labelledby="addmemberModalLabel"
-    aria-hidden="true">
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content border-0" style="width: 125%;">
             <div class="modal-header px-3">
@@ -413,7 +393,7 @@
                     Bảng đã đóng
                 </h5>
                 <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -421,26 +401,28 @@
                     @if (!empty(session('board')))
                         @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
                             <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
-                                style="background-color: #091e420f">
+                                 style="background-color: #091e420f">
                                 <div class="d-flex align-items-center ">
                                     @if ($archiverBoard->image)
                                         <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
-                                            class="rounded-circle avatar-sm">
+                                             class="rounded-circle avatar-sm">
                                     @else
-                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center border rounded"
+                                        <div
+                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center border rounded"
                                             style="width: 40px;height: 40px">
                                             {{ strtoupper(substr($archiverBoard->name, 0, 1)) }}
                                         </div>
                                     @endif
                                     <p class="fs-16 mt-3 ms-2">{{ $archiverBoard->name }}</p>
                                 </div>
+
                                 <div>
                                     <button class="btn btn-outline-primary"
-                                        onclick="restoreBoard({{ $archiverBoard->id }})">
+                                            onclick="restoreBoard({{ $archiverBoard->id }})">
                                         Khôi phục
                                     </button>
                                     <button class="btn btn-outline-danger"
-                                        onclick="destroyBoard({{ $archiverBoard->id }})">
+                                            onclick="destroyBoard({{ $archiverBoard->id }})">
                                         <i class="ri-delete-bin-line"></i>
                                     </button>
                                 </div>
@@ -461,7 +443,7 @@
         <div class="modal-content">
             <div class="modal-body text-center p-5">
                 <lord-icon src="https://cdn.lordicon.com/pithnlch.json" trigger="loop"
-                    colors="primary:#121331,secondary:#08a88a" style="width:120px;height:120px">
+                           colors="primary:#121331,secondary:#08a88a" style="width:120px;height:120px">
                 </lord-icon>
                 <div class="mt-4">
                     <h4 class="mb-3">Bạn có muốn đăng xuất không?</h4>
@@ -481,13 +463,13 @@
 {{-- tìm kiếm --}}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-options');
         const searchDropdown = document.getElementById('search-dropdown');
         const workspaceId = document.getElementById('workspace-id').value;
 
         // Hiện dropdown với chữ "Tìm Kiếm" khi nhấn vào ô input
-        searchInput.addEventListener('focus', function() {
+        searchInput.addEventListener('focus', function () {
             searchDropdown.classList.add('show');
 
             // Hiển thị "Tìm Kiếm" khi không có input
@@ -498,7 +480,7 @@
         });
 
         // Lắng nghe sự kiện input
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const query = searchInput.value;
             if (query.length > 1) {
                 fetch(`/api/search?query=${query}&workspace_id=${workspaceId}`)
@@ -577,11 +559,11 @@
                         searchDropdown.classList.add('show');
 
                         // Ngăn không cho nhấn Enter nếu không có kết quả hoặc dropdown đang mở
-                        searchInput.addEventListener('keydown', function(event) {
+                        searchInput.addEventListener('keydown', function (event) {
                             const isDropdownOpen = searchDropdown.classList.contains(
                                 'show');
                             if ((resultsHtml.includes('Không tìm thấy kết quả') ||
-                                    isDropdownOpen) && event.key === 'Enter') {
+                                isDropdownOpen) && event.key === 'Enter') {
                                 event.preventDefault();
                             }
                         });

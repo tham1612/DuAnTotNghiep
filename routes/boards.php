@@ -82,7 +82,7 @@ Route::middleware(['auth', 'isWorkspace'])
         });
 
         Route::get('/taskflow/invite/b/{uuid}/{token}', [BoardController::class, 'acceptInviteBoard'])
-            ->withoutMiddleware('auth');
+            ->withoutMiddleware(['auth', 'isWorkspace']);
 
         Route::resource('catalogs', CatalogControler::class);
 
@@ -108,4 +108,7 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/catalogs/getFormCreateCatalog/{id}', [CatalogControler::class, 'getFormCreateCatalog'])
             ->name('catalogs.getFormCreateCatalog');
 
+//        tạo bảng mẫu
+        Route::post('/boardTemplate/create', [\App\Http\Controllers\TemplateController::class, 'createBoardTemplate'])
+            ->name('createBoardTemplate');
     });

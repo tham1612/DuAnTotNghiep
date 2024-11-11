@@ -30,7 +30,7 @@ class InviteBoardMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('You are invited to join a workspace')
+            ->subject('You are invited to join a board')
             ->view('emails.inviteBoard'); // Đảm bảo đường dẫn view là đúng
     }
 

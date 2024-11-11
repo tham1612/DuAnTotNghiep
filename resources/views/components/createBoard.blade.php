@@ -30,18 +30,16 @@
                         <label for="" class="form-label">Tiêu đề bảng<span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('board.name') is-invalid @enderror"
                                id="boardName" placeholder="Nhập tiêu đề bảng" value="{{ old('board.name') }}"
-                               name="name" />
+                               name="name"/>
                         @error('board.name')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="mt-3">
                         <label for="" class="form-label">Không gian làm việc</label>
-                        <select name="workspace_id" id="" class="form-select">
-                            @foreach ($workspace as $workspace1)
-                                <option value="{{ $workspace1->id }}">{{ $workspace1->name }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" readonly value="{{$board->workspace->name}}" class="form-control">
+                        <input type="hidden"  value="{{$board->workspace->id}}" class="form-control" name="workspace_id">
+
                     </div>
                     <div class="mt-3">
                         <label for="" class="form-label">Quyền xem</label>
@@ -65,7 +63,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const forms = document.querySelectorAll('.formItem');
 
         forms.forEach((form) => {
@@ -74,14 +72,14 @@
 
             if (textInput && submitButton) {
                 // Kiểm tra trạng thái của input để enable/disable button
-                textInput.addEventListener('input', function() {
+                textInput.addEventListener('input', function () {
                     const isFilled = textInput.value.trim() !== '';
                     console.log(`Input value: "${textInput.value}", Is filled: ${isFilled}`);
                     submitButton.disabled = !isFilled;
                 });
 
                 // Xử lý khi button được nhấn
-                submitButton.addEventListener('click', function(event) {
+                submitButton.addEventListener('click', function (event) {
                     disableButtonOnSubmit(event, textInput, submitButton);
                 });
             }

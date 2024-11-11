@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('template_dateables', function (Blueprint $table) {
+        Schema::create('template_tags', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('dateable_id');
-            $table->string('dateable_type');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->date('reminder_date');
-
+            $table->foreignIdFor(\App\Models\TemplateBoard::class)->constrained();
+            $table->string('color_code');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_dateables');
+        Schema::dropIfExists('template_tags');
     }
 };
