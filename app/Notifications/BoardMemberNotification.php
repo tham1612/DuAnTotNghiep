@@ -7,30 +7,37 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+
 class BoardMemberNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $desciption;
-    protected $title;
+    protected $description; // Nội dung mô tả
+    protected $title;       // Tiêu đề email
+    protected $boardMember;
 
-    public function __construct($title, $desciption)
+    public function __construct($title, $description, $boardMember)
     {
-
-        $this->desciption = $desciption;
+        $this->description = $description;
         $this->title = $title;
+        $this->boardMember = $boardMember;
     }
+
     public function via($notifiable)
     {
-        // Gửi thông qua mail và lưu vào database
+        \Log::error("Notification via mail for user: " . $notifiable->id);
         return ['mail'];
     }
 
     public function toMail($notifiable)
     {
-        // Tạo email thông báox
-        return (new MailMessage)
-            ->subject($this->title)
-            ->line($this->desciption);
+        // return (new MailMessage)
+        //     ->subject($this->title)
+        //     ->view('emails.workspace_member_notification', [
+        //         'title' => $this->title,
+        //         'description' => $this->description,
+        //         'workspace_name' => $this->boardMember->board->name ?? 'Bảng chưa xác định',
+        //         'recipient_name' => $this->boardMember->user->name ?? 'Bạn',
+        //     ]);
+        return (new MailMessage)->subject($this->title);
     }
 }
-

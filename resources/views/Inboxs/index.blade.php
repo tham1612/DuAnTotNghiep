@@ -136,7 +136,7 @@
                                 });
                         @endphp
                         <div class="col-auto">
-                            <div class="text-muted mb-2">{{ $allNotifications->count() }} thông báo hiện tại</div>
+                            <div class="text-muted mb-2">{{ $allNotifications->count() }} thông báo chưa đọc</div>
                         </div>
                     </div>
                 </div>
