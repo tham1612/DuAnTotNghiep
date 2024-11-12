@@ -1,25 +1,3 @@
-@php
-    $boardIsStars = \App\Models\Board::query()
-        ->distinct()
-        ->select(
-            'boards.name AS board_name',
-            'workspaces.name AS workspace_name',
-            'boards.id AS board_id',
-            'boards.image AS board_image',
-        )
-        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
-        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-        ->where('workspace_members.is_active', 1)
-        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
-        ->where('board_members.is_star', 1)
-        ->get();
-
-    //    $boardIsStars = session('$board_star');
-    //    dd($boardIsStars);
-    $userId = Auth::id();
-    $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
-@endphp
 
 <header id="page-topbar">
     <div class="layout-width">
@@ -216,9 +194,6 @@
                          aria-labelledby="template-home">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
-                                @php
-                                    $template_boards =   \Illuminate\Support\Facades\DB::table('template_boards')->get();
-                                @endphp
                                 @foreach($template_boards as $tplBoard)
                                     <div
                                         class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"

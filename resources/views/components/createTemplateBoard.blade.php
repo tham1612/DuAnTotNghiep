@@ -1,7 +1,4 @@
-<!-- chia sẻ bảng & thêm thành viên -->
-@php
-    $template_boards =   \Illuminate\Support\Facades\DB::table('template_boards')->get();
-@endphp
+
 @foreach($template_boards as $tplBoard)
     <div
         class="modal fade"
@@ -53,8 +50,8 @@
                         </div>
                         <div class="mt-3">
                             <label for="" class="form-label">Không gian làm việc</label>
-                            <input type="text" readonly value="{{$board->workspace->name}}" class="form-control">
-                            <input type="hidden" value="{{$board->workspace->id}}" class="form-control"
+                            <input type="text" readonly value="{{$workspace->name}}" class="form-control">
+                            <input type="hidden" value="{{$workspace->id}}" class="form-control"
                                    name="workspace_id">
                         </div>
                         <div class="mt-3">

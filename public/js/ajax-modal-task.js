@@ -187,24 +187,44 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateBadgeStatus(taskId) {
         const checkbox = document.getElementById(`due_date_checkbox_${taskId}`);
         const successBadge = document.getElementById(`due_date_success_${taskId}`);
-        const dueBadge = document.getElementById(`due_date_due_${taskId}`);
+        const dateViewBoard = document.getElementById(`date-view-board-${taskId}`);
         const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value);
         const now = new Date();
 
         if (checkbox.checked) {
-            // Nếu checkbox được chọn (Hoàn tất)
-            successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
-            dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
+            successBadge.classList.remove('bg-warning');
+            successBadge.classList.remove('bg-danger');
+            successBadge.innerHTML = 'Hoàn tất'
+
+            successBadge.classList.add('bg-success');
+
+            dateViewBoard.classList.remove('bg-warning');
+            dateViewBoard.classList.remove('bg-danger');
+            dateViewBoard.classList.add('bg-success');
         } else {
+
             // Nếu checkbox chưa được chọn
             if (now > endDate) {
-                // Hiện "Quá hạn" nếu đã quá hạn
-                dueBadge.classList.remove('d-none');
-                successBadge.classList.add('d-none');
-            } else {
-                // Ẩn cả "Hoàn tất" và "Quá hạn" nếu chưa quá hạn
-                dueBadge.classList.add('d-none');
-                successBadge.classList.add('d-none');
+                console.log('quá hạn')
+                successBadge.classList.remove('bg-success'); // Hiện "Hoàn tất"
+                successBadge.classList.remove('bg-warning'); // Hiện "Hoàn tất"
+                successBadge.classList.add('bg-danger');
+
+                successBadge.innerHTML = 'Quá hạn';
+
+                dateViewBoard.classList.remove('bg-warning');
+                dateViewBoard.classList.remove('bg-success');
+                dateViewBoard.classList.add('bg-danger');
+            } else if (now < endDate) {
+                console.log('sắp đến hạn')
+                successBadge.classList.remove('bg-success'); // Hiện "Hoàn tất"
+                successBadge.classList.remove('bg-danger'); // Hiện "Hoàn tất"
+                successBadge.classList.add('bg-warning');
+                successBadge.innerHTML = 'Sắp đến hạn';
+
+                dateViewBoard.classList.remove('bg-danger');
+                dateViewBoard.classList.remove('bg-success');
+                dateViewBoard.classList.add('bg-warning');
             }
         }
     }
@@ -247,8 +267,7 @@ function updateTask2(taskId) {
             formData.append('image', image.files[0]);
     }
     formData.append('_method', 'PUT');
-    console.log([...formData]);
-    console.log(image);
+
     $.ajax({
         url: `/tasks/` + taskId,
         method: "POST", // Sử dụng POST nhưng với method PUT
@@ -338,10 +357,6 @@ function loadFormCreateTag(taskId) {
 function updateReminderOptions2(taskId) {
     let endDateInput = document.getElementById('end_date_task_' + taskId).value;
 
-    // Kiểm tra xem sự kiện có được kích hoạt và giá trị của end_date
-    console.log('updateReminderOptions2 called for task:', taskId);
-    console.log('end_date value:', endDateInput);
-
     if (!endDateInput) {
         console.log('No end date provided.');
         return;
@@ -386,6 +401,22 @@ function loadFormAddDateTask(taskId) {
     });
 }
 
+function formatDate(date) {
+    const now = new Date();
+    const year = date.getFullYear();
+    const currentYear = now.getFullYear();
+
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+
+    if (year !== currentYear) {
+        return `${hours}:${minutes} ${day} tháng ${month}, ${year}`;
+    } else {
+        return `${hours}:${minutes} ${day} tháng ${month}`;
+    }
+}
 
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
@@ -427,39 +458,62 @@ function submitUpdateDateTask(taskId, event) {
             const now = new Date();
 
 // Kiểm tra điều kiện cho start_date và end_date
-            if (response.task.start_date && !response.task.end_date) {
-                // Trường hợp chỉ có ngày bắt đầu
+            if (response.task.start_date && response.task.end_date) {
+                // Trường hợp có ngày hết hạn hoặc có cả ngày bắt đầu và ngày hết hạn
+                const endDate = new Date(response.task.end_date);
+                const startDate = new Date(response.task.start_date);
+
+                date = `
+    <strong>Ngày</strong>
+    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+         style="height: 35px; background-color: #091e420f; color: #172b4d">
+        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
+               class="form-check-input"
+               onchange="updateTask2(${response.task.id})" name="progress"
+               ${response.task.progress == 100 ? 'checked' : ''} />
+        <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
+        <p class="ms-2 mt-3">${formatDate(startDate)}-${formatDate(endDate)}</p>`;
+
+                if (response.task.progress == 100) {
+                    date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
+                } else if (now < endDate) {
+                    date += `<span class="badge bg-warning ms-2" id="due_date_success_${response.task.id}">Sắp đến hạn</span>`;
+                } else if (now > endDate) {
+                    date += `<span class="badge bg-danger ms-2" id="due_date_due_${response.task.id}">Quá hạn</span>`;
+                }
+
+                date += `</div>`;
+
+            } else if (response.task.end_date) {
+                const endDate = new Date(response.task.end_date);
+
+                date = `
+    <strong>Ngày kết thúc</strong>
+    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+         style="height: 35px; background-color: #091e420f; color: #172b4d">
+        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
+               class="form-check-input"
+               onchange="updateTask2(${response.task.id})" name="progress"
+               ${response.task.progress == 100 ? 'checked' : ''} />
+        <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
+        <p class="ms-2 mt-3">${formatDate(endDate)}</p>`;
+
+                if (response.task.progress == 100) {
+                    date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
+                } else if (now < endDate) {
+                    date += `<span class="badge bg-warning ms-2" id="due_date_success_${response.task.id}">Sắp đến hạn</span>`;
+                } else if (now > endDate) {
+                    date += `<span class="badge bg-danger ms-2" id="due_date_due_${response.task.id}">Quá hạn</span>`;
+                }
+
+                date += `</div>`;
+            } else if (response.task.start_date) {
+                const startDate = new Date(response.task.start_date);
                 date = `
                     <strong>Ngày bắt đầu</strong>
                     <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                          style="height: 35px; background-color: #091e420f; color: #172b4d">
-                        <p class="ms-2 mt-3">${response.task.start_date}</p>
-                    </div>
-                `;
-            } else if (response.task.end_date) {
-                // Trường hợp có ngày hết hạn hoặc có cả ngày bắt đầu và ngày hết hạn
-                const endDate = new Date(response.task.end_date);
-
-                date = `
-                    <strong>Ngày hết hạn</strong>
-                    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
-                         style="height: 35px; background-color: #091e420f; color: #172b4d">
-                        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
-                               class="form-check-input"
-                               onchange="updateTask2(${response.task.id})" name="progress"
-                               ${response.task.progress == 100 ? 'checked' : ''} />
-                        <input type="hidden" id="task_end_date_${response.task.id}"
-                               value="${response.task.end_date}">
-                        <p class="ms-2 mt-3">
-                        ${response.task.start_date ? `  ${response.task.start_date}-` : ''}
-                        ${response.task.end_date}</p>
-
-                        ${response.task.progress == 100
-                    ? `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`
-                    : `
-                            <span class="badge bg-success ms-2 ${now > endDate ? 'd-none' : ''}" id="due_date_success_${response.task.id}">Hoàn tất</span>
-                            <span class="badge bg-danger ms-2 ${now > endDate ? '' : 'd-none'}" id="due_date_due_${response.task.id}">Quá hạn</span>
-                        `}
+                        <p class="ms-2 mt-3">${formatDate(startDate)}</p>
                     </div>
                 `;
             }

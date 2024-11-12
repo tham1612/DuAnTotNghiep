@@ -200,7 +200,6 @@
             },
             // xem chi tiết
             eventClick: function (event) {
-
                 openCustomModal(event.id);
                 $.ajax({
                     url: '/tasks/getModalTask/' + event.id,
@@ -242,6 +241,7 @@
                 //     }
                 //
                 // })
+
 
             },
             viewRender: function (view) {
