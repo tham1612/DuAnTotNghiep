@@ -10,19 +10,20 @@ use App\Models\Task;
 use App\Models\TaskTag;
 use App\Models\TemplateBoard;
 use App\Models\TemplateCatalog;
+use App\Models\TemplateTag;
 use App\Models\TemplateTask;
+use App\Models\TemplateTaskTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class TemplateController extends Controller
 {
     public function createBoardTemplate(Request $request)
     {
-//        dd($request->all());
         $data = $request->all();
-        $boardTemplate = TemplateBoard::query()->findOrFail($data['board_template_id']);
         $uuid = Str::uuid();
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
@@ -31,6 +32,7 @@ class TemplateController extends Controller
             DB::beginTransaction();
             $boardNew = Board::query()->create($data);
 
+// Create a new BoardMember entry
             BoardMember::query()->create([
                 'user_id' => auth()->id(),
                 'board_id' => $boardNew->id,
@@ -38,50 +40,68 @@ class TemplateController extends Controller
                 'invite' => now(),
             ]);
 
+// Migrate TemplateTags to Tags
+            $tagOld = TemplateTag::query()->where('template_board_id', $data['board_template_id'])->get();
+            $tagMap = []; // This will store mapping between old TemplateTag IDs and new Tag IDs
 
+            foreach ($tagOld as $tag) {
+                $newTag = Tag::query()->create([
+                    'board_id' => $boardNew->id,
+                    'color_code' => $tag->color_code,
+                    'name' => $tag->name,
+                ]);
+
+                // Store the mapping of old TemplateTag ID to new Tag ID
+                $tagMap[$tag->id] = $newTag->id;
+            }
+
+// Migrate TemplateCatalogs and their TemplateTasks to Catalogs and Tasks
             $catalogOld = TemplateCatalog::query()->where('template_board_id', $data['board_template_id'])->get();
+
             foreach ($catalogOld as $catalog) {
                 $catalogNew = Catalog::query()->create([
                     'board_id' => $boardNew->id,
-                    'name' => $catalog['name'],
-                    'image' => $catalog['image'],
-                    'position' => $catalog['position'],
+                    'name' => $catalog->name,
+                    'image' => $catalog->image,
+                    'position' => $catalog->position,
                 ]);
-                $taskOld = TemplateTask::query()->where('template_catalog_id', $catalog['id'])->get();
-                if ($taskOld->isNotEmpty() && $data['isTask']) {
+
+                // Fetch and migrate TemplateTasks if `isTask` is set
+                $taskOld = TemplateTask::query()->where('template_catalog_id', $catalog->id)->get();
+                if ($taskOld->isNotEmpty() && !empty($data['isTask'])) {
                     foreach ($taskOld as $task) {
-                        Task::query()->create([
+                        $taskNew = Task::query()->create([
                             'catalog_id' => $catalogNew->id,
-                            'text' => $task['title'],
-                            'description' => $task['description'],
-                            'position' => $task['position'],
-                            'image' => $task['image'],
-                            'priority' => $task['priority'],
-                            'risk' => $task['risk'],
-                            'progress' => 0,
-                            'start_date' => $task['start_date'],
-                            'end_date' => $task['end_date'],
-                            'parent' => $task['parent'],
-                            'sortorder' => $task['sortorder'],
-                            'id_google_calendar' => $task['id_google_calendar'],
+                            'text' => $task->text,
+                            'description' => $task->description,
+                            'position' => $task->position,
+                            'image' => $task->image,
+                            'priority' => $task->priority,
+                            'risk' => $task->risk,
+                            'progress' => $task->progress,
+                            'start_date' => $task->start_date,
+                            'end_date' => $task->end_date,
+                            'parent' => $task->parent,
+                            'sortorder' => $task->sortorder,
+                            'id_google_calendar' => null,
                             'creator_email' => Auth::user()->email,
                         ]);
 
+                        // Migrate TemplateTaskTags to TaskTags
+                        $taskTagOld = TemplateTaskTag::query()->where('template_task_id', $task->id)->get();
+                        foreach ($taskTagOld as $taskTag) {
+                            // Ensure the tag ID maps to the new Tag ID using the $tagMap
+                            if (isset($tagMap[$taskTag->template_tag_id])) {
+                                TaskTag::query()->create([
+                                    'task_id' => $taskNew->id,
+                                    'tag_id' => $tagMap[$taskTag->template_tag_id], // Use the new Tag ID
+                                ]);
+                            }
+                        }
                     }
                 }
             }
 
-
-//            if ($data['isTag']) {
-//                $tagOld = Tag::query()->where('board_id', $data['id'])->get();
-//                foreach ($tagOld as $tag) {
-//                    Tag::query()->create([
-//                        'board_id' => $boardNew->id,
-//                        'color_code' => $tag['color_code'],
-//                        'name' => $tag['name'],
-//                    ]);
-//                }
-//            }
             // ghi lại hoạt động của bảng
             activity('Người dùng đã tạo bảng ')
                 ->performedOn($boardNew) // đối tượng liên quan là bảng vừa tạo
