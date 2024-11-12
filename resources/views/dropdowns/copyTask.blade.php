@@ -3,7 +3,7 @@
     <div>
         <strong class="fs-14">Tên</strong>
         <input type="text" name="text" id=""
-               class="form-control border-1 my-2 nameCopyTask" placeholder="Tên thẻ"/>
+               class="form-control border-1 my-2 nameCopyTask" value="{{$task->text}} sao chép" placeholder="Tên thẻ"/>
     </div>
     <div>
         <strong class="fs-14 mt-3">Giữ</strong>
@@ -37,19 +37,19 @@
                 @endphp
                 @foreach($workspace->boards as $boards)
                     <option value="{{ $boards->id }}"
-                            @selected($boards->id === request()->route('id'))
+                        @selected($boards->id === request()->route('id'))
                     >
                         {{ $boards->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="row mt-2">
-            <section class="col-8">
+            <section class="col-12">
                 <strong class="fs-16">Danh sách</strong>
                 <select name="catalog_id" id="toCatalog" class="form-select toCatalog">
                     @foreach ($board->catalogs as $catalogs)
                         <option value="{{ $catalogs->id }}" data-task-count="{{ $catalogs->tasks->count() }}"
-                                @selected($catalogs->id === $task->catalog_id)>
+                            @selected($catalogs->id === $task->catalog_id)>
                             {{ $catalogs->name }}
                         </option>
                     @endforeach
@@ -62,4 +62,3 @@
         <button class="btn bg-primary text-white">Tạo thẻ</button>
     </div>
 </form>
-

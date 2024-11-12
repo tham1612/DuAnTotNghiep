@@ -238,11 +238,11 @@
                                             title="{{ $boardMember['name'] }}">
                                             @if ($boardMember['image'])
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                    alt="" class="rounded-circle avatar-xs object-fit-cover">
+                                                    alt="" class="rounded-circle avatar-xs object-fit-cover" style="width: 35px;height: 35px">
                                             @else
-                                                <div class="avatar-xs" style="width: 40px;height: 40px">
+                                                <div class="avatar-xs" style="width: 35px;height: 35px">
                                                     <div class="avatar-title rounded-circle bg-light text-primary"
-                                                        style="width: 40px;height: 40px">
+                                                        style="width: 35px;height: 35px">
                                                         {{ strtoupper(substr($boardMember['name'], 0, 1)) }}
                                                     </div>
                                                 </div>
@@ -256,8 +256,8 @@
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
                                         data-bs-placement="top"
                                         title="{{ count($boardMembers) - $maxDisplay }} more">
-                                        <div class="avatar-xs" style="width: 40px;height: 40px">
-                                            <div class="avatar-title rounded-circle" style="width: 40px;height: 40px">
+                                        <div class="avatar-xs" style="width: 35px;height: 35px">
+                                            <div class="avatar-title rounded-circle" style="width: 35px;height: 35px">
                                                 +{{ count($boardMembers) - $maxDisplay }}
                                             </div>
                                         </div>

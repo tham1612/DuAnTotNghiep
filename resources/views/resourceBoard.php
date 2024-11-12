@@ -1,0 +1,2 @@
+<?php
+    $colors = session('colors');

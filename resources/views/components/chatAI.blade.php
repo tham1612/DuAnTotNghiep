@@ -2,7 +2,7 @@
     $chats = \App\Models\ChatAI::where('user_id', Auth::id())->get();
 @endphp
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="chatAi" aria-labelledby="offcanvasRightLabel">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="chatAi" aria-labelledby="offcanvasRightLabel" style="width: 600px">
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title" id="offcanvasRightLabel">Chat AI</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -21,14 +21,14 @@
                 @foreach ($chats as $chat)
                     <div class="user-message mb-3" style="text-align: right; margin-bottom: 10px;">
                         <span
-                            style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 300px;">
+                            style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 500px;">
                             {!! nl2br(preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', e($chat->prompt))) !!}
                         </span>
                     </div>
 
                     <div class="ai-response mb-3" style="margin-bottom: 10px;">
                         <span
-                            style="background-color: #f1f1f1; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 300px;">
+                            style="background-color: #f1f1f1; padding: 8px 12px; border-radius: 15px; display: inline-block; max-width: 500px;">
                             {!! nl2br(preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', e($chat->response))) !!}
                         </span>
                     </div>
