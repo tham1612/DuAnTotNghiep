@@ -81,8 +81,43 @@ function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
 }
 
 // Gọi hàm với các tham số tùy chỉnh
+//gọi modal task ở màn gantt và calender
+function openCustomModal(taskId) {
+    var modalElement = document.getElementById('detailCardModal');
+
+    if (modalElement) {
+        // Tải nội dung task qua AJAX
+        $.ajax({
+            url: '/tasks/getModalTask/' + taskId,
+            type: 'GET',
+            success: function(response) {
+                $('.modal-task', modalElement).html(response.html); // Cập nhật nội dung modal
+
+                // Khởi tạo modal instance và hiển thị modal
+                var modalInstance = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                modalInstance.show();
+
+                // Xử lý sự kiện khi modal bị đóng để giải phóng instance và backdrop
+                modalElement.addEventListener('hidden.bs.modal', function () {
+                    modalInstance.dispose();
+                    $('.modal-backdrop').remove(); // Xóa backdrop nếu vẫn còn
+                    document.body.classList.remove('modal-open'); // Đảm bảo class modal-open bị xóa
+                });
+            },
+            error: function(xhr) {
+                console.error("Không thể tải dữ liệu task:", xhr);
+            }
+        });
+    } else {
+        console.error("Modal không tồn tại!");
+    }
+}
 
 
+//gọi modal task ở màn board, table, list
 function getModalTaskEvents() {
     document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (trigger) {
         trigger.addEventListener('click', function () {
@@ -965,16 +1000,28 @@ function updateProgressBar(checklistId) {
 
     // Tính phần trăm hoàn thành
     const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
-
-    // Cập nhật thanh tiến trình cho checklist tương ứng
-    const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
-    if (progressBar) {
-        progressBar.style.width = percentCompleted + '%';
-        progressBar.setAttribute('aria-valuenow', percentCompleted);
-        progressBar.innerHTML = Math.round(percentCompleted) + '%';
-    } else {
-        console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
-    }
+    $.ajax({
+        url: `/tasks/${checklistId}/checklist`,
+        type: 'PUT',
+        data: {
+            progress:percentCompleted
+        },
+        success: function (response) {
+            // Cập nhật thanh tiến trình cho checklist tương ứng
+            const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
+            if (progressBar) {
+                progressBar.style.width = percentCompleted + '%';
+                progressBar.setAttribute('aria-valuenow', percentCompleted);
+                progressBar.innerHTML = Math.round(percentCompleted) + '%';
+            } else {
+                console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
+            }
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+        }
+    });
 }
 
 // Lắng nghe sự kiện thay đổi trên từng checkbox
@@ -1081,6 +1128,11 @@ function onclickAddMemberCheckListItem(memberId, memberName, checklistItemId) {
             `;
             cardMembersListItem.innerHTML += listItem;
             memberCheckListItem.innerHTML += memberCheckListItemAdd;
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
             console.log('Thành viên đã được thêm vào checkListMember thành công.');
         },
         error: function (xhr) {
@@ -1106,6 +1158,11 @@ function removeMemberFromCard(memberId, checklistItemId) {
             if (memberElement) {
                 memberElement.remove();
             }
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
             console.log('Thành viên đã được xóa thành công khỏi thẻ.');
         },
         error: function (xhr) {

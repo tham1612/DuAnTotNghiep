@@ -37,7 +37,8 @@
                                     <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                     <tr>
                                         <td>{{ $loop->iteration  }}</td>
-                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal{{ $task->id }}">
+                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal"
+                                            data-task-id="{{ $task->id }}">
                                             {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                         </td>
                                         <td class="col-2">
