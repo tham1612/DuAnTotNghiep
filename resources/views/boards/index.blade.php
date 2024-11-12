@@ -35,10 +35,11 @@
                         <!-- task item -->
                         @foreach ($catalog->tasks as $task)
                             @php
-//                                $task = json_decode(json_encode($task));
-//                                dd($task)
+                                //                                $task = json_decode(json_encode($task));
+                                //                                dd($task)
                             @endphp
-                            <div class="card tasks-box cursor-pointer" data-value="{{ $task->id }}">
+                            <div class="card tasks-box cursor-pointer" id="task_id_view_{{$task->id}}"
+                                 data-value="{{ $task->id }}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
                                         <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
@@ -46,9 +47,9 @@
                                             {{ $task->text }}
                                         </h6>
                                         <div class="dropdown">
-                                            <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
+                                            {{-- <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
                                                data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a>
+                                                    class="ri-more-fill"></i></a> --}}
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                                                 {{--                                                <li>--}}
                                                 {{--                                                    <span class="dropdown-item" href="#"><i--}}
@@ -119,9 +120,11 @@
                                                                         <img
                                                                             src="{{ asset('storage/' . $taskMember->image) }}"
                                                                             alt=""
-                                                                            class="rounded-circle avatar-xs" style="width: 30px;height: 30px">
+                                                                            class="rounded-circle avatar-xs"
+                                                                            style="width: 30px;height: 30px">
                                                                     @else
-                                                                        <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                                        <div class="avatar-xs"
+                                                                             style="width: 30px;height: 30px">
                                                                             <div
                                                                                 class="avatar-title rounded-circle bg-info-subtle text-primary"
                                                                                 style="width: 30px;height: 30px">
@@ -141,7 +144,7 @@
                                                                title="{{ $task->members->count() - $maxDisplay }} more">
                                                                 <div class="avatar-xs" style="width: 30px;height: 30px">
                                                                     <div class="avatar-title rounded-circle"
-                                                                    style="width: 30px;height: 30px">
+                                                                         style="width: 30px;height: 30px">
                                                                         +{{ $task->members->count() - $maxDisplay }}
                                                                     </div>
                                                                 </div>
@@ -152,19 +155,57 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        <!-- ngày bắt đầu & kết thúc -->
-                                        @if ($task->start_date && $task->end_date)
-                                            @php
-                                                $start_date = \Carbon\Carbon::parse($task->start_date);
-                                                $end_date = \Carbon\Carbon::parse($task->end_date);
-                                                $start =
-                                                    $start_date->format('d') . ' tháng ' . $start_date->format('m');
-                                                $end = $end_date->format('d') . ' tháng ' . $end_date->format('m');
-                                            @endphp
+                                        @php
+                                            $now = \Carbon\Carbon::now();
+
+
+                                            $startDate = $task->start_date ? \Carbon\Carbon::parse($task->start_date) : null;
+                                            $endDate = $task->end_date ? \Carbon\Carbon::parse($task->end_date) : null;
+
+
+                                            if ($startDate && $endDate && $endDate->year === $now->year && $startDate->year === $now->year) {
+                                                $dateFormat = ' d \t\h\á\n\g m';
+                                            }else if($startDate && $startDate->year === $now->year){
+                                                $dateFormat = ' d \t\h\á\n\g m';
+                                            } else if($endDate && $endDate->year === $now->year){
+                                                $dateFormat = ' d \t\h\á\n\g m';
+                                            } else {
+                                                $dateFormat = ' d \t\h\á\n\g m, Y';
+                                            }
+
+                                            $startDate = $startDate ? $startDate->format($dateFormat) : null;
+                                            $endDate = $endDate ? $endDate->format($dateFormat) : null;
+                                        @endphp
+                                            <!-- ngày bắt đầu & kết thúc -->
+                                        @if ($endDate && empty($startDate))
                                             <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-calendar-event-line fs-20 me-2"></i>
-                                                <span class="badge bg-primary"> {{ $start }} -
-                                                    {{ $end }}
+                                                <span
+                                                    class="badge @if($task->progress == 100) bg-success
+                                                    @elseif($now > $task->end_date) bg-danger
+                                                    @elseif($now < $task->end_date) bg-warning
+                                                    @endif "
+                                                    id="date-view-board-{{$task->id}}">
+                                                    {{ $endDate }}
+                                                </span>
+                                            </div>
+                                        @elseif($startDate && empty($endDate))
+                                            <div class="flex-grow-1 d-flex align-items-center">
+                                                <i class="ri-calendar-event-line fs-20 me-2"></i>
+                                                <span class="badge bg-primary" id="date-view-board-{{$task->id}}">
+                                                    {{ $startDate }}
+                                                </span>
+                                            </div>
+                                        @elseif($endDate && $startDate)
+                                            <div class="flex-grow-1 d-flex align-items-center">
+                                                <i class="ri-calendar-event-line fs-20 me-2"></i>
+                                                <span
+                                                    class="badge @if($task->progress == 100) bg-success
+                                                    @elseif($now > $task->end_date) bg-danger
+                                                    @elseif($now < $task->end_date) bg-warning
+                                                    @endif "
+                                                    id="date-view-board-{{$task->id}}">
+                                                {{$startDate}} - {{ $endDate }}
                                                 </span>
                                             </div>
                                         @endif
@@ -222,24 +263,24 @@
                                                 @endif
                                                 <!-- checklist -->
                                                 @php
-//                                                    // Chuyển đổi $task->checklists sang mảng để dễ thao tác
-//                                                       $checklistsArray = json_decode(json_encode($task->check_lists), true);
-//
-//                                                       // Đếm tổng số checklist items
-//                                                       $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
-//                                                           return count($checklist['checklistItems']);
-//                                                       });
-//
-//                                                       // Đếm số checklist items đã hoàn thành
-//                                                       $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
-//                                                           return collect($checklist['checklistItems'])->where('is_complete', true)->count();
-//                                                       });
-                                                   $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems;
-                                                    });
-                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems->where('is_complete', true);
-                                                    });
+                                                    //                                                    // Chuyển đổi $task->checklists sang mảng để dễ thao tác
+                                                    //                                                       $checklistsArray = json_decode(json_encode($task->check_lists), true);
+                                                    //
+                                                    //                                                       // Đếm tổng số checklist items
+                                                    //                                                       $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                    //                                                           return count($checklist['checklistItems']);
+                                                    //                                                       });
+                                                    //
+                                                    //                                                       // Đếm số checklist items đã hoàn thành
+                                                    //                                                       $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
+                                                    //                                                           return collect($checklist['checklistItems'])->where('is_complete', true)->count();
+                                                    //                                                       });
+                                                                                                       $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
+                                                                                                            return $checklist->checklistItems;
+                                                                                                        });
+                                                                                                        $inProgressItems = $task->checklists->flatMap(function ($checklist) {
+                                                                                                            return $checklist->checklistItems->where('is_complete', true);
+                                                                                                        });
                                                 @endphp
 
                                                 @if($task->checkLists->isNotEmpty())
@@ -264,7 +305,8 @@
                             aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask({{ $catalog->id }})">
                         Thêm thẻ
                     </button>
-                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{$catalog->id }}" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
+                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{$catalog->id }}" style="width: 285px"
+                         aria-labelledby="dropdownMenuOffset2">
                         {{--dropdown.createTask--}}
                     </div>
 
@@ -282,8 +324,9 @@
                     Thêm danh sách
                 </h6>
             </div>
-            <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px" aria-labelledby="addCatalog">
-                        {{--dropdown.createCatalog--}}
+            <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px"
+                 aria-labelledby="addCatalog">
+                {{--dropdown.createCatalog--}}
             </div>
         </div>
     </div>

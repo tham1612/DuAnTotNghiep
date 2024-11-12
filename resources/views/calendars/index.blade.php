@@ -201,31 +201,6 @@
             // xem chi tiết
             eventClick: function (event) {
 
-                $(`#detailCardModal${event.id}`).modal('toggle'); // bật modal lên
-
-                var id_gg_canlendar = event.id_google_calendar;
-
-                // deteleEvent.addEventListener('click', function (e) {
-                //     e.preventDefault();
-                //     if (isAllowedToDrag(event)) {
-                //         if (confirm('ban co muon xoa khong?')) {
-                //             $.ajax({
-                //                 url: `/delete-event/${id_gg_canlendar}`,
-                //                 type: "DELETE",
-                //                 dataType: "json",
-                //                 data: {},
-                //                 success: function (response) {
-                //                     alert(response.msg);
-                //                     $('#detailCardModal6').modal('toggle');
-                //                 }
-                //             })
-                //         }
-                //     } else {
-                //         alert('Bạn không có quyền để xóa');
-                //     }
-                //
-                // })
-
             },
             viewRender: function (view) {
 

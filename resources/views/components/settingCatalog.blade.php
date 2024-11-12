@@ -83,7 +83,7 @@
                                         <label>Bảng thông tin</label>
                                         <textarea name="name" id=""
                                                   class="form-control mb-2 nameMoveTask"
-                                                  placeholder="Nhập tên danh sách">{{$catalog->name}} sao chép</textarea>
+                                                  placeholder="Nhập tên danh sách">{{$catalog->name}}</textarea>
                                         <select name="board_id" id="" class="form-select mb-3">
                                             @php
                                                 $userId = \Illuminate\Support\Facades\Auth::id();
