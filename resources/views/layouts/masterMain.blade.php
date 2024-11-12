@@ -162,8 +162,10 @@
 
                 @if (request()->is('b/*'))
                     @php
+
                         include  resource_path('views/resourceBoard.php');
                     @endphp
+
 
                     @include('layouts.navbar')
                     @include('components.setting')

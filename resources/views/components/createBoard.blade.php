@@ -28,8 +28,10 @@
                     </div>
                     <div class="mt-3">
                         <label for="" class="form-label">Không gian làm việc</label>
+
                         <input type="text" readonly value="{{$workspace->name}}" class="form-control">
                         <input type="hidden" value="{{$workspace->id}}" class="form-control" name="workspace_id">
+
 
                     </div>
                     <div class="mt-3">
