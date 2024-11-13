@@ -14,19 +14,24 @@ class DeleteGoogleApiClientEvent implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $accessToken;
+    protected $id;
+    protected $userOrTaskId;
+
     /**
      * Create a new job instance.
      */
-    public function __construct(protected $accessToken,protected $id)
+    public function __construct($accessToken, $id, $userOrTaskId)
     {
         $this->accessToken = $accessToken;
         $this->id = $id;
+        $this->userOrTaskId = $userOrTaskId;
     }
 
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle()
     {
         $client = $this->getClient();
         $accessToken = $this->accessToken;

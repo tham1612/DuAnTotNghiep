@@ -1,4 +1,3 @@
-<!-- tệp -->
 <div class="row mt-3" id="attachment-section-{{$task->id}}"
      style="{{ count($task->attachments) ? '' : 'display: none;' }}">
     <section class="d-flex">
@@ -126,6 +125,15 @@
                     @php
                         $fileUrl = asset('storage/' . $attachment->file_name);
                         $fileExtension = pathinfo($attachment->file_name, PATHINFO_EXTENSION);
+                        $now = \Carbon\Carbon::now();
+
+                          $attachmentDate = $attachment->created_at ? \Carbon\Carbon::parse($attachment->created_at) : null;
+                          if($attachmentDate && $attachment->year === $now->year){
+                              $dateFormat = 'H:i d \t\h\á\n\g m';
+                              } else {
+                               $dateFormat = 'H:i d \t\h\á\n\g m, Y';
+                          }
+                          $attachmentDate = $attachmentDate ? $attachmentDate->format($dateFormat) : null;
                     @endphp
                     <tr class="cursor-pointer attachment_{{$attachment->id}} ">
                         <td class="col-1">
@@ -170,9 +178,13 @@
                             @endif
 
                         </td>
-                        <td class="text-start name_attachment"
+                        <td class="text-start name_attachment "
                             id="name_display_{{ $attachment->id }}">
-                            {{ strtoupper(substr($attachment->name, 0, 50)) }}
+                            <div class="d-flex flex-column">
+                                <span>{{ strtoupper(substr($attachment->name, 0, 50)) }}</span>
+                                <span> Đã thêm {{$attachmentDate}}</span>
+                            </div>
+
                         </td>
                         <td class="text-end">
                             <i class="ri-more-fill fs-20 cursor-pointer"
