@@ -109,7 +109,33 @@ function updatePermission(permissionType, value, boardId) {
             value: value,
         },
         success: function (response) {
-            notificationWeb(response.action, response.msg)
+            console.log(response.board)
+            notificationWeb(response.action, response.msg);
+
+            let titleBoardNavbar = document.getElementById(`2-name-board-${response.board.id}`)
+            let titleBoardSidebar = document.getElementById(`name-board-${response.board.id}`)
+            let iconAccessBoardNavbar = document.getElementById(`accessIcon_${response.board.id}`)
+            let textAccessBoardNavbar = document.getElementById(`accessText_${response.board.id}`)
+
+            titleBoardNavbar.innerHTML = response.board.name
+            titleBoardSidebar.innerHTML = response.board.name
+
+            if (response.board.access === 'private') {
+                iconAccessBoardNavbar.classList.add('ri-lock-2-line')
+                iconAccessBoardNavbar.classList.add('text-danger')
+                iconAccessBoardNavbar.classList.remove('ri-shield-user-fill')
+                iconAccessBoardNavbar.classList.remove('text-primary')
+                textAccessBoardNavbar.innerHTML = 'Riêng tư'
+            }
+
+            if (response.board.access === 'public') {
+                iconAccessBoardNavbar.classList.add('ri-shield-user-fill')
+                iconAccessBoardNavbar.classList.add('text-primary')
+                iconAccessBoardNavbar.classList.remove('ri-lock-2-line')
+                iconAccessBoardNavbar.classList.remove('text-danger')
+
+                textAccessBoardNavbar.innerHTML = 'Công khai'
+            }
         },
         error: function (error) {
             notificationWeb(response.action, response.msg)

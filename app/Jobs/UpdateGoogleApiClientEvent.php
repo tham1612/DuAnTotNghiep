@@ -38,9 +38,7 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
      */
     public function handle()
     {
-//        dd($this->attendees);
         $client = $this->getClient();
-//        $accessToken = User::query()->where('id', auth()->id())->value('remember_token');
         $accessToken = $this->accessToken;
         if ($accessToken) {
             $client->setAccessToken($accessToken);
@@ -49,7 +47,6 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
                 // Làm mới token nếu hết hạn
                 $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
                 // Cập nhật token mới vào database
-//                session(['google_access_token' => $client->getAccessToken()]);
                 User::query()
                     ->where('id', $this->userOrTaskId['user_id'])
                     ->update([

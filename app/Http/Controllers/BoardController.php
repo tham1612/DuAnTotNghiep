@@ -931,7 +931,8 @@ class BoardController extends Controller
 
         return response()->json([
             'action' => 'success',
-            'msg' => 'Thay đổi quyền thành công!!'
+            'msg' => 'Thay đổi quyền thành công!!',
+            'board' => $board
         ]);
     }
 

@@ -100,7 +100,7 @@
                                                     @selected($catalog->board->id == $board->id)>{{$board->name}}</option>
                                             @endforeach
                                         </select>
-                                        <input type="hidden" name="id" class="id" value="{{$catalog->id}}">
+                                        <input type="hidden" name="catalog_id" class="id" value="{{$catalog->id}}">
                                         <button class="btn btn-primary">Di chuyển danh sách</button>
                                     </form>
                                 </div>

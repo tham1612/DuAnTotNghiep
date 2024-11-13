@@ -273,13 +273,16 @@
                 const startDate = new Date(startDateInput.value);
 
                 endDate.setDate(endDate.getDate());
-                startDate.setDate(startDate.getDate() + 1);
+                startDate.setDate(startDate.getDate() + 2);
 
                 const maxDate = endDate.toISOString().slice(0, 16);
                 const minDate = startDate.toISOString().slice(0, 16);
                 startDateInput.max = maxDate;
                 endDateInput.min = minDate;
                 console.log(maxDate, minDate)
+            } else {
+                startDateInput.max = null;
+                endDateInput.min = null;
             }
 
 
@@ -297,7 +300,10 @@
         active_checkbox.addEventListener('click', function () {
             startDateInput.disabled = !startDateInput.disabled;
             startDateInput.value = '';
-
+            const endDate = new Date(endDateInput.value);
+            endDate.setDate(endDate.getDate());
+            const maxDate = endDate.toISOString().slice(0, 16);
+            startDateInput.value = maxDate;
             handleDate();
         });
     </script>

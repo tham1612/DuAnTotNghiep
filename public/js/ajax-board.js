@@ -259,44 +259,7 @@ function submitAddTask(catalogId, catalogName) {
                                 data-bs-target="#detailCardModal" data-task-id="${response.task.id}">
                              ${response.task.text}
                         </h6>
-                        <div class="dropdown">
-                            <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                    class="ri-more-fill"></i></a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                <li>
-                                    <span class="dropdown-item" href="#"><i
-                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                        Mở thẻ</span>
-                                </li>
-                                <li>
-                                    <span class="dropdown-item" href="#"><i
-                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                        Chỉnh sửa nhãn</span>
-                                </li>
-                                <li>
-                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                        Thay đổi thành viên</span>
-                                </li>
-                                <li>
-                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                        Chỉnh sửa ngày</span>
-                                </li>
-                                <li>
-                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                        Sao chép</span>
-                                </li>
-                                <li>
-                                    <span class="dropdown-item" data-bs-toggle="modal"
-                                          onclick="archiverTask(${response.task.id})"><i
-                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                        Lưu trữ</span>
-                                </li>
-                            </ul>
-                        </div>
+
                     </div>
                     <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
                         <!-- Ảnh bìa -->
@@ -312,32 +275,7 @@ function submitAddTask(catalogId, catalogName) {
                 <div class="card-footer border-top-dashed">
                     <div class="d-flex justify-content-end">
                         <div class="flex-shrink-0">
-                            <ul class="link-inline mb-0">
-                                <!-- theo dõi -->
-                                <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="text-muted"><i
-                                            class="ri-eye-line align-bottom"></i>
-                                        04</a>
-                                </li>
-                                <!-- bình luận -->
-                                <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="text-muted"><i
-                                            class="ri-question-answer-line align-bottom"></i>
-                                        19</a>
-                                </li>
-                                <!-- tệp đính kèm -->
-                                <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="text-muted"><i
-                                            class="ri-attachment-2 align-bottom"></i>
-                                        02</a>
-                                </li>
-                                <!-- checklist -->
-                                <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="text-muted"><i
-                                            class="ri-checkbox-line align-bottom"></i>
-                                        2/4</a>
-                                </li>
-                            </ul>
+
                         </div>
                     </div>
                 </div>
