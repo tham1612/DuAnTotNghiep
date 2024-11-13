@@ -180,8 +180,27 @@ class GoogleApiClientController extends Controller
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
+        $userOrTaskId = [
+            'user_id' => Auth::id(),
+        ];
+        $client = $this->getClient();
+        $service = new \Google_Service_Calendar($client);
+        $client->setAccessToken($accessToken);
+        $eventsList = $service->events->listEvents('primary');
+        $events = $eventsList->getItems();
+        $eventExists = false;
+        foreach ($events as $event) {
+            if ($event->getId() === $id) {
+                Log::debug($event->getId());
+                Log::debug($id);
+                $eventExists = true;
+            }
+        }
 
-        DeleteGoogleApiClientEvent::dispatch($accessToken, $id);
+        if ($eventExists) {
+            DeleteGoogleApiClientEvent::dispatch($accessToken, $id, $userOrTaskId);
+        }
+
     }
 
 
