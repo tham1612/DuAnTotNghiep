@@ -897,8 +897,6 @@ class WorkspaceController extends Controller
         try {
 
             if (!empty($data->boards)) {
-                dd('a');
-
                 $wsp->update([
                     'authorize' => AuthorizeEnum::Viewer()
                 ]);
@@ -907,7 +905,6 @@ class WorkspaceController extends Controller
 
                 $wsp->user->notify(new WorkspaceMemberNotification($title, $description, $wsp,0));
             } else {
-                dd('b');
                 $wsp->delete();
                 $title = "Rời Khỏi Không Gian Làm Việc";
                 $description = 'Chúng tôi rất tiếc phải thông báo rằng bạn đã bị xóa khỏi không gian làm việc "' . $wsp->workspace->name . '". Hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
