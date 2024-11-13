@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AuthorizeEnum;
+use App\Events\EventNotification;
 use App\Events\UserInvitedToWorkspace;
 use App\Http\Requests\UpdateWorkspaceRequest;
 use App\Models\Board;
@@ -11,7 +12,7 @@ use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
 use App\Notifications\BoardNotification;
-use App\Notifications\WorksaceNotification;
+use App\Notifications\WorkspaceNotification;
 use App\Notifications\WorkspaceMemberNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -975,7 +976,7 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Thành viên mới trong không gian làm việc';
                 $description = 'Người dùng "' . $userName . '" đã được thêm vào không gian làm việc "' . $workspace->name . '".';
-                $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+                $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
     }
@@ -995,7 +996,8 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Chỉnh sửa không gian làm việc';
                 $description = 'Người dùng "' . $userName . '" đã thay đổi trạng thái của không gian làm việc sang "' . $workspace->access . '".';
-                $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+                broadcast(new EventNotification($description, 'success'));
+                $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
     }
@@ -1015,7 +1017,7 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Thăng cấp thành viên';
                 $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
-                $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+                $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
     }
@@ -1035,7 +1037,7 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Nhượng quyền';
                 $description = 'Người dùng "' . $userName . '" đã được nhượng quyền lên Chủ Nhóm.';
-                $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+                $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
     }
@@ -1054,7 +1056,7 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Chỉnh sửa';
                 $description = 'Người dùng "' . $userName . '" Chỉnh sửa không gian làm việc, xem chi tiết!.';
-                $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+                $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
     }

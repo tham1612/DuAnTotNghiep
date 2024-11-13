@@ -18,12 +18,12 @@ class EventNotification implements ShouldBroadcast
      * Create a new event instance.
      */
 
-     public $message;
-     public $type;
-    public function __construct($message,$type)
+    public $message;
+    public $action;
+    public function __construct($message, $action)
     {
         $this->message = $message;
-        $this->type = $type;
+        $this->action = $action;
     }
 
     /**
@@ -31,10 +31,9 @@ class EventNotification implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [
-            new Channel('notifications'),
-        ];
+        return
+            new Channel('notifications');
     }
 }

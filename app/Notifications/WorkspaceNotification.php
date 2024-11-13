@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WorksaceNotification extends Notification implements ShouldQueue
+class WorkspaceNotification extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $user; // Người được thêm vào không gian làm việc
