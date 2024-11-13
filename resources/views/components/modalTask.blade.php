@@ -52,7 +52,7 @@
                         <section class="d-flex mb-2">
                             <i class="ri-artboard-line fs-24 mt-1"></i>
                             <input type="text" name="text"
-                                   class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
+                                   class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0  cursor-pointer"
                                    id="text_{{ $task->id }}" value="{{ $task->text }}"
                                    onchange="updateTask2({{ $task->id }})"/>
 
@@ -326,7 +326,7 @@
                                 </button>
                             </form>
 
-                            <div class="bg-info-subtle p-2 rounded ps-2" data-task-id="{{ $task->id }}"
+                            <div class="bg-info-subtle p-2 rounded ps-2  cursor-pointer" data-task-id="{{ $task->id }}"
                                  onclick="toggleCommentForm(this)">
                                 Viết bình luận
                             </div>

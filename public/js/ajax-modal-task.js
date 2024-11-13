@@ -1666,8 +1666,8 @@ function addTaskComment(taskId, user_id) {
                 <span class="fs-11">${timeAgo}</span>
                 <div class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-${response.comment.id}">${content}</div>
                 <div class="fs-11 d-flex">
-                   <div class=""> ${btnThaoTac} </div>
-                    <div class=""> ${btnXoa}</div>
+                   <div class="cursor-pointer"> ${btnThaoTac} </div>
+                    <div class="cursor-pointer"> ${btnXoa}</div>
 
                 </div>
             </section>
