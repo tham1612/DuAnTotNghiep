@@ -29,8 +29,7 @@ class TaskOverdueNotification extends Notification
         // Tạo email thông báox
         return (new MailMessage)
             ->subject('Task sắp đến hạn')
-            ->line('Task "' . $this->task->text . '" đã quá hạn, hãy nhanh chóng hoàn thành!')
-            ->action('Xem Task', url("/b\"{$this->task->catalog->board->id}\"edit"));
+            ->view('emails.taskOverDueDate', ['task' => $this->task]);
     }
 
     public function toDatabase($notifiable)

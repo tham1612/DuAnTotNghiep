@@ -242,7 +242,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('inbox') }}">
                         <i class=" ri-notification-3-line"></i> <span data-key="">Thông Báo</span>
-                        @if (!empty($allNotifications))
+                        @if (!empty($allNotifications) && $allNotifications->count() > 0 )
                             @if ($allNotifications->count() <= 9)
                                 <span
                                     class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
@@ -293,10 +293,12 @@
                                 @php
                                     // $boardMembers = $board->members->unique('id');
 
-                                    $boardMembers = $board->boardMembers()->with('user')->get()->unique('user.id');
-
-                                    $memberIsStar =
-                                        $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
+                                     $boardMembers = $board->members()
+                                                    ->where('authorize', '!=', 'Viewer')
+                                                    ->distinct('id')
+                                                    ->get();
+                                    $memberIsStar =$boardMembers->where('id', auth()->id())
+                                        ->first()->pivot->is_star ?? null;
 
                                     // Lưu vào session
                                     session([

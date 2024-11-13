@@ -46,9 +46,9 @@
                 {!! $comment->content !!}
             </div>
             <div class="">
-                <div class="fs-11 d-flex">
+                <div class="fs-11 d-flex  cursor-pointer">
                     @if($comment->user->id === Auth::id())
-                        <div class="">
+                        <div class=" cursor-pointer">
                                 <span data-bs-toggle="dropdown"
                                       aria-haspopup="true"
                                       aria-expanded="false">Chỉnh sửa</span>
@@ -90,7 +90,7 @@
                     @endif
                     {{--                        @php $userOwner = $board->members->firstWhere('pivot.authorize', 'Owner');  @endphp--}}
                     @if(auth()->id()===$comment->user->id || auth()->id()=== $userOwner->id )
-                        <span class="mx-1">-</span>
+                        <span class="mx-1 ">-</span>
                         <span data-bs-toggle="dropdown"
                               aria-haspopup="true"
                               aria-expanded="false">Xóa</span>

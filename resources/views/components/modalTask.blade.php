@@ -18,6 +18,17 @@
         height: 20%;
         opacity: 0; /* Ẩn input nhưng vẫn nhận được sự kiện click */
     }
+    #modalImage {
+        max-width: 100%;
+        max-height: 80vh;
+        cursor: zoom-in;
+        transition: transform 0.3s ease;
+    }
+
+    #modalImage.zoomed {
+        transform: scale(2); /* Tăng kích thước ảnh gấp 2 lần */
+        cursor: zoom-out;
+    }
 </style>
 <div class="modal-header p-3 modal-header-{{$task->id}}"
      style="
@@ -52,7 +63,7 @@
                         <section class="d-flex mb-2">
                             <i class="ri-artboard-line fs-24 mt-1"></i>
                             <input type="text" name="text"
-                                   class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
+                                   class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0  cursor-pointer"
                                    id="text_{{ $task->id }}" value="{{ $task->text }}"
                                    onchange="updateTask2({{ $task->id }})"/>
 
@@ -326,7 +337,7 @@
                                 </button>
                             </form>
 
-                            <div class="bg-info-subtle p-2 rounded ps-2" data-task-id="{{ $task->id }}"
+                            <div class="bg-info-subtle p-2 rounded ps-2  cursor-pointer" data-task-id="{{ $task->id }}"
                                  onclick="toggleCommentForm(this)">
                                 Viết bình luận
                             </div>
