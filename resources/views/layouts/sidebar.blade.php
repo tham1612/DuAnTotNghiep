@@ -293,10 +293,12 @@
                                 @php
                                     // $boardMembers = $board->members->unique('id');
 
-                                    $boardMembers = $board->boardMembers()->with('user')->get()->unique('user.id');
-
-                                    $memberIsStar =
-                                        $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
+                                     $boardMembers = $board->members()
+                                                    ->where('authorize', '!=', 'Viewer')
+                                                    ->distinct('id')
+                                                    ->get();
+                                    $memberIsStar =$boardMembers->where('id', auth()->id())
+                                        ->first()->pivot->is_star ?? null;
 
                                     // Lưu vào session
                                     session([

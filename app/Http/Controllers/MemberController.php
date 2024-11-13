@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
@@ -87,6 +88,8 @@ class MemberController extends Controller
         }
 
         return response()->json([
+            'msg' =>'thêm  thành viên vô task thành công !',
+            'action' => 'success',
             'success' => true,
             'message' => 'Thêm thành viên thành công.'
         ]);
@@ -151,6 +154,8 @@ class MemberController extends Controller
         }
 
         return response()->json([
+            'msg' =>'xóa thành viên khỏi task thành công !',
+            'action' => 'success',
             'success' => true,
             'message' => 'Xóa thành viên thành công.'
         ], 200);
@@ -214,8 +219,12 @@ class MemberController extends Controller
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-        $boardMembers0 = session('boardMembers_' . $request->boardId);
-        $boardMembers = json_decode(json_encode($boardMembers0));
+//        $boardMembers0 = session('boardMembers_' . $request->boardId);
+//        $boardMembers = json_decode(json_encode($boardMembers0));
+        $boardMembers = BoardMember::with('user')
+            ->where('board_id',$request->boardId)
+            ->where('authorize', '!=', 'Viewer')
+            ->get();
 
         $task = json_decode(json_encode(Task::with('members')->findOrFail($taskId)));
         //        dd( $boardMembers);

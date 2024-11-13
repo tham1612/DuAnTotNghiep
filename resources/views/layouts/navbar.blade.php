@@ -237,22 +237,25 @@
                                     $count = 0;
                                 @endphp
 
-                                @foreach ($boardMembers as $boardMemberMain)
+                                @foreach ($boardMembers as $boardMember)
                                     @php
-                                        $boardMember = $boardMemberMain->user;
+                                           $boardMember = json_decode(json_encode($boardMember));
                                     @endphp
                                     @if ($count < $maxDisplay)
                                         <a href="javascript: void(0);" class="avatar-group-item"
-                                           data-bs-toggle="tooltip" data-bs-placement="top"
-                                           title="{{ $boardMember['name'] }}">
-                                            @if ($boardMember['image'])
+
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ $boardMember->name }}">
+                                            @if ($boardMember->image)
+
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
                                                      alt="" class="rounded-circle avatar-xs object-fit-cover">
                                             @else
                                                 <div class="avatar-xs" style="width: 40px;height: 40px">
                                                     <div class="avatar-title rounded-circle bg-light text-primary"
-                                                         style="width: 40px;height: 40px">
-                                                        {{ strtoupper(substr($boardMember['name'], 0, 1)) }}
+                                                        style="width: 40px;height: 40px">
+                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
+
                                                     </div>
                                                 </div>
                                             @endif

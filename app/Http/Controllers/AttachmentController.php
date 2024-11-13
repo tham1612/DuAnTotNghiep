@@ -19,7 +19,8 @@ class AttachmentController extends Controller
 
             foreach ($request->file('file_name') as $index => $file) {
                 if ($uploadedFilePath = Storage::put(self::PATH_UPLOAD, $file)) {
-                    $fileName = $request->input('name')[$index];
+                    $fileNameWithExtension = $request->input('name')[$index];
+                    $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
                     $attachment = TaskAttachment::create([
                         'task_id' => $request->task_id,
                         'file_name' => $uploadedFilePath,
