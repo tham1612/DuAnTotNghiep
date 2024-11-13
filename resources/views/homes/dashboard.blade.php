@@ -93,7 +93,7 @@
                                                 <div class="avatar-group">
                                                     @php
                                                         // Giới hạn số thành viên hiển thị
-                                                        $maxDisplay = 2;
+                                                        $maxDisplay = 4;
                                                         $count = 0;
                                                     @endphp
 
@@ -234,7 +234,7 @@
                                                 <div class="avatar-group">
                                                     @php
                                                         // Giới hạn số thành viên hiển thị
-                                                        $maxDisplay = 2;
+                                                        $maxDisplay = 4;
                                                         $count = 0;
                                                     @endphp
 
@@ -248,10 +248,10 @@
                                                                         <img src="{{ asset('storage/' . $boardMember->image) }}"
                                                                             alt="{{ $boardMember->name }}"
                                                                             class="rounded-circle"
-                                                                            style="width: 30px;height: 30px">
+                                                                            style="width: 25px;height: 25px">
                                                                     @else
                                                                         <div class="bg-info-subtle rounded-circle avatar-xs d-flex justify-content-center align-items-center"
-                                                                            style="width: 30px;height: 30px">
+                                                                            style="width: 25px;height: 25px">
                                                                             {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                                         </div>
                                                                     @endif
@@ -268,9 +268,9 @@
                                                             data-bs-toggle="tooltip" data-bs-trigger="hover"
                                                             data-bs-placement="top"
                                                             title="{{ $board->members->count() - $maxDisplay }} more members">
-                                                            <div class="avatar-xs" style="width: 30px;height: 30px">
+                                                            <div class="avatar-xs" style="width: 25px;height: 25px">
                                                                 <div class="avatar-title fs-16 rounded-circle"
-                                                                    style="width: 30px;height: 30px">
+                                                                    style="width: 25px;height: 25px">
                                                                     +{{ $board->members->count() - $maxDisplay }}
                                                                 </div>
                                                             </div>
