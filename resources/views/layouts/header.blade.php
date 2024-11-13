@@ -1,4 +1,3 @@
-
 <header id="page-topbar">
     <div class="layout-width">
         <div class="navbar-header">
@@ -197,7 +196,8 @@
                                 @foreach($template_boards as $tplBoard)
                                     <div
                                         class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                        data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal{{$tplBoard->id}}">
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#create-board-template-home-modal{{$tplBoard->id}}">
                                         <div class="d-flex align-items-center">
                                             @if ($tplBoard->image)
                                                 <img
@@ -357,6 +357,27 @@
         </div>
     </div>
 </header>
+{{--thông báo web--}}
+<div class="bg-light" aria-live="polite" aria-atomic="true"
+     style="position: fixed; top: 70px;right: 10px; z-index: 100">
+    @if (!empty(session('msg')) && !empty(session('action')))
+        {{--        @dd(session('msg'),session('action')) --}}
+        {{--        @foreach (session('success') as $notification) --}}
+        <div class="toast fade show bg-{{ session('action') }}-subtle" role="alert" aria-live="assertive"
+             aria-atomic="true" data-bs-toggle="toast" id="notification-messenger">
+            <div class="toast-header">
+                <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
+                     height="20">
+                <span class="fw-semibold me-auto">Task Flow.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body fw-bolder text-{{ session('action') }}">
+                {{ session('msg') }}
+            </div>
+        </div>
+        {{--        @endforeach --}}
+    @endif
+</div>
 
 {{-- bảng lưu trữ --}}
 <div class="modal fade" id="archiverBoard-member" tabindex="-1" aria-labelledby="addmemberModalLabel"

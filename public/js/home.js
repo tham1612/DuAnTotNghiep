@@ -190,7 +190,7 @@ function updateBoard(boardId) {
             if (nameboard && response.board.name && nameboard2 ) {
                 // Giới hạn tên mới theo 10 ký tự như trong Blade
                 var limitedName = response.board.name.length > 10 ? response.board.name.substring(0, 10) + '...' : response.board.name;
-                nameboard.textContent =nameboard2.textContent= limitedName;  // Cập nhật tên mới vào thẻ span
+                nameboard.textContent = nameboard2.textContent = limitedName;  // Cập nhật tên mới vào thẻ span
             }
             if (response.board.image) {
                 let imageElement = $('#image-board-' + boardId);

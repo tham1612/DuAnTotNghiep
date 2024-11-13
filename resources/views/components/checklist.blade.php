@@ -30,10 +30,10 @@
             <div class="ps-4">
                 <div class="progress animated-progress bg-light-subtle" style="height: 20px"
                      data-checklist-id="{{ $checklist->id }}">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ $checklist->progress }}%"
                          id="progress-bar-checklist-{{ $checklist->id }}" aria-valuenow="0" aria-valuemin="0"
                          aria-valuemax="100">
-                        0%
+                        {{ $checklist->progress }}%
                     </div>
                 </div>
                 <div class="table-responsive table-hover table-card" >

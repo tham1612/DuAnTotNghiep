@@ -12,12 +12,13 @@
         @foreach ($board->catalogs as $catalog)
             <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}">
                 <div class="d-flex mb-3 d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                    <div class="flex-grow-1 d-flex">
+                        <h6 class="fs-14 text-uppercase fw-semibold mb-0"
+                            id="title-catalog-view-board-{{$catalog->id}}">
                             {{ $catalog->name }}
-                            <small
-                                class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
                         </h6>
+                        <small
+                            class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">

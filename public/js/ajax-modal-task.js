@@ -81,8 +81,43 @@ function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
 }
 
 // Gọi hàm với các tham số tùy chỉnh
+//gọi modal task ở màn gantt và calender
+function openCustomModal(taskId) {
+    var modalElement = document.getElementById('detailCardModal');
+
+    if (modalElement) {
+        // Tải nội dung task qua AJAX
+        $.ajax({
+            url: '/tasks/getModalTask/' + taskId,
+            type: 'GET',
+            success: function(response) {
+                $('.modal-task', modalElement).html(response.html); // Cập nhật nội dung modal
+
+                // Khởi tạo modal instance và hiển thị modal
+                var modalInstance = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                modalInstance.show();
+
+                // Xử lý sự kiện khi modal bị đóng để giải phóng instance và backdrop
+                modalElement.addEventListener('hidden.bs.modal', function () {
+                    modalInstance.dispose();
+                    $('.modal-backdrop').remove(); // Xóa backdrop nếu vẫn còn
+                    document.body.classList.remove('modal-open'); // Đảm bảo class modal-open bị xóa
+                });
+            },
+            error: function(xhr) {
+                console.error("Không thể tải dữ liệu task:", xhr);
+            }
+        });
+    } else {
+        console.error("Modal không tồn tại!");
+    }
+}
 
 
+//gọi modal task ở màn board, table, list
 function getModalTaskEvents() {
     document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (trigger) {
         trigger.addEventListener('click', function () {
@@ -366,7 +401,7 @@ function loadFormAddDateTask(taskId) {
     });
 }
 
-function formatDate(date) {
+function formatFullDate(date) {
     const now = new Date();
     const year = date.getFullYear();
     const currentYear = now.getFullYear();
@@ -383,10 +418,25 @@ function formatDate(date) {
     }
 }
 
+function formatDate(date) {
+    const now = new Date();
+    const year = date.getFullYear();
+    const currentYear = now.getFullYear();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+
+    if (year !== currentYear) {
+        return `${day} tháng ${month}, ${year}`;
+    } else {
+        return `${day} tháng ${month}`;
+    }
+}
+
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
     const startDateInput = document.getElementById('start_date_task_' + taskId).value;
     const endDateInput = document.getElementById('end_date_task_' + taskId).value;
+    const dateViewBoard = document.getElementById(`date-view-board-${taskId}`);
 
     // Chuyển đổi giá trị sang đối tượng Date để so sánh
     const startDate = new Date(startDateInput);
@@ -437,7 +487,7 @@ function submitUpdateDateTask(taskId, event) {
                onchange="updateTask2(${response.task.id})" name="progress"
                ${response.task.progress == 100 ? 'checked' : ''} />
         <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
-        <p class="ms-2 mt-3">${formatDate(startDate)}-${formatDate(endDate)}</p>`;
+        <p class="ms-2 mt-3">${formatFullDate(startDate)}-${formatFullDate(endDate)}</p>`;
 
                 if (response.task.progress == 100) {
                     date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
@@ -449,6 +499,7 @@ function submitUpdateDateTask(taskId, event) {
 
                 date += `</div>`;
 
+                dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
             } else if (response.task.end_date) {
                 const endDate = new Date(response.task.end_date);
 
@@ -461,7 +512,7 @@ function submitUpdateDateTask(taskId, event) {
                onchange="updateTask2(${response.task.id})" name="progress"
                ${response.task.progress == 100 ? 'checked' : ''} />
         <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
-        <p class="ms-2 mt-3">${formatDate(endDate)}</p>`;
+        <p class="ms-2 mt-3">${formatFullDate(endDate)}</p>`;
 
                 if (response.task.progress == 100) {
                     date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
@@ -472,15 +523,19 @@ function submitUpdateDateTask(taskId, event) {
                 }
 
                 date += `</div>`;
+
+                dateViewBoard.innerHTML = `${formatDate(endDate)}`
             } else if (response.task.start_date) {
                 const startDate = new Date(response.task.start_date);
                 date = `
                     <strong>Ngày bắt đầu</strong>
                     <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                          style="height: 35px; background-color: #091e420f; color: #172b4d">
-                        <p class="ms-2 mt-3">${formatDate(startDate)}</p>
+                        <p class="ms-2 mt-3">${formatFullDate(startDate)}</p>
                     </div>
                 `;
+
+                dateViewBoard.innerHTML = `${formatDate(startDate)}`
             }
             if (dateSection) {
                 if (dateSection.style.display === 'none') {
@@ -965,16 +1020,28 @@ function updateProgressBar(checklistId) {
 
     // Tính phần trăm hoàn thành
     const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
-
-    // Cập nhật thanh tiến trình cho checklist tương ứng
-    const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
-    if (progressBar) {
-        progressBar.style.width = percentCompleted + '%';
-        progressBar.setAttribute('aria-valuenow', percentCompleted);
-        progressBar.innerHTML = Math.round(percentCompleted) + '%';
-    } else {
-        console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
-    }
+    $.ajax({
+        url: `/tasks/${checklistId}/checklist`,
+        type: 'PUT',
+        data: {
+            progress:percentCompleted
+        },
+        success: function (response) {
+            // Cập nhật thanh tiến trình cho checklist tương ứng
+            const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
+            if (progressBar) {
+                progressBar.style.width = percentCompleted + '%';
+                progressBar.setAttribute('aria-valuenow', percentCompleted);
+                progressBar.innerHTML = Math.round(percentCompleted) + '%';
+            } else {
+                console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
+            }
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+        }
+    });
 }
 
 // Lắng nghe sự kiện thay đổi trên từng checkbox
@@ -1081,6 +1148,11 @@ function onclickAddMemberCheckListItem(memberId, memberName, checklistItemId) {
             `;
             cardMembersListItem.innerHTML += listItem;
             memberCheckListItem.innerHTML += memberCheckListItemAdd;
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
             console.log('Thành viên đã được thêm vào checkListMember thành công.');
         },
         error: function (xhr) {
@@ -1106,6 +1178,11 @@ function removeMemberFromCard(memberId, checklistItemId) {
             if (memberElement) {
                 memberElement.remove();
             }
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
             console.log('Thành viên đã được xóa thành công khỏi thẻ.');
         },
         error: function (xhr) {

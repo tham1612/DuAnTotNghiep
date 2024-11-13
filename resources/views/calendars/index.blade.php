@@ -200,6 +200,48 @@
             },
             // xem chi tiết
             eventClick: function (event) {
+                openCustomModal(event.id);
+                $.ajax({
+                    url: '/tasks/getModalTask/' + event.id,
+                    type: 'GET',
+                    success: function(response) {
+                        $('.modal-task', modalElement).html(response.html); // Cập nhật nội dung modal
+
+                        // Khởi tạo lại modalInstance sau khi cập nhật nội dung
+                        var modalInstance = new bootstrap.Modal(modalElement, {
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                        modalInstance.show();
+                    },
+                    error: function(xhr) {
+                        console.error("Không thể tải dữ liệu task:", xhr);
+                    }
+                });
+
+                var id_gg_canlendar = event.id_google_calendar;
+
+                // deteleEvent.addEventListener('click', function (e) {
+                //     e.preventDefault();
+                //     if (isAllowedToDrag(event)) {
+                //         if (confirm('ban co muon xoa khong?')) {
+                //             $.ajax({
+                //                 url: `/delete-event/${id_gg_canlendar}`,
+                //                 type: "DELETE",
+                //                 dataType: "json",
+                //                 data: {},
+                //                 success: function (response) {
+                //                     alert(response.msg);
+                //                     $('#detailCardModal6').modal('toggle');
+                //                 }
+                //             })
+                //         }
+                //     } else {
+                //         alert('Bạn không có quyền để xóa');
+                //     }
+                //
+                // })
+
 
             },
             viewRender: function (view) {
@@ -231,13 +273,16 @@
                 const startDate = new Date(startDateInput.value);
 
                 endDate.setDate(endDate.getDate());
-                startDate.setDate(startDate.getDate() + 1);
+                startDate.setDate(startDate.getDate() + 2);
 
                 const maxDate = endDate.toISOString().slice(0, 16);
                 const minDate = startDate.toISOString().slice(0, 16);
                 startDateInput.max = maxDate;
                 endDateInput.min = minDate;
                 console.log(maxDate, minDate)
+            } else {
+                startDateInput.max = null;
+                endDateInput.min = null;
             }
 
 
@@ -255,7 +300,10 @@
         active_checkbox.addEventListener('click', function () {
             startDateInput.disabled = !startDateInput.disabled;
             startDateInput.value = '';
-
+            const endDate = new Date(endDateInput.value);
+            endDate.setDate(endDate.getDate());
+            const maxDate = endDate.toISOString().slice(0, 16);
+            startDateInput.value = maxDate;
             handleDate();
         });
     </script>
