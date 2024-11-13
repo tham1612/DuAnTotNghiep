@@ -88,6 +88,8 @@ class MemberController extends Controller
         }
 
         return response()->json([
+            'msg' =>'thêm  thành viên vô task thành công !',
+            'action' => 'success',
             'success' => true,
             'message' => 'Thêm thành viên thành công.'
         ]);
@@ -152,6 +154,8 @@ class MemberController extends Controller
         }
 
         return response()->json([
+            'msg' =>'xóa thành viên khỏi task thành công !',
+            'action' => 'success',
             'success' => true,
             'message' => 'Xóa thành viên thành công.'
         ], 200);

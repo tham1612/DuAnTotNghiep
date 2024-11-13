@@ -123,19 +123,52 @@
             <table class="table table-nowrap mt-4">
                 <tbody id="list-attachment-task-{{$task->id}}">
                 @foreach($task->attachments as $attachment)
+                    @php
+                        $fileUrl = asset('storage/' . $attachment->file_name);
+                        $fileExtension = pathinfo($attachment->file_name, PATHINFO_EXTENSION);
+                    @endphp
                     <tr class="cursor-pointer attachment_{{$attachment->id}} ">
                         <td class="col-1">
-                            <img
-                                src="{{ asset('storage/' . $attachment->file_name) }}"
-                                alt="Attachment Image"
-                                class="thumbnail"
-                                data-modal-id="exampleModal"
-                                style="
-                            width: 100px;
-                            height: auto;
-                            object-fit: cover;
-                            border-radius: 8px;
-                            ">
+                            @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']))
+                                <img src="{{ $fileUrl }}"
+                                     alt="Attachment Image"
+                                     class="thumbnail"
+                                     data-modal-id="exampleModal"
+                                     data-file-url="{{ asset('storage/' . $attachment->file_name) }}"
+                                     style="
+                                        width: 100px;
+                                        height: auto;
+                                        object-fit: cover;
+                                        border-radius: 8px;
+                                        ">
+                            @elseif($fileExtension === 'pdf')
+                                <a href="{{ $fileUrl }}" target="_blank">
+                                    <img src="{{ asset('theme/assets/images/small/pdf-icon.png') }}"
+                                         alt="Attachment Image"
+                                         style="
+                                        width: 100px;
+                                        height: auto;
+                                        object-fit: cover;
+                                        border-radius: 8px;
+                                        ">
+                            @elseif(in_array($fileExtension, ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']))
+                                <a href="{{ $fileUrl }}" target="_blank">
+                                    <img src="{{ asset('theme/assets/images/small/office-icon.png') }}"
+                                         alt="Attachment Image"
+                                         style="
+                                        width: 100px;
+                                        height: auto;
+                                        object-fit: cover;
+                                        border-radius: 8px;
+                                        ">
+                                </a>
+                            @else
+                                <!-- Hiển thị thông báo và nút tải xuống cho các tệp không hỗ trợ xem trước -->
+                                <p>File không hỗ trợ xem trước</p>
+                                <a href="{{ $fileUrl }}" target="_blank"
+                                   class="btn btn-primary">Tải xuống</a>
+                            @endif
+
                         </td>
                         <td class="text-start name_attachment"
                             id="name_display_{{ $attachment->id }}">
@@ -171,11 +204,14 @@
 </div>
 
 <!-- Modal phóng to ảnh -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true"
-     style="z-index: 1060">
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true" style="z-index: 1060">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content d-flex justify-content-center align-items-center bg-warning">
-            <img id="modalImage" style="width: 150vh; height: 90vh" src="" alt="Phóng to ảnh">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="modalImage" style="width: 100%; height: auto; display: none;" src="" alt="Phóng to ảnh">
+
+            </div>
         </div>
     </div>
 </div>
+

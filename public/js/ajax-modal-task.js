@@ -49,7 +49,7 @@ function updateIsStar(boardId, userId,) {
 // ================ task ==================
 // xử lý hiện ảnh ở tệp đính kèm
 function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
-    // Lấy tất cả các ảnh có class thumbnail
+    // Lấy tất cả các ảnh hoặc tệp có class thumbnail
     var thumbnails = document.querySelectorAll(thumbnailSelector);
     var modalImage = document.getElementById(modalImageId);
     var imageModal = new bootstrap.Modal(document.getElementById(imageModalId));
@@ -57,28 +57,42 @@ function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
     // Lặp qua tất cả các ảnh thu nhỏ
     thumbnails.forEach(function (thumbnail) {
         thumbnail.addEventListener('click', function () {
-            // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
-            modalImage.src = thumbnail.src;
+            // Lấy URL của file từ thuộc tính data-file-url
+            var fileUrl = thumbnail.getAttribute('data-file-url');
+            if (fileUrl) {
+                var fileExtension = fileUrl.split('.').pop().toLowerCase();
 
-            // Hiển thị modal ảnh
-            imageModal.show();
+                // Kiểm tra nếu là ảnh (jpg, jpeg, png, gif, etc.)
+                if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
+                    // Hiển thị hình ảnh
+                    modalImage.src = fileUrl;
+                    modalImage.style.display = 'block';
+                }
 
-            // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
-            var taskModalId = thumbnail.getAttribute('data-modal-id');
-            var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+                // Hiển thị modal ảnh hoặc file
+                imageModal.show();
 
-            // Hàm xử lý khi modal ảnh đóng
-            function handleModalClose() {
-                taskModal.show();
-                // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
-                document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+                // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh/file
+                var taskModalId = thumbnail.getAttribute('data-modal-id');
+                var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+
+                // Hàm xử lý khi modal ảnh hoặc file đóng
+                function handleModalClose() {
+                    taskModal.show();
+                    // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
+                    document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+                }
+
+                // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
+                document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
+            } else {
+                console.error('Thuộc tính data-file-url đang bị thiếu trên phần tử thumbnail');
             }
-
-            // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
-            document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
         });
     });
 }
+
+
 
 // Gọi hàm với các tham số tùy chỉnh
 //gọi modal task ở màn gantt và calender

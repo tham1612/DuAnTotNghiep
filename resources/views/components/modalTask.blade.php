@@ -18,6 +18,17 @@
         height: 20%;
         opacity: 0; /* Ẩn input nhưng vẫn nhận được sự kiện click */
     }
+    #modalImage {
+        max-width: 100%;
+        max-height: 80vh;
+        cursor: zoom-in;
+        transition: transform 0.3s ease;
+    }
+
+    #modalImage.zoomed {
+        transform: scale(2); /* Tăng kích thước ảnh gấp 2 lần */
+        cursor: zoom-out;
+    }
 </style>
 <div class="modal-header p-3 modal-header-{{$task->id}}"
      style="
