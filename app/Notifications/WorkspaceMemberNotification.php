@@ -39,7 +39,7 @@ class WorkspaceMemberNotification extends Notification implements ShouldQueue
                     'title' => $this->title,
                     'description' => $this->description,
                     'workspace_name' => $wspMember->workspace->name ?? 'Không gian làm việc chưa xác định',
-                    'recipient_name' => $wspMember0->user->name ?? 'Bạn',
+                    'recipient_name' => $wspMember->user->name ?? 'Bạn',
                     // 'action_url' => url('/workspaces/' . ($workspace->id ?? '')),
                     'action_text' => 'Truy cập không gian làm việc',
                 ]);
@@ -50,7 +50,7 @@ class WorkspaceMemberNotification extends Notification implements ShouldQueue
                     'title' => $this->title,
                     'description' => $this->description,
                     'workspace_name' => $wspMember->workspace->name ?? 'Không gian làm việc chưa xác định',
-                    'recipient_name' => $wspMember0->user->name ?? 'Bạn',
+                    'recipient_name' => $wspMember->user->name ?? 'Bạn',
                 ]);
         }
 

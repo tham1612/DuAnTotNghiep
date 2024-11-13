@@ -93,7 +93,10 @@ $('.submitFormUpdateCatalog').on('submit', function (e) {
         type: 'PUT',
         data: $(this).serialize(),       // Lấy dữ liệu từ form
         success: function (response) {
-            notificationWeb(response.action, response.msg)
+            let titleCatalogViewBoard = document.getElementById(`title-catalog-view-board-${response.catalog.id}`)
+            notificationWeb(response.action, response.msg);
+
+            titleCatalogViewBoard.innerHTML = response.catalog.name; // thay đổi tên ở màn board
         },
         error: function (xhr, status, error) {
             notificationWeb('error', 'Có lỗi xảy ra!!')
