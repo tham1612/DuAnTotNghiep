@@ -325,8 +325,8 @@
                 <div class="row" style="margin-top: -15px">
                     <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
                             onchange="updatePermission('access', this.value,{{$board->id}})">
-                        <option value="public" @selected($board->access === 'public')>Công khai</option>
-                        <option value="private" @selected($board->access === 'private')>Riêng tư</option>
+                        <option value="public" @selected($board->access == 'public')>Công khai</option>
+                        <option value="private" @selected($board->access == 'private')>Riêng tư</option>
                     </select>
                 </div>
                 <hr>

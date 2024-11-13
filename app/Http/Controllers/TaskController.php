@@ -395,6 +395,7 @@ class TaskController extends Controller
 
     public function destroyTask(string $id)
     {
+
         $task = Task::withTrashed()->findOrFail($id);
         $boardId = Task::withTrashed()
             ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
@@ -408,7 +409,6 @@ class TaskController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-
         try {
             // Bắt đầu transaction
             DB::beginTransaction();
@@ -434,7 +434,7 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-
+            if ($task->id_google_calendar) $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([

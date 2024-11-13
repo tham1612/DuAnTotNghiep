@@ -366,7 +366,7 @@ function loadFormAddDateTask(taskId) {
     });
 }
 
-function formatDate(date) {
+function formatFullDate(date) {
     const now = new Date();
     const year = date.getFullYear();
     const currentYear = now.getFullYear();
@@ -383,10 +383,25 @@ function formatDate(date) {
     }
 }
 
+function formatDate(date) {
+    const now = new Date();
+    const year = date.getFullYear();
+    const currentYear = now.getFullYear();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+
+    if (year !== currentYear) {
+        return `${day} tháng ${month}, ${year}`;
+    } else {
+        return `${day} tháng ${month}`;
+    }
+}
+
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
     const startDateInput = document.getElementById('start_date_task_' + taskId).value;
     const endDateInput = document.getElementById('end_date_task_' + taskId).value;
+    const dateViewBoard = document.getElementById(`date-view-board-${taskId}`);
 
     // Chuyển đổi giá trị sang đối tượng Date để so sánh
     const startDate = new Date(startDateInput);
@@ -437,7 +452,7 @@ function submitUpdateDateTask(taskId, event) {
                onchange="updateTask2(${response.task.id})" name="progress"
                ${response.task.progress == 100 ? 'checked' : ''} />
         <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
-        <p class="ms-2 mt-3">${formatDate(startDate)}-${formatDate(endDate)}</p>`;
+        <p class="ms-2 mt-3">${formatFullDate(startDate)}-${formatFullDate(endDate)}</p>`;
 
                 if (response.task.progress == 100) {
                     date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
@@ -449,6 +464,7 @@ function submitUpdateDateTask(taskId, event) {
 
                 date += `</div>`;
 
+                dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
             } else if (response.task.end_date) {
                 const endDate = new Date(response.task.end_date);
 
@@ -461,7 +477,7 @@ function submitUpdateDateTask(taskId, event) {
                onchange="updateTask2(${response.task.id})" name="progress"
                ${response.task.progress == 100 ? 'checked' : ''} />
         <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
-        <p class="ms-2 mt-3">${formatDate(endDate)}</p>`;
+        <p class="ms-2 mt-3">${formatFullDate(endDate)}</p>`;
 
                 if (response.task.progress == 100) {
                     date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
@@ -472,15 +488,19 @@ function submitUpdateDateTask(taskId, event) {
                 }
 
                 date += `</div>`;
+
+                dateViewBoard.innerHTML = `${formatDate(endDate)}`
             } else if (response.task.start_date) {
                 const startDate = new Date(response.task.start_date);
                 date = `
                     <strong>Ngày bắt đầu</strong>
                     <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                          style="height: 35px; background-color: #091e420f; color: #172b4d">
-                        <p class="ms-2 mt-3">${formatDate(startDate)}</p>
+                        <p class="ms-2 mt-3">${formatFullDate(startDate)}</p>
                     </div>
                 `;
+
+                dateViewBoard.innerHTML = `${formatDate(startDate)}`
             }
             if (dateSection) {
                 if (dateSection.style.display === 'none') {
