@@ -116,13 +116,13 @@
                                                     <p>{{ $adminName }} đã giao cho bạn bạn khỏi nhiệm vụ "<strong>{{ $task->text }}</strong>". Hãy kiểm tra chi tiết và tiếp tục theo dõi các nhiệm vụ!</p>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td class="content-block" style="text-align: center; padding-top: 20px;">
                                                     <a href="{{ url('/b/' . $task->catalog->board->id . '/edit') }}" style="padding: 10px 20px; background-color: #0ab39c; color: #fff; text-decoration: none; border-radius: 5px;">
                                                         Xem Task
                                                     </a>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <td class="content-block" style="color: #878a99; text-align: center; font-size: 14px; padding-top: 20px; border-top: 1px solid #e9ebec;">
                                                     Nếu bạn nhận được email này do nhầm lẫn, vui lòng xóa nó.

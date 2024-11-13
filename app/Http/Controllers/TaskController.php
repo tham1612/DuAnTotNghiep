@@ -64,6 +64,7 @@ class TaskController extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
+
     public function store(StoreTaskRequest $request)
     {
         if (session('view_only', false)) {
@@ -121,7 +122,7 @@ class TaskController extends Controller
             'action' => 'success',
             'success' => true,
             'task' => $task,
-            'catalogs'=>$task->catalog->board->catalogs,
+            'catalogs' => $task->catalog->board->catalogs,
             'task_count' => count($catalog->tasks),
         ]);
     }
@@ -381,6 +382,7 @@ class TaskController extends Controller
             return response()->json([
                 'action' => 'error',
                 'msg' => 'Bạn không có quyền!!',
+                'taskId' => $id
             ]);
         }
 
@@ -393,6 +395,7 @@ class TaskController extends Controller
 
     public function destroyTask(string $id)
     {
+
         $task = Task::withTrashed()->findOrFail($id);
         $boardId = Task::withTrashed()
             ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
@@ -406,7 +409,6 @@ class TaskController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-
         try {
             // Bắt đầu transaction
             DB::beginTransaction();
@@ -432,7 +434,7 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-
+            if ($task->id_google_calendar) $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([
@@ -479,7 +481,7 @@ class TaskController extends Controller
                 'creator_email' => Auth::user()->email,
             ]);
 
-            if ($data['isAttachment']) {
+            if (isset($data['isAttachment'])) {
                 $attachmentOld = TaskAttachment::query()->where('task_id', $task['id'])->get();
 
                 foreach ($attachmentOld as $attachment) {
@@ -491,7 +493,7 @@ class TaskController extends Controller
                 }
             }
 
-            if ($data['isCheckList']) {
+            if (isset($data['isCheckList'])) {
                 $checklistOld = CheckList::query()->where('task_id', $task['id'])->get();
 
                 foreach ($checklistOld as $checklist) {
@@ -562,14 +564,14 @@ class TaskController extends Controller
             'taskComments',
             'taskComments.user'
         ])->findOrFail($taskId);
-    //    dd( $task);
+        //    dd( $task);
 
         $htmlForm = View::make('components.modalTask', [
             'task' => $task,
-            'boardId'=>$task->catalog->board->id,
-            'board'=>$task->catalog->board,
+            'boardId' => $task->catalog->board->id,
+            'board' => $task->catalog->board,
             'image' => $task->image ? asset('storage/' . $task->image) : asset('theme/assets/images/small/img-7.jpg'),
-            'userId'=>auth()->id()
+            'userId' => auth()->id()
         ])->render();
 
         return response()->json(['html' => $htmlForm]);

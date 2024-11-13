@@ -177,18 +177,9 @@
                 return catalogs.find(catalog => catalog.id == catalog_id);
             }
 
-            // Hàm để mở modal tùy chỉnh
-            function openCustomModal(taskId) {
-                // Lấy phần tử modal dựa vào ID của nó
-                var modalElement = document.getElementById('detailCardModal' + taskId);
+            // Hàm để mở modal tùy chỉn
 
-                if (modalElement) {
-                    var modalInstance = new bootstrap.Modal(modalElement);
-                    modalInstance.show();
-                } else {
-                    console.error("Modal không tồn tại!");
-                }
-            }
+
             gantt.attachEvent("onTaskCreated", function(task) {
                 // goi modal tuy chinh
                 openCustomModal(task.id);
@@ -198,7 +189,7 @@
             gantt.templates.grid_row_class = function(start, end, task) {
                 return "custom_grid_background"; // Thay đổi màu nền của hàng lưới
             };
-            gantt.templates.task_cell_class = function(task, date) {
+            gantt.templates.timeline_cell_class = function(task, date) {
                 return "custom_task_background"; // Thay đổi màu nền của ô nhiệm vụ
             };
         </script>

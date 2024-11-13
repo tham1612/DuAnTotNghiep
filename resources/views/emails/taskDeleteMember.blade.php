@@ -124,7 +124,7 @@
                                                         nhiệm vụ khác!</p>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td class="content-block"
                                                     style="text-align: center; padding-top: 20px;">
                                                     <a href="{{ url('/b/' . $task->catalog->board->id . '/edit') }}"
@@ -132,7 +132,7 @@
                                                         Xem Task
                                                     </a>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <td class="content-block"
                                                     style="color: #878a99; text-align: center; font-size: 14px; padding-top: 20px; border-top: 1px solid #e9ebec;">

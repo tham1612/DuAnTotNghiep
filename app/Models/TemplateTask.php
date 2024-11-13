@@ -21,7 +21,7 @@ class TemplateTask extends Model
         'start_date',
         'start_date',
         'parent',
-        'sortorder'
+        'sortorder',
     ];
     protected $casts = [
         'priority' => IndexEnum::class,

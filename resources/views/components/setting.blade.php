@@ -253,41 +253,44 @@
                         @endphp
                         @foreach($board->catalogs as $catalog)
                             @foreach($catalog->tasks as $archiverTask)
-                                <div class="bg-warning-subtle border rounded mt-2">
-                                    <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
-                                    <ul class="link-inline" style="margin-left: -32px">
-                                        <!-- theo dõi -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-eye-line align-bottom"></i>
-                                                04</a>
-                                        </li>
-                                        <!-- bình luận -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-question-answer-line align-bottom"></i>
-                                                19</a>
-                                        </li>
-                                        <!-- tệp đính kèm -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-attachment-2 align-bottom"></i>
-                                                02</a>
-                                        </li>
-                                        <!-- checklist -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-checkbox-line align-bottom"></i>
-                                                2/4</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="fs-13 fw-bold d-flex">
+                                <div id="task_id_archiver_{{$archiverTask->id}}">
+                                    <div class="bg-warning-subtle border rounded ps-2"
+                                    >
+                                        <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
+                                        <ul class="link-inline" style="margin-left: -32px">
+                                            <!-- theo dõi -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-eye-line align-bottom"></i>
+                                                    04</a>
+                                            </li>
+                                            <!-- bình luận -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-question-answer-line align-bottom"></i>
+                                                    19</a>
+                                            </li>
+                                            <!-- tệp đính kèm -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-attachment-2 align-bottom"></i>
+                                                    02</a>
+                                            </li>
+                                            <!-- checklist -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-checkbox-line align-bottom"></i>
+                                                    2/4</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="fs-13 fw-bold d-flex">
                                          <span class="text-primary cursor-pointer"
                                                onclick="restoreTask({{$archiverTask->id}})">Khôi phục</span>
-                                    -
-                                    <span class="text-danger cursor-pointer"
-                                          onclick="destroyTask({{$archiverTask->id}})">Xóa</span>
+                                        -
+                                        <span class="text-danger cursor-pointer"
+                                              onclick="destroyTask({{$archiverTask->id}})">Xóa</span>
+                                    </div>
                                 </div>
                             @endforeach
                         @endforeach
@@ -322,8 +325,8 @@
                 <div class="row" style="margin-top: -15px">
                     <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
                             onchange="updatePermission('access', this.value,{{$board->id}})">
-                        <option value="public" @selected($board->access === 'public')>Công khai</option>
-                        <option value="private" @selected($board->access === 'private')>Riêng tư</option>
+                        <option value="public" @selected($board->access == 'public')>Công khai</option>
+                        <option value="private" @selected($board->access == 'private')>Riêng tư</option>
                     </select>
                 </div>
                 <hr>

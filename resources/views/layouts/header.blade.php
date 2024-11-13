@@ -1,26 +1,3 @@
-@php
-    $boardIsStars = \App\Models\Board::query()
-        ->distinct()
-        ->select(
-            'boards.name AS board_name',
-            'workspaces.name AS workspace_name',
-            'boards.id AS board_id',
-            'boards.image AS board_image',
-        )
-        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-        ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
-        ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-        ->where('workspace_members.is_active', 1)
-        ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
-        ->where('board_members.is_star', 1)
-        ->get();
-
-    //    $boardIsStars = session('$board_star');
-    //    dd($boardIsStars);
-    $userId = Auth::id();
-    $currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
-@endphp
-
 <header id="page-topbar">
     <div class="layout-width">
         <div class="navbar-header">
@@ -216,13 +193,11 @@
                          aria-labelledby="template-home">
                         <div data-simplebar style="max-height: 270px">
                             <div class="p-2">
-                                @php
-                                    $template_boards =   \Illuminate\Support\Facades\DB::table('template_boards')->get();
-                                @endphp
                                 @foreach($template_boards as $tplBoard)
                                     <div
                                         class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
-                                        data-bs-toggle="modal" data-bs-target="#create-board-template-home-modal{{$tplBoard->id}}">
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#create-board-template-home-modal{{$tplBoard->id}}">
                                         <div class="d-flex align-items-center">
                                             @if ($tplBoard->image)
                                                 <img
@@ -382,6 +357,27 @@
         </div>
     </div>
 </header>
+{{--thông báo web--}}
+<div class="bg-light" aria-live="polite" aria-atomic="true"
+     style="position: fixed; top: 70px;right: 10px; z-index: 100">
+    @if (!empty(session('msg')) && !empty(session('action')))
+        {{--        @dd(session('msg'),session('action')) --}}
+        {{--        @foreach (session('success') as $notification) --}}
+        <div class="toast fade show bg-{{ session('action') }}-subtle" role="alert" aria-live="assertive"
+             aria-atomic="true" data-bs-toggle="toast" id="notification-messenger">
+            <div class="toast-header">
+                <img src="{{ asset('theme/assets/images/logo-sm.png') }}" class="rounded me-2" alt="..."
+                     height="20">
+                <span class="fw-semibold me-auto">Task Flow.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body fw-bolder text-{{ session('action') }}">
+                {{ session('msg') }}
+            </div>
+        </div>
+        {{--        @endforeach --}}
+    @endif
+</div>
 
 {{-- bảng lưu trữ --}}
 <div class="modal fade" id="archiverBoard-member" tabindex="-1" aria-labelledby="addmemberModalLabel"
