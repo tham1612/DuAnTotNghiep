@@ -11,6 +11,7 @@ class CheckList extends Model
     protected $fillable=[
         'task_id',
         'name',
+        'progress',
     ];
 
     public function task()

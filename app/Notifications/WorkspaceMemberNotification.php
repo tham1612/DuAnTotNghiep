@@ -10,27 +10,49 @@ use Illuminate\Notifications\Notification;
 class WorkspaceMemberNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $desciption; // Không gian làm việc
-    protected $title; // Không gian làm việc
 
-    public function __construct( $title,$desciption)
+    protected $description; // Nội dung mô tả
+    protected $title;       // Tiêu đề email
+    protected $wspMember;
+    protected $action;
+
+    public function __construct($title, $description, $wspMember, $action)
     {
-
-        $this->desciption = $desciption;
+        $this->description = $description;
         $this->title = $title;
+        $this->wspMember = $wspMember;
+        $this->action = $action;
     }
+
     public function via($notifiable)
     {
-        // Gửi thông qua mail và lưu vào database
+        // Gửi thông qua mail và có thể mở rộng thêm database hoặc các kênh khác nếu cần
         return ['mail'];
     }
 
     public function toMail($notifiable)
     {
-        // Tạo email thông báox
-        return (new MailMessage)
-            ->subject($this->title)
-            ->line($this->desciption);
-        // ->action('Xem Task', url("/b\"{$this->task->catalog->board->id}\"edit"));
+        if ($this->action == 0) {
+            return (new MailMessage)
+                ->subject($this->title)
+                ->view('emails.workspace_member_notification', [
+                    'title' => $this->title,
+                    'description' => $this->description,
+                    'workspace_name' => $wspMember->workspace->name ?? 'Không gian làm việc chưa xác định',
+                    'recipient_name' => $wspMember->user->name ?? 'Bạn',
+                    // 'action_url' => url('/workspaces/' . ($workspace->id ?? '')),
+                    'action_text' => 'Truy cập không gian làm việc',
+                ]);
+        }else{
+            return (new MailMessage)
+                ->subject($this->title)
+                ->view('emails.workspace_member_notification', [
+                    'title' => $this->title,
+                    'description' => $this->description,
+                    'workspace_name' => $wspMember->workspace->name ?? 'Không gian làm việc chưa xác định',
+                    'recipient_name' => $wspMember->user->name ?? 'Bạn',
+                ]);
+        }
+
     }
 }

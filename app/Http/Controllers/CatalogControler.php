@@ -29,6 +29,7 @@ class CatalogControler extends Controller
     }
 
     const PATH_UPLOAD = 'catalogs.';
+
     public function getFormCreateCatalog($boardId)
     {
         if (session('view_only', false)) {
@@ -44,14 +45,20 @@ class CatalogControler extends Controller
         // Trả về HTML cho frontend
         return response()->json(['html' => $htmlForm]);
     }
+
     public function store(StoreCatalogRequest $request)
     {
-
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-
+        $authorize = $this->authorizeWeb->authorizeEdit($request->board_id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         $data = $request->except(['image', 'position']);
 
         if ($request->hasFile('image')) {
@@ -89,7 +96,7 @@ class CatalogControler extends Controller
     public function update(Request $request, string $id)
     {
         $catalog = Catalog::query()->findOrFail($id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -99,7 +106,8 @@ class CatalogControler extends Controller
         $catalog->update($request->all());
         return response()->json([
             'action' => 'success',
-            'msg' => 'Chỉnh sửa danh sách thành công!!'
+            'msg' => 'Chỉnh sửa danh sách thành công!!',
+            'catalog' => $catalog
         ]);
     }
 
@@ -146,7 +154,8 @@ class CatalogControler extends Controller
                 ->log('Người dùng đã xóa danh sách khỏi bảng');
             return response()->json([
                 'action' => 'success',
-                'msg' => 'Lưu trữ danh sách thành công!!'
+                'msg' => 'Lưu trữ danh sách thành công!!',
+                'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -236,7 +245,8 @@ class CatalogControler extends Controller
             DB::commit();
             return response()->json([
                 'action' => 'sucess',
-                'msg' => 'Khôi phục danh sách thành công!!'
+                'msg' => 'Khôi phục danh sách thành công!!',
+                'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -258,24 +268,30 @@ class CatalogControler extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        $allTask = Task::withTrashed()->where('catalog_id', $id)->get();
+        $allTask = Task::query()->where('catalog_id', $id)->get();
+
         if ($allTask->isEmpty()) {
             return response()->json([
                 'action' => 'warning',
                 'msg' => 'Danh sách không có task nào',
             ]);
         }
-        $allTask->delete();
+        foreach ($allTask as $task) {
+            $task->delete();
+        }
+
         return response()->json([
             'action' => 'success',
             'msg' => 'Lưu trữ tất cả task thành công',
+            'task' => $allTask,
+
         ]);
     }
 
     public function copyCatalog(Request $request)
     {
         $catalog = Catalog::query()->findOrFail($request->id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -313,7 +329,8 @@ class CatalogControler extends Controller
             DB::commit();
             return response()->json([
                 'action' => 'success',
-                'msg' => 'Sao chép danh sách thành công!!'
+                'msg' => 'Sao chép danh sách thành công!!',
+                'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -323,8 +340,8 @@ class CatalogControler extends Controller
 
     public function moveCatalog(Request $request)
     {
-        $catalog = Catalog::query()->findOrFail($request->id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $catalog = Catalog::query()->findOrFail($request->catalog_id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -334,36 +351,16 @@ class CatalogControler extends Controller
         try {
             DB::beginTransaction();
             $positionCatalog = Board::query()->findOrFail($request->board_id);
-            $catalogNew = Catalog::query()->create([
+            $catalog->update([
                 'board_id' => $request->board_id,
                 'name' => $request->name,
-                'image' => $catalog->image,
                 'position' => $positionCatalog->catalogs->count() + 1,
             ]);
 
-            $taskOld = Task::query()->where('catalog_id', $catalog->id)->get();
-            foreach ($taskOld as $task) {
-                Task::query()->create([
-                    'catalog_id' => $catalogNew->id,
-                    'text' => $task->text,
-                    'description' => $task->description,
-                    'position' => $task->position,
-                    'image' => $task->image,
-                    'priority' => $task->priority,
-                    'risk' => $task->risk,
-                    'progress' => $task->progress,
-                    'start_date' => $task->start_date,
-                    'end_date' => $task->end_date,
-                    'parent' => $task->parent,
-                    'sortorder' => $task->sortorder,
-                    'id_google_calendar' => $task->id_google_calendar,
-                    'creator_email' => $task->creator_email,
-                ]);
-            }
             DB::commit();
             return response()->json([
                 'action' => 'success',
-                'msg' => 'Sao chép danh sách thành công!!',
+                'msg' => 'Di chuyển danh sách thành công!!',
                 'boardId' => $request->board_id
             ]);
         } catch (\Exception $e) {

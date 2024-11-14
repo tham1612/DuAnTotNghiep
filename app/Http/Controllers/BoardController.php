@@ -9,16 +9,17 @@ use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Catalog;
+use App\Models\CheckListItemMember;
 use App\Models\Color;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Notifications\Testhihi;
 use App\Notifications\WorksaceNotification;
 use App\Notifications\BoardMemberNotification;
 use App\Notifications\BoardNotification;
-use App\Notifications\TaskDueNotification;
 use Carbon\Carbon;
 use Google\Service\Forms\FormResponse;
 use Illuminate\Support\Facades\Log;
@@ -170,7 +171,10 @@ class BoardController extends Controller
      */
     public function edit(Request $request, string $id)
     {
-
+        // $checkListItemMemberIsSend = CheckListItemMember::with(['checkListItem.checkList.task.catalog.board', 'user'])->where('check_list_item_id', 1)
+        //     ->where('user_id', 1)
+        //     ->first();
+        //     dd($checkListItemMemberIsSend);
         $board = Board::query()->findOrFail($id);
         $colors = Color::query()->get();
         session([
@@ -262,7 +266,6 @@ class BoardController extends Controller
             ->select('users.name', 'users.fullName', 'users.image', 'board_members.is_accept_invite', 'board_members.authorize', 'users.id as user_id', 'board_members.id as bm_id')
             ->where('board_members.board_id', $board->id)
             ->get();
-
         /*
          * pluck('tasks'): Lấy tất cả các tasks từ các catalogs, nó sẽ trả về một collection mà mỗi phần tử là một danh sách các tasks.
          * flatten(): Dùng để chuyển đổi một collection lồng vào nhau thành một collection phẳng, chứa tất cả các tasks.
@@ -294,15 +297,14 @@ class BoardController extends Controller
         });
 
         // Kiểm tra và cập nhật tất cả thành viên   đã được mời vào workspace cùng một lần truy vấn
-        $userIds = $boardMemberInvites->pluck('user_id')->toArray();
-        $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
-            ->where('workspace_id', $board->workspace_id)
-            ->get();
+        // $userIds = $boardMemberInvites->pluck('user_id')->toArray();
+        // $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
+        //     ->where('workspace_id', $board->workspace_id)
+        //     ->get();
 
-
-        BoardMember::whereIn('user_id', $invitedWorkspaceMembers->pluck('user_id'))
-            ->where('board_id', $board->id)
-            ->update(['is_accept_invite' => 0]);
+        // BoardMember::whereIn('user_id', $invitedWorkspaceMembers->pluck('user_id'))
+        //     ->where('board_id', $board->id)
+        //     ->update(['is_accept_invite' => 0]);
 
         // Lấy ra chủ sở hữu của bảng
         $boardOwner = $boardMemberMain->firstWhere('authorize', AuthorizeEnum::Owner()->value);
@@ -334,7 +336,8 @@ class BoardController extends Controller
                 return view('lists.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
 
             case 'gantt':
-                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'tasks', 'boardMemberChecked'));
+                return view('ganttCharts.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'colors', 'tasks', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
+
 
             case 'table':
                 return view('tables.index', compact('board', 'activities', 'boardMembers', 'boardMemberInvites', 'boardOwner', 'wspMember', 'boardSubOwner', 'boardSubOwnerChecked', 'boardMemberChecked'));
@@ -362,7 +365,6 @@ class BoardController extends Controller
                         // Hiển thị task nếu đã xử lý xong
                         return true;
                     });
-                //        dd($taskCalendar);
                 foreach ($taskCalendar as $event) {
                     $listEvent[] = [
                         'id' => $event->id,
@@ -549,10 +551,10 @@ class BoardController extends Controller
         }
         session()->forget('view_only');
         try {
+            $title = "Phản hồi về lời mời tham gia bảng";
+            $description = "Rất tiếc, lời mời tham gia bảng {{ $boardMember->board->name }} của bạn chưa được phê duyệt. Cảm ơn bạn đã quan tâm, và hy vọng sẽ có cơ hội hợp tác trong các dự án khác!";
+            $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
             $boardMember->delete();
-            $title = "Từ chối lời mời";
-            $description = 'Bạn đã bị từ chối lời mời vào bảng ' . $boardMember->board->name;
-            $boardMember->user->notify(new BoardMemberNotification($title, $description));
             return back()->with([
                 'msg' => 'bạn đã từ chối người dùng vào bảng',
                 'action' => 'danger'
@@ -577,20 +579,18 @@ class BoardController extends Controller
             ->where('workspace_id', $boardMember->board->workspace_id)->first();
         try {
             if ($wspChecked->authorize->value !== "Viewer") {
+                $title = "Rời khỏi bảng công việc";
+                $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
-
-                $title = "Bạn bị kick khỏi không gian làm việc";
-                $description = 'Bạn đã xóa khỏi bảng ' . $boardMember->board->name;
-                $boardMember->user->notify(new BoardMemberNotification($title, $description));
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
+                $title = "Rời khỏi bảng công việc";
+                $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
-
-                $title = "Bạn bị kick khỏi không gian làm việc";
-                $description = 'Bạn đã xóa khỏi bảng ' . $boardMember->board->name;
-                $boardMember->user->notify(new BoardMemberNotification($title, $description));
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
                 $wspChecked->delete();
-                $boardMember->delete();
+
                 $wsp = WorkspaceMember::where('user_id', $boardMember->user_id)
                     ->whereNot('authorize', 'Viewer')
                     ->inRandomOrder()
@@ -599,9 +599,10 @@ class BoardController extends Controller
                     'is_active' => 1
                 ]);
 
-                $title = "Bạn bị kick khỏi không gian làm việc";
-                $description = 'Bạn đã xóa khỏi bảng ' . $boardMember->board->name;
-                $boardMember->user->notify(new BoardMemberNotification($title, $description));
+                $title = "Rời khỏi bảng công việc";
+                $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
+                $boardMember->delete();
             }
         } catch (\Throwable $th) {
             dd(vars: $th);
@@ -790,7 +791,6 @@ class BoardController extends Controller
     public function copyBoard(Request $request)
     {
         $data = $request->all();
-
         $uuid = Str::uuid();
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
@@ -804,7 +804,16 @@ class BoardController extends Controller
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
-
+            if (isset($data['isTag'])) {
+                $tagOld = Tag::query()->where('board_id', $data['id'])->get();
+                foreach ($tagOld as $tag) {
+                    Tag::query()->create([
+                        'board_id' => $boardNew->id,
+                        'color_code' => $tag['color_code'],
+                        'name' => $tag['name'],
+                    ]);
+                }
+            }
             if ($data['isCatalog']) {
                 $catalogOld = Catalog::query()->where('board_id', $data['id'])->get();
                 foreach ($catalogOld as $catalog) {
@@ -834,8 +843,8 @@ class BoardController extends Controller
                                 'creator_email' => Auth::user()->email,
                             ]);
 
-//                            xử lý thêm tag vào từng task
-                            if ($data['isTag']) {
+                            //                            xử lý thêm tag vào từng task
+                            if (isset($data['isTag'])) {
                                 $tagOld = TaskTag::query()->where('task_id', $task['id'])->get();
 
                                 foreach ($tagOld as $tag) {
@@ -850,16 +859,7 @@ class BoardController extends Controller
                 }
 
             }
-            if ($data['isTag']) {
-                $tagOld = Tag::query()->where('board_id', $data['id'])->get();
-                foreach ($tagOld as $tag) {
-                    Tag::query()->create([
-                        'board_id' => $boardNew->id,
-                        'color_code' => $tag['color_code'],
-                        'name' => $tag['name'],
-                    ]);
-                }
-            }
+
             // ghi lại hoạt động của bảng
             activity('Người dùng đã tạo bảng ')
                 ->performedOn($boardNew) // đối tượng liên quan là bảng vừa tạo
@@ -876,8 +876,10 @@ class BoardController extends Controller
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
-            return response()->json(['action' => 'error',
-                'msg' => 'Có lỗi xảy ra!!']);
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
         }
     }
 
@@ -925,7 +927,8 @@ class BoardController extends Controller
 
         return response()->json([
             'action' => 'success',
-            'msg' => 'Thay đổi quyền thành công!!'
+            'msg' => 'Thay đổi quyền thành công!!',
+            'board' => $board
         ]);
     }
 
@@ -945,9 +948,11 @@ class BoardController extends Controller
         return response()->json(['catalogs' => $catalogs]);
     }
 
-// gửi mail thêm người vào bảng
+    // gửi mail thêm người vào bảng
     public
-    function inviteUserBoard(Request $request)
+    function inviteUserBoard(
+        Request $request
+    )
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
@@ -972,37 +977,32 @@ class BoardController extends Controller
         return back();
     }
 
-//người dùng tham gia vào bảng
+    //người dùng tham gia vào bảng
 //thông báo done
     public
-    function acceptInviteBoard($uuid, $token, Request $request)
+    function acceptInviteBoard(
+        $uuid,
+        $token,
+        Request $request
+    )
     {
         //xử lý khi admin gửi link invite cho người dùng
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             $user = User::query()->where('email', $request->email)->first();
 
-
             //xử lý khi người dùng có tài khoản
             if ($user) {
-                $check_user_wsp = BoardMember::join('boards', 'boards.id', '=', 'board_members.board_id')
-                    ->join('workspace_members', 'workspace_members.workspace_id', 'boards.workspace_id')
-                    ->where('board_members.user_id', $user->id)
-                    ->where('boards.workspace_id', $board->workspace_id)
-                    ->where('workspace_members.workspace_id', $board->workspace_id)
+                $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $board->workspace_id)
                     ->first();
                 $check_user_board = BoardMember::where('user_id', $user->id)->where('board_id', $board->id)
                     ->first();
+
                 //Check xử lý người dùng có trong workspace
                 if ($check_user_wsp) {
 
                     //xử lý khi người dùng chưa có trong bảng đó
                     if (!$check_user_board) {
-
                         //xử lý khi người dùng đã có tài khoản và đang đăng nhập
                         if (Auth::check()) {
                             $user_check = Auth::user(); // Lấy thông tin người dùng hiện tại
@@ -1055,7 +1055,6 @@ class BoardController extends Controller
 
                     //xử lý khi người dùng đã có trong bảng đó rồi
                     else {
-
                         session(['msg' => 'Bạn đã ở trong bảng rồi!!']);
                         session(['action' => 'error']);
                         return redirect()->route('b.edit', $board->id);
@@ -1065,7 +1064,6 @@ class BoardController extends Controller
 
                     //xử lý khi người dùng chưa có trong bảng đó
                     if (!$check_user_board) {
-
                         //xử lý khi người dùng đã có tài khoản và đang đăng nhập
                         if (Auth::check()) {
 
@@ -1074,7 +1072,6 @@ class BoardController extends Controller
                             //xử lý người dùng khi đã đăng nhập đúng người dùng
                             if ($user_check->email === $request->email) {
                                 try {
-
                                     //thêm người dùng vào workspace member
                                     WorkspaceMember::create([
                                         'user_id' => $user_check->id,
@@ -1167,13 +1164,14 @@ class BoardController extends Controller
         }
     }
 
-//người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
+    //người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
 //thông báo done
     public
     function requestToJoinWorkspace()
     {
 
         $workspace_member = WorkspaceMember::where('user_id', Auth::id())
+            ->with('workspace')
             ->where('is_active', 1)
             ->first();
 
@@ -1203,16 +1201,21 @@ class BoardController extends Controller
             $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
         });
 
-
-        session(['msg' => 'Bạn đã gửi yêu cầu tham gia vào không gian làm việc']);
-        session(['action' => 'success']);
-        return redirect()->route('home');
+        return response()->json([
+            'success' => true,
+            'msg' => "Bạn dẫ gửi yêu cầu tham gia vào không gian làm việc",
+            'action' => 'success',
+            'workspaceName' => $workspace_member->workspace->name
+        ]);
     }
 
-//mời người dùng từ wsp vào bảng
+    //mời người dùng từ wsp vào bảng
 //thông báo done
     public
-    function inviteMemberWorkspace($userId, $boardId)
+    function inviteMemberWorkspace(
+        $userId,
+        $boardId
+    )
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
@@ -1232,9 +1235,12 @@ class BoardController extends Controller
     }
 
 
-//thông báo người dùng tham gia vào bảng
+    //thông báo người dùng tham gia vào bảng
     protected
-    function notificationMemberInviteBoard($boardID, $userName)
+    function notificationMemberInviteBoard(
+        $boardID,
+        $userName
+    )
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
@@ -1258,9 +1264,12 @@ class BoardController extends Controller
         }
     }
 
-//thông báo nhượng quyền
+    //thông báo nhượng quyền
     protected
-    function notificationManagementfranchiseBoard($boardID, $userName)
+    function notificationManagementfranchiseBoard(
+        $boardID,
+        $userName
+    )
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
@@ -1284,9 +1293,12 @@ class BoardController extends Controller
         }
     }
 
-//thông báo thăng cấp thành viên
+    //thông báo thăng cấp thành viên
     protected
-    function notificationUpgradeMemberShipBoard($boardID, $userName)
+    function notificationUpgradeMemberShipBoard(
+        $boardID,
+        $userName
+    )
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
@@ -1310,9 +1322,12 @@ class BoardController extends Controller
         }
     }
 
-//thông báo thăng cấp thành viên
+    //thông báo thăng cấp thành viên
     protected
-    function notificationAcceptMemberBoard($boardID, $userName)
+    function notificationAcceptMemberBoard(
+        $boardID,
+        $userName
+    )
     {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([

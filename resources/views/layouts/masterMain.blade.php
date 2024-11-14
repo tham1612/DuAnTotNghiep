@@ -9,9 +9,10 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!--Swiper slider css-->
     <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- Layout config Js -->
@@ -46,14 +47,14 @@
         }
 
         .comment-section {
-            scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+            scrollbar-width: none;
+            /* Ẩn thanh cuộn trên Firefox */
         }
 
         .comment-section::-webkit-scrollbar {
-            display: none; /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
+            display: none;
+            /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
         }
-
-
     </style>
 
     @if (request()->is('b/*'))
@@ -69,25 +70,32 @@
             }
 
             .attachments-container {
-                max-height: 400px; /* Đặt chiều cao tối đa để tạo scroll khi cần */
-                overflow-y: auto; /* Cho phép cuộn dọc khi vượt quá chiều cao */
+                max-height: 400px;
+                /* Đặt chiều cao tối đa để tạo scroll khi cần */
+                overflow-y: auto;
+                /* Cho phép cuộn dọc khi vượt quá chiều cao */
             }
 
             .attachments-container::-webkit-scrollbar {
-                display: none; /* Chrome, Safari, Opera */
+                display: none;
+                /* Chrome, Safari, Opera */
             }
 
             .checkList-section {
-                max-height: 400px; /* Đặt chiều cao tối đa để tạo scroll khi cần */
-                overflow-y: auto; /* Cho phép cuộn dọc khi vượt quá chiều cao */
+                max-height: 400px;
+                /* Đặt chiều cao tối đa để tạo scroll khi cần */
+                overflow-y: auto;
+                /* Cho phép cuộn dọc khi vượt quá chiều cao */
             }
 
             .checkList-section::-webkit-scrollbar {
-                display: none; /* Chrome, Safari, Opera */
+                display: none;
+                /* Chrome, Safari, Opera */
             }
 
             .selected-tag {
-                box-shadow: 0 0 15px #000000; /* Hiệu ứng bóng */
+                box-shadow: 0 0 15px #000000;
+                /* Hiệu ứng bóng */
             }
         </style>
     @endif
@@ -95,10 +103,11 @@
 </head>
 
 <body>
-
-<!-- Begin page -->
+@php
+    include  resource_path('views/resourceHome.php');
+@endphp
+    <!-- Begin page -->
 <div id="layout-wrapper">
-
     {{-- header website --}}
     @include('layouts.header')
 
@@ -151,19 +160,17 @@
         <div class="page-content">
             <div class="container-fluid">
 
-
                 @if (request()->is('b/*'))
                     @php
-                        $board = session('board');
-                        $memberIsStar = session('memberIsStar');
-                        $colors = session('colors');
+
+                        include  resource_path('views/resourceBoard.php');
                     @endphp
+
 
                     @include('layouts.navbar')
                     @include('components.setting')
                     @include('components.task')
                     @include('components.member')
-
                 @endif
 
                 {{-- các màn hình hiển thị --}}
@@ -220,10 +227,10 @@
 <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
 <!-- glightbox js -->
-{{--<script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>--}}
+{{-- <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script> --}}
 
 <!-- fgEmojiPicker js -->
-{{--<script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>--}}
+{{-- <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script> --}}
 
 
 <!-- notifications init -->
@@ -239,7 +246,7 @@
 <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
 
 <!-- Modal Js -->
-<script src="{{asset('theme/assets/js/pages/modal.init.js')}}"></script>
+<script src="{{ asset('theme/assets/js/pages/modal.init.js') }}"></script>
 
 @if (request()->is('b/*'))
     <!-- dragula init js -->
@@ -251,13 +258,16 @@
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
-    <script src="{{asset('js/ajax-board.js')}}"></script>
-    <script src="{{asset('js/ajax-modal-task.js')}}"></script>
-    <script src="{{asset('js/task.js')}}"></script>
-    <script src="{{asset('js/catalog.js')}}"></script>
+    <!-- ckeditor -->
+    <script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
+
+    <script src="{{ asset('js/ajax-board.js') }}"></script>
+    <script src="{{ asset('js/ajax-modal-task.js') }}"></script>
+    <script src="{{ asset('js/task.js') }}"></script>
+    <script src="{{ asset('js/catalog.js') }}"></script>
 @endif
-<script src="{{asset('js/board.js')}}"></script>
-<script src="{{asset('js/home.js')}}"></script>
+<script src="{{ asset('js/board.js') }}"></script>
+<script src="{{ asset('js/home.js') }}"></script>
 @yield('script')
 <script !src="">
     function notificationWeb(action, title) {

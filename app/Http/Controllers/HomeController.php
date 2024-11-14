@@ -63,8 +63,21 @@ class HomeController extends Controller
         });
         // dd($ownerBoards);
 
+        $filteredBoards = $boards->filter(function ($board) use ($userId) {
+            // Lấy thông tin thành viên của người dùng trong workspace
+            $workspaceMember = $board->workspace->workspaceMembers->firstWhere('user_id', $userId);
+        
+            // Kiểm tra nếu người dùng là "Viewer"
+            if ($workspaceMember && $workspaceMember->authorize == \App\Enums\AuthorizeEnum::Viewer) {
+                // Nếu bảng là "public" hoặc người dùng là thành viên của bảng (ngay cả khi bảng là "private"), cho phép xem bảng
+                return $board->access == 'public' || $board->boardMembers->contains(fn($member) => $member->user_id == $userId);
+            }
+        
+            // Các quyền khác được phép xem tất cả bảng
+            return true;
+        });
         // Tách danh sách bảng sao
-        $board_star = $boards->filter(fn($board) => $board->is_star);
+        $board_star = $filteredBoards->filter(fn($board) => $board->is_star);
 
         // lấy tất cả các thành viên trong ws mà người dùng đang trong ws đấy
         $workspaceMembers = WorkspaceMember::with([
@@ -84,25 +97,21 @@ class HomeController extends Controller
 
         // Lấy tất cả các task trong các workspace mà user là thành viên
         $tasks = Task::with(['catalog.board.workspace', 'catalog.board.boardMembers', 'members'])
-        ->whereIn('catalog_id', function ($query) use ($userId) {
-            $query->select('catalogs.id')
-                ->from('catalogs')
-                ->join('boards', 'catalogs.board_id', '=', 'boards.id')
-                ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
-                ->join('workspace_members', 'workspaces.id', '=', 'workspace_members.workspace_id')
-                ->where('workspace_members.user_id', $userId)
-                ->where('workspace_members.is_active', 1)
-                ->whereNull('workspace_members.deleted_at');
-        })
-        ->get()
-        ->map(function ($task) {
-            // Lấy trực tiếp thông tin từ quan hệ của task
-            $task->catalog_name = $task->catalog->name;
-            $task->board_name = $task->catalog->board->name;
-            $task->board_id = $task->catalog->board->id;
-
-            return $task;
-        });
+            ->whereIn('catalog_id', function ($query) use ($userId) {
+                $query->select('catalogs.id')
+                    ->from('catalogs')
+                    ->join('boards', 'catalogs.board_id', '=', 'boards.id')
+                    ->join('board_members', 'boards.id', '=', 'board_members.board_id')
+                    ->where('board_members.user_id', $userId);
+            })
+            ->get()
+            ->map(function ($task) {
+                $task->catalog_name = $task->catalog->name;
+                $task->board_name = $task->catalog->board->name;
+                $task->board_id = $task->catalog->board->id;
+                return $task;
+            });
+    
 
         // Tách các task của riêng user ra
         $userTasks = $tasks->filter(function ($task) use ($userId) {
@@ -133,7 +142,7 @@ class HomeController extends Controller
 
 
         // hoạt động gần đây
-        $activities = Activity::whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
+        $activities = Activity::with('causer')->whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -45,7 +45,7 @@ class ChecklistController extends Controller
         }
         session()->forget('view_only');
         $checkList = CheckList::query()->findOrFail($id);
-        $data = $request->only(['name', 'task_id']);
+        $data = $request->only(['name', 'task_id','progress']);
         $checkList->update($data);
         return response()->json([
             'success' => "update checkList thành công",

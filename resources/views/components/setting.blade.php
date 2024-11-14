@@ -221,9 +221,9 @@
 
                     <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
 
-                    <div class="row p-3 ">
+                    <div class="row p-3 " id="catalog-container-setting-board">
                         @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
-                            <div
+                            <div id="catalog_id_archiver_{{$archiverCatalog->id}}"
                                 class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle mt-2">
                                 <p class="fs-16 text-danger mt-3">{{$archiverCatalog->name}}</p>
                                 <div>
@@ -246,48 +246,51 @@
 
                     <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
 
-                    <div class="row p-3 ">
+                    <div class="row p-3 " id="task-container-setting-board">
                         @php $board->load(['catalogs.tasks' => function ($query) {
                                 $query->onlyTrashed(); // Chỉ lấy tasks đã xóa mềm
                             }]);
                         @endphp
                         @foreach($board->catalogs as $catalog)
                             @foreach($catalog->tasks as $archiverTask)
-                                <div class="bg-warning-subtle border rounded mt-2">
-                                    <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
-                                    <ul class="link-inline" style="margin-left: -32px">
-                                        <!-- theo dõi -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-eye-line align-bottom"></i>
-                                                04</a>
-                                        </li>
-                                        <!-- bình luận -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-question-answer-line align-bottom"></i>
-                                                19</a>
-                                        </li>
-                                        <!-- tệp đính kèm -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-attachment-2 align-bottom"></i>
-                                                02</a>
-                                        </li>
-                                        <!-- checklist -->
-                                        <li class="list-inline-item">
-                                            <a href="javascript:void(0)" class="text-muted">
-                                                <i class="ri-checkbox-line align-bottom"></i>
-                                                2/4</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="fs-13 fw-bold d-flex">
+                                <div id="task_id_archiver_{{$archiverTask->id}}">
+                                    <div class="bg-warning-subtle border rounded ps-2"
+                                    >
+                                        <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
+                                        <ul class="link-inline" style="margin-left: -32px">
+                                            <!-- theo dõi -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-eye-line align-bottom"></i>
+                                                    </a>
+                                            </li>
+                                            <!-- bình luận -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-question-answer-line align-bottom"></i>
+                                                   </a>
+                                            </li>
+                                            <!-- tệp đính kèm -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-attachment-2 align-bottom"></i>
+                                                    </a>
+                                            </li>
+                                            <!-- checklist -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-checkbox-line align-bottom"></i>
+                                                   </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="fs-13 fw-bold d-flex">
                                          <span class="text-primary cursor-pointer"
                                                onclick="restoreTask({{$archiverTask->id}})">Khôi phục</span>
-                                    -
-                                    <span class="text-danger cursor-pointer"
-                                          onclick="destroyTask({{$archiverTask->id}})">Xóa</span>
+                                        -
+                                        <span class="text-danger cursor-pointer"
+                                              onclick="destroyTask({{$archiverTask->id}})">Xóa</span>
+                                    </div>
                                 </div>
                             @endforeach
                         @endforeach
@@ -322,8 +325,8 @@
                 <div class="row" style="margin-top: -15px">
                     <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
                             onchange="updatePermission('access', this.value,{{$board->id}})">
-                        <option value="public" @selected($board->access === 'public')>Công khai</option>
-                        <option value="private" @selected($board->access === 'private')>Riêng tư</option>
+                        <option value="public" @selected($board->access == 'public')>Công khai</option>
+                        <option value="private" @selected($board->access == 'private')>Riêng tư</option>
                     </select>
                 </div>
                 <hr>

@@ -1,5 +1,5 @@
-@if (!empty($task->check_lists) && !empty($task))
-    @foreach ($task->check_lists as $checklist)
+@if (!empty($task->checkLists) )
+    @foreach ($task->checkLists as $checklist)
         @php $checklist = json_decode(json_encode($checklist)); @endphp
             <!-- việc cần làm -->
         <div class="row mt-3 list-checklist-{{ $checklist->id }}">
@@ -30,10 +30,10 @@
             <div class="ps-4">
                 <div class="progress animated-progress bg-light-subtle" style="height: 20px"
                      data-checklist-id="{{ $checklist->id }}">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%"
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ $checklist->progress }}%"
                          id="progress-bar-checklist-{{ $checklist->id }}" aria-valuenow="0" aria-valuemin="0"
                          aria-valuemax="100">
-                        0%
+                        {{ $checklist->progress }}%
                     </div>
                 </div>
                 <div class="table-responsive table-hover table-card" >

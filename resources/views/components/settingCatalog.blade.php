@@ -83,7 +83,7 @@
                                         <label>Bảng thông tin</label>
                                         <textarea name="name" id=""
                                                   class="form-control mb-2 nameMoveTask"
-                                                  placeholder="Nhập tên danh sách">{{$catalog->name}} sao chép</textarea>
+                                                  placeholder="Nhập tên danh sách">{{$catalog->name}}</textarea>
                                         <select name="board_id" id="" class="form-select mb-3">
                                             @php
                                                 $userId = \Illuminate\Support\Facades\Auth::id();
@@ -100,7 +100,7 @@
                                                     @selected($catalog->board->id == $board->id)>{{$board->name}}</option>
                                             @endforeach
                                         </select>
-                                        <input type="hidden" name="id" class="id" value="{{$catalog->id}}">
+                                        <input type="hidden" name="catalog_id" class="id" value="{{$catalog->id}}">
                                         <button class="btn btn-primary">Di chuyển danh sách</button>
                                     </form>
                                 </div>

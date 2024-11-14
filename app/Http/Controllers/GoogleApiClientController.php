@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CreateGoogleApiClientEvent;
+use App\Jobs\DeleteGoogleApiClientEvent;
 use App\Jobs\UpdateGoogleApiClientEvent;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Google\Service\Calendar\Calendar;
 use Google_Client;
 use Google_Service_Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GoogleApiClientController extends Controller
 {
@@ -53,7 +56,6 @@ class GoogleApiClientController extends Controller
 
     public function createEvent($data)
     {
-//        dd($data);
         if (isset($data['start']) || isset($data['end'])) {
             $startDate = empty($data['start']) ? $data['end'] : $data['start'];
             $endDate = $data['end'];
@@ -65,7 +67,7 @@ class GoogleApiClientController extends Controller
         $description = isset($data['description']) ? $data['description'] : '';
         $summary = isset($data['text']) ? $data['text'] : '';
 
-//        $accessToken = session('google_access_token');
+
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
@@ -105,10 +107,10 @@ class GoogleApiClientController extends Controller
 
     public function updateEvent($data)
     {
-//        dd($data);
+
         $attendees = $eventData = [];
-        if (!isset($data['id_google_calendar']) && !isset($data['id_gg_calendar'])) {
-            $data['id_google_calendar'] = Task::query()->findOrFail($data['task_id'])->value('id_google_calendar');
+        if (!isset($data['id_google_calendar'])) {
+            $data['id_google_calendar'] = Task::query()->findOrFail(isset($data['id']) ? $data['id'] : $data['task_id'])->value('id_google_calendar');
         }
         $startDate = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
         $endDate = $data['end_date'];
@@ -116,8 +118,7 @@ class GoogleApiClientController extends Controller
         $accessToken = User::query()
             ->where('id', auth()->id())
             ->value('access_token');
-        $eventId = isset($data['id_google_calendar']) ? $data['id_google_calendar'] : $data['id_gg_calendar'];
-//        if (isset($startDate) || isset($endDate)) {
+        $eventId = $data['id_google_calendar'];
         $eventData = [
             'summary' => $data['text'],
             'description' => $data['description'],
@@ -129,12 +130,15 @@ class GoogleApiClientController extends Controller
                 'dateTime' => Carbon::parse($endDate, 'Asia/Ho_Chi_Minh')->toIso8601String(),
                 'timeZone' => 'Asia/Ho_Chi_Minh',
             ],
+            'reminders' => [
+                'useDefault' => false,
+                'overrides' => [
+                    ['method' => 'email', 'minutes' => 24 * 60], // Gửi email nhắc nhở trước 24 giờ
+                    ['method' => 'popup', 'minutes' => 10],      // Hiện popup nhắc nhở trước 10 phút
+                ],
+            ],
         ];
-//        } else if (isset($data['text']) || isset($data['description'])) {
-//            $eventData = [
-//
-//            ];
-//        }
+
         // Thêm người tham gia (attendees)
         if (isset($data['user_id'])) {
             $attendees[] = ['email' => User::query()->where('id', $data['user_id'])->value('email')];
@@ -145,29 +149,59 @@ class GoogleApiClientController extends Controller
             'task_id' => isset($data['id']) ? $data['id'] : $data['task_id'],
         ];
 
-        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
+//        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
+
+        $client = $this->getClient();
+        $service = new \Google_Service_Calendar($client);
+        $client->setAccessToken($accessToken);
+        $eventsList = $service->events->listEvents('primary');
+        $events = $eventsList->getItems();
+        $eventExists = false;
+        foreach ($events as $event) {
+            if ($event->getId() === $eventId) {
+                Log::debug($event->getId());
+                Log::debug($eventId);
+                $eventExists = true;
+            }
+        }
+//        dd($eventExists);
+        if ($eventExists) {
+            UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
+        } else {
+            CreateGoogleApiClientEvent::dispatch($eventData, $attendees, $accessToken, $userOrTaskId);
+        }
+
 
     }
 
 
     public function deleteEvent(string $id)
     {
+        $accessToken = User::query()
+            ->where('id', auth()->id())
+            ->value('access_token');
+        $userOrTaskId = [
+            'user_id' => Auth::id(),
+        ];
         $client = $this->getClient();
-        //        $accessToken =  User::query()->where('user_id', auth()->id())->value('access_token');
-        $accessToken = session('google_access_token');
-        if ($accessToken) {
-            $client->setAccessToken($accessToken);
-
-            if ($client->isAccessTokenExpired()) {
-                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-                //                 User::query()->where('user_id', auth()->id())->update([
-                //                    'remember_token' => json_encode($client->getAccessToken())
-                //                ]);
+        $service = new \Google_Service_Calendar($client);
+        $client->setAccessToken($accessToken);
+        $eventsList = $service->events->listEvents('primary');
+        $events = $eventsList->getItems();
+        $eventExists = false;
+        foreach ($events as $event) {
+            if ($event->getId() === $id) {
+                Log::debug($event->getId());
+                Log::debug($id);
+                $eventExists = true;
             }
-            $service = new Google_Service_Calendar($client);
-
-            $service->events->delete('primary', $id);
         }
-        return response()->json(['msg' => 'xoa thanh cong']);
+
+        if ($eventExists) {
+            DeleteGoogleApiClientEvent::dispatch($accessToken, $id, $userOrTaskId);
+        }
+
     }
+
+
 }

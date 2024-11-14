@@ -10,27 +10,57 @@ use Illuminate\Notifications\Notification;
 class BoardMemberNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $desciption;
-    protected $title;
 
-    public function __construct( $title,$desciption)
+    /**
+     * Create a new notification instance.
+     */
+    protected $description; // Nội dung mô tả
+    protected $title;       // Tiêu đề email
+    protected $boardName;
+    protected $boardMemberName;
+
+    public function __construct($title, $description, $boardName, $boardMemberName)
     {
-
-        $this->desciption = $desciption;
         $this->title = $title;
+        $this->description = $description;
+        $this->boardName = $boardName;
+        $this->boardMemberName = $boardMemberName;
     }
-    public function via($notifiable)
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
+    public function via(object $notifiable): array
     {
-        // Gửi thông qua mail và lưu vào database
         return ['mail'];
     }
 
-    public function toMail($notifiable)
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable)
     {
-        // Tạo email thông báox
         return (new MailMessage)
             ->subject($this->title)
-            ->line($this->desciption);
+            ->view('emails.workspace_member_notification', [
+                'title' => $this->title,
+                'description' => $this->description,
+                'workspace_name' => $this->boardName ?? 'Bảng chưa xác định',
+                'recipient_name' => $this->boardMemberName ?? 'Bạn',
+            ]);
     }
-}
 
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    // public function toArray(object $notifiable): array
+    // {
+    //     return [
+    //         //
+    //     ];
+    // }
+}

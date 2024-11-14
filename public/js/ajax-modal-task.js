@@ -1,22 +1,22 @@
 //  ============ navbar ========
-document.getElementById('dropdownToggle').addEventListener('click', function() {
+document.getElementById('dropdownToggle').addEventListener('click', function () {
     let dropdownMenu = document.getElementById('dropdownMenu');
     dropdownMenu.style.display = (dropdownMenu.style.display === 'none') ? 'block' : 'none';
 });
 
-document.getElementById('dropdownMenu').addEventListener('click', function(e) {
+document.getElementById('dropdownMenu').addEventListener('click', function (e) {
     e.stopPropagation();
 });
 
-document.getElementById('closeDropdown').addEventListener('click', function() {
+document.getElementById('closeDropdown').addEventListener('click', function () {
     document.getElementById('dropdownMenu').style.display = 'none';
 });
 
-document.getElementById('saveChanges').addEventListener('click', function() {
+document.getElementById('saveChanges').addEventListener('click', function () {
     document.getElementById('dropdownMenu').style.display = 'none';
 });
 
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     let dropdownMenu = document.getElementById('dropdownMenu');
     let dropdownToggle = document.getElementById('dropdownToggle');
     if (!dropdownMenu.contains(event.target) && !dropdownToggle.contains(event.target)) {
@@ -24,7 +24,7 @@ document.addEventListener('click', function(event) {
     }
 });
 
-function updateIsStar(boardId, userId, ) {
+function updateIsStar(boardId, userId,) {
 
     $.ajax({
         url: `/b/${boardId}/updateBoardMember`,
@@ -33,10 +33,10 @@ function updateIsStar(boardId, userId, ) {
             board_id: boardId,
             user_id: userId,
         },
-        success: function(response) {
+        success: function (response) {
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('An error occurred:', xhr.responseText);
         }
     });
@@ -49,7 +49,7 @@ function updateIsStar(boardId, userId, ) {
 // ================ task ==================
 // xử lý hiện ảnh ở tệp đính kèm
 function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
-    // Lấy tất cả các ảnh có class thumbnail
+    // Lấy tất cả các ảnh hoặc tệp có class thumbnail
     var thumbnails = document.querySelectorAll(thumbnailSelector);
     var modalImage = document.getElementById(modalImageId);
     var imageModal = new bootstrap.Modal(document.getElementById(imageModalId));
@@ -57,41 +57,90 @@ function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
     // Lặp qua tất cả các ảnh thu nhỏ
     thumbnails.forEach(function (thumbnail) {
         thumbnail.addEventListener('click', function () {
-            // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
-            modalImage.src = thumbnail.src;
+            // Lấy URL của file từ thuộc tính data-file-url
+            var fileUrl = thumbnail.getAttribute('data-file-url');
+            if (fileUrl) {
+                var fileExtension = fileUrl.split('.').pop().toLowerCase();
 
-            // Hiển thị modal ảnh
-            imageModal.show();
+                // Kiểm tra nếu là ảnh (jpg, jpeg, png, gif, etc.)
+                if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
+                    // Hiển thị hình ảnh
+                    modalImage.src = fileUrl;
+                    modalImage.style.display = 'block';
+                }
 
-            // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
-            var taskModalId = thumbnail.getAttribute('data-modal-id');
-            var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+                // Hiển thị modal ảnh hoặc file
+                imageModal.show();
 
-            // Hàm xử lý khi modal ảnh đóng
-            function handleModalClose() {
-                taskModal.show();
-                // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
-                document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+                // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh/file
+                var taskModalId = thumbnail.getAttribute('data-modal-id');
+                var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+
+                // Hàm xử lý khi modal ảnh hoặc file đóng
+                function handleModalClose() {
+                    taskModal.show();
+                    // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
+                    document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+                }
+
+                // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
+                document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
+            } else {
+                console.error('Thuộc tính data-file-url đang bị thiếu trên phần tử thumbnail');
             }
-
-            // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
-            document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
         });
     });
 }
 
+
+
 // Gọi hàm với các tham số tùy chỉnh
+//gọi modal task ở màn gantt và calender
+function openCustomModal(taskId) {
+    var modalElement = document.getElementById('detailCardModal');
+
+    if (modalElement) {
+        // Tải nội dung task qua AJAX
+        $.ajax({
+            url: '/tasks/getModalTask/' + taskId,
+            type: 'GET',
+            success: function(response) {
+                $('.modal-task', modalElement).html(response.html); // Cập nhật nội dung modal
+
+                // Khởi tạo modal instance và hiển thị modal
+                var modalInstance = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                modalInstance.show();
+
+                // Xử lý sự kiện khi modal bị đóng để giải phóng instance và backdrop
+                modalElement.addEventListener('hidden.bs.modal', function () {
+                    modalInstance.dispose();
+                    $('.modal-backdrop').remove(); // Xóa backdrop nếu vẫn còn
+                    document.body.classList.remove('modal-open'); // Đảm bảo class modal-open bị xóa
+                });
+            },
+            error: function(xhr) {
+                console.error("Không thể tải dữ liệu task:", xhr);
+            }
+        });
+    } else {
+        console.error("Modal không tồn tại!");
+    }
+}
 
 
+//gọi modal task ở màn board, table, list
 function getModalTaskEvents() {
-    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function(trigger) {
-        trigger.addEventListener('click', function() {
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
             const taskId = trigger.getAttribute('data-task-id');
             // Gọi AJAX để tải dữ liệu vào modal
             $.ajax({
                 url: '/tasks/getModalTask/' + taskId,
                 type: 'GET',
-                success: function(response) {
+                success: function (response) {
                     $('#detailCardModal').modal('show');
                     $('.modal-task').html(response.html);
                     initThumbnailModal('.thumbnail', 'modalImage', 'imageModal');
@@ -102,7 +151,7 @@ function getModalTaskEvents() {
                     });
                     attachNotificationEvent();
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     console.error("Không thể tải dữ liệu task:", xhr);
                 }
             });
@@ -112,15 +161,14 @@ function getModalTaskEvents() {
 }
 
 // Khởi tạo sự kiện modal khi trang được tải
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     getModalTaskEvents();
 });
 
 
-
 function attachNotificationEvent() {
     document.querySelectorAll('[id^="notification_"]').forEach(notificationElement => {
-        notificationElement.addEventListener('click', function() {
+        notificationElement.addEventListener('click', function () {
             // Lấy taskId từ id của phần tử
             const taskId = this.id.split('_')[1];
 
@@ -148,41 +196,61 @@ function attachNotificationEvent() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Hàm để cập nhật trạng thái hiển thị của các badge
     function updateBadgeStatus(taskId) {
         const checkbox = document.getElementById(`due_date_checkbox_${taskId}`);
         const successBadge = document.getElementById(`due_date_success_${taskId}`);
-        const dueBadge = document.getElementById(`due_date_due_${taskId}`);
+        const dateViewBoard = document.getElementById(`date-view-board-${taskId}`);
         const endDate = new Date(document.getElementById(`task_end_date_${taskId}`).value);
         const now = new Date();
 
         if (checkbox.checked) {
-            // Nếu checkbox được chọn (Hoàn tất)
-            successBadge.classList.remove('d-none'); // Hiện "Hoàn tất"
-            dueBadge.classList.add('d-none'); // Ẩn "Quá hạn"
+            successBadge.classList.remove('bg-warning');
+            successBadge.classList.remove('bg-danger');
+            successBadge.innerHTML = 'Hoàn tất'
+
+            successBadge.classList.add('bg-success');
+
+            dateViewBoard.classList.remove('bg-warning');
+            dateViewBoard.classList.remove('bg-danger');
+            dateViewBoard.classList.add('bg-success');
         } else {
+
             // Nếu checkbox chưa được chọn
             if (now > endDate) {
-                // Hiện "Quá hạn" nếu đã quá hạn
-                dueBadge.classList.remove('d-none');
-                successBadge.classList.add('d-none');
-            } else {
-                // Ẩn cả "Hoàn tất" và "Quá hạn" nếu chưa quá hạn
-                dueBadge.classList.add('d-none');
-                successBadge.classList.add('d-none');
+                console.log('quá hạn')
+                successBadge.classList.remove('bg-success'); // Hiện "Hoàn tất"
+                successBadge.classList.remove('bg-warning'); // Hiện "Hoàn tất"
+                successBadge.classList.add('bg-danger');
+
+                successBadge.innerHTML = 'Quá hạn';
+
+                dateViewBoard.classList.remove('bg-warning');
+                dateViewBoard.classList.remove('bg-success');
+                dateViewBoard.classList.add('bg-danger');
+            } else if (now < endDate) {
+                console.log('sắp đến hạn')
+                successBadge.classList.remove('bg-success'); // Hiện "Hoàn tất"
+                successBadge.classList.remove('bg-danger'); // Hiện "Hoàn tất"
+                successBadge.classList.add('bg-warning');
+                successBadge.innerHTML = 'Sắp đến hạn';
+
+                dateViewBoard.classList.remove('bg-danger');
+                dateViewBoard.classList.remove('bg-success');
+                dateViewBoard.classList.add('bg-warning');
             }
         }
     }
 
     // Kiểm tra trạng thái ban đầu của tất cả checkbox khi tải trang
-    document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(function(checkbox) {
+    document.querySelectorAll('input[id^="due_date_checkbox_"]').forEach(function (checkbox) {
         const taskId = checkbox.id.split('due_date_checkbox_')[1];
         updateBadgeStatus(taskId);
     });
 
     // Lắng nghe sự kiện thay đổi của checkbox
-    document.addEventListener('change', function(event) {
+    document.addEventListener('change', function (event) {
         if (event.target.matches('input[id^="due_date_checkbox_"]')) {
             const taskId = event.target.id.split('due_date_checkbox_')[1];
             updateBadgeStatus(taskId);
@@ -213,8 +281,7 @@ function updateTask2(taskId) {
             formData.append('image', image.files[0]);
     }
     formData.append('_method', 'PUT');
-    console.log([...formData]);
-    console.log(image);
+
     $.ajax({
         url: `/tasks/` + taskId,
         method: "POST", // Sử dụng POST nhưng với method PUT
@@ -222,14 +289,14 @@ function updateTask2(taskId) {
         data: formData,
         processData: false, // Bắt buộc phải false để không xử lý FormData thành chuỗi
         contentType: false, // Bắt buộc phải false để đặt đúng 'multipart/form-data'
-        success: function(response) {
+        success: function (response) {
             if (response.task.image) {
                 $('#detailCardModalLabel').css('background-image', `url('/storage/${response.task.image}')`);
             }
             notificationWeb(response.action, response.msg);
             console.log('Task updated successfully:', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('An error occurred:', xhr.responseText);
         }
     });
@@ -245,11 +312,11 @@ function updateTaskMember(taskId, userId) {
             task_id: taskId,
             user_id: userId,
         },
-        success: function(response) {
+        success: function (response) {
             console.log('Người dùng đã folow Task:', response);
 
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('An error occurred:', xhr.responseText);
         }
     });
@@ -261,8 +328,8 @@ function loadTaskTag(taskId, boardId) {
     $.ajax({
         url: `/tasks/getListTagTaskBoard/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        data: { board_id: boardId },
-        success: function(response) {
+        data: {board_id: boardId},
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-list-tag-task-board-' + taskId).html(response.html);
@@ -270,7 +337,7 @@ function loadTaskTag(taskId, boardId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -281,7 +348,7 @@ function loadFormCreateTag(taskId) {
     $.ajax({
         url: `/tasks/getFormCreateTag/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             // Biến lưu trữ mã màu được chọn, khởi tạo là null
             let selectedColor = null;
             if (response.html) {
@@ -291,7 +358,7 @@ function loadFormCreateTag(taskId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -303,10 +370,6 @@ function loadFormCreateTag(taskId) {
 // ============ date ============
 function updateReminderOptions2(taskId) {
     let endDateInput = document.getElementById('end_date_task_' + taskId).value;
-
-    // Kiểm tra xem sự kiện có được kích hoạt và giá trị của end_date
-    console.log('updateReminderOptions2 called for task:', taskId);
-    console.log('end_date value:', endDateInput);
 
     if (!endDateInput) {
         console.log('No end date provided.');
@@ -338,7 +401,7 @@ function loadFormAddDateTask(taskId) {
     $.ajax({
         url: `/tasks/${taskId}/getFormDateTask`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-date-task-' + taskId).html(response.html);
@@ -346,17 +409,48 @@ function loadFormAddDateTask(taskId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
 }
 
+function formatFullDate(date) {
+    const now = new Date();
+    const year = date.getFullYear();
+    const currentYear = now.getFullYear();
+
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+
+    if (year !== currentYear) {
+        return `${hours}:${minutes} ${day} tháng ${month}, ${year}`;
+    } else {
+        return `${hours}:${minutes} ${day} tháng ${month}`;
+    }
+}
+
+function formatDate(date) {
+    const now = new Date();
+    const year = date.getFullYear();
+    const currentYear = now.getFullYear();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+
+    if (year !== currentYear) {
+        return `${day} tháng ${month}, ${year}`;
+    } else {
+        return `${day} tháng ${month}`;
+    }
+}
 
 function submitUpdateDateTask(taskId, event) {
     event.preventDefault(); // Ngăn hành động mặc định của form
     const startDateInput = document.getElementById('start_date_task_' + taskId).value;
     const endDateInput = document.getElementById('end_date_task_' + taskId).value;
+    const dateViewBoard = document.getElementById(`date-view-board-${taskId}`);
 
     // Chuyển đổi giá trị sang đối tượng Date để so sánh
     const startDate = new Date(startDateInput);
@@ -386,48 +480,76 @@ function submitUpdateDateTask(taskId, event) {
         processData: false, // Không xử lý dữ liệu (vì là FormData)
         contentType: false, // Để trình duyệt tự đặt Content-Type (multipart/form-data)
         data: formData,
-        success: function(response) {
+        success: function (response) {
             let dateSection = document.getElementById(`date-section-` + taskId);
             let date = ''; // Khởi tạo biến date
 
             const now = new Date();
 
 // Kiểm tra điều kiện cho start_date và end_date
-            if (response.task.start_date && !response.task.end_date) {
-                // Trường hợp chỉ có ngày bắt đầu
+            if (response.task.start_date && response.task.end_date) {
+                // Trường hợp có ngày hết hạn hoặc có cả ngày bắt đầu và ngày hết hạn
+                const endDate = new Date(response.task.end_date);
+                const startDate = new Date(response.task.start_date);
+
+                date = `
+    <strong>Ngày</strong>
+    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+         style="height: 35px; background-color: #091e420f; color: #172b4d">
+        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
+               class="form-check-input"
+               onchange="updateTask2(${response.task.id})" name="progress"
+               ${response.task.progress == 100 ? 'checked' : ''} />
+        <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
+        <p class="ms-2 mt-3">${formatFullDate(startDate)}-${formatFullDate(endDate)}</p>`;
+
+                if (response.task.progress == 100) {
+                    date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
+                } else if (now < endDate) {
+                    date += `<span class="badge bg-warning ms-2" id="due_date_success_${response.task.id}">Sắp đến hạn</span>`;
+                } else if (now > endDate) {
+                    date += `<span class="badge bg-danger ms-2" id="due_date_due_${response.task.id}">Quá hạn</span>`;
+                }
+
+                date += `</div>`;
+
+                dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
+            } else if (response.task.end_date) {
+                const endDate = new Date(response.task.end_date);
+
+                date = `
+    <strong>Ngày kết thúc</strong>
+    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
+         style="height: 35px; background-color: #091e420f; color: #172b4d">
+        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
+               class="form-check-input"
+               onchange="updateTask2(${response.task.id})" name="progress"
+               ${response.task.progress == 100 ? 'checked' : ''} />
+        <input type="hidden" id="task_end_date_${response.task.id}" value="${response.task.end_date}">
+        <p class="ms-2 mt-3">${formatFullDate(endDate)}</p>`;
+
+                if (response.task.progress == 100) {
+                    date += `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`;
+                } else if (now < endDate) {
+                    date += `<span class="badge bg-warning ms-2" id="due_date_success_${response.task.id}">Sắp đến hạn</span>`;
+                } else if (now > endDate) {
+                    date += `<span class="badge bg-danger ms-2" id="due_date_due_${response.task.id}">Quá hạn</span>`;
+                }
+
+                date += `</div>`;
+
+                dateViewBoard.innerHTML = `${formatDate(endDate)}`
+            } else if (response.task.start_date) {
+                const startDate = new Date(response.task.start_date);
                 date = `
                     <strong>Ngày bắt đầu</strong>
                     <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
                          style="height: 35px; background-color: #091e420f; color: #172b4d">
-                        <p class="ms-2 mt-3">${response.task.start_date}</p>
+                        <p class="ms-2 mt-3">${formatFullDate(startDate)}</p>
                     </div>
                 `;
-            } else if (response.task.end_date) {
-                // Trường hợp có ngày hết hạn hoặc có cả ngày bắt đầu và ngày hết hạn
-                const endDate = new Date(response.task.end_date);
 
-                date = `
-                    <strong>Ngày hết hạn</strong>
-                    <div class="d-flex align-items-center justify-content-between rounded p-3 cursor-pointer"
-                         style="height: 35px; background-color: #091e420f; color: #172b4d">
-                        <input type="checkbox" id="due_date_checkbox_${response.task.id}"
-                               class="form-check-input"
-                               onchange="updateTask2(${response.task.id})" name="progress"
-                               ${response.task.progress == 100 ? 'checked' : ''} />
-                        <input type="hidden" id="task_end_date_${response.task.id}"
-                               value="${response.task.end_date}">
-                        <p class="ms-2 mt-3">
-                        ${response.task.start_date ? `  ${response.task.start_date}-` : ''}
-                        ${response.task.end_date}</p>
-
-                        ${response.task.progress == 100
-                                ? `<span class="badge bg-success ms-2" id="due_date_success_${response.task.id}">Hoàn tất</span>`
-                                : `
-                            <span class="badge bg-success ms-2 ${now > endDate ? 'd-none' : ''}" id="due_date_success_${response.task.id}">Hoàn tất</span>
-                            <span class="badge bg-danger ms-2 ${now > endDate ? '' : 'd-none'}" id="due_date_due_${response.task.id}">Quá hạn</span>
-                        `}
-                    </div>
-                `;
+                dateViewBoard.innerHTML = `${formatDate(startDate)}`
             }
             if (dateSection) {
                 if (dateSection.style.display === 'none') {
@@ -439,7 +561,7 @@ function submitUpdateDateTask(taskId, event) {
             }
             console.log('Task updated successfully:', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error('An error occurred:', xhr.responseText);
         }
     });
@@ -452,17 +574,17 @@ function submitUpdateDateTask(taskId, event) {
 
 //  ========= checklist ==============
 // Xử lý sự kiện khi checkbox được chọn
-$(document).ready(function() {
+$(document).ready(function () {
     // Đảm bảo sự kiện 'change' chỉ chạy khi DOM đã sẵn sàng
-    $(document).on('change', '.form-check-input-tag', function() {
+    $(document).on('change', '.form-check-input-tag', function () {
         let data = $(this).val(); // Lấy giá trị tag ID
         console.log(data);
 
         $.ajax({
             url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
             type: 'POST',
-            data: { data: data },
-            success: function(response) {
+            data: {data: data},
+            success: function (response) {
                 let tagSection = document.getElementById(`tag-section-${response.task_id}`);
                 let tagTask = document.getElementById('tag-task-' + response.task_id);
 
@@ -501,7 +623,7 @@ $(document).ready(function() {
                 }
                 console.log('Checkbox đã được cập nhật:', response);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Có lỗi xảy ra:', error);
             }
         });
@@ -525,7 +647,7 @@ function FormCheckListItem(checkListId) {
         url: `/tasks/checklist/checklistItem/create`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
 
             let maxDisplay = 2;
             let count = 0;
@@ -663,7 +785,7 @@ function FormCheckListItem(checkListId) {
             // Xóa giá trị input sau khi thêm
             $('#name_check_list_item_' + checkListId).val('');
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
             $(this).find('button[type="submit"]').prop('disabled', false);
@@ -673,7 +795,7 @@ function FormCheckListItem(checkListId) {
     return false;
 }
 
-$(document).on('change', '.form-check-input-checkList', function() {
+$(document).on('change', '.form-check-input-checkList', function () {
     let checkListItemId = $(this).data('checklist-item-id');
     let checkbox = $(this);
 
@@ -693,10 +815,10 @@ $(document).on('change', '.form-check-input-checkList', function() {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.log('ChecklistItem đã được cập nhật thành công!', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.log(xhr.responseText);
         }
     });
@@ -707,7 +829,7 @@ function loadTaskFormAddCheckList(taskId) {
     $.ajax({
         url: `/tasks/getFormCheckList/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-checkList-' + taskId).html(response.html);
@@ -715,7 +837,7 @@ function loadTaskFormAddCheckList(taskId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -732,7 +854,7 @@ function submitAddCheckList(taskId) {
         type: 'POST',
         data: formData,
 
-        success: function(response) {
+        success: function (response) {
             let checkList = document.getElementById('checkListCreate-' + taskId);
             let listItem = `
                 <div class="row mt-3 list-checklist-${response.checkListId}" >
@@ -818,7 +940,7 @@ function submitAddCheckList(taskId) {
             console.log('checklist đã được thêm thành công!', response);
 
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
         }
@@ -843,10 +965,10 @@ function submitUpdateCheckList(checklistId, taskId) {
         url: `/tasks/${checklistId}/checklist`,
         type: 'PUT',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             console.log('Task đã được cập nhật thành công!', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
         }
@@ -856,9 +978,9 @@ function submitUpdateCheckList(checklistId, taskId) {
 }
 
 // document.addEventListener('DOMContentLoaded', function () {
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Lắng nghe sự kiện click trên tất cả các checkbox trong DOM
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         const checkbox = event.target;
 
         // Kiểm tra xem click có phải là checkbox thuộc checklist không
@@ -875,7 +997,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lấy tất cả các checkbox
     const checkboxes = document.querySelectorAll('.form-check-input-checkList');
     checkboxes.forEach(checkbox => {
-        checkbox.onclick = function() {
+        checkbox.onclick = function () {
             const checklistId = this.getAttribute('data-checklist-id');
             if (checklistId) {
                 updateProgressBar(checklistId);
@@ -890,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const checklists = new Set(Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-checklist-id')));
     checklists.forEach(checklistId => updateProgressBar(checklistId));
 });
-document.querySelector('table').addEventListener('click', function(event) {
+document.querySelector('table').addEventListener('click', function (event) {
     const checkbox = event.target;
 
     if (checkbox.classList.contains('form-check-input-checkList')) {
@@ -912,16 +1034,28 @@ function updateProgressBar(checklistId) {
 
     // Tính phần trăm hoàn thành
     const percentCompleted = (totalCheckboxes > 0) ? (checkedCheckboxes / totalCheckboxes) * 100 : 0;
-
-    // Cập nhật thanh tiến trình cho checklist tương ứng
-    const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
-    if (progressBar) {
-        progressBar.style.width = percentCompleted + '%';
-        progressBar.setAttribute('aria-valuenow', percentCompleted);
-        progressBar.innerHTML = Math.round(percentCompleted) + '%';
-    } else {
-        console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
-    }
+    $.ajax({
+        url: `/tasks/${checklistId}/checklist`,
+        type: 'PUT',
+        data: {
+            progress:percentCompleted
+        },
+        success: function (response) {
+            // Cập nhật thanh tiến trình cho checklist tương ứng
+            const progressBar = document.getElementById('progress-bar-checklist-' + checklistId);
+            if (progressBar) {
+                progressBar.style.width = percentCompleted + '%';
+                progressBar.setAttribute('aria-valuenow', percentCompleted);
+                progressBar.innerHTML = Math.round(percentCompleted) + '%';
+            } else {
+                console.error(`Không tìm thấy thanh tiến trình cho checklist ID: ${checklistId}`);
+            }
+        },
+        error: function (xhr) {
+            alert('Đã xảy ra lỗi!');
+            console.log(xhr.responseText);
+        }
+    });
 }
 
 // Lắng nghe sự kiện thay đổi trên từng checkbox
@@ -936,7 +1070,7 @@ function loadChecklistItemFormAddMember(checkListItemId) {
         url: `/tasks/checklist/checklistItem/getFormAddMember/${checkListItemId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
         data: {},
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-member-check-list-' + checkListItemId).html(response.html);
@@ -944,7 +1078,7 @@ function loadChecklistItemFormAddMember(checkListItemId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -954,7 +1088,7 @@ function loadTaskFormAddDateCheckListItem(checkListItemId) {
     $.ajax({
         url: `/tasks/checklist/checklistItem/${checkListItemId}/getFormDate`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-date-check-list-item-' + checkListItemId).html(response.html);
@@ -963,7 +1097,7 @@ function loadTaskFormAddDateCheckListItem(checkListItemId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -986,7 +1120,7 @@ function onclickAddMemberCheckListItem(memberId, memberName, checklistItemId) {
             user_id: memberId,
             check_list_item_id: checklistItemId,
         },
-        success: function(response) {
+        success: function (response) {
             let user = '';
             if (response.userImage) {
                 user = `<img src="/storage/${response.userImage}"
@@ -1028,9 +1162,14 @@ function onclickAddMemberCheckListItem(memberId, memberName, checklistItemId) {
             `;
             cardMembersListItem.innerHTML += listItem;
             memberCheckListItem.innerHTML += memberCheckListItemAdd;
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
             console.log('Thành viên đã được thêm vào checkListMember thành công.');
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.log(xhr.responseText);
         }
     });
@@ -1044,7 +1183,7 @@ function removeMemberFromCard(memberId, checklistItemId) {
             user_id: memberId,
             check_list_item_id: checklistItemId
         },
-        success: function(response) {
+        success: function (response) {
             let memberElement = document.getElementById('card-member-' + memberId + '-' + checklistItemId);
             let memberElement1 = document.getElementById('member-checklist-' + memberId + '-' + checklistItemId);
             if (memberElement1) {
@@ -1053,9 +1192,14 @@ function removeMemberFromCard(memberId, checklistItemId) {
             if (memberElement) {
                 memberElement.remove();
             }
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
             console.log('Thành viên đã được xóa thành công khỏi thẻ.');
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa thành viên.');
             console.log(xhr.responseText);
         }
@@ -1070,11 +1214,11 @@ function removeCheckList(checklistId) {
         data: {
             id: checklistId
         },
-        success: function(response) {
+        success: function (response) {
             $('.list-checklist-' + checklistId).hide();
             console.log('checkList đã được xóa thành công .');
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa thành viên.');
             console.log(xhr.responseText);
         }
@@ -1090,14 +1234,14 @@ function removeCheckListItem(checklistItemId, check_list_id) {
         data: {
             id: checklistItemId
         },
-        success: function(response) {
+        success: function (response) {
 
 
             $('.check-list-item-' + checklistItemId).remove();
             console.log('checklistItem đã được xóa thành công .');
             updateProgressBar(check_list_id);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa thành viên.');
             console.log(xhr.responseText);
         }
@@ -1147,7 +1291,7 @@ function submitUpdateDateCheckListItem(checklistItemId) {
         url: `/tasks/checklist/checklistItem/${checklistItemId}/update`,
         type: 'PUT',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             console.log('checklistItem đã được cập nhật thành công!', response);
             if (formData.end_date) {
                 // Định dạng ngày thành yyyy-mm-dd hh:mm:ss
@@ -1164,7 +1308,7 @@ function submitUpdateDateCheckListItem(checklistItemId) {
                 $('#dropdownToggle_dateChecklistItem_' + checklistItemId).html(formattedDate);
             }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
         }
@@ -1181,7 +1325,7 @@ function loadTaskFormAddAttach(taskId) {
     $.ajax({
         url: `/tasks/getFormAttach/${taskId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-attach-' + taskId).html(response.html);
@@ -1189,7 +1333,7 @@ function loadTaskFormAddAttach(taskId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -1212,7 +1356,7 @@ function uploadTaskAttachments(taskId) {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.log('Tệp đã được thêm vào thành công');
 
             let attachmentSection = document.getElementById(`attachment-section-` + taskId);
@@ -1255,7 +1399,7 @@ function uploadTaskAttachments(taskId) {
             }
             notificationWeb(response.action, response.msg);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.log('Error occurred:', xhr.responseText);
         }
     });
@@ -1274,12 +1418,12 @@ function updateTaskAttachment(attachmentId) {
         url: `/tasks/attachments/${attachmentId}/update`, // Lấy URL từ thuộc tính action của form
         method: 'PUT', // Lấy method (POST) từ thuộc tính method của form
         data: formData, // Lấy toàn bộ dữ liệu của form
-        success: function(response) {
+        success: function (response) {
             // Xử lý khi gửi thành công
             console.log('Form submitted successfully');
             console.log(response); // Dữ liệu phản hồi từ server
         },
-        error: function(xhr) {
+        error: function (xhr) {
             // Xử lý khi gửi thất bại
             console.log('Error occurred:', xhr);
         }
@@ -1290,7 +1434,7 @@ function deleteTaskAttachment(attachmentId, taskId) {
     $.ajax({
         url: `/tasks/attachments/${attachmentId}/destroy`,
         method: 'DELETE',
-        success: function(response) {
+        success: function (response) {
             if (response.success) {
                 console.log('Tệp đã được xóa thành công');
                 document.querySelector(`.attachment_${attachmentId}`).remove();
@@ -1299,7 +1443,7 @@ function deleteTaskAttachment(attachmentId, taskId) {
                 console.log('Có lỗi xảy ra khi xóa tệp:', response.msg);
             }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.log('Có lỗi xảy ra khi gọi API:', xhr.responseText);
         }
     });
@@ -1317,7 +1461,7 @@ function loadTaskFormAddMember(taskId, boardId) {
             boardId: boardId,
             task_id: taskId,
         },
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('#dropdown-content-add-member-task-' + taskId).html(response.html);
@@ -1325,7 +1469,7 @@ function loadTaskFormAddMember(taskId, boardId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -1352,7 +1496,9 @@ function addMemberToTask(user_id, name, task_id) {
             user_id: user_id,
             task_id: task_id,
         },
-        success: function(response) {
+        success: function (response) {
+            notificationWeb(response.action, response.msg);
+            if (response.action === 'error') return false;
             let memberSection = document.getElementById(`member-section-` + task_id);
             if (memberSection && memberSection.style.display === 'none') {
                 memberSection.style.display = 'block';
@@ -1403,7 +1549,7 @@ function addMemberToTask(user_id, name, task_id) {
 
             console.log('Thành viên đã được thêm vào thẻ thành công.');
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.log(xhr.responseText);
         }
     });
@@ -1418,7 +1564,11 @@ function removeMemberFromTask(user_id, task_id) {
             user_id: user_id,
             task_id: task_id
         },
-        success: function(response) {
+        success: function (response) {
+            notificationWeb(response.action, response.msg);
+
+            if (response.action === 'error') return false;
+
             let memberElement = document.getElementById('card-member-task-' + user_id + '-' + task_id);
             let memberElement1 = document.getElementById('member-' + user_id + '-' + task_id);
             if (memberElement1) {
@@ -1427,9 +1577,11 @@ function removeMemberFromTask(user_id, task_id) {
             if (memberElement) {
                 memberElement.remove();
             }
+
+
             console.log('Thành viên đã được xóa thành công khỏi thẻ.');
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Có lỗi xảy ra khi xóa thành viên.');
             console.log(xhr.responseText);
         }
@@ -1453,7 +1605,7 @@ function addTaskComment(taskId, user_id) {
         url: `/tasks/comments/create`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             notificationWeb(response.action, response.msg)
 
             let taskComment = document.getElementById('task-comment-' + taskId);
@@ -1548,8 +1700,8 @@ function addTaskComment(taskId, user_id) {
                 <span class="fs-11">${timeAgo}</span>
                 <div class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-${response.comment.id}">${content}</div>
                 <div class="fs-11 d-flex">
-                   <div class=""> ${btnThaoTac} </div>
-                    <div class=""> ${btnXoa}</div>
+                   <div class="cursor-pointer"> ${btnThaoTac} </div>
+                    <div class="cursor-pointer"> ${btnXoa}</div>
 
                 </div>
             </section>
@@ -1559,7 +1711,7 @@ function addTaskComment(taskId, user_id) {
             taskComment.innerHTML += taskComment2;
             $(this).find('button[type="submit"]').prop('disabled', false);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
             $(this).find('button[type="submit"]').prop('disabled', false);
@@ -1582,7 +1734,7 @@ function addReplyTaskComment(taskId, user_id, commentId) {
         url: `/tasks/comments/create`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             console.log('taskComment đã được thêm thành công!', response);
 
             let taskComment = document.getElementById('task-comment-' + taskId);
@@ -1697,7 +1849,7 @@ function addReplyTaskComment(taskId, user_id, commentId) {
             $('.dropdown-menu-reply-comemnt-' + commentId).dropdown('hide');
             $(this).find('button[type="submit"]').prop('disabled', false);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             alert('Đã xảy ra lỗi!');
             console.log(xhr.responseText);
             $(this).find('button[type="submit"]').prop('disabled', false);
@@ -1717,14 +1869,14 @@ function updateTaskComment(taskId, user_id, commentId) {
     };
     console.log(formData);
     $.ajax({
-                url: `/tasks/comments/${commentId}/update`,
-                type: 'PUT',
-                data: formData,
-                success: function(response) {
-                        console.log('taskComment đã được thêm thành công!', response);
+        url: `/tasks/comments/${commentId}/update`,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+            console.log('taskComment đã được thêm thành công!', response);
 
-                        let taskComment = document.getElementById('1content-coment-' + commentId);
-                        let repon = `
+            let taskComment = document.getElementById('1content-coment-' + commentId);
+            let repon = `
             <div class="bg-info-subtle p-1 rounded ps-2 d-flex " id="1content-coment-${commentId}">
                 ${response.replyUser ? `
                     <div class="badge border rounded align-items-center" style="background-color: #4A90E2;">
