@@ -254,7 +254,7 @@
                                                 <div class="avatar-xs" style="width: 35px;height: 35px">
                                                     <div class="avatar-title rounded-circle bg-light text-primary"
                                                            style="width: 40px;height: 40px">
-                                                        {{ strtoupper(substr($boardMember['name'], 0, 1)) }}
+                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                     </div>
                                                 </div>
                                             @endif

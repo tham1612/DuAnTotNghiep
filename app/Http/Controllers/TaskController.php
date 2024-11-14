@@ -365,7 +365,7 @@ class TaskController extends Controller
         return response()->json([
             'action' => 'success',
             'msg' => 'Lưu trữ thẻ thành công!!',
-            'taskId' => $id
+            'task' => $task
         ]);
     }
 
@@ -382,7 +382,6 @@ class TaskController extends Controller
             return response()->json([
                 'action' => 'error',
                 'msg' => 'Bạn không có quyền!!',
-                'taskId' => $id
             ]);
         }
 
@@ -390,6 +389,7 @@ class TaskController extends Controller
         return response()->json([
             'action' => 'success',
             'msg' => 'Hoàn tác task thành công!!',
+            'task' => $task
         ]);
     }
 
