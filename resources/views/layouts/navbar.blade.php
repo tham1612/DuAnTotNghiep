@@ -228,9 +228,9 @@
                                     $count = 0;
                                 @endphp
 
-                                @foreach ($boardMembers as $boardMemberMain)
+                                @foreach ($boardMembers as $boardMember)
                                     @php
-                                        $boardMember = $boardMemberMain->user;
+                                           $boardMember = json_decode(json_encode($boardMember));
                                     @endphp
                                     @if ($count < $maxDisplay)
                                         <a href="javascript: void(0);" class="avatar-group-item"
@@ -243,8 +243,8 @@
                                             @else
                                                 <div class="avatar-xs" style="width: 35px;height: 35px">
                                                     <div class="avatar-title rounded-circle bg-light text-primary"
-                                                        style="width: 35px;height: 35px">
-                                                        {{ strtoupper(substr($boardMember['name'], 0, 1)) }}
+                                                           style="width: 40px;height: 40px">
+                                                        {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                     </div>
                                                 </div>
                                             @endif

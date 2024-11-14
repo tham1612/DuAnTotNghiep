@@ -18,6 +18,18 @@
         height: 20%;
         opacity: 0; /* Ẩn input nhưng vẫn nhận được sự kiện click */
     }
+
+    #modalImage {
+        max-width: 100%;
+        max-height: 80vh;
+        cursor: zoom-in;
+        transition: transform 0.3s ease;
+    }
+
+    #modalImage.zoomed {
+        transform: scale(2); /* Tăng kích thước ảnh gấp 2 lần */
+        cursor: zoom-out;
+    }
 </style>
 <div class="modal-header p-3 modal-header-{{$task->id}}"
      style="
@@ -52,7 +64,7 @@
                         <section class="d-flex mb-2">
                             <i class="ri-artboard-line fs-24 mt-1"></i>
                             <input type="text" name="text"
-                                   class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0"
+                                   class="form-control border-0 ms-1 fs-18 fw-medium bg-transparent ps-0  cursor-pointer"
                                    id="text_{{ $task->id }}" value="{{ $task->text }}"
                                    onchange="updateTask2({{ $task->id }})"/>
 
@@ -326,7 +338,7 @@
                                 </button>
                             </form>
 
-                            <div class="bg-info-subtle p-2 rounded ps-2" data-task-id="{{ $task->id }}"
+                            <div class="bg-info-subtle p-2 rounded ps-2  cursor-pointer" data-task-id="{{ $task->id }}"
                                  onclick="toggleCommentForm(this)">
                                 Viết bình luận
                             </div>
@@ -457,7 +469,7 @@
             <div class="d-flex mt-3 mb-3 cursor-pointer archiver ">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                      style=" height: 30px; background-color: #091e420f; color: #172b4d"
-                     onclick="archiverTask({{ $task->id }},{{ $userId }})">
+                     onclick="archiverTask({{ $task->id }})">
                     <i class="ri-archive-line fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Lưu trữ
@@ -469,7 +481,7 @@
             <div class="d-flex mt-3 mb-3 cursor-pointer restore-archiver d-none">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                      style=" height: 30px; background-color: #091e420f; color: #172b4d"
-                     onclick="restoreTask({{ $task->id }},{{ $userId }})">
+                     onclick="restoreTask({{ $task->id }})" data-value="true">
                     <i class="las la-window-restore fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Khôi phục
@@ -481,7 +493,7 @@
             <div class="d-flex mt-3 mb-3 cursor-pointer delete-archiver d-none">
                 <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
                      style=" height: 30px; background-color: red"
-                     onclick="destroyTask({{ $task->id }},{{ $userId }})">
+                     onclick="destroyTask({{ $task->id }})">
                     <i class="las la-window-restore fs-20"></i>
                     <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Xóa

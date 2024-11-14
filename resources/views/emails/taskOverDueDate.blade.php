@@ -87,57 +87,48 @@
                 style="font-family: 'Roboto', sans-serif; width: 100%; background-color: #f8f9fa; margin-top: -50px;">
                 <tr>
                     <td></td>
-                    <td class="container" width="600" style="display: block; max-width: 600px; margin: 0 auto;">
+                    <td class="container" width="600"
+                        style="display: block; max-width: 600px; margin: 0 auto; background-color: #fff;">
                         <div class="content" style="padding: 20px;">
                             <table class="main" width="100%" cellpadding="0" cellspacing="0"
-                                style="border-radius: 7px; background-color: #fff; box-shadow: 0 3px 15px rgba(30, 32, 37, .06);">
+                                style="border-radius: 7px; background-color: #fff; box-shadow: 0 3px 15px rgba(30,32,37,.06);">
                                 <tr>
                                     <td class="content-wrap" style="padding: 30px;">
                                         <table width="100%" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td class="content-block"
-                                                    style="text-align: center; margin-bottom: 15px;">
-                                                    <h1 style="font-size: 24px; color: #0ab39c;">Task Flow</h1>
+                                                <td class="content-block" style="text-align: center; margin-bottom: 15px;">
+                                                    <h1 style="font-size: 24px; color: #e7515a;">Task Flow</h1>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="content-block"
                                                     style="text-align: center; font-size: 20px; font-weight: 500;">
-                                                    {{ $adminName }} đã thêm bạn vào checklist cho nhiệm vụ "{{
-                                                    $checkListItemMember->checkListItem->checkList->task->text }}"!
+                                                    Task đã quá hạn!
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="content-block"
                                                     style="color: #878a99; text-align: left; font-size: 15px; padding-top: 15px;">
-                                                    <p><strong>Tên Checklist:</strong> {{
-                                                        $checkListItemMember->checkListItem->checkList->name }}</p>
-                                                    <p><strong>Nhiệm vụ:</strong> {{
-                                                        $checkListItemMember->checkListItem->checkList->task->text }}
-                                                    </p>
-                                                    <p><strong>Giao bởi:</strong> {{ $adminName }}</p>
+                                                    <p><strong>Task:</strong> {{ $task->text }}</p>
+                                                    <p><strong>Thời hạn:</strong> {{ $task->end_date->format('d/m/Y H:i') }}</p>
+                                                    <p><strong>Danh mục:</strong> {{ $task->catalog->name }}</p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="content-block"
                                                     style="text-align: left; font-size: 14px; line-height: 1.5; color: #495057; padding-top: 15px;">
                                                     <p>Chào bạn,</p>
-                                                    <p>{{ $adminName }} đã thêm bạn vào checklist cho nhiệm vụ
-                                                        "<strong>{{
-                                                            $checkListItemMember->checkListItem->checkList->task->text
-                                                            }}</strong>". Hãy kiểm tra checklist và hoàn thành các mục
-                                                        theo đúng thời gian quy định.</p>
+                                                    <p>Task "<strong>{{ $task->text }}</strong>" đã quá hạn. Vui lòng kiểm tra lại và cập nhật để đảm bảo tiến độ.</p>
                                                 </td>
                                             </tr>
-                                            <!-- <tr>
-                                                <td class="content-block"
-                                                    style="text-align: center; padding-top: 20px;">
-                                                    <a href="{{ url('/b/') }}"
-                                                        style="padding: 10px 20px; background-color: #0ab39c; color: #fff; text-decoration: none; border-radius: 5px;">
-                                                        Xem Checklist
+                                            {{-- <tr>
+                                                <td class="content-block" style="text-align: center; padding-top: 20px;">
+                                                    <a href="{{ url('/b/' . $task->catalog->board->id . '/edit') }}"
+                                                        style="padding: 10px 20px; background-color: #e7515a; color: #fff; text-decoration: none; border-radius: 5px;">
+                                                        Xem Task
                                                     </a>
                                                 </td>
-                                            </tr> -->
+                                            </tr> --}}
                                             <tr>
                                                 <td class="content-block"
                                                     style="color: #878a99; text-align: center; font-size: 14px; padding-top: 20px; border-top: 1px solid #e9ebec;">
@@ -146,14 +137,12 @@
                                             </tr>
                                         </table>
                                         <div style="text-align: center; margin-top: 25px;">
-                                            <ul
-                                                style="list-style: none; display: flex; justify-content: center; gap: 15px; padding-left: 0;">
+                                            <ul style="list-style: none; display: flex; justify-content: center; gap: 15px; padding-left: 0;">
                                                 <li><a href="#" style="color: #495057;">Trung tâm hỗ trợ</a></li>
                                                 <li><a href="#" style="color: #495057;">Hỗ trợ 24/7</a></li>
                                                 <li><a href="#" style="color: #495057;">Tài khoản</a></li>
                                             </ul>
-                                            <p style="font-size: 14px; color: #98a6ad;">2024 Task Flow. Thiết kế & phát
-                                                triển bởi đội ngũ TaskFlow.</p>
+                                            <p style="font-size: 14px; color: #98a6ad;">2024 Task Flow. Thiết kế & phát triển bởi đội ngũ TaskFlow.</p>
                                         </div>
                                     </td>
                                 </tr>

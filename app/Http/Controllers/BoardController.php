@@ -16,6 +16,7 @@ use App\Models\Task;
 use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Notifications\Testhihi;
 use App\Notifications\WorksaceNotification;
 use App\Notifications\BoardMemberNotification;
 use App\Notifications\BoardNotification;
@@ -550,14 +551,9 @@ class BoardController extends Controller
         }
         session()->forget('view_only');
         try {
-            $title = "Từ chối lời mời";
-            $description = 'Bạn đã bị từ chối lời mời vào bảng ' . $boardMember->board->name;
-            // $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember));
-            try {
-                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember));
-            } catch (\Exception $e) {
-                \Log::error('Notification failed: ' . $e->getMessage());
-            }
+            $title = "Phản hồi về lời mời tham gia bảng";
+            $description = "Rất tiếc, lời mời tham gia bảng {{ $boardMember->board->name }} của bạn chưa được phê duyệt. Cảm ơn bạn đã quan tâm, và hy vọng sẽ có cơ hội hợp tác trong các dự án khác!";
+            $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
             $boardMember->delete();
             return back()->with([
                 'msg' => 'bạn đã từ chối người dùng vào bảng',
@@ -585,12 +581,12 @@ class BoardController extends Controller
             if ($wspChecked->authorize->value !== "Viewer") {
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
-                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember));
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
-                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember));
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
                 $wspChecked->delete();
@@ -605,7 +601,7 @@ class BoardController extends Controller
 
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
-                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember));
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
             }
         } catch (\Throwable $th) {
