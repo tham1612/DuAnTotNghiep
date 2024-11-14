@@ -1,20 +1,46 @@
 import './bootstrap';
+
 Echo.channel('catalog')
     .listen('.CatalogCreated', (e) => {
         console.log("Nhận sự kiện CatalogCreated:", e);
-
-        const kanbanBoard = document.getElementById("kanbanboard");
-
-        if (kanbanBoard) {
-            addCatalogToKanbanBoard(kanbanBoard, e);
-        }
+        addCatalogToCurrentView(e); // Gọi hàm chính để thêm catalog vào view hiện tại
     });
 
+function addCatalogToCurrentView(catalog) {
+    const currentView = getCurrentView(); // Xác định view hiện tại
+    console.log("Current View:", currentView); // Log để xem view hiện tại
+    switch (currentView) {
+        case 'view1':
+            addCatalogToKanbanBoard(document.getElementById("kanbanboard"), catalog);
+            break;
+        case 'view2':
+            addCatalogToView2(catalog);
+            break;
+        // Thêm các view khác nếu cần
+        default:
+            console.error("Không xác định được view hiện tại.");
+    }
+}
 
+// Hàm xác định màn hình hiện tại
+function getCurrentView() {
+    // Kiểm tra id hoặc class để xác định màn hình hiện tại
+    if (document.getElementById("kanbanboard")) {
+        console.log("Detected view1");
+        return 'view1';
+    } else if (document.getElementById("view2Container")) {
+        console.log("Detected view2");
+        return 'view2';
+    }
+    return null; // Không xác định được view
+}
+
+// Hàm thêm catalog vào Kanban Board (view1)
 function addCatalogToKanbanBoard(kanbanBoard, catalog) {
     const newCatalogDiv = document.createElement("div");
-    newCatalogDiv.classList.add("tasks-list", "rounded-3", "p-2", "border");
+    newCatalogDiv.classList.add("tasks-list", "rounded-3", "p-2", "border", "shadow-sm", "mb-4");
     newCatalogDiv.setAttribute("data-value", catalog.id);
+
     newCatalogDiv.innerHTML = `
         <div class="d-flex mb-3 align-items-center">
             <div class="flex-grow-1">
@@ -63,8 +89,25 @@ function addCatalogToKanbanBoard(kanbanBoard, catalog) {
             </div>
         </div>
     `;
-    // Chèn catalog mới vào Kanban board
+
     kanbanBoard.insertBefore(newCatalogDiv, kanbanBoard.firstChild);
 }
 
+// Hàm thêm catalog vào View2 với giao diện đơn giản hơn
+function addCatalogToView2(catalog) {
+    const viewElement = document.getElementById("view2Container");
+    if (viewElement) {
+        const newCatalogDiv = document.createElement("div");
+        newCatalogDiv.classList.add("custom-style-view2", "rounded", "border", "p-3", "mb-4");
+        newCatalogDiv.setAttribute("data-value", catalog.id);
 
+        newCatalogDiv.innerHTML = `
+            <h4>${catalog.name}</h4>
+            <p class="text-muted">Số lượng task: ${catalog.task_count}</p>
+            <button class="btn btn-outline-primary btn-sm mt-2" onclick="addTask(${catalog.id})">Thêm Task</button>
+            <!-- Các thành phần bổ sung khác cho view2 -->
+        `;
+
+        viewElement.insertBefore(newCatalogDiv,viewElement.firstChild);
+    }
+}

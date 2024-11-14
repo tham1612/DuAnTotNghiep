@@ -47,276 +47,276 @@
         </div>
     </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"  class=" me-3 ms-3 list-catalog-{{$board->id }}" >
-            @if (!empty($board))
-                @foreach ($board->catalogs as $catalog)
-                    <div class="card" id="{{ $catalog->id }}">
-                        <div class="card-header border-0">
-                            <div class="d-flex align-items-center">
-                                <div class="d-flex flex-grow-1">
-                                    <h6 class="fs-14 fw-semibold mb-0" value="{{ $catalog->id }}">{{ $catalog->name }}
-                                        <small
-                                            class="badge bg-warning align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
-                                    </h6>
-                                    <div class="d-flex ms-4">
-                                        <div class="dropdown">
-                                            <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                <li>
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Thay đổi tên</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                        Thêm thẻ</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép danh sách</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Di chuyển danh sách</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép danh sách</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Lưu trữ danh sách</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary ms-3" id="dropdownMenuOffset{{ $catalog->id }}"
-                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
-                                            onclick="loadFormAddTask({{ $catalog->id }})">
-                                        <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
-                                    </button>
-                                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}" style="width: 285px"
-                                         aria-labelledby="dropdownMenuOffset3">
-                                        {{--dropdown.createTask--}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--end card-body-->
-                        <div class="card-body">
-                            <div class="table-responsive table-card mb-3">
-                                <table id="catalog-table-{{ $catalog->id }}" style="width:100%"
-                                       class="table table-bordered dt-responsive nowrap table-striped align-middle">
-                                    <thead>
-                                    <tr>
-                                        <th>Thẻ</th>
-                                        <th>Thành viên</th>
-                                        <th>Ngày bắt đầu</th>
-                                        <th>Ngày kết thúc</th>
-                                        <th>Độ ưu tiên</th>
-                                        <th>Danh sách</th>
-                                        {{-- <th>Bình luận</th> --}}
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="body-catalog-{{$catalog->id}}">
-                                    @foreach ($catalog->tasks as $task)
-                                        <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
-                                        <tr draggable="true">
-                                            <td class="col-2">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1" data-bs-toggle="modal"
-                                                         data-bs-target="#detailCardModal" data-task-id="{{$task->id}}">
-                                                        {{ \Illuminate\Support\Str::limit($task->text, 20) }}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="">
-                                                <div id="member1"
-                                                     class="cursor-pointer">
-                                                    <div class="avatar-group d-flex justify-content-center"
-                                                         id="newMembar">
-                                                        @if ($task->members->isNotEmpty())
-                                                            @php
-                                                                // Giới hạn số thành viên hiển thị
-                                                                $maxDisplay = 2;
-                                                                $count = 0;
-                                                            @endphp
-                                                            @foreach ($task->members as $member)
-                                                                @if ($count < $maxDisplay)
-                                                                    <a href="javascript: void(0);"
-                                                                       class="avatar-group-item"
-                                                                       data-bs-toggle="tooltip"
-                                                                       data-bs-trigger="hover"
-                                                                       data-bs-placement="top"
-                                                                       title="{{ $member->name }}">
-                                                                        @if ($member->image)
-                                                                            <img
-                                                                                src="{{ asset('storage/' . $member->image) }}"
-                                                                                alt=""
-                                                                                class="rounded-circle avatar-xxs"/>
-                                                                        @else
-                                                                            <div
-                                                                                class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
-                                                                                {{ strtoupper(substr($member->name, 0, 1)) }}
-                                                                            </div>
-                                                                        @endif
-                                                                    </a>
-                                                                    @php $count++; @endphp
-                                                                @endif
-                                                            @endforeach
-
-                                                            @if ($task->members->count() > $maxDisplay)
-                                                                <a href="javascript: void(0);"
-                                                                   class="avatar-group-item" data-bs-toggle="tooltip"
-                                                                   data-bs-placement="top"
-                                                                   title="{{ $task->members->count() - $maxDisplay }} more">
-                                                                    <div class="avatar-xxs">
-                                                                        <div
-                                                                            class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
-                                                                            +{{ $task->members->count() - $maxDisplay }}
-                                                                        </div>
-                                                                    </div>
-                                                                </a>
-                                                            @endif
-                                                        @else
-                                                            <span>
-                                                                    <i class="bx fs-20 bxs-user-plus cursor-pointer"
-                                                                       data-bs-toggle="tooltip"
-                                                                       title="Thêm thành viên"></i>
-                                                                </span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <form id="updatelistTaskForm_{{ $task->id }}">
-                                                @php
-                                                    $start_date = $task->start_date
-                                                        ? \Carbon\Carbon::parse($task->start_date)->format(
-                                                            'Y-m-d\TH:i',
-                                                        )
-                                                        : null;
-                                                    $end_date = $task->end_date
-                                                        ? \Carbon\Carbon::parse($task->end_date)->format(
-                                                            'Y-m-d\TH:i',
-                                                        )
-                                                        : null;
-                                                @endphp
-                                                <td class="col-2">
-                                                    <input type="datetime-local" name="start_date"
-                                                           id="start_date_{{ $task->id }}"
-                                                           value="{{ $start_date }}" class="form-control no-arrow"
-                                                           onchange="updateTaskList({{ $task->id }})">
-                                                </td>
-
-                                                <td class="col-2">
-                                                    <input type="datetime-local" name="end_date"
-                                                           id="end_date_{{ $task->id }}"
-                                                           value="{{ $end_date }}" class="form-control no-arrow"
-                                                           onchange="updateTaskList({{ $task->id }})">
-                                                </td>
-                                                <td class="">
-                                                    <span
-                                                    class="badge
-                                                        @if ($task->priority == 'High') bg-danger-subtle text-danger
-                                                        @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
-                                                        @elseif ($task->priority == 'Low') bg-success-subtle text-success
-                                                        @else bg-info-subtle text-info @endif"
-                                                    onclick="toggleSelect({{ $task->id }});">
-                                                    {{ $task->priority }}
-                                                </span>
-
-
-                                                    <select name="priority" id="priority_{{ $task->id }}"
-                                                            class="form-select no-arrow" style="display: none;"
-                                                            onchange="updateTaskList({{ $task->id }})">
-                                                        @foreach (\App\Enums\IndexEnum::getValues() as $priority)
-                                                            <option value="{{ $priority }}"
-                                                                @selected($task->priority == $priority)>
-                                                                {{ $priority }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select name="catalog_id" id="catalog_id_{{ $task->id }}"
-                                                            class="form-select no-arrow"
-                                                            onchange="updateTaskList({{ $task->id }});">
-                                                        @foreach ($board->catalogs as $catalog)
-                                                            <option @selected($catalog->id == $task->catalog_id)
-                                                                    value="{{ $catalog->id }}">
-                                                                {{ $catalog->name }}
-                                                            </option>
-                                                        @endforeach
-
-                                                    </select>
-
-                                                </td>
-                                            </form>
-                                            <td class="">
-                                                <a href="javascript:void(0);" class="text-muted"
-                                                   id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                                   aria-expanded="false"><i class="ri-more-fill"></i></a>
+            <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"  class=" me-3 ms-3 list-catalog-{{$board->id }}" id="view2Container" >
+                @if (!empty($board))
+                    @foreach ($board->catalogs as $catalog)
+                        <div class="card" id="{{ $catalog->id }}">
+                            <div class="card-header border-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-grow-1">
+                                        <h6 class="fs-14 fw-semibold mb-0" value="{{ $catalog->id }}">{{ $catalog->name }}
+                                            <small
+                                                class="badge bg-warning align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
+                                        </h6>
+                                        <div class="d-flex ms-4">
+                                            <div class="dropdown">
+                                                <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                        class="ri-more-fill"></i></a>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                                                     <li>
                                                         <a class="dropdown-item" href="#"><i
                                                                 class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                            Mở thẻ</a>
+                                                            Thay đổi tên</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item" href="#"><i
                                                                 class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                            Chỉnh sửa nhãn</a>
+                                                            Thêm thẻ</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
+                                                        <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                                 class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Thay đổi thành viên</a>
+                                                            Sao chép danh sách</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
+                                                        <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                                 class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Chỉnh sửa ngày</a>
+                                                            Di chuyển danh sách</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
+                                                        <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                                 class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Sao chép</a>
+                                                            Sao chép danh sách</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
+                                                        <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
                                                                 class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Lưu trữ</a>
+                                                            Lưu trữ danh sách</a>
                                                     </li>
                                                 </ul>
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary ms-3" id="dropdownMenuOffset{{ $catalog->id }}"
+                                                data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
+                                                onclick="loadFormAddTask({{ $catalog->id }})">
+                                            <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
+                                        </button>
+                                        <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}" style="width: 285px"
+                                            aria-labelledby="dropdownMenuOffset3">
+                                            {{--dropdown.createTask--}}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
+                            <!--end card-body-->
+                            <div class="card-body" id="kanbanboard" >
+                                <div class="table-responsive table-card mb-3">
+                                    <table id="catalog-table-{{ $catalog->id }}" style="width:100%"
+                                        class="table table-bordered dt-responsive nowrap table-striped align-middle">
+                                        <thead>
+                                        <tr>
+                                            <th>Thẻ</th>
+                                            <th>Thành viên</th>
+                                            <th>Ngày bắt đầu</th>
+                                            <th>Ngày kết thúc</th>
+                                            <th>Độ ưu tiên</th>
+                                            <th>Danh sách</th>
+                                            {{-- <th>Bình luận</th> --}}
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="body-catalog-{{$catalog->id}}">
+                                        @foreach ($catalog->tasks as $task)
+                                            <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
+                                            <tr draggable="true">
+                                                <td class="col-2">
+                                                    <div class="d-flex">
+                                                        <div class="flex-grow-1" data-bs-toggle="modal"
+                                                            data-bs-target="#detailCardModal" data-task-id="{{$task->id}}">
+                                                            {{ \Illuminate\Support\Str::limit($task->text, 20) }}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="">
+                                                    <div id="member1"
+                                                        class="cursor-pointer">
+                                                        <div class="avatar-group d-flex justify-content-center"
+                                                            id="newMembar">
+                                                            @if ($task->members->isNotEmpty())
+                                                                @php
+                                                                    // Giới hạn số thành viên hiển thị
+                                                                    $maxDisplay = 2;
+                                                                    $count = 0;
+                                                                @endphp
+                                                                @foreach ($task->members as $member)
+                                                                    @if ($count < $maxDisplay)
+                                                                        <a href="javascript: void(0);"
+                                                                        class="avatar-group-item"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-trigger="hover"
+                                                                        data-bs-placement="top"
+                                                                        title="{{ $member->name }}">
+                                                                            @if ($member->image)
+                                                                                <img
+                                                                                    src="{{ asset('storage/' . $member->image) }}"
+                                                                                    alt=""
+                                                                                    class="rounded-circle avatar-xxs"/>
+                                                                            @else
+                                                                                <div
+                                                                                    class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
+                                                                                    {{ strtoupper(substr($member->name, 0, 1)) }}
+                                                                                </div>
+                                                                            @endif
+                                                                        </a>
+                                                                        @php $count++; @endphp
+                                                                    @endif
+                                                                @endforeach
+
+                                                                @if ($task->members->count() > $maxDisplay)
+                                                                    <a href="javascript: void(0);"
+                                                                    class="avatar-group-item" data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    title="{{ $task->members->count() - $maxDisplay }} more">
+                                                                        <div class="avatar-xxs">
+                                                                            <div
+                                                                                class="bg-info-subtle rounded-circle avatar-xxs d-flex justify-content-center align-items-center">
+                                                                                +{{ $task->members->count() - $maxDisplay }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                @endif
+                                                            @else
+                                                                <span>
+                                                                        <i class="bx fs-20 bxs-user-plus cursor-pointer"
+                                                                        data-bs-toggle="tooltip"
+                                                                        title="Thêm thành viên"></i>
+                                                                    </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <form id="updatelistTaskForm_{{ $task->id }}">
+                                                    @php
+                                                        $start_date = $task->start_date
+                                                            ? \Carbon\Carbon::parse($task->start_date)->format(
+                                                                'Y-m-d\TH:i',
+                                                            )
+                                                            : null;
+                                                        $end_date = $task->end_date
+                                                            ? \Carbon\Carbon::parse($task->end_date)->format(
+                                                                'Y-m-d\TH:i',
+                                                            )
+                                                            : null;
+                                                    @endphp
+                                                    <td class="col-2">
+                                                        <input type="datetime-local" name="start_date"
+                                                            id="start_date_{{ $task->id }}"
+                                                            value="{{ $start_date }}" class="form-control no-arrow"
+                                                            onchange="updateTaskList({{ $task->id }})">
+                                                    </td>
+
+                                                    <td class="col-2">
+                                                        <input type="datetime-local" name="end_date"
+                                                            id="end_date_{{ $task->id }}"
+                                                            value="{{ $end_date }}" class="form-control no-arrow"
+                                                            onchange="updateTaskList({{ $task->id }})">
+                                                    </td>
+                                                    <td class="">
+                                                        <span
+                                                        class="badge
+                                                            @if ($task->priority == 'High') bg-danger-subtle text-danger
+                                                            @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
+                                                            @elseif ($task->priority == 'Low') bg-success-subtle text-success
+                                                            @else bg-info-subtle text-info @endif"
+                                                        onclick="toggleSelect({{ $task->id }});">
+                                                        {{ $task->priority }}
+                                                    </span>
+
+
+                                                        <select name="priority" id="priority_{{ $task->id }}"
+                                                                class="form-select no-arrow" style="display: none;"
+                                                                onchange="updateTaskList({{ $task->id }})">
+                                                            @foreach (\App\Enums\IndexEnum::getValues() as $priority)
+                                                                <option value="{{ $priority }}"
+                                                                    @selected($task->priority == $priority)>
+                                                                    {{ $priority }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="catalog_id" id="catalog_id_{{ $task->id }}"
+                                                                class="form-select no-arrow"
+                                                                onchange="updateTaskList({{ $task->id }});">
+                                                            @foreach ($board->catalogs as $catalog)
+                                                                <option @selected($catalog->id == $task->catalog_id)
+                                                                        value="{{ $catalog->id }}">
+                                                                    {{ $catalog->name }}
+                                                                </option>
+                                                            @endforeach
+
+                                                        </select>
+
+                                                    </td>
+                                                </form>
+                                                <td class="">
+                                                    <a href="javascript:void(0);" class="text-muted"
+                                                    id="dropdownMenuLink1" data-bs-toggle="dropdown"
+                                                    aria-expanded="false"><i class="ri-more-fill"></i></a>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                                        <li>
+                                                            <a class="dropdown-item" href="#"><i
+                                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                                Mở thẻ</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="#"><i
+                                                                    class="ri-edit-2-line align-bottom me-2 text-muted"></i>
+                                                                Chỉnh sửa nhãn</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                            href="#"><i
+                                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                                Thay đổi thành viên</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                            href="#"><i
+                                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                                Chỉnh sửa ngày</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                            href="#"><i
+                                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                                Sao chép</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                            href="#"><i
+                                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
+                                                                Lưu trữ</a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <!--end card-body-->
                         </div>
-                        <!--end card-body-->
-                    </div>
-                @endforeach
-            @endif
-        </div>
+                    @endforeach
+                @endif
+            </div>
         @endsection
 
         @section('style')
