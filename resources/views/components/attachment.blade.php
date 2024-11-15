@@ -126,7 +126,6 @@
                         $fileUrl = asset('storage/' . $attachment->file_name);
                         $fileExtension = pathinfo($attachment->file_name, PATHINFO_EXTENSION);
                         $now = \Carbon\Carbon::now();
-
                           $attachmentDate = $attachment->created_at ? \Carbon\Carbon::parse($attachment->created_at) : null;
                           if($attachmentDate && $attachment->year === $now->year){
                               $dateFormat = 'H:i d \t\h\á\n\g m';

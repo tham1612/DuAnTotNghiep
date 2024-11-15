@@ -365,4 +365,17 @@ class CatalogControler extends Controller
         }
 
     }
+
+    public function getModalSettingCatalog($catalogId)
+    {
+        $catalog = Catalog::with(
+            'tasks'
+        )->findOrFail($catalogId);
+        //    dd( $catalog);
+        $htmlForm = View::make('components.modalSettingCatalog', [
+            'catalog' => $catalog,
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
+    }
 }
