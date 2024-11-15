@@ -143,77 +143,99 @@ function destroyCatalog(catalogId) {
 }
 
 // cập nhật danh sách
-$('.submitFormUpdateCatalog').on('submit', function (e) {
-    e.preventDefault();
+$(document).on('submit', '.submitFormUpdateCatalog', function (e) {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
     var name = $(this).find('.nameUpdateTask').val().trim();
     var id = $(this).find('.id').val();
+
     if (name === '') {
-        notificationWeb('error', 'Vui lòng nhập tiêu đề')
+        notificationWeb('error', 'Vui lòng nhập tiêu đề');
         return;
     }
+
     $.ajax({
         url: `/catalogs/${id}`,
         type: 'PUT',
-        data: $(this).serialize(),       // Lấy dữ liệu từ form
+        data: $(this).serialize(), // Lấy dữ liệu từ form
         success: function (response) {
-            let titleCatalogViewBoard = document.getElementById(`title-catalog-view-board-${response.catalog.id}`)
+            let titleCatalogViewBoard = document.getElementById(`title-catalog-view-board-${response.catalog.id}`);
             notificationWeb(response.action, response.msg);
 
-            titleCatalogViewBoard.innerHTML = response.catalog.name; // thay đổi tên ở màn board
+            // Cập nhật tên ở màn hình board
+            if (titleCatalogViewBoard) {
+                titleCatalogViewBoard.innerHTML = response.catalog.name;
+            }
         },
         error: function (xhr, status, error) {
-            notificationWeb('error', 'Có lỗi xảy ra!!')
+            notificationWeb('error', 'Có lỗi xảy ra!!');
         }
     });
 });
 
+
 //  sao chép danh sách
-$('.submitFormCopyCatalog').on('submit', function (e) {
-    e.preventDefault();
+$(document).on('submit', '.submitFormCopyCatalog', function (e) {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
     var name = $(this).find('.nameCopyTask').val().trim();
     if (name === '') {
-        notificationWeb('error', 'Vui lòng nhập tiêu đề')
+        notificationWeb('error', 'Vui lòng nhập tiêu đề');
         return;
     }
+
     $.ajax({
         url: `/catalogs/copyCatalog`,
         type: 'POST',
-        data: $(this).serialize(),       // Lấy dữ liệu từ form
+        data: $(this).serialize(), // Lấy dữ liệu từ form
         success: function (response) {
-            notificationWeb(response.action, response.msg)
+            notificationWeb(response.action, response.msg);
 
-            //     hiển thị ra board
+            // Hiển thị ra board
 
         },
         error: function (xhr, status, error) {
-            notificationWeb('error', 'Có lỗi xảy ra!!')
+            notificationWeb('error', 'Có lỗi xảy ra!!');
         }
     });
 });
 
+
 // di chuyển danh sách
-$('.submitFormMoveCatalog').on('submit', function (e) {
+$(document).on('submit', '.submitFormMoveCatalog', function (e) {
     e.preventDefault();
+
     var name = $(this).find('.nameMoveTask').val().trim();
     if (name === '') {
-        notificationWeb('error', 'Vui lòng nhập tiêu đề')
+        notificationWeb('error', 'Vui lòng nhập tiêu đề');
         return;
     }
+
+    // Vô hiệu hóa nút submit để ngăn người dùng submit nhiều lần
+    var submitButton = $(this).find('button[type="submit"]');
+    submitButton.prop('disabled', true);
+
     $.ajax({
         url: `/catalogs/moveCatalog`,
         type: 'POST',
         data: $(this).serialize(),       // Lấy dữ liệu từ form
         success: function (response) {
-            notificationWeb(response.action, response.msg)
-            if (response.action === 'success') window.location.href = `http://127.0.0.1:8000/b/${response.boardId}/edit?viewType=board`;
+            notificationWeb(response.action, response.msg);
+            if (response.action === 'success') {
+                // URL chuyển hướng động hơn
+                window.location.href = `${window.location.origin}/b/${response.boardId}/edit?viewType=board`;
+            }
         },
         error: function (xhr, status, error) {
-            notificationWeb('error', 'Có lỗi xảy ra!!')
+            notificationWeb('error', 'Có lỗi xảy ra!!');
+        },
+        complete: function () {
+            // Kích hoạt lại nút submit khi quá trình AJAX hoàn tất
+            submitButton.prop('disabled', false);
         }
     });
 });
+
 
 // tạo view
 function createCatalogViewSettingBoard(id, name) {

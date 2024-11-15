@@ -56,7 +56,7 @@
                                 <div class="d-flex flex-grow-1">
                                     <h6 class="fs-14 fw-semibold mb-0" value="{{ $catalog->id }}">{{ $catalog->name }}
                                         <small
-                                            class="badge bg-warning align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
+                                            class="badge bg-warning align-bottom ms-1 totaltask-badge totaltask-catalog-{{$catalog->id}}">{{ $catalog->tasks->count() }}</small>
                                     </h6>
                                     <div class="d-flex ms-4">
                                         <div class="dropdown">

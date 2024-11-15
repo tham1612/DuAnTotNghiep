@@ -18,12 +18,12 @@
                             {{ $catalog->name }}
                         </h6>
                         <small
-                            class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
+                            class="badge bg-success align-bottom ms-1 totaltask-badge totaltask-catalog-{{$catalog->id}}">{{ $catalog->tasks->count() }}</small>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
                             <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
-                               data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
+                               data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="{{$catalog->id}}">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
@@ -47,44 +47,6 @@
                                             data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}">
                                             {{ $task->text }}
                                         </h6>
-                                        <div class="dropdown">
-                                            {{-- <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a> --}}
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Mở thẻ</span>--}}
-                                                {{--                                                </li>--}}
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Chỉnh sửa nhãn</span>--}}
-                                                {{--                                                </li>--}}
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa ngày</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal"
-                                                          onclick="archiverTask({{$task->id}})"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Lưu trữ</span>
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </div>
                                     <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
                                         <!-- Ảnh bìa -->
