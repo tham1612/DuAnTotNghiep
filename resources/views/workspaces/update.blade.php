@@ -1,6 +1,7 @@
 @extends('layouts.masterMain')
 @section('main')
-@vite('resources/js/notification.js')
+
+
     <div class="row justify-content-center">
         <div class="col-xxl-9">
             <div class="card">

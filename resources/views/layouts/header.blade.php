@@ -357,6 +357,12 @@
         </div>
     </div>
 </header>
+{{-- <input type="hidden" id="userId" value="{{ auth()->id() }}">
+<script>
+    var userId = document.getElementById('userId').value;
+</script> --}}
+@vite('resources/js/notification.js')
+
 {{--thông báo web--}}
 <div class="bg-light" aria-live="polite" aria-atomic="true"
      style="position: fixed; top: 70px;right: 10px; z-index: 100">

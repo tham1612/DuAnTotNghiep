@@ -578,23 +578,23 @@ class BoardController extends Controller
         $wspChecked = WorkspaceMember::where('user_id', $boardMember->user_id)
             ->where('workspace_id', $boardMember->board->workspace_id)->first();
         try {
+            DB::beginTransaction();
             if ($wspChecked->authorize->value !== "Viewer") {
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
-                $boardMember->delete();
+                $boardMember->forceDelete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
-                $boardMember->delete();
+                $boardMember->forceDelete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
-                $wspChecked->delete();
-
+                $wspChecked->forceDelete();
                 $wsp = WorkspaceMember::where('user_id', $boardMember->user_id)
                     ->whereNot('authorize', 'Viewer')
                     ->inRandomOrder()
-                    ->first();
+                    ->firstOrFail();
                 $wsp->update([
                     'is_active' => 1
                 ]);
@@ -604,7 +604,9 @@ class BoardController extends Controller
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
             }
+            DB::commit();
         } catch (\Throwable $th) {
+            DB::rollBack();
             dd(vars: $th);
         }
 

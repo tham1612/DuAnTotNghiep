@@ -9,10 +9,11 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class EventNotification implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
     /**
      * Create a new event instance.
@@ -20,10 +21,12 @@ class EventNotification implements ShouldBroadcast
 
     public $message;
     public $action;
-    public function __construct($message, $action)
+    public $userId;
+    public function __construct($message, $action, $userId)
     {
         $this->message = $message;
         $this->action = $action;
+        $this->userId = $userId;
     }
 
     /**
@@ -33,7 +36,16 @@ class EventNotification implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return
-            new Channel('notifications');
+        Log::info($this->userId);
+        return new PrivateChannel("notifications." . $this->userId);
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'userId' => $this->userId,
+            'action' => $this->action,
+            'message' => $this->message,
+        ];
     }
 }

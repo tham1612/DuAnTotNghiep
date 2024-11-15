@@ -22,8 +22,9 @@
         ->where('workspace_members.user_id', $userId)
         ->where('workspace_members.is_active', 1)
         ->first();
-    Session::put('workspaceChecked', $workspaceChecked);
 
+    Session::put('workspaceChecked', $workspaceChecked);
+    
     if ($workspaceChecked) {
         // Đếm số thành viên trong workspace
         $memberCount = \App\Models\WorkspaceMember::where('workspace_id', $workspaceChecked->workspace_id)->count();
@@ -36,40 +37,6 @@
         ->first();
 
     if (\Illuminate\Support\Facades\Auth::user()->hasWorkspace()) {
-        // if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
-        //     $workspaceBoards = \App\Models\Workspace::query()
-        //         ->with('boards.boardMembers')
-        //         ->where('id', $workspaceChecked->workspace_id)
-        //         ->first();
-        // } elseif ($workspaceChecked->authorize == 'Member') {
-        //     $workspaceBoards = \App\Models\Workspace::query()
-        //         ->with([
-        //             'boards.boardMembers' => function ($query) use ($userId) {
-        //                 $query
-        //                     ->where('access', 'public') // Bảng công khai
-        //                     ->orWhere(function ($q) use ($userId) {
-        //                         $q->where('access', 'private') // Bảng riêng tư
-        //                             ->whereHas('boardMembers', function ($q) use ($userId) {
-        //                                 $q->where('user_id', $userId); // Kiểm tra người dùng có trong bảng không
-        //                             });
-        //                     });
-        //             },
-        //         ])
-        //         ->where('id', $workspaceChecked->workspace_id)
-        //         ->first();
-        // } else {
-        //     $workspaceBoards = \App\Models\Workspace::query()
-        //         ->where('id', $workspaceChecked->workspace_id) // Lọc theo workspace cụ thể
-        //         ->with([
-        //             'boards' => function ($query) {
-        //                 $query->whereHas('boardMembers', function ($query) {
-        //                     $query->where('user_id', Auth::id());
-        //                 });
-        //             },
-        //         ])
-        //         ->first();
-        // }
-
         if ($workspaceChecked->authorize === 'Owner' || $workspaceChecked->authorize === 'Sub_Owner') {
             $workspaceBoards = \App\Models\Workspace::query()
                 ->with(['boards.boardMembers.user']) // Load cả user trong boardMembers

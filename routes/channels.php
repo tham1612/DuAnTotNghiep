@@ -26,6 +26,11 @@ Broadcast::channel('chat.{roomId}', function (User $user, $roomId) {
     return ['id' => $user->id, 'name' => $user->name];
 });
 
-Broadcast::channel('notifications', function () {
-    return true;
+// Broadcast::channel('notifications', function () {
+//     return true;
+// });
+
+Broadcast::channel('notifications.{id}', function ($user, $id) {
+    Log::debug($user->id. '-'. $id);
+    return (int) $user->id === (int) $id;
 });
