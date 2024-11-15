@@ -3,21 +3,21 @@
     List - TaskFlow
 @endsection
 @section('main')
-@if(session('error'))
-<div class="alert alert-danger custom-alert">
-    {{ session('error') }}
-</div>
-@endif
+    @if(session('error'))
+        <div class="alert alert-danger custom-alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
-<style>
-.custom-alert {
-    border-radius: 0.5rem;
-    padding: 1rem;
-    position: relative;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-</style>
+    <style>
+        .custom-alert {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
 
     <div class="row mt-3 ms-3 me-3">
         <div class="col-12">
@@ -27,7 +27,8 @@
                     <i class="ri-menu-line fs-20" id="menuIcon"></i>
                 </div>
                 <!-- Menu sẽ ẩn ban đầu -->
-                <div id="verticalMenu" class="list-group d-none menu-catalog-{{$board->id}}" data-simplebar style="max-height: 400px; width:300px">
+                <div id="verticalMenu" class="list-group d-none menu-catalog-{{$board->id}}" data-simplebar
+                     style="max-height: 400px; width:300px">
                     @if (!empty($board))
                         @foreach ($board->catalogs as $catalog)
                             <a class="list-group-item list-group-item-action"
@@ -39,15 +40,17 @@
                         aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddCatalog({{ $board->id }})">
                     <i class="ri-add-line align-bottom me-1"></i>Thêm danh sách
                 </button>
-                    <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px" aria-labelledby="addCatalog">
-                        {{--dropdown.createCatalog--}}
-                    </div>
+                <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px"
+                     aria-labelledby="addCatalog">
+                    {{--dropdown.createCatalog--}}
                 </div>
             </div>
         </div>
     </div>
+    </div>
     <div class="col-lg-12" id="example" class="display">
-        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"  class=" me-3 ms-3 list-catalog-{{$board->id }}" >
+        <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"
+             class=" me-3 ms-3 list-catalog-{{$board->id }}" id="realtime-view-list">
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
                     <div class="card" id="{{ $catalog->id }}">
@@ -59,43 +62,10 @@
                                             class="badge bg-warning align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
                                     </h6>
                                     <div class="d-flex ms-4">
-                                        <div class="dropdown">
-                                            <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                <li>
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Thay đổi tên</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                        Thêm thẻ</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép danh sách</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Di chuyển danh sách</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép danh sách</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Lưu trữ danh sách</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                                           data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
+                                            <i class="ri-more-fill"></i>
+                                        </a>
                                     </div>
                                 </div>
                                 <div>
@@ -104,7 +74,8 @@
                                             onclick="loadFormAddTask({{ $catalog->id }})">
                                         <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
                                     </button>
-                                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}" style="width: 285px"
+                                    <div class="dropdown-menu p-3 dropdown-content-add-task-{{ $catalog->id }}"
+                                         style="width: 285px"
                                          aria-labelledby="dropdownMenuOffset3">
                                         {{--dropdown.createTask--}}
                                     </div>
@@ -125,8 +96,7 @@
                                         <th>Ngày kết thúc</th>
                                         <th>Độ ưu tiên</th>
                                         <th>Danh sách</th>
-                                        {{-- <th>Bình luận</th> --}}
-                                        <th>Thao tác</th>
+
                                     </tr>
                                     </thead>
                                     <tbody id="body-catalog-{{$catalog->id}}">
@@ -227,12 +197,12 @@
                                                 </td>
                                                 <td class="">
                                                     <span
-                                                    class="badge
+                                                        class="badge
                                                         @if ($task->priority == 'High') bg-danger-subtle text-danger
                                                         @elseif ($task->priority == 'Medium') bg-warning-subtle text-warning
                                                         @elseif ($task->priority == 'Low') bg-success-subtle text-success
                                                         @else bg-info-subtle text-info @endif"
-                                                    onclick="toggleSelect({{ $task->id }});">
+                                                        onclick="toggleSelect({{ $task->id }});">
                                                     {{ $task->priority }}
                                                 </span>
 
@@ -263,48 +233,6 @@
 
                                                 </td>
                                             </form>
-                                            <td class="">
-                                                <a href="javascript:void(0);" class="text-muted"
-                                                   id="dropdownMenuLink1" data-bs-toggle="dropdown"
-                                                   aria-expanded="false"><i class="ri-more-fill"></i></a>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                    <li>
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                            Mở thẻ</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                            Chỉnh sửa nhãn</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
-                                                                class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Thay đổi thành viên</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
-                                                                class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Chỉnh sửa ngày</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
-                                                                class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Sao chép</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" data-bs-toggle="modal"
-                                                           href="#"><i
-                                                                class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                            Lưu trữ</a>
-                                                    </li>
-                                                </ul>
-                                            </td>
-
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -314,6 +242,7 @@
                         </div>
                         <!--end card-body-->
                     </div>
+
                 @endforeach
             @endif
         </div>

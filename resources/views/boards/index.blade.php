@@ -10,7 +10,8 @@
     @endif
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
-            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}" id="catalog_view_board_{{$catalog->id}}">
+            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}"
+                 id="catalog_view_board_{{$catalog->id}}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1 d-flex">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
@@ -227,6 +228,47 @@
                                                 </div>
                                             </div>
                                         @endif
+
+{{--                                        <div class="flex-grow-1 d-flex align-items-center">--}}
+{{--                                            <div class="d-flex flex-wrap gap-2">--}}
+{{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
+{{--                                                @if(!$task->priority) d-none @endif"--}}
+{{--                                                     id="task-priority-view-board-{{$task->id}}"--}}
+{{--                                                     style="height: 20px;--}}
+{{--                                                      @if($task->priority == 'High')--}}
+{{--                                                   background-color: rgba(93,31,26,0.5)--}}
+{{--                                                @elseif($task->priority == 'Medium')--}}
+{{--                                                    background-color: rgba(83,63,4,0.5)--}}
+{{--                                                @elseif($task->priority == 'Low')--}}
+{{--                                                   background-color: rgba(22,69,85,0.5)--}}
+{{--                                                @endif">--}}
+{{--                                                    <p>Độ ưu--}}
+{{--                                                        tiên: {{$task->priority}}--}}
+{{--                                                        --}}{{--                                                        {{ $task->priority == 'High' ? 'Cao' :--}}
+{{--                                                        --}}{{--                                                                ($task->priority == 'Medium' ? 'Trung Bình' :--}}
+{{--                                                        --}}{{--                                                                ($task->priority == 'Low' ? 'Thấp' : '')) }}--}}
+{{--                                                    </p>--}}
+{{--                                                </div>--}}
+
+{{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
+{{--                                                @if(!$task->risk) d-none @endif"--}}
+{{--                                                     id="task-risk-view-board-{{$task->id}}"--}}
+{{--                                                     style="height: 20px; @if($task->risk == 'High')--}}
+{{--                                                   background-color: rgba(93,31,26,0.5)--}}
+{{--                                                @elseif($task->risk == 'Medium')--}}
+{{--                                                    background-color: rgba(83,63,4,0.5)--}}
+{{--                                                @elseif($task->risk == 'Low')--}}
+{{--                                                   background-color: rgba(22,69,85,0.5)--}}
+{{--                                                @endif">--}}
+{{--                                                    <p>Độ ưu--}}
+{{--                                                        tiên: {{$task->risk}}--}}
+{{--                                                        --}}{{--                                                        {{ $task->risk == 'High' ? 'Cao' :--}}
+{{--                                                        --}}{{--                                                                ($task->risk == 'Medium' ? 'Trung Bình' :--}}
+{{--                                                        --}}{{--                                                                ($task->risk == 'Low' ? 'Thấp' : '')) }}--}}
+{{--                                                    </p>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="card-footer border-top-dashed">
@@ -314,7 +356,6 @@
                 </div>
             </div>
 
-            @include('components.settingCatalog')
         @endforeach
         <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"

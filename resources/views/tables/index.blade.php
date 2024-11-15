@@ -24,8 +24,6 @@
                             <th>Danh sách</th>
                             <th>Ngày bắt đầu</th>
                             <th>Ngày hết hạn</th>
-                            <th>Thao tác</th>
-
                         </tr>
                         </thead>
 
@@ -138,43 +136,7 @@
                                                        onchange="updateTask({{ $task->id }})">
                                             </td>
                                         </form>
-                                        <td class="col-1 text-center">
-                                            <a href="javascript:void(0);" class="text-muted" id="settingTask1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a>
-                                            <ul class="dropdown-menu" aria-labelledby="settingTask1">
-                                                <li>
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Mở thẻ</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa nhãn</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Thay đổi thành viên</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa ngày</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Lưu trữ</a>
-                                                </li>
-                                            </ul>
-                                        </td>
+
                                     </tr>
                                 @endforeach
                             @endforeach

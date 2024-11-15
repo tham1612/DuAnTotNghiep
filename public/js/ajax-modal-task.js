@@ -93,7 +93,6 @@ function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
 }
 
 
-
 // Gọi hàm với các tham số tùy chỉnh
 //gọi modal task ở màn gantt và calender
 function openCustomModal(taskId) {
@@ -104,7 +103,7 @@ function openCustomModal(taskId) {
         $.ajax({
             url: '/tasks/getModalTask/' + taskId,
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
                 $('.modal-task', modalElement).html(response.html); // Cập nhật nội dung modal
 
                 // Khởi tạo modal instance và hiển thị modal
@@ -121,7 +120,7 @@ function openCustomModal(taskId) {
                     document.body.classList.remove('modal-open'); // Đảm bảo class modal-open bị xóa
                 });
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error("Không thể tải dữ liệu task:", xhr);
             }
         });
@@ -513,7 +512,7 @@ function submitUpdateDateTask(taskId, event) {
 
                 date += `</div>`;
 
-                dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
+                if (dateViewBoard) dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
             } else if (response.task.end_date) {
                 const endDate = new Date(response.task.end_date);
 
@@ -538,7 +537,7 @@ function submitUpdateDateTask(taskId, event) {
 
                 date += `</div>`;
 
-                dateViewBoard.innerHTML = `${formatDate(endDate)}`
+                if (dateViewBoard) dateViewBoard.innerHTML = `${formatDate(endDate)}`
             } else if (response.task.start_date) {
                 const startDate = new Date(response.task.start_date);
                 date = `
@@ -549,7 +548,7 @@ function submitUpdateDateTask(taskId, event) {
                     </div>
                 `;
 
-                dateViewBoard.innerHTML = `${formatDate(startDate)}`
+                if (dateViewBoard) dateViewBoard.innerHTML = `${formatDate(startDate)}`
             }
             if (dateSection) {
                 if (dateSection.style.display === 'none') {
@@ -1038,7 +1037,7 @@ function updateProgressBar(checklistId) {
         url: `/tasks/${checklistId}/checklist`,
         type: 'PUT',
         data: {
-            progress:percentCompleted
+            progress: percentCompleted
         },
         success: function (response) {
             // Cập nhật thanh tiến trình cho checklist tương ứng
