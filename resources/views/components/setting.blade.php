@@ -221,9 +221,9 @@
 
                     <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
 
-                    <div class="row p-3 ">
+                    <div class="row p-3 " id="catalog-container-setting-board">
                         @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
-                            <div
+                            <div id="catalog_id_archiver_{{$archiverCatalog->id}}"
                                 class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle mt-2">
                                 <p class="fs-16 text-danger mt-3">{{$archiverCatalog->name}}</p>
                                 <div>
@@ -246,7 +246,7 @@
 
                     <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
 
-                    <div class="row p-3 ">
+                    <div class="row p-3 " id="task-container-setting-board">
                         @php $board->load(['catalogs.tasks' => function ($query) {
                                 $query->onlyTrashed(); // Chỉ lấy tasks đã xóa mềm
                             }]);
@@ -262,25 +262,25 @@
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-eye-line align-bottom"></i>
-                                                    04</a>
+                                                    </a>
                                             </li>
                                             <!-- bình luận -->
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-question-answer-line align-bottom"></i>
-                                                    19</a>
+                                                   </a>
                                             </li>
                                             <!-- tệp đính kèm -->
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-attachment-2 align-bottom"></i>
-                                                    02</a>
+                                                    </a>
                                             </li>
                                             <!-- checklist -->
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-checkbox-line align-bottom"></i>
-                                                    2/4</a>
+                                                   </a>
                                             </li>
                                         </ul>
                                     </div>

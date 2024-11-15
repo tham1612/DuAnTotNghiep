@@ -10,7 +10,7 @@
     @endif
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
-            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}">
+            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}" id="catalog_view_board_{{$catalog->id}}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1 d-flex">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
