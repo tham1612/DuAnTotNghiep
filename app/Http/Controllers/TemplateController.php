@@ -21,9 +21,24 @@ use Illuminate\Support\Str;
 
 class TemplateController extends Controller
 {
+    public $authorizeWeb;
+    public function __construct(AuthorizeWeb $authorizeWeb)
+    {
+        $this->authorizeWeb = $authorizeWeb;
+    }
+
     public function createBoardTemplate(Request $request)
     {
         $data = $request->all();
+    
+        $authorize = $this->authorizeWeb->authorizeCreateBoardOnWorkspace($data['workspace_id']);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền tạo bảng mẫu trong không gian làm việc này!!',
+            ]);
+        }
+        dd();
         $uuid = Str::uuid();
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
@@ -32,7 +47,7 @@ class TemplateController extends Controller
             DB::beginTransaction();
             $boardNew = Board::query()->create($data);
 
-// Create a new BoardMember entry
+            // Create a new BoardMember entry
             BoardMember::query()->create([
                 'user_id' => auth()->id(),
                 'board_id' => $boardNew->id,
@@ -40,7 +55,7 @@ class TemplateController extends Controller
                 'invite' => now(),
             ]);
 
-// Migrate TemplateTags to Tags
+            // Migrate TemplateTags to Tags
             $tagOld = TemplateTag::query()->where('template_board_id', $data['board_template_id'])->get();
             $tagMap = []; // This will store mapping between old TemplateTag IDs and new Tag IDs
 
@@ -55,7 +70,7 @@ class TemplateController extends Controller
                 $tagMap[$tag->id] = $newTag->id;
             }
 
-// Migrate TemplateCatalogs and their TemplateTasks to Catalogs and Tasks
+            // Migrate TemplateCatalogs and their TemplateTasks to Catalogs and Tasks
             $catalogOld = TemplateCatalog::query()->where('template_board_id', $data['board_template_id'])->get();
 
             foreach ($catalogOld as $catalog) {
@@ -118,8 +133,10 @@ class TemplateController extends Controller
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
-            return response()->json(['action' => 'error',
-                'msg' => 'Có lỗi xảy ra!!']);
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
         }
     }
 }

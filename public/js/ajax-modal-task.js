@@ -149,6 +149,7 @@ function getModalTaskEvents() {
                         });
                     });
                     attachNotificationEvent();
+                    callEditor();
                 },
                 error: function (xhr) {
                     console.error("Không thể tải dữ liệu task:", xhr);
@@ -1989,3 +1990,7 @@ function loadAllTaskComment(taskId) {
 //     // Lắng nghe các sự kiện thay đổi trên form (input, checkbox, select,...)
 //     $form.on('input change', debouncedHandleFormChange);
 // });
+
+function callEditor(){
+   
+}

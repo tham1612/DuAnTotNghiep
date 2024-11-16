@@ -149,27 +149,27 @@ class GoogleApiClientController extends Controller
             'task_id' => isset($data['id']) ? $data['id'] : $data['task_id'],
         ];
 
-//        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
+       UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 
-        $client = $this->getClient();
-        $service = new \Google_Service_Calendar($client);
-        $client->setAccessToken($accessToken);
-        $eventsList = $service->events->listEvents('primary');
-        $events = $eventsList->getItems();
-        $eventExists = false;
-        foreach ($events as $event) {
-            if ($event->getId() === $eventId) {
-                Log::debug($event->getId());
-                Log::debug($eventId);
-                $eventExists = true;
-            }
-        }
+        // $client = $this->getClient();
+        // $service = new \Google_Service_Calendar($client);
+        // $client->setAccessToken($accessToken);
+        // $eventsList = $service->events->listEvents('primary');
+        // $events = $eventsList->getItems();
+        // $eventExists = false;
+        // foreach ($events as $event) {
+        //     if ($event->getId() === $eventId) {
+        //         Log::debug($event->getId());
+        //         Log::debug($eventId);
+        //         $eventExists = true;
+        //     }
+        // }
 //        dd($eventExists);
-        if ($eventExists) {
-            UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
-        } else {
-            CreateGoogleApiClientEvent::dispatch($eventData, $attendees, $accessToken, $userOrTaskId);
-        }
+        // if ($eventExists) {
+        //     UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
+        // } else {
+        //     CreateGoogleApiClientEvent::dispatch($eventData, $attendees, $accessToken, $userOrTaskId);
+        // }
 
 
     }

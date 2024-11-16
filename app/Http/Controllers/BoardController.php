@@ -38,6 +38,7 @@ class BoardController extends Controller
     public $googleApiClient;
     public $catalogController;
     public $taskController;
+    public $authorizeWeb;
 
     public function __construct(
         GoogleApiClientController $googleApiClient,
