@@ -191,52 +191,84 @@
                                             </div>
                                         @endif
 
-{{--                                        <div class="flex-grow-1 d-flex align-items-center">--}}
-{{--                                            <div class="d-flex flex-wrap gap-2">--}}
-{{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
-{{--                                                @if(!$task->priority) d-none @endif"--}}
-{{--                                                     id="task-priority-view-board-{{$task->id}}"--}}
-{{--                                                     style="height: 20px;--}}
-{{--                                                      @if($task->priority == 'High')--}}
-{{--                                                   background-color: rgba(93,31,26,0.5)--}}
-{{--                                                @elseif($task->priority == 'Medium')--}}
-{{--                                                    background-color: rgba(83,63,4,0.5)--}}
-{{--                                                @elseif($task->priority == 'Low')--}}
-{{--                                                   background-color: rgba(22,69,85,0.5)--}}
-{{--                                                @endif">--}}
-{{--                                                    <p>Độ ưu--}}
-{{--                                                        tiên: {{$task->priority}}--}}
-{{--                                                        --}}{{--                                                        {{ $task->priority == 'High' ? 'Cao' :--}}
-{{--                                                        --}}{{--                                                                ($task->priority == 'Medium' ? 'Trung Bình' :--}}
-{{--                                                        --}}{{--                                                                ($task->priority == 'Low' ? 'Thấp' : '')) }}--}}
-{{--                                                    </p>--}}
-{{--                                                </div>--}}
+                                        {{--                                        <div class="flex-grow-1 d-flex align-items-center">--}}
+                                        {{--                                            <div class="d-flex flex-wrap gap-2">--}}
+                                        {{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
+                                        {{--                                                @if(!$task->priority) d-none @endif"--}}
+                                        {{--                                                     id="task-priority-view-board-{{$task->id}}"--}}
+                                        {{--                                                     style="height: 20px;--}}
+                                        {{--                                                      @if($task->priority == 'High')--}}
+                                        {{--                                                   background-color: rgba(93,31,26,0.5)--}}
+                                        {{--                                                @elseif($task->priority == 'Medium')--}}
+                                        {{--                                                    background-color: rgba(83,63,4,0.5)--}}
+                                        {{--                                                @elseif($task->priority == 'Low')--}}
+                                        {{--                                                   background-color: rgba(22,69,85,0.5)--}}
+                                        {{--                                                @endif">--}}
+                                        {{--                                                    <p>Độ ưu--}}
+                                        {{--                                                        tiên: {{$task->priority}}--}}
+                                        {{--                                                        --}}{{--                                                        {{ $task->priority == 'High' ? 'Cao' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->priority == 'Medium' ? 'Trung Bình' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->priority == 'Low' ? 'Thấp' : '')) }}--}}
+                                        {{--                                                    </p>--}}
+                                        {{--                                                </div>--}}
 
-{{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
-{{--                                                @if(!$task->risk) d-none @endif"--}}
-{{--                                                     id="task-risk-view-board-{{$task->id}}"--}}
-{{--                                                     style="height: 20px; @if($task->risk == 'High')--}}
-{{--                                                   background-color: rgba(93,31,26,0.5)--}}
-{{--                                                @elseif($task->risk == 'Medium')--}}
-{{--                                                    background-color: rgba(83,63,4,0.5)--}}
-{{--                                                @elseif($task->risk == 'Low')--}}
-{{--                                                   background-color: rgba(22,69,85,0.5)--}}
-{{--                                                @endif">--}}
-{{--                                                    <p>Độ ưu--}}
-{{--                                                        tiên: {{$task->risk}}--}}
-{{--                                                        --}}{{--                                                        {{ $task->risk == 'High' ? 'Cao' :--}}
-{{--                                                        --}}{{--                                                                ($task->risk == 'Medium' ? 'Trung Bình' :--}}
-{{--                                                        --}}{{--                                                                ($task->risk == 'Low' ? 'Thấp' : '')) }}--}}
-{{--                                                    </p>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                                        {{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
+                                        {{--                                                @if(!$task->risk) d-none @endif"--}}
+                                        {{--                                                     id="task-risk-view-board-{{$task->id}}"--}}
+                                        {{--                                                     style="height: 20px; @if($task->risk == 'High')--}}
+                                        {{--                                                   background-color: rgba(93,31,26,0.5)--}}
+                                        {{--                                                @elseif($task->risk == 'Medium')--}}
+                                        {{--                                                    background-color: rgba(83,63,4,0.5)--}}
+                                        {{--                                                @elseif($task->risk == 'Low')--}}
+                                        {{--                                                   background-color: rgba(22,69,85,0.5)--}}
+                                        {{--                                                @endif">--}}
+                                        {{--                                                    <p>Độ ưu--}}
+                                        {{--                                                        tiên: {{$task->risk}}--}}
+                                        {{--                                                        --}}{{--                                                        {{ $task->risk == 'High' ? 'Cao' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->risk == 'Medium' ? 'Trung Bình' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->risk == 'Low' ? 'Thấp' : '')) }}--}}
+                                        {{--                                                    </p>--}}
+                                        {{--                                                </div>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="card-footer border-top-dashed">
                                     <div class="d-flex justify-content-end">
                                         <div class="flex-shrink-0">
                                             <ul class="link-inline mb-0">
+                                                {{--  độ ưu tiên                                              --}}
+                                                @if(!empty($task->priority))
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"
+                                                           title="Độ ưu tiên">
+                                                            <i id="task-priority-view-board-{{$task->id}}" class="ri-flag-fill align-bottom
+                                                             @if($task->priority == 'High')
+                                                                text-danger
+                                                             @elseif($task->priority == 'Medium')
+                                                                text-warning
+                                                             @elseif($task->priority == 'Low')
+                                                               text-info
+                                                             @endif"></i>
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                {{--  rủi do                                              --}}
+                                                @if(!empty($task->risk))
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted" title="Rủi do">
+                                                            <i id="task-risk-view-board-{{$task->id}}" class=" ri-spam-fill align-bottom
+                                                             @if($task->risk == 'High')
+                                                                text-danger
+                                                             @elseif($task->risk == 'Medium')
+                                                                text-warning
+                                                             @elseif($task->risk == 'Low')
+                                                               text-info
+                                                             @endif"></i>
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <!-- theo dõi -->
                                                 @if($task->followMembers->contains('user_id', auth()->id()))
                                                     <li class="list-inline-item">

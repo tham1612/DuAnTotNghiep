@@ -279,14 +279,7 @@
                 <div class="ps-4 d-flex gap-1">
                     <div class="col-4">
                         <label for="">Độ ưu tiên</label>
-                        <select name="" id="" class="form-select
-    @if($task->priority == 'High')
-        bg-danger-subtle
-    @elseif($task->priority == 'Medium')
-        bg-warning-subtle
-    @elseif($task->priority == 'Low')
-        bg-info-subtle
-    @endif"
+                        <select name="" id="" class="form-select no-arrow"
                                 onchange="updatePriorityOrRisk('priority', this.value, {{$task->id}})">
                             <option value="" hidden selected>Chọn...</option>
                             <option value="High" @selected($task->priority == 'High')>Cao</option>
@@ -296,14 +289,7 @@
                     </div>
                     <div class="col-4">
                         <label for="">Rủi do</label>
-                        <select name="" id="" class="form-select
-    @if($task->risk == 'High')
-        bg-danger-subtle
-    @elseif($task->risk == 'Medium')
-        bg-warning-subtle
-    @elseif($task->risk == 'Low')
-        bg-info-subtle
-    @endif"
+                        <select name="" id="" class="form-select no-arrow"
                                 onchange="updatePriorityOrRisk('risk', this.value, {{$task->id}})">
                             <option value="" hidden selected>Chọn...</option>
                             <option value="High" @selected($task->risk == 'High')>Cao</option>
@@ -560,10 +546,8 @@
     </div>
 
 </div>
-
-
 <script>
-    function debounce(func, wait) {
+     function debounce(func, wait) {
         let timeout;
         return function (...args) {
             const context = this;
@@ -702,9 +686,3 @@
         }
     }
 </script>
-
-
-
-
-
-

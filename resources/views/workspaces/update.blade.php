@@ -162,11 +162,11 @@
                                                             class="nav-item d-flex align-items-center justify-content-between">
                                                             <a class="nav-link active" data-bs-toggle="tab"
                                                                 href="#home1" role="tab">
-                                                                Thành viên trong không gian làm việc
+                                                                Thành viên
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 2 }}</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 1 }}</span>
                                                         </li>
                                                         @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
                                                             <li
