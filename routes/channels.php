@@ -26,6 +26,10 @@ Broadcast::channel('chat.{roomId}', function (User $user, $roomId) {
     return ['id' => $user->id, 'name' => $user->name];
 });
 
+
+
+Broadcast::channel('notifications.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;});
 Broadcast::channel('catalogs', function () {
     return true;
 });

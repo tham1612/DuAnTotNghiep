@@ -1,4 +1,4 @@
-@foreach ($board->catalogs as $catalog)
+{{-- @foreach ($board->catalogs as $catalog) --}}
 <div class="modal fade"
      id="detailCardModalCatalog" tabindex="-1"
      aria-labelledby="create-board-home-modal-label" aria-hidden="true">
@@ -18,4 +18,4 @@
         </div>
     </div>
 </div>
-@endforeach
+{{-- @endforeach --}}

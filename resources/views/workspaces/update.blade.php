@@ -1,5 +1,7 @@
 @extends('layouts.masterMain')
 @section('main')
+
+
     <div class="row justify-content-center">
         <div class="col-xxl-9">
             <div class="card">
@@ -164,7 +166,7 @@
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 1 }}</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 2 }}</span>
                                                         </li>
                                                         @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
                                                             <li
@@ -193,8 +195,8 @@
                                                     <!-- Tab panes -->
                                                     <div class="tab-content text-muted">
                                                         <div class="tab-pane active" id="home1" role="tabpanel">
-                                                            <div class="scrollable-content"
-                                                                style="max-height: 400px; overflow-y: auto;">
+                                                            {{-- <div class="scrollable-content"
+                                                                style="max-height: 400px; overflow-y: auto;"> --}}
                                                             <ul style="margin-left: -32px;">
                                                                 <li class="d-flex">
                                                                     <div class="col-1">
@@ -461,82 +463,13 @@
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
-                                                            </div>
+                                                            {{-- </div> --}}
                                                         </div>
-                                                        {{-- @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
-                                                            <div class="tab-pane" id="profile1" role="tabpanel">
-                                                                <ul style="margin-left: -32px;">
-                                                                    @foreach ($wspInvite as $item)
-                                                                        <li class="d-flex justify-content-between">
-                                                                            <div class="col-1">
-                                                                                <a href="javascript: void(0);"
-                                                                                    class="avatar-group-item"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    data-bs-trigger="hover"
-                                                                                    data-bs-placement="top"
-                                                                                    title="Nancy">
-                                                                                    @if ($item->image)
-                                                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                                                            alt=""
-                                                                                            class="rounded-circle avatar-xs" />
-                                                                                    @else
-                                                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                                                                            style="width: 25px;height: 25px">
-                                                                                            {{ strtoupper(substr($item->name, 0, 1)) }}
-                                                                                        </div>
-                                                                                    @endif
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="col-7 d-flex flex-column">
-                                                                                <section class="fs-12">
-                                                                                    <p style="margin-bottom: 0px;"
-                                                                                        class="text-black">
-                                                                                        {{ $item->name }}
-                                                                                        <span class="text-black">(Người
-                                                                                            mới)</span>
-                                                                                    </p>
-                                                                                    <span>@ {{ $item->name }}</span>
-                                                                                    <span><i
-                                                                                            class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                    <span>Đã gửi lời mời vao không gian làm
-                                                                                        việc</span>
-                                                                                </section>
-                                                                            </div>
-                                                                            <div class="col-4 d-flex justify-content-end">
-                                                                                <form onsubmit="disableButtonOnSubmit()"
-                                                                                    action="{{ route('accept_member') }}"
-                                                                                    method="post">
-                                                                                    @method('PUT')
-                                                                                    @csrf
-                                                                                    <input type="hidden"
-                                                                                        value="{{ $item->user_id }}"
-                                                                                        name="user_id">
-                                                                                    <input type="hidden"
-                                                                                        value="{{ $item->workspace_id }}"
-                                                                                        name="workspace_id">
-                                                                                    <button class="btn btn-primary me-2"
-                                                                                        type="submit">Duyệt</button>
-                                                                                </form>
-                                                                                <form
-                                                                                    action="{{ route('refuse_member', $item->wm_id) }}"
-                                                                                    onsubmit="disableButtonOnSubmit()"
-                                                                                    method="post">
-                                                                                    @method('DELETE')
-                                                                                    @csrf
-                                                                                    <button class="btn btn-danger"
-                                                                                        type="submit">Từ chối</button>
-                                                                                </form>
-                                                                            </div>
-                                                                        </li>
-                                                                        <br>
-                                                                    @endforeach
-                                                                </ul>
-                                                            </div>
-                                                        @endif --}}
+
                                                         @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
                                                             <div class="tab-pane" id="profile1" role="tabpanel">
-                                                                <div class="scrollable-content"
-                                                                style="max-height: 400px; overflow-y: auto;">
+                                                                {{-- <div class="scrollable-content"
+                                                                style="max-height: 400px; overflow-y: auto;"> --}}
                                                                 <ul
                                                                     style="margin-left: -32px; max-height: 400px; overflow-y: auto;">
                                                                     @foreach ($wspInvite as $item)
@@ -604,13 +537,13 @@
                                                                         <br>
                                                                     @endforeach
                                                                 </ul>
-                                                            </div>
+                                                            {{-- </div> --}}
                                                             </div>
                                                         @endif
 
                                                         <div class="tab-pane" id="profile2" role="tabpanel">
-                                                            <div class="scrollable-content"
-                                                                style="max-height: 400px; overflow-y: auto;">
+                                                            {{-- <div class="scrollable-content"
+                                                                style="max-height: 400px; overflow-y: auto;"> --}}
                                                             <ul style="margin-left: -32px;">
                                                                 @foreach ($wspViewer as $item)
                                                                     <li class="d-flex justify-content-between">
@@ -657,7 +590,7 @@
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
-                                                        </div>
+                                                        {{-- </div> --}}
                                                         </div>
                                                     </div>
                                                 </div>
