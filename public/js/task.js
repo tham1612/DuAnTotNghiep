@@ -82,7 +82,7 @@ function restoreTask(taskId) {
                 originalParent = null; // Clear the parent reference
             }
 
-        //     hiển thị ra board
+            //     hiển thị ra board
 
         },
         error: function (xhr) {
@@ -147,3 +147,58 @@ $(document).on('submit', '.submitFormCopyTask', function (e) {
         }
     });
 });
+
+
+// quyền của bảng
+function updatePriorityOrRisk(type, value, taskId) {
+    $.ajax({
+        url: `/tasks/updatePriorityOrRisk/${taskId}`,
+        type: 'POST',
+        data: {
+            type: type,
+            value: value,
+        },
+        success: function (response) {
+
+            let taskRiskViewBoard = document.getElementById(`task-risk-view-board-${response.task.id}`)
+            let taskPriorityViewBoard = document.getElementById(`task-priority-view-board-${response.task.id}`)
+
+
+            if (taskRiskViewBoard) {
+                taskRiskViewBoard.classList.add = '';
+                const paragraph = taskRiskViewBoard.querySelector('p');
+                if (paragraph) {
+                    paragraph.innerHTML = `Rủi do: ${response.task.risk}`; // Thay thế "Nội dung mới của bạn" bằng nội dung mong muốn
+                }
+            }
+            if (taskPriorityViewBoard) {
+                const paragraph = taskPriorityViewBoard.querySelector('p');
+                if (paragraph) {
+                    paragraph.innerHTML = `Rủi do: ${response.task.risk}`; // Thay thế "Nội dung mới của bạn" bằng nội dung mong muốn
+                }
+            }
+            // titleBoardNavbar.innerHTML = response.board.name
+            // titleBoardSidebar.innerHTML = response.board.name
+            //
+            // if (response.board.access === 'private') {
+            //     iconAccessBoardNavbar.classList.add('ri-lock-2-line')
+            //     iconAccessBoardNavbar.classList.add('text-danger')
+            //     iconAccessBoardNavbar.classList.remove('ri-shield-user-fill')
+            //     iconAccessBoardNavbar.classList.remove('text-primary')
+            //     textAccessBoardNavbar.innerHTML = 'Riêng tư'
+            // }
+            //
+            // if (response.board.access === 'public') {
+            //     iconAccessBoardNavbar.classList.add('ri-shield-user-fill')
+            //     iconAccessBoardNavbar.classList.add('text-primary')
+            //     iconAccessBoardNavbar.classList.remove('ri-lock-2-line')
+            //     iconAccessBoardNavbar.classList.remove('text-danger')
+            //
+            //     textAccessBoardNavbar.innerHTML = 'Công khai'
+            // }
+        },
+        error: function (error) {
+            notificationWeb(response.action, response.msg)
+        }
+    });
+}

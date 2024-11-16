@@ -3,7 +3,7 @@ function loadFormAddCatalog(boardId) {
     $.ajax({
         url: `/catalogs/getFormCreateCatalog/${boardId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('.dropdown-content-add-catalog-' + boardId).html(response.html);
@@ -11,7 +11,7 @@ function loadFormAddCatalog(boardId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -31,7 +31,8 @@ function submitAddCatalog(boardId) {
         url: `/catalogs`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
+            notificationWeb(response.action, response.msg);
             // màn board
             let listCatalog = $('.board-' + boardId);
             let catalog = `
@@ -186,19 +187,19 @@ function submitAddCatalog(boardId) {
             if (listCatalogList) {
                 listCatalogList.append(catalogList);
             } else {
-                console.error(`Không tìm thấy phần tử với class '.list-catalog-${ boardId}' `);
+                console.error(`Không tìm thấy phần tử với class '.list-catalog-${boardId}' `);
             }
 
             $('#nameCatalog').val('');
-            notificationWeb(response.action, response.msg);
+
             $('.dropdown-menu').dropdown('hide');
             console.log('Catalog đã được thêm thành công!', response);
         },
-        error: function(xhr) {
-            notificationWeb(false, 'thêm mới không thành công!')
+        error: function (xhr) {
+            notificationWeb(false, 'Thêm mới không thành công!')
             console.log(xhr.responseText);
         },
-        complete: function() {
+        complete: function () {
             // Đặt lại cờ sau 3 giây để cho phép gửi lại
             setTimeout(() => {
                 isSubmittingCatalog = false;
@@ -212,7 +213,7 @@ function loadFormAddTask(catalogId) {
     $.ajax({
         url: `/tasks/getFormCreateTask/${catalogId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('.dropdown-content-add-task-' + catalogId).html(response.html);
@@ -220,7 +221,7 @@ function loadFormAddTask(catalogId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -239,7 +240,7 @@ function submitAddTask(catalogId, catalogName) {
         url: `/tasks`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             notificationWeb(response.action, response.msg)
             let currentTaskCountElement = $('.totaltask-catalog-' + catalogId);
             if (currentTaskCountElement.length) {
@@ -357,10 +358,14 @@ function submitAddTask(catalogId, catalogName) {
 // Hàm để lấy lớp CSS cho priority
             function getPriorityBadgeClass(priority) {
                 switch (priority) {
-                    case 'High': return 'bg-danger-subtle text-danger';
-                    case 'Medium': return 'bg-warning-subtle text-warning';
-                    case 'Low': return 'bg-success-subtle text-success';
-                    default: return 'bg-info-subtle text-info';
+                    case 'High':
+                        return 'bg-danger-subtle text-danger';
+                    case 'Medium':
+                        return 'bg-warning-subtle text-warning';
+                    case 'Low':
+                        return 'bg-success-subtle text-success';
+                    default:
+                        return 'bg-info-subtle text-info';
                 }
             }
 
@@ -372,7 +377,7 @@ function submitAddTask(catalogId, catalogName) {
                     ${priority}
                 </option>
             `).join('');
-                    }
+            }
 
 // Hàm để tạo các option cho catalog_id
             function generateCatalogOptions(catalogs, selectedCatalogId) {
@@ -394,7 +399,7 @@ function submitAddTask(catalogId, catalogName) {
         `;
                 }).join('');
 
-        }
+            }
 
             $('#add-task-catalog-' + catalogId).val('');
             notificationWeb(response.action, response.msg);
@@ -402,11 +407,11 @@ function submitAddTask(catalogId, catalogName) {
             getModalTaskEvents();
             console.log('task đã được thêm thành công!', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             notificationWeb(false, 'thêm mới không thành công!')
             console.log(xhr.responseText);
         },
-        complete: function() {
+        complete: function () {
             // Đặt lại cờ sau 3 giây để cho phép gửi lại
             setTimeout(() => {
                 isSubmittingTask = false;
