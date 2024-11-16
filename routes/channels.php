@@ -31,6 +31,5 @@ Broadcast::channel('chat.{roomId}', function (User $user, $roomId) {
 // });
 
 Broadcast::channel('notifications.{id}', function ($user, $id) {
-    Log::debug($user->id. '-'. $id);
     return (int) $user->id === (int) $id;
 });

@@ -24,7 +24,7 @@
         ->first();
 
     Session::put('workspaceChecked', $workspaceChecked);
-    
+
     if ($workspaceChecked) {
         // Đếm số thành viên trong workspace
         $memberCount = \App\Models\WorkspaceMember::where('workspace_id', $workspaceChecked->workspace_id)->count();

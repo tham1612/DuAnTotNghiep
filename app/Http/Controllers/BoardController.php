@@ -17,7 +17,7 @@ use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Notifications\Testhihi;
-use App\Notifications\WorksaceNotification;
+use App\Notifications\WorkspaceNotification;
 use App\Notifications\BoardMemberNotification;
 use App\Notifications\BoardNotification;
 use Carbon\Carbon;
@@ -1200,7 +1200,7 @@ class BoardController extends Controller
             $description = 'Người dùng "' . $userName . '" Đã gửi lời mời vào không gian làm việc!.';
 
             // Gửi notification cho user
-            $user->notify(new WorksaceNotification($user, $workspace, $name, $description, $title));
+            $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
         });
 
         return response()->json([

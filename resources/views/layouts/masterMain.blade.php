@@ -288,9 +288,9 @@
         });
     }
 </script>
-{{-- <script>
+<script>
     window.userId = {{ auth()->user()->id }};
-</script> --}}
+</script>
 </body>
 
 </html>

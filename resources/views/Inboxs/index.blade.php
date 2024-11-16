@@ -93,8 +93,12 @@
     <!-- ckeditor js -->
     <script src="{{ asset('theme/assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
     <script>
-        var userId = {{ Auth::user()->id }}; // Lấy ID người dùng hiện tại
+        var userIdmain = {{ Auth::user()->id }}; // Lấy ID người dùng hiện tại
     </script>
     <!-- mailbox init -->
     <script src="{{ asset('theme/assets/js/pages/mailbox.init.js') }}"></script>
+@endsection
+
+@section('title')
+Thông báo - TaskFlow
 @endsection
