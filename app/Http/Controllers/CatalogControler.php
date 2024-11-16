@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RealtimeCreateCatalog;
 use App\Http\Requests\StoreCatalogRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
@@ -69,6 +70,8 @@ class CatalogControler extends Controller
         $data['position'] = $maxPosition + 1;
 
         $catalog = Catalog::query()->create($data);
+        broadcast(new RealtimeCreateCatalog($catalog))->toOthers();
+
         // lấy thông tin board
         $board = Board::findOrFail($request->board_id);
         activity('thêm mới danh sách')
@@ -151,7 +154,8 @@ class CatalogControler extends Controller
                 ->log('Người dùng đã xóa danh sách khỏi bảng');
             return response()->json([
                 'action' => 'success',
-                'msg' => 'Lưu trữ danh sách thành công!!'
+                'msg' => 'Lưu trữ danh sách thành công!!',
+                'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -241,7 +245,8 @@ class CatalogControler extends Controller
             DB::commit();
             return response()->json([
                 'action' => 'sucess',
-                'msg' => 'Khôi phục danh sách thành công!!'
+                'msg' => 'Khôi phục danh sách thành công!!',
+                'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -263,17 +268,23 @@ class CatalogControler extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        $allTask = Task::withTrashed()->where('catalog_id', $id)->get();
+        $allTask = Task::query()->where('catalog_id', $id)->get();
+
         if ($allTask->isEmpty()) {
             return response()->json([
                 'action' => 'warning',
                 'msg' => 'Danh sách không có task nào',
             ]);
         }
-        $allTask->delete();
+        foreach ($allTask as $task) {
+            $task->delete();
+        }
+
         return response()->json([
             'action' => 'success',
             'msg' => 'Lưu trữ tất cả task thành công',
+            'task' => $allTask,
+
         ]);
     }
 
@@ -331,6 +342,13 @@ class CatalogControler extends Controller
     {
         $catalog = Catalog::query()->findOrFail($request->catalog_id);
         $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
+        $authorizeMoveBoard = $this->authorizeWeb->authorizeEdit($request->board_id);
+        if (!$authorizeMoveBoard) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền di chuyển sang bảng này!!',
+            ]);
+        }
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -356,5 +374,18 @@ class CatalogControler extends Controller
             dd($e->getMessage());
         }
 
+    }
+
+    public function getModalSettingCatalog($catalogId)
+    {
+        $catalog = Catalog::with(
+            'tasks'
+        )->findOrFail($catalogId);
+        //    dd( $catalog);
+        $htmlForm = View::make('components.modalSettingCatalog', [
+            'catalog' => $catalog,
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
     }
 }

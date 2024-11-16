@@ -12,6 +12,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
@@ -35,6 +36,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
@@ -62,6 +64,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
@@ -89,6 +92,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()

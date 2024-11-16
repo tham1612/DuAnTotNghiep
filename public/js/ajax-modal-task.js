@@ -49,7 +49,7 @@ function updateIsStar(boardId, userId,) {
 // ================ task ==================
 // xử lý hiện ảnh ở tệp đính kèm
 function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
-    // Lấy tất cả các ảnh có class thumbnail
+    // Lấy tất cả các ảnh hoặc tệp có class thumbnail
     var thumbnails = document.querySelectorAll(thumbnailSelector);
     var modalImage = document.getElementById(modalImageId);
     var imageModal = new bootstrap.Modal(document.getElementById(imageModalId));
@@ -57,28 +57,41 @@ function initThumbnailModal(thumbnailSelector, modalImageId, imageModalId) {
     // Lặp qua tất cả các ảnh thu nhỏ
     thumbnails.forEach(function (thumbnail) {
         thumbnail.addEventListener('click', function () {
-            // Lấy src của ảnh thu nhỏ và gán vào modal ảnh
-            modalImage.src = thumbnail.src;
+            // Lấy URL của file từ thuộc tính data-file-url
+            var fileUrl = thumbnail.getAttribute('data-file-url');
+            if (fileUrl) {
+                var fileExtension = fileUrl.split('.').pop().toLowerCase();
 
-            // Hiển thị modal ảnh
-            imageModal.show();
+                // Kiểm tra nếu là ảnh (jpg, jpeg, png, gif, etc.)
+                if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
+                    // Hiển thị hình ảnh
+                    modalImage.src = fileUrl;
+                    modalImage.style.display = 'block';
+                }
 
-            // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh
-            var taskModalId = thumbnail.getAttribute('data-modal-id');
-            var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+                // Hiển thị modal ảnh hoặc file
+                imageModal.show();
 
-            // Hàm xử lý khi modal ảnh đóng
-            function handleModalClose() {
-                taskModal.show();
-                // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
-                document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+                // Lấy id của modal task chính từ thuộc tính data-modal-id của ảnh/file
+                var taskModalId = thumbnail.getAttribute('data-modal-id');
+                var taskModal = new bootstrap.Modal(document.getElementById(taskModalId));
+
+                // Hàm xử lý khi modal ảnh hoặc file đóng
+                function handleModalClose() {
+                    taskModal.show();
+                    // Gỡ bỏ sự kiện này để tránh gọi lại khi đóng modal ảnh
+                    document.getElementById(imageModalId).removeEventListener('hidden.bs.modal', handleModalClose);
+                }
+
+                // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
+                document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
+            } else {
+                console.error('Thuộc tính data-file-url đang bị thiếu trên phần tử thumbnail');
             }
-
-            // Lắng nghe sự kiện modal ảnh bị đóng và mở lại modal task
-            document.getElementById(imageModalId).addEventListener('hidden.bs.modal', handleModalClose);
         });
     });
 }
+
 
 // Gọi hàm với các tham số tùy chỉnh
 //gọi modal task ở màn gantt và calender
@@ -90,7 +103,7 @@ function openCustomModal(taskId) {
         $.ajax({
             url: '/tasks/getModalTask/' + taskId,
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
                 $('.modal-task', modalElement).html(response.html); // Cập nhật nội dung modal
 
                 // Khởi tạo modal instance và hiển thị modal
@@ -107,7 +120,7 @@ function openCustomModal(taskId) {
                     document.body.classList.remove('modal-open'); // Đảm bảo class modal-open bị xóa
                 });
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error("Không thể tải dữ liệu task:", xhr);
             }
         });
@@ -499,7 +512,7 @@ function submitUpdateDateTask(taskId, event) {
 
                 date += `</div>`;
 
-                dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
+                if (dateViewBoard) dateViewBoard.innerHTML = `${formatDate(startDate)}-${formatDate(endDate)}`
             } else if (response.task.end_date) {
                 const endDate = new Date(response.task.end_date);
 
@@ -524,7 +537,7 @@ function submitUpdateDateTask(taskId, event) {
 
                 date += `</div>`;
 
-                dateViewBoard.innerHTML = `${formatDate(endDate)}`
+                if (dateViewBoard) dateViewBoard.innerHTML = `${formatDate(endDate)}`
             } else if (response.task.start_date) {
                 const startDate = new Date(response.task.start_date);
                 date = `
@@ -535,7 +548,7 @@ function submitUpdateDateTask(taskId, event) {
                     </div>
                 `;
 
-                dateViewBoard.innerHTML = `${formatDate(startDate)}`
+                if (dateViewBoard) dateViewBoard.innerHTML = `${formatDate(startDate)}`
             }
             if (dateSection) {
                 if (dateSection.style.display === 'none') {
@@ -1024,7 +1037,7 @@ function updateProgressBar(checklistId) {
         url: `/tasks/${checklistId}/checklist`,
         type: 'PUT',
         data: {
-            progress:percentCompleted
+            progress: percentCompleted
         },
         success: function (response) {
             // Cập nhật thanh tiến trình cho checklist tương ứng
@@ -1686,8 +1699,8 @@ function addTaskComment(taskId, user_id) {
                 <span class="fs-11">${timeAgo}</span>
                 <div class="bg-info-subtle p-1 rounded ps-2 " id="1content-coment-${response.comment.id}">${content}</div>
                 <div class="fs-11 d-flex">
-                   <div class=""> ${btnThaoTac} </div>
-                    <div class=""> ${btnXoa}</div>
+                   <div class="cursor-pointer"> ${btnThaoTac} </div>
+                    <div class="cursor-pointer"> ${btnXoa}</div>
 
                 </div>
             </section>

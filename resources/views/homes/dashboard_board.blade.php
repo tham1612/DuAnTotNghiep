@@ -399,16 +399,16 @@
                         <tbody>
                             @if (!@empty($task_over))
                                 @foreach ($task_over as $task)
-                                    <tr>
+                                    <tr >
                                         <td>{{ $task->id }}</td>
-                                        <td class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal{{ $task->id }}">{{ $task->text }}</td>
+                                        <td> <h6 class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
+                                            data-bs-target="#detailCardModal{{ $task->id }}">{{ $task->text }}</h6></td>
                                         <td>
                                             <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                 @if ($task->members->isNotEmpty())
                                                     @php
                                                         // Giới hạn số thành viên hiển thị
-                                                        $maxDisplay = 2;
+                                                        $maxDisplay = 4;
                                                         $count = 0;
                                                     @endphp
                                                     @foreach ($task->members as $member)
@@ -418,10 +418,11 @@
                                                                 data-bs-placement="top" title="{{ $member->name }}">
                                                                 @if ($member->image)
                                                                     <img src="{{ asset('storage/' . $member->image) }}"
-                                                                        alt="" class="rounded-circle" style="width: 40px;height: 40px"/>
+                                                                        alt="" class="rounded-circle"
+                                                                        style="width: 35px;height: 35px;" />
                                                                 @else
                                                                     <div class="bg-info-subtle rounded-circle d-flex justify-content-center align-items-center"
-                                                                        style="width: 40px;height: 40px">
+                                                                        style="width: 35px;height: 35px;">
                                                                         {{ strtoupper(substr($member->name, 0, 1)) }}
                                                                     </div>
                                                                 @endif
@@ -435,7 +436,7 @@
                                                             title="{{ $task->members->count() - $maxDisplay }} more">
                                                             <div class="avatar-xs">
                                                                 <div class="avatar-title rounded-circle bg-info-subtle d-flex justify-content-center align-items-center text-black"
-                                                                    style="width: 40px; height: 40px;">
+                                                                    style="width: 35px; height: 35px;">
                                                                     +{{ $task->members->count() - $maxDisplay }}
                                                                 </div>
                                                             </div>

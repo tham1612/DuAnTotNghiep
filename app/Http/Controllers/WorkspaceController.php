@@ -964,7 +964,9 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Thành viên mới trong không gian làm việc';
                 $description = 'Người dùng "' . $userName . '" đã được thêm vào không gian làm việc "' . $workspace->name . '".';
+                if($user->id != Auth::id()){
                 event(new EventNotification($description, 'success', $user->id));
+                }
 
                 $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
@@ -989,8 +991,9 @@ class WorkspaceController extends Controller
                 $description = 'Người dùng "' . $userName . '" đã thay đổi trạng thái của không gian làm việc sang "' . $workspace->access . '".';
 
                 // broadcast(new EventNotification($description, 'success', 3))->toOthers();
-                event(new EventNotification($description, 'success', $user->id));
-
+                if ($user->id != Auth::id()) {
+                    event(new EventNotification($description, 'success', $user->id));
+                }
                 $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
@@ -1011,8 +1014,9 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Thăng cấp thành viên';
                 $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
-                event(new EventNotification($description, 'success', $user->id));
-
+                if ($user->id != Auth::id()) {
+                    event(new EventNotification($description, 'success', $user->id));
+                }
                 $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
@@ -1033,7 +1037,9 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Nhượng quyền';
                 $description = 'Người dùng "' . $userName . '" đã được nhượng quyền lên Chủ Nhóm.';
-                event(new EventNotification($description, 'success', $user->id));
+                if ($user->id != Auth::id()) {
+                    event(new EventNotification($description, 'success', $user->id));
+                }
                 $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
@@ -1053,7 +1059,9 @@ class WorkspaceController extends Controller
                 $name = 'không gian làm việc ' . $workspace->name;
                 $title = 'Chỉnh sửa';
                 $description = 'Người dùng "' . $userName . '" Chỉnh sửa không gian làm việc, xem chi tiết!.';
-                event(new EventNotification($description, 'success', $user->id));
+                if ($user->id != Auth::id()) {
+                    event(new EventNotification($description, 'success', $user->id));
+                }
                 $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
             });
         }
@@ -1078,7 +1086,10 @@ class WorkspaceController extends Controller
                     $name = 'Bảng ' . $board->name;
                     $title = 'Thành viên mới trong bảng';
                     $description = 'Người dùng "' . $userName . '" đã được thêm vào bảng "' . $board->name . '".';
-                    event(new EventNotification($description, 'success', $user->id));
+                    
+                    if ($user->id != Auth::id()) {
+                        event(new EventNotification($description, 'success', $user->id));
+                    }
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }
             });
