@@ -3,8 +3,6 @@
     Board - TaskFlow
 @endsection
 @section('main')
-@vite('resources/js/app.js')
-@vite('resources/js/task.js')
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -115,54 +113,10 @@
                                                                     </div>
                                                                 </div>
                                                             </a>
-                                                        </li>
-                                                    @endif
-                                                    <!-- bình luận -->
-                                                    @if($task->taskComments->isNotEmpty())
-                                                        <li class="list-inline-item">
-                                                            <a href="javascript:void(0)" class="text-muted"><i
-                                                                    class="ri-question-answer-line align-bottom"></i>
-                                                                {{ $task->taskComments->count() < 10
-                                                                ? '0'.$task->taskComments->count()
-                                                                 : $task->taskComments->count() }}
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    <!-- tệp đính kèm -->
-                                                    @if($task->attachments->isNotEmpty())
-                                                        <li class="list-inline-item">
-                                                            <a href="javascript:void(0)" class="text-muted"><i
-                                                                    class="ri-attachment-2 align-bottom"></i>
-                                                                {{ $task->attachments->count() < 10
-                                                                   ? '0'.$task->attachments->count()
-                                                                    : $task->attachments->count() }}</a>
-                                                        </li>
-                                                    @endif
-                                                    <!-- checklist -->
-                                                    @php
-                                                        // Chuyển đổi $task->checklists sang mảng để dễ thao tác
-                                                           $checklistsArray = json_decode(json_encode($task->check_lists), true);
-
-                                                           // Đếm tổng số checklist items
-                                                           $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
-                                                               return count($checklist['checklistItems']);
-                                                           });
-
-                                                           // Đếm số checklist items đã hoàn thành
-                                                           $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
-                                                               return collect($checklist['checklistItems'])->where('is_complete', true)->count();
-                                                           });
-                                                    @endphp
-
-                                                    @if($totalChecklistItems > 0)
-                                                        <li class="list-inline-item">
-                                                            <a href="javascript:void(0)" class="text-muted"><i class="ri-checkbox-line align-bottom"></i>
-                                                                {{ $completedChecklistItems . '/' . $totalChecklistItems }}
-                                                            </a>
-                                                        </li>
+                                                        @endif
                                                     @endif
 
-                                                </ul>
+                                                </div>
                                             </div>
                                         @endif
                                         @php
@@ -377,20 +331,10 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <!--end card-body-->
                                 </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="my-3">
-                        <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown"
-                                aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask({{ $catalog->id }})">
-                            Thêm thẻ
-                        </button>
-                        <div class="dropdown-menu p-3 dropdown-content-add-task-{{$catalog->id }}" style="width: 285px" aria-labelledby="dropdownMenuOffset2">
-                            {{--dropdown.createTask--}}
-                        </div>
-
+                                <!--end card-body-->
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="my-3">
@@ -403,19 +347,6 @@
                         {{--dropdown.createTask--}}
                     </div>
 
-                @include('components.settingCatalog')
-            @endforeach
-            <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
-                <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"
-                     aria-expanded="false" data-bs-offset="-7,-30" style="width: 280px"
-                     onclick="loadFormAddCatalog({{ $board->id }})">
-                    <i class="ri-add-line fs-15"></i>
-                    <h6 class="fs-14 text-uppercase fw-semibold mb-0">
-                        Thêm danh sách
-                    </h6>
-                </div>
-                <div class="dropdown-menu p-3 dropdown-content-add-catalog-{{$board->id }}" style="width: 300px" aria-labelledby="addCatalog">
-                            {{--dropdown.createCatalog--}}
                 </div>
             </div>
 
@@ -434,8 +365,8 @@
                 {{--dropdown.createCatalog--}}
             </div>
         </div>
-
-  @endsection
+    </div>
+@endsection
 
 @section('style')
     <!-- Dragula css -->
