@@ -82,7 +82,7 @@ function restoreTask(taskId) {
                 originalParent = null; // Clear the parent reference
             }
 
-        //     hiển thị ra board
+            //     hiển thị ra board
 
         },
         error: function (xhr) {
@@ -147,3 +147,47 @@ $(document).on('submit', '.submitFormCopyTask', function (e) {
         }
     });
 });
+
+
+// quyền của bảng
+function updatePriorityOrRisk(type, value, taskId) {
+    $.ajax({
+        url: `/tasks/updatePriorityOrRisk/${taskId}`,
+        type: 'POST',
+        data: {
+            type: type,
+            value: value,
+        },
+        success: function (response) {
+            let taskRiskViewBoard = document.getElementById(`task-risk-view-board-${response.task.id}`)
+            let taskPriorityViewBoard = document.getElementById(`task-priority-view-board-${response.task.id}`)
+
+            if (taskPriorityViewBoard) {
+                updateClass(taskPriorityViewBoard, response.task.priority);
+            }
+
+            if (taskRiskViewBoard) {
+                updateClass(taskRiskViewBoard, response.task.risk);
+            }
+
+        },
+        error: function (error) {
+            notificationWeb(response.action, response.msg)
+        }
+    });
+}
+
+function updateClass(element, value) {
+    const classMap = {
+        'High': 'text-danger',
+        'Medium': 'text-warning',
+        'Low': 'text-info'
+    };
+
+    const classToAdd = classMap[value] || '';
+    element.classList.remove('text-danger', 'text-warning', 'text-info');
+    if (classToAdd) {
+        element.classList.add(classToAdd);
+    }
+    console.log(classToAdd);
+}

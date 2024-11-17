@@ -1,4 +1,4 @@
-var url = "http://127.0.0.1:8000/api/inbox/" + userId,
+var url = "http://127.0.0.1:8000/api/inbox/" + userIdmain,
     allmaillist = "";
 const loader = document.querySelector("#elmLoader");
 var getJSON = function (e, t) {
@@ -149,11 +149,6 @@ function loadMailData(emails) {
                 <div class="date">${email.date}</div>
             </div>
         </li>`;
-
-        favouriteBtn();
-        emailDetailShow();
-        emailDetailChange();
-        checkBoxAll();
     });
 
     document.querySelectorAll(".notification-item").forEach(function (item) {

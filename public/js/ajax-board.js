@@ -1,8 +1,9 @@
+
 function loadFormAddCatalog(boardId) {
     $.ajax({
         url: `/catalogs/getFormCreateCatalog/${boardId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('.dropdown-content-add-catalog-' + boardId).html(response.html);
@@ -10,11 +11,12 @@ function loadFormAddCatalog(boardId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
 }
+
 let isSubmittingCatalog = false;
 let isSubmittingTask = false;
 
@@ -29,42 +31,30 @@ function submitAddCatalog(boardId) {
         url: `/catalogs`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
+            notificationWeb(response.action, response.msg);
             // màn board
             let listCatalog = $('.board-' + boardId);
             let catalog = `
             <div class="tasks-list rounded-3 p-2 border" data-value="${response.catalog.id}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1">
-                        <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                        <h6 class="fs-14 text-uppercase fw-semibold mb-0"
+                         id="title-catalog-view-board-${response.catalog.id}">
                             ${response.catalog.name}
                             <small
-                                class="badge bg-success align-bottom ms-1 totaltask-badge">${response.task_count}</small>
+                                class="badge bg-success align-bottom ms-1 totaltask-badge
+                                totaltask-catalog-${response.catalog.id}">${response.task_count}</small>
                         </h6>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
-                            <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false">
+                           <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                               data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="${response.catalog.id}">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
                             </a>
-                            <!--                    setting list-->
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog(${response.catalog.id})">Thêm thẻ</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog(${response.catalog.id})">Sao chép danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog(${response.catalog.id})">Di chuyển danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="destroyCatalog(${response.catalog.id})">Theo dõi</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="archiverCatalog(${response.catalog.id})">Lưu Trữ danh sách</span>
-                                <span class="dropdown-item cursor-pointer"
-                                      onclick="archiverAllTasks(${response.catalog.id})">Lưu trữ tất cả thẻ trong danh sách</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,7 +99,9 @@ function submitAddCatalog(boardId) {
                         <div class="d-flex flex-grow-1">
                             <h6 class="fs-14 fw-semibold mb-0" value="${response.catalog.id}">${response.catalog.name}
                                 <small
-                                    class="badge bg-warning align-bottom ms-1 totaltask-badge">${response.task_count}</small>
+                                    class="badge bg-warning align-bottom ms-1 totaltask-badge
+                                     totaltask-catalog-${response.catalog.id}">
+                                    ${response.task_count}</small>
                             </h6>
                             <div class="d-flex ms-4">
                                 <div class="dropdown">
@@ -195,19 +187,19 @@ function submitAddCatalog(boardId) {
             if (listCatalogList) {
                 listCatalogList.append(catalogList);
             } else {
-                console.error(`Không tìm thấy phần tử với class '.list-catalog-${ boardId}' `);
+                console.error(`Không tìm thấy phần tử với class '.list-catalog-${boardId}' `);
             }
 
             $('#nameCatalog').val('');
-            notificationWeb(response.action, response.msg);
+
             $('.dropdown-menu').dropdown('hide');
             console.log('Catalog đã được thêm thành công!', response);
         },
-        error: function(xhr) {
-            notificationWeb(false, 'thêm mới không thành công!')
+        error: function (xhr) {
+            notificationWeb(false, 'Thêm mới không thành công!')
             console.log(xhr.responseText);
         },
-        complete: function() {
+        complete: function () {
             // Đặt lại cờ sau 3 giây để cho phép gửi lại
             setTimeout(() => {
                 isSubmittingCatalog = false;
@@ -221,7 +213,7 @@ function loadFormAddTask(catalogId) {
     $.ajax({
         url: `/tasks/getFormCreateTask/${catalogId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('.dropdown-content-add-task-' + catalogId).html(response.html);
@@ -229,7 +221,7 @@ function loadFormAddTask(catalogId) {
                 console.log('No HTML returned');
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -248,8 +240,20 @@ function submitAddTask(catalogId, catalogName) {
         url: `/tasks`,
         type: 'POST',
         data: formData,
-        success: function(response) {
+        success: function (response) {
             notificationWeb(response.action, response.msg)
+            let currentTaskCountElement = $('.totaltask-catalog-' + catalogId);
+            if (currentTaskCountElement.length) {
+                let currentTaskCount = parseInt(currentTaskCountElement.text());
+
+                // Kiểm tra xem currentTaskCount có phải là số hợp lệ không, nếu có thì tăng lên 1
+                if (!isNaN(currentTaskCount)) {
+                    currentTaskCountElement.text(currentTaskCount + 1);
+                } else {
+                    // Nếu không phải là số hợp lệ, đặt về 1
+                    currentTaskCountElement.text(1);
+                }
+            }
             let listTask = document.getElementById(catalogName + '-' + catalogId);
             let task = `
             <div class="card tasks-box cursor-pointer" data-value="${response.task.id}">
@@ -354,10 +358,14 @@ function submitAddTask(catalogId, catalogName) {
 // Hàm để lấy lớp CSS cho priority
             function getPriorityBadgeClass(priority) {
                 switch (priority) {
-                    case 'High': return 'bg-danger-subtle text-danger';
-                    case 'Medium': return 'bg-warning-subtle text-warning';
-                    case 'Low': return 'bg-success-subtle text-success';
-                    default: return 'bg-info-subtle text-info';
+                    case 'High':
+                        return 'bg-danger-subtle text-danger';
+                    case 'Medium':
+                        return 'bg-warning-subtle text-warning';
+                    case 'Low':
+                        return 'bg-success-subtle text-success';
+                    default:
+                        return 'bg-info-subtle text-info';
                 }
             }
 
@@ -369,7 +377,7 @@ function submitAddTask(catalogId, catalogName) {
                     ${priority}
                 </option>
             `).join('');
-                    }
+            }
 
 // Hàm để tạo các option cho catalog_id
             function generateCatalogOptions(catalogs, selectedCatalogId) {
@@ -391,7 +399,7 @@ function submitAddTask(catalogId, catalogName) {
         `;
                 }).join('');
 
-        }
+            }
 
             $('#add-task-catalog-' + catalogId).val('');
             notificationWeb(response.action, response.msg);
@@ -399,11 +407,11 @@ function submitAddTask(catalogId, catalogName) {
             getModalTaskEvents();
             console.log('task đã được thêm thành công!', response);
         },
-        error: function(xhr) {
+        error: function (xhr) {
             notificationWeb(false, 'thêm mới không thành công!')
             console.log(xhr.responseText);
         },
-        complete: function() {
+        complete: function () {
             // Đặt lại cờ sau 3 giây để cho phép gửi lại
             setTimeout(() => {
                 isSubmittingTask = false;
@@ -412,3 +420,21 @@ function submitAddTask(catalogId, catalogName) {
     });
     return false;
 }
+
+// load modal cài đặt catalog
+$(document).on('click', '[data-bs-toggle="modal"][data-setting-catalog-id]', function () {
+    const catalogId = $(this).data('setting-catalog-id');
+
+    $.ajax({
+        url: `/catalogs/getModalSettingCatalog/${catalogId}`,
+        type: 'GET',
+        success: function (response) {
+            $('#detailCardModalCatalog').modal('show');
+            $('.modal-setting-catalog').html(response.html);
+        },
+        error: function (xhr) {
+            console.error("Không thể tải dữ liệu catalog:", xhr);
+        }
+    });
+});
+

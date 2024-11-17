@@ -270,8 +270,37 @@
                     </div>
                 </div>
             </div>
-            <!-- mô tả -->
+            <!-- trường bổ xung -->
             <div class="row">
+                <section class="d-flex">
+                    <i class="ri-menu-2-line fs-22"></i>
+                    <p class="fs-18 ms-2 mt-1">Trường bổ xung</p>
+                </section>
+                <div class="ps-4 d-flex gap-1">
+                    <div class="col-4">
+                        <label for="">Độ ưu tiên</label>
+                        <select name="" id="" class="form-select no-arrow"
+                                onchange="updatePriorityOrRisk('priority', this.value, {{$task->id}})">
+                            <option value="" hidden selected>Chọn...</option>
+                            <option value="High" @selected($task->priority == 'High')>Cao</option>
+                            <option value="Medium" @selected($task->priority == 'Medium')>Trung Bình</option>
+                            <option value="Low" @selected($task->priority == 'Low')>Thấp</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="">Rủi do</label>
+                        <select name="" id="" class="form-select no-arrow"
+                                onchange="updatePriorityOrRisk('risk', this.value, {{$task->id}})">
+                            <option value="" hidden selected>Chọn...</option>
+                            <option value="High" @selected($task->risk == 'High')>Cao</option>
+                            <option value="Medium" @selected($task->risk == 'Medium')>Trung Bình</option>
+                            <option value="Low" @selected($task->risk == 'Low')>Thấp</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- mô tả -->
+            <div class="row mt-2">
                 <section class="d-flex">
                     <i class="ri-menu-2-line fs-22"></i>
                     <p class="fs-18 ms-2 mt-1">Mô tả</p>
@@ -517,10 +546,8 @@
     </div>
 
 </div>
-
-
 <script>
-    function debounce(func, wait) {
+     function debounce(func, wait) {
         let timeout;
         return function (...args) {
             const context = this;
@@ -659,9 +686,3 @@
         }
     }
 </script>
-
-
-
-
-
-

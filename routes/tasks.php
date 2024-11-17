@@ -47,6 +47,10 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/getFormCheckList/{id}', [ChecklistController::class, 'getFormCheckList'])
             ->name('tasks.getFormCheckList');
 
+        //        cập nhật priority & risk
+        Route::post('/tasks/updatePriorityOrRisk/{id}', [TaskController::class, 'updatePriorityOrRisk'])
+            ->name('tasks.updatePriorityOrRisk');
+
 //        sao chep
         Route::post('/tasks/copyTask', [TaskController::class, 'copyTask'])
             ->name('tasks.copyTask');

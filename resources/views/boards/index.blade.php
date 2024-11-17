@@ -12,7 +12,8 @@
     @endif
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
-            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}" id="catalog_view_board_{{$catalog->id}}">
+            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}"
+                 id="catalog_view_board_{{$catalog->id}}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1 d-flex">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
@@ -20,12 +21,12 @@
                             {{ $catalog->name }}
                         </h6>
                         <small
-                            class="badge bg-success align-bottom ms-1 totaltask-badge">{{ $catalog->tasks->count() }}</small>
+                            class="badge bg-success align-bottom ms-1 totaltask-badge totaltask-catalog-{{$catalog->id}}">{{ $catalog->tasks->count() }}</small>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
                             <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
-                               data-bs-target="#detailCardModalCatalog{{ $catalog->id }}">
+                               data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="{{$catalog->id}}">
                                 <span class="fw-medium text-muted fs-12">
                                     <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
                                 </span>
@@ -49,44 +50,6 @@
                                             data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}">
                                             {{ $task->text }}
                                         </h6>
-                                        <div class="dropdown">
-                                            {{-- <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                               data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="ri-more-fill"></i></a> --}}
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Mở thẻ</span>--}}
-                                                {{--                                                </li>--}}
-                                                {{--                                                <li>--}}
-                                                {{--                                                    <span class="dropdown-item" href="#"><i--}}
-                                                {{--                                                            class="ri-edit-2-line align-bottom me-2 text-muted"></i>--}}
-                                                {{--                                                        Chỉnh sửa nhãn</span>--}}
-                                                {{--                                                </li>--}}
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Chỉnh sửa ngày</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Sao chép</span>
-                                                </li>
-                                                <li>
-                                                    <span class="dropdown-item" data-bs-toggle="modal"
-                                                          onclick="archiverTask({{$task->id}})"><i
-                                                            class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                        Lưu trữ</span>
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </div>
                                     <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
                                         <!-- Ảnh bìa -->
@@ -273,12 +236,85 @@
                                                 </div>
                                             </div>
                                         @endif
+
+                                        {{--                                        <div class="flex-grow-1 d-flex align-items-center">--}}
+                                        {{--                                            <div class="d-flex flex-wrap gap-2">--}}
+                                        {{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
+                                        {{--                                                @if(!$task->priority) d-none @endif"--}}
+                                        {{--                                                     id="task-priority-view-board-{{$task->id}}"--}}
+                                        {{--                                                     style="height: 20px;--}}
+                                        {{--                                                      @if($task->priority == 'High')--}}
+                                        {{--                                                   background-color: rgba(93,31,26,0.5)--}}
+                                        {{--                                                @elseif($task->priority == 'Medium')--}}
+                                        {{--                                                    background-color: rgba(83,63,4,0.5)--}}
+                                        {{--                                                @elseif($task->priority == 'Low')--}}
+                                        {{--                                                   background-color: rgba(22,69,85,0.5)--}}
+                                        {{--                                                @endif">--}}
+                                        {{--                                                    <p>Độ ưu--}}
+                                        {{--                                                        tiên: {{$task->priority}}--}}
+                                        {{--                                                        --}}{{--                                                        {{ $task->priority == 'High' ? 'Cao' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->priority == 'Medium' ? 'Trung Bình' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->priority == 'Low' ? 'Thấp' : '')) }}--}}
+                                        {{--                                                    </p>--}}
+                                        {{--                                                </div>--}}
+
+                                        {{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
+                                        {{--                                                @if(!$task->risk) d-none @endif"--}}
+                                        {{--                                                     id="task-risk-view-board-{{$task->id}}"--}}
+                                        {{--                                                     style="height: 20px; @if($task->risk == 'High')--}}
+                                        {{--                                                   background-color: rgba(93,31,26,0.5)--}}
+                                        {{--                                                @elseif($task->risk == 'Medium')--}}
+                                        {{--                                                    background-color: rgba(83,63,4,0.5)--}}
+                                        {{--                                                @elseif($task->risk == 'Low')--}}
+                                        {{--                                                   background-color: rgba(22,69,85,0.5)--}}
+                                        {{--                                                @endif">--}}
+                                        {{--                                                    <p>Độ ưu--}}
+                                        {{--                                                        tiên: {{$task->risk}}--}}
+                                        {{--                                                        --}}{{--                                                        {{ $task->risk == 'High' ? 'Cao' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->risk == 'Medium' ? 'Trung Bình' :--}}
+                                        {{--                                                        --}}{{--                                                                ($task->risk == 'Low' ? 'Thấp' : '')) }}--}}
+                                        {{--                                                    </p>--}}
+                                        {{--                                                </div>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="card-footer border-top-dashed">
                                     <div class="d-flex justify-content-end">
                                         <div class="flex-shrink-0">
                                             <ul class="link-inline mb-0">
+                                                {{--  độ ưu tiên                                              --}}
+                                                @if(!empty($task->priority))
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted"
+                                                           title="Độ ưu tiên">
+                                                            <i id="task-priority-view-board-{{$task->id}}" class="ri-flag-fill align-bottom
+                                                             @if($task->priority == 'High')
+                                                                text-danger
+                                                             @elseif($task->priority == 'Medium')
+                                                                text-warning
+                                                             @elseif($task->priority == 'Low')
+                                                               text-info
+                                                             @endif"></i>
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                {{--  rủi do                                              --}}
+                                                @if(!empty($task->risk))
+                                                    <li class="list-inline-item">
+                                                        <a href="javascript:void(0)" class="text-muted" title="Rủi do">
+                                                            <i id="task-risk-view-board-{{$task->id}}" class=" ri-spam-fill align-bottom
+                                                             @if($task->risk == 'High')
+                                                                text-danger
+                                                             @elseif($task->risk == 'Medium')
+                                                                text-warning
+                                                             @elseif($task->risk == 'Low')
+                                                               text-info
+                                                             @endif"></i>
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <!-- theo dõi -->
                                                 @if($task->followMembers->contains('user_id', auth()->id()))
                                                     <li class="list-inline-item">
@@ -383,7 +419,6 @@
                 </div>
             </div>
 
-            @include('components.settingCatalog')
         @endforeach
         <div class="rounded-3 p-2 bg-info-subtle board-{{$board->id}}" style="height: 40px;">
             <div class="d-flex align-items-center cursor-pointer" id="addCatalog" data-bs-toggle="dropdown"

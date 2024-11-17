@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\WorkspaceMember;
 use Illuminate\Http\Request;
 
 class AuthorizeWeb extends Controller
@@ -12,6 +13,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
@@ -35,6 +37,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
@@ -62,6 +65,7 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
@@ -89,27 +93,28 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = BoardMember::query()
             ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
             ->value('authorize');
 
         $authorize = Board::query()
             ->where('id', $boardId)
             ->first()
             ? Board::query()
-                ->where('id', $boardId)
-                ->first()
+            ->where('id', $boardId)
+            ->first()
             : Board::withTrashed()
-                ->where('id', $boardId)
-                ->first();
+            ->where('id', $boardId)
+            ->first();
 
         if ($authorize->archiver_permission == 'board') {
-//            tất cả thành viên trong bảng
+            //            tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Member'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
                 : false;
         } else if ($authorize->archiver_permission == 'owner') {
-//            chỉ có quản trị viên với phó quản trị viên
+            //            chỉ có quản trị viên với phó quản trị viên
             return ($checkAuthorize == 'Owner'
                 || $checkAuthorize == 'Sub_Owner')
                 ? true
@@ -126,5 +131,19 @@ class AuthorizeWeb extends Controller
         return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner')
             ? true
             : false;
+    }
+
+    public function authorizeCreateBoardOnWorkspace($ws)
+    {
+        $checkAuthorize = WorkspaceMember::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $ws)
+            ->first();
+        if ($checkAuthorize) {
+            return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member')
+                ? true
+                : false;
+        }
+        return false;
     }
 }

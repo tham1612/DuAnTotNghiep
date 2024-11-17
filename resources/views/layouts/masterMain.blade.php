@@ -25,7 +25,7 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
-    @vite('resources/js/app.js')
+    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js'])
     <script !src="">
         const PATH_ROOT = "/theme/";
     </script>
@@ -177,6 +177,7 @@
                 @yield('main')
                 @include('components.chatAI')
                 @include('components.createBoard')
+                @include('components.settingCatalog')
                 @include('components.createTemplateBoard')
                 @include('components.workspace')
 
@@ -287,6 +288,9 @@
             title: title
         });
     }
+</script>
+<script>
+    window.userId = {{ auth()->user()->id }};
 </script>
 </body>
 

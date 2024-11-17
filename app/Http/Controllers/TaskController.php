@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TaskCreate;
+
+use App\Events\RealtimeCreateTask;
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -99,10 +100,8 @@ class TaskController extends Controller
 //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
-        Log::info('Bắt đầu phát sự kiện TaskCreated');
-        broadcast(new TaskCreate($task))->toOthers();
-        Log::info('Đã phát sự kiện TaskCreated');
 
+        broadcast(new RealtimeCreateTask($task))->toOthers();
         // ghi lại hoạt động khi thêm
         activity('thêm mới task')
             ->performedOn($task)
@@ -351,6 +350,33 @@ class TaskController extends Controller
             ]);
         }
 
+    }
+
+    public function updatePriorityOrRisk(Request $request, string $id)
+    {
+        $task = Task::query()->findOrFail($id);
+        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+
+
+        if ($request->type === 'priority') {
+            $task->update([
+                'priority' => $request->value
+            ]);
+        }
+        if ($request->type === 'risk') {
+            $task->update([
+                'risk' => $request->value
+            ]);
+        }
+        return response()->json([
+            'task' => $task,
+        ]);
     }
 
     public function destroy(string $id)

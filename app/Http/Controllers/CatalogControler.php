@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\CatalogCreated;
+use App\Events\RealtimeCreateCatalog;
 use App\Http\Requests\StoreCatalogRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
@@ -70,8 +70,8 @@ class CatalogControler extends Controller
         $data['position'] = $maxPosition + 1;
 
         $catalog = Catalog::query()->create($data);
-        Log::info('Broadcasting CatalogCreated event for catalog ID: ' . $catalog->id);
-        broadcast(new CatalogCreated($catalog))->toOthers();
+        broadcast(new RealtimeCreateCatalog($catalog))->toOthers();
+
         // lấy thông tin board
         $board = Board::findOrFail($request->board_id);
         activity('thêm mới danh sách')
@@ -342,6 +342,13 @@ class CatalogControler extends Controller
     {
         $catalog = Catalog::query()->findOrFail($request->catalog_id);
         $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
+        $authorizeMoveBoard = $this->authorizeWeb->authorizeEdit($request->board_id);
+        if (!$authorizeMoveBoard) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền di chuyển sang bảng này!!',
+            ]);
+        }
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -367,5 +374,18 @@ class CatalogControler extends Controller
             dd($e->getMessage());
         }
 
+    }
+
+    public function getModalSettingCatalog($catalogId)
+    {
+        $catalog = Catalog::with(
+            'tasks'
+        )->findOrFail($catalogId);
+        //    dd( $catalog);
+        $htmlForm = View::make('components.modalSettingCatalog', [
+            'catalog' => $catalog,
+        ])->render();
+
+        return response()->json(['html' => $htmlForm]);
     }
 }
