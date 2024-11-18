@@ -10,7 +10,7 @@
     @endif
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
-            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}"
+            <div class="tasks-list rounded-3 p-2 border position-{{$catalog->position}}" data-value="{{ $catalog->id }}"
                  id="catalog_view_board_{{$catalog->id}}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1 d-flex">
@@ -40,7 +40,7 @@
                                 //                                $task = json_decode(json_encode($task));
                                 //                                dd($task)
                             @endphp
-                            <div class="card tasks-box cursor-pointer" id="task_id_view_{{$task->id}}"
+                            <div class="card tasks-box cursor-pointer task-of-catalog-{{$catalog->id}}" id="task_id_view_{{$task->id}}"
                                  data-value="{{ $task->id }}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">

@@ -37,6 +37,7 @@ function destroyBoard(boardId) {
         url: `/b/destroyBoard/${boardId}`,
         type: 'POST',
         success: function (response) {
+            $('.archiver-board-' + boardId).remove()
             notificationWeb(response.action, response.msg)
         },
         error: function (xhr) {
