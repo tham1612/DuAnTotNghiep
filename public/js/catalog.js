@@ -15,9 +15,14 @@ function archiverCatalog(catalogId) {
                 type: 'DELETE',
                 success: function (response) {
                     notificationWeb(response.action, response.msg);
+                    $('#detailCardModalCatalog').modal('hide');
                     let catalogViewBoard = document.getElementById(`catalog_view_board_${response.catalog.id}`)
                     if (catalogViewBoard) {
                         catalogViewBoard.remove();
+                    }
+                    let catalogViewList = document.getElementById(`catalog_view_list_${response.catalog.id}`)
+                    if (catalogViewList) {
+                        catalogViewList.remove();
                     }
                     createCatalogViewSettingBoard(response.catalog.id, response.catalog.name);
                 },
@@ -49,6 +54,7 @@ function archiverAllTasks(catalogId) {
                 success: function (response) {
                     console.log(response.task)
                     response.task.forEach(item => {
+                        $('.task-of-catalog-' + catalogId).hide()
                         let taskViewBoard = document.getElementById(`task_id_view_${item.id}`)
                         if (taskViewBoard) {
                             taskViewBoard.remove();
@@ -112,18 +118,107 @@ function restoreCatalog(catalogId) {
         url: `/catalogs/restoreCatalog/${catalogId}`,
         type: 'POST',
         success: function (response) {
-            // xóa phần tử trong cài đặt
+            // Xóa catalog khỏi danh sách lưu trữ
             let catalogArchiver = document.getElementById(`catalog_id_archiver_${catalogId}`);
             if (catalogArchiver) {
                 catalogArchiver.remove();
             }
-            notificationWeb(response.action, response.msg)
+            window.tasks_list=response.catalog;
+            // nội dung trong của catalog màn board
+            let taskHTML = response.tasks.map(task => `
+                <div class="card tasks-box cursor-pointer task-of-catalog-${catalogId}" data-value="${task.id}" id="task_id_view_${task.id}">
+                    <div class="card-body">
+                        <div class="d-flex mb-2">
+                            <h6 class="fs-15 mb-0 flex-grow-1" data-bs-toggle="modal" data-bs-target="#detailCardModal" data-task-id="${task.id}">
+                                ${task.text }
+                            </h6>
+                        </div>
+                        <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
+                            <!-- Ảnh bìa -->
+                            ${task.image ? `
+                                <div class="tasks-img rounded" style="
+                                    background-image: url('${task.image}');
+                                    background-size: cover;
+                                    background-position: center;
+                                    width: 100%; height: 150px;">
+                                </div>
+                            ` : ''}
+                            <!-- giao việc cho thành viên -->
 
-            //     hiển thị ra board
+                            <!-- ngày bắt đầu & kết thúc -->
 
+                            <!-- nhãn -->
+                        </div>
+                    </div>
+                    <div class="card-footer border-top-dashed">
+                        <div class="d-flex justify-content-end">
+                            <div class="flex-shrink-0">
+                                <!-- Nút hoặc thông tin khác -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            //  catalog màn board
+            let catalogHTML = `
+            <div class="tasks-list rounded-3 p-2 border position-${response.catalog.position}" id="catalog_view_board_${response.catalog.id}" data-value="${response.catalog.id}">
+                <div class="d-flex mb-3 d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="fs-14 text-uppercase fw-semibold mb-0" id="title-catalog-view-board-${response.catalog.id}">
+                            ${response.catalog.name}
+                            <small class="badge bg-success align-bottom ms-1 totaltask-badge totaltask-catalog-${response.catalog.id}">${response.task_count}</small>
+                        </h6>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                           <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal" data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="${response.catalog.id}">
+                                <span class="fw-medium text-muted fs-12">
+                                    <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div data-simplebar class="tasks-wrapper px-3 mx-n3">
+                    <div id="${response.catalog.name}-${response.catalog.id}" class="tasks">
+                        ${taskHTML}
+                    </div>
+                </div>
+                <div class="my-3">
+                    <button class="btn btn-soft-info w-100" id="dropdownMenuOffset2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50" onclick="loadFormAddTask(${response.catalog.id})">
+                        Thêm thẻ
+                    </button>
+                    <div class="dropdown-menu p-3 dropdown-content-add-task-${response.catalog.id}" style="width: 285px" aria-labelledby="dropdownMenuOffset2"></div>
+                </div>
+            </div>
+            `;
+
+            // Tìm danh sách catalog hiện tại
+            let catalogs = Array.from(document.querySelectorAll('.tasks-list'));
+
+            // Xác định vị trí chèn dựa trên position
+            let inserted = false;
+            for (let catalog of catalogs) {
+                let currentPosition = parseInt(catalog.className.match(/position-(\d+)/)?.[1] || 0, 10);
+                if (response.catalog.position < currentPosition) {
+                    // Chèn catalog trước catalog hiện tại
+                    catalog.insertAdjacentHTML('beforebegin', catalogHTML);
+                    inserted = true;
+                    break;
+                }
+            }
+
+            // Nếu không có catalog nào có position lớn hơn, chèn vào cuối
+            if (!inserted) {
+                document.querySelector('.tasks-wrapper').insertAdjacentHTML('beforeend', catalogHTML);
+            }
+            // Thông báo thành công
+            notificationWeb(response.action, response.msg);
         },
         error: function (xhr) {
-            notificationWeb(response.action, response.msg)
+            // Thông báo lỗi
+            notificationWeb(response.action, response.msg);
         }
     });
 }
