@@ -256,7 +256,9 @@ class CatalogControler extends Controller
 
     public function restoreCatalog(string $id)
     {
+
         $catalog = Catalog::withTrashed()->findOrFail($id);
+
         $boardId = Catalog::withTrashed()
             ->join('boards', 'catalogs.board_id', '=', 'boards.id')
             ->where('catalogs.id', $catalog->id)
@@ -285,10 +287,13 @@ class CatalogControler extends Controller
             $catalog->restore();
 
             DB::commit();
+            $catalog = Catalog::withTrashed()->where('board_id',$boardId)->get();
             return response()->json([
                 'action' => 'sucess',
                 'msg' => 'Khôi phục danh sách thành công!!',
-                'catalog' => $catalog
+                'catalog' => $catalog,
+                'task_count' => $catalog->tasks->count(),
+                'tasks'=>$catalog->tasks
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());

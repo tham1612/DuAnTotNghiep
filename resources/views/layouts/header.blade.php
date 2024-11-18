@@ -343,7 +343,7 @@
 
                     @if (!empty(session('board')))
                         @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
-                            <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
+                            <div class="d-flex align-items-center justify-content-between  border rounded mt-2 archiver-board-{{ $archiverBoard->id}} "
                                  style="background-color: #091e420f">
                                 <div class="d-flex align-items-center ">
                                     @if ($archiverBoard->image)
