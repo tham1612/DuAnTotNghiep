@@ -93,6 +93,48 @@ class CatalogControler extends Controller
         ]);
     }
 
+    public function CreateCatalog(StoreCatalogRequest $request)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $authorize = $this->authorizeWeb->authorizeEdit($request->board_id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        $data = $request->except(['image', 'position']);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
+        }
+
+        $maxPosition = Catalog::where('board_id', $request->board_id)
+            ->max('position');
+        $data['position'] = $maxPosition + 1;
+
+        $catalog = Catalog::query()->create($data);
+        broadcast(new RealtimeCreateCatalog($catalog))->toOthers();
+
+        // lấy thông tin board
+        $board = Board::findOrFail($request->board_id);
+        activity('thêm mới danh sách')
+            ->performedOn($catalog)
+            ->causedBy(Auth::user())
+            ->withProperties(['catalog_name' => $catalog->name, 'board_id' => $request->board_id, 'workspace_id' => $board->workspace_id])
+            ->tap(function (Activity $activity) use ($board, $request, $catalog) {
+                $activity->board_id = $request->board_id;
+                $activity->catalog_id = $catalog->id;
+                $activity->workspace_id = $board->workspace_id;
+            })
+            ->log('danh sách đã được thêm:' . $catalog->name);
+       return back();
+    }
+
+
     public function update(Request $request, string $id)
     {
         $catalog = Catalog::query()->findOrFail($id);

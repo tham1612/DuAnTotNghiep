@@ -81,6 +81,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->withoutMiddleware(['auth', 'isWorkspace']);
 
         Route::resource('catalogs', CatalogControler::class);
+        Route::post('catalogs/gantt',[CatalogControler::class, 'CreateCatalog'])->name('catalog.CreateGantt');;
 
         // hoàn tác + xóa vĩnh viễn
         Route::post('/catalogs/destroyCatalog/{id}', [CatalogControler::class, 'destroyCatalog'])

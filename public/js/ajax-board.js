@@ -437,4 +437,3 @@ $(document).on('click', '[data-bs-toggle="modal"][data-setting-catalog-id]', fun
         }
     });
 });
-

@@ -121,10 +121,10 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        // // if (session('view_only', false)) {
-        // //     return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        // // }
-        // session()->forget('view_only');
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));

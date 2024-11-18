@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 use App\Enums\AuthorizeEnum;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -66,13 +67,13 @@ class HomeController extends Controller
         $filteredBoards = $boards->filter(function ($board) use ($userId) {
             // Lấy thông tin thành viên của người dùng trong workspace
             $workspaceMember = $board->workspace->workspaceMembers->firstWhere('user_id', $userId);
-        
+
             // Kiểm tra nếu người dùng là "Viewer"
             if ($workspaceMember && $workspaceMember->authorize == \App\Enums\AuthorizeEnum::Viewer) {
                 // Nếu bảng là "public" hoặc người dùng là thành viên của bảng (ngay cả khi bảng là "private"), cho phép xem bảng
                 return $board->access == 'public' || $board->boardMembers->contains(fn($member) => $member->user_id == $userId);
             }
-        
+
             // Các quyền khác được phép xem tất cả bảng
             return true;
         });
@@ -111,7 +112,7 @@ class HomeController extends Controller
                 $task->board_id = $task->catalog->board->id;
                 return $task;
             });
-    
+
 
         // Tách các task của riêng user ra
         $userTasks = $tasks->filter(function ($task) use ($userId) {
@@ -164,7 +165,7 @@ class HomeController extends Controller
             'upcomingTasks',
             'myAssignedTasks',
             'tasksExpiringSoon',
-            'currentWorkspace'
+            'currentWorkspace',
         ));
     }
 }
