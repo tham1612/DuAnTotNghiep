@@ -6,7 +6,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginGoogleController extends Controller
@@ -98,7 +97,7 @@ class LoginGoogleController extends Controller
                 return redirect()->intended('home');
             }
         } catch (Exception $e) {
-            Log::error('Error during Google OAuth callback: ' . $e->getMessage());
+            \Log::error('Error during Google OAuth callback: ' . $e->getMessage());
             return redirect('/login')->with('error', 'Có lỗi xảy ra khi xác thực Google.');
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -17,7 +17,22 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
-// Broadcast::channel('TaskUpdated', function ($user) {
-//     return Auth::check(); // Kiểm tra xem người dùng có được phép nghe kênh không
+
+// Broadcast::channel('chat', function ($user) {
+//     return true;
 // });
 
+Broadcast::channel('chat.{roomId}', function (User $user, $roomId) {
+    return ['id' => $user->id, 'name' => $user->name];
+});
+
+
+
+Broadcast::channel('notifications.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;});
+Broadcast::channel('catalogs', function () {
+    return true;
+});
+Broadcast::channel('tasks', function () {
+    return true;
+});

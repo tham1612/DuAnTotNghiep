@@ -9,15 +9,12 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('theme/assets/images/favicon.ico') }}"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <!--Swiper slider css-->
-    <link
-        href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}"
-        rel="stylesheet"
-        type="text/css"
-    />
+    <link href="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- Layout config Js -->
     <script src="{{ asset('theme/assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
@@ -28,38 +25,89 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
+    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js'])
+    <script !src="">
+        const PATH_ROOT = "/theme/";
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!--jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <style>
-        body{
+        body {
             overflow-x: hidden;
         }
+
+
         /* Giới hạn chiều cao CKEditor */
         .ck-editor__editable_inline {
-            min-height: 100px !important; /* Đảm bảo chiều cao giới hạn 150px */
+            min-height: 100px !important;
+            /* Đảm bảo chiều cao giới hạn 150px */
+        }
 
+        .comment-section {
+            scrollbar-width: none;
+            /* Ẩn thanh cuộn trên Firefox */
+        }
 
+        .comment-section::-webkit-scrollbar {
+            display: none;
+            /* Ẩn thanh cuộn trên Chrome, Safari và Edge */
         }
     </style>
 
     @if (request()->is('b/*'))
+        <style>
+            .dropdown-item p {
+                overflow-wrap: break-word;
+                /* Cho phép xuống dòng */
+                white-space: normal;
+                /* Cho phép nội dung xuống dòng */
+                width: 200%;
+                /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
 
-        <style >
-        .dropdown-item p {
-        overflow-wrap: break-word;
-        /* Cho phép xuống dòng */
-        white-space: normal;
-        /* Cho phép nội dung xuống dòng */
-        width: 200%;
-        /* Đảm bảo chiều rộng của thẻ p không vượt quá chiều rộng của li */
-        }
+            }
+
+            .attachments-container {
+                max-height: 400px;
+                /* Đặt chiều cao tối đa để tạo scroll khi cần */
+                overflow-y: auto;
+                /* Cho phép cuộn dọc khi vượt quá chiều cao */
+            }
+
+            .attachments-container::-webkit-scrollbar {
+                display: none;
+                /* Chrome, Safari, Opera */
+            }
+
+            .checkList-section {
+                max-height: 400px;
+                /* Đặt chiều cao tối đa để tạo scroll khi cần */
+                overflow-y: auto;
+                /* Cho phép cuộn dọc khi vượt quá chiều cao */
+            }
+
+            .checkList-section::-webkit-scrollbar {
+                display: none;
+                /* Chrome, Safari, Opera */
+            }
+
+            .selected-tag {
+                box-shadow: 0 0 15px #000000;
+                /* Hiệu ứng bóng */
+            }
         </style>
     @endif
     @yield('style')
 </head>
+
 <body>
-
-<!-- Begin page -->
+@php
+    include  resource_path('views/resourceHome.php');
+@endphp
+    <!-- Begin page -->
 <div id="layout-wrapper">
-
     {{-- header website --}}
     @include('layouts.header')
 
@@ -96,6 +144,7 @@
             <!-- /.modal-content -->
         </div>
 
+
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
@@ -111,12 +160,12 @@
         <div class="page-content">
             <div class="container-fluid">
 
-
                 @if (request()->is('b/*'))
                     @php
-                        $board = session('board');
 
+                        include  resource_path('views/resourceBoard.php');
                     @endphp
+
 
                     @include('layouts.navbar')
                     @include('components.setting')
@@ -128,8 +177,10 @@
                 @yield('main')
                 @include('components.chatAI')
                 @include('components.createBoard')
+                @include('components.settingCatalog')
                 @include('components.createTemplateBoard')
                 @include('components.workspace')
+
             </div>
             <!-- container-fluid -->
         </div>
@@ -157,7 +208,6 @@
 </div>
 
 <script>
-    const PATH_ROOT = "/theme/";
     document.querySelectorAll('input[type="datetime-local"]').forEach(function (input) {
         input.addEventListener('input', function (event) {
             // Ngăn chặn nút xóa (clear button) hoạt động
@@ -165,6 +215,7 @@
                 this.value = this.defaultValue;
             }
         });
+
     });
 </script>
 <!-- JAVASCRIPT -->
@@ -176,203 +227,71 @@
 <!--Swiper slider js-->
 <script src="{{ asset('theme/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
 
-<script src=""></script>
 <!-- glightbox js -->
-<script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script>
+{{-- <script src="{{ asset('theme/assets/libs/glightbox/js/glightbox.min.js') }}"></script> --}}
 
 <!-- fgEmojiPicker js -->
-<script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script>
-<!--jquery cdn-->
+{{-- <script src="{{ asset('theme/assets/libs/fg-emoji-picker/fgEmojiPicker.js') }}"></script> --}}
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<!--select2 cdn-->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- notifications init -->
 <script src="{{ asset('theme/assets/js/pages/notifications.init.js') }}"></script>
+
 <!-- prismjs plugin -->
 <script src="{{ asset('theme/assets/libs/prismjs/prism.js') }}"></script>
+
 <!-- App js -->
 <script src="{{ asset('theme/assets/js/app.js') }}"></script>
+
+<!-- Lord Icon -->
+<script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
+
+<!-- Modal Js -->
+<script src="{{ asset('theme/assets/js/pages/modal.init.js') }}"></script>
 
 @if (request()->is('b/*'))
     <!-- dragula init js -->
     <script src="{{ asset('theme/assets/libs/dragula/dragula.min.js') }}"></script>
-
     <!-- dom autoscroll -->
     <script src="{{ asset('theme/assets/libs/dom-autoscroller/dom-autoscroller.min.js') }}"></script>
-
-
-
-
     {{--            <script src="{{ asset('theme/assets/js/pages/flag-input.init.js') }}"></script> --}}
-
     <script src="{{ asset('theme/assets/js/pages/project-list.init.js') }}"></script>
-
-
-
-
+    <!--select2 cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('theme/assets/js/pages/select2.init.js') }}"></script>
+    <!-- ckeditor -->
+    <script src="https://unpkg.com/@ckeditor/ckeditor5-build-classic@12.2.0/build/ckeditor.js"></script>
+
+    <script src="{{ asset('js/ajax-board.js') }}"></script>
+    <script src="{{ asset('js/ajax-modal-task.js') }}"></script>
+    <script src="{{ asset('js/task.js') }}"></script>
+    <script src="{{ asset('js/catalog.js') }}"></script>
 @endif
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // hàm ngăn chặn bị tắt khi người dùng tác động lên dropdown
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            menu.addEventListener('click', event => {
-                event.stopPropagation();
-            });
-        });
-    });
-    $(document).ready(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-    })
-
-
-    function disableButtonOnSubmit() {
-        continueButton.disabled = true;
-        return true; // Vẫn cho phép submit form
-    }
-
-    // Đoạn script này sẽ làm thông báo biến mất sau 3 giây
-    setTimeout(function () {
-        var alertElement = document.getElementById('notification-messenger');
-        if (alertElement) {
-            alertElement.style.display = 'none';
-        }
-    }, 5000);
-
-</script>
-
-<script>
-    $(document).ready(function () {
-        // Tắt nút "Gửi" khi trang tải
-        $('#sendBtn').prop('disabled', true);
-
-        // Kiểm tra khi người dùng nhập vào ô nhập liệu
-        $('#prompt').on('input', function () {
-            // Nếu ô nhập không trống, bật nút "Gửi", ngược lại tắt nút
-            $('#sendBtn').prop('disabled', $(this).val().trim() === '');
-        });
-
-        // Bắt sự kiện khi form được submit
-        $('#chatinput-form').on('submit', function (e) {
-            e.preventDefault(); // Ngăn chặn form submit mặc định
-
-            // Lấy giá trị từ ô nhập liệu
-            let prompt = $('#prompt').val();
-
-            // Nếu ô nhập trống, không làm gì cả
-            if (prompt.trim() === '') {
-                return; // Không hiển thị alert
-            }
-
-            // Disable nút "Gửi" và ô nhập
-            $('#sendBtn').prop('disabled', true);
-            $('#prompt').prop('disabled', true);
-
-            // Hiển thị tin nhắn của người dùng
-            $('#responseBox').append(
-                '<div class="user-message" style="text-align: right; margin-bottom: 10px;"><span style="background-color: #d1e7dd; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
-                prompt + '</span></div>'
-            );
-            // Xóa nội dung trong ô nhập liệu
-            $('#prompt').val('');
-
-            // Gửi yêu cầu AJAX đến server
-            $.ajax({
-                url: '/ai-chat', // Route để xử lý yêu cầu
-                type: 'GET',
-                data: {
-                    prompt: prompt
-                },
-                success: function (response) {
-                    // Format response text
-                    let formattedResponse = response.response.replace(/\*\*(.*?)\*\*/g,
-                        '<strong>$1</strong>');
-                    formattedResponse = formattedResponse.replace(/\n/g, '<br>');
-
-                    // Hiển thị phản hồi từ hệ thống
-                    $('#responseBox').append(
-                        '<div class="system-response" style="text-align: left; margin-bottom: 10px;"><span style="background-color: #ffffff; padding: 8px 12px; border-radius: 15px; display: inline-block;">' +
-                        formattedResponse + '</span></div>'
-                    );
-
-                    // Cuộn xuống cuối khung chat
-                    $('#chat-conversation').scrollTop($('#chat-conversation')[0]
-                        .scrollHeight);
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                    alert('Đã có lỗi xảy ra!');
-                },
-                complete: function () {
-                    // Re-enable nút "Gửi" và ô nhập sau khi yêu cầu hoàn tất
-                    $('#sendBtn').prop('disabled', false);
-                    $('#prompt').prop('disabled', false);
-                }
-            });
-        });
-    });
-
-    // validate Catalog
-    document.addEventListener('DOMContentLoaded', function() {
-        const nameCatalogInput = document.getElementById('nameCatalog');
-        const btnSubmitCatalog = document.getElementById('btnSubmitCatalog');
-
-        // Kiểm tra trạng thái của input
-        function validateCatalogForm() {
-            const isNameFilled = nameCatalogInput.value.trim() !== '';
-            btnSubmitCatalog.disabled = !isNameFilled; // Vô hiệu hóa nút nếu input trống
-        }
-
-        // Lắng nghe sự kiện khi người dùng nhập dữ liệu vào input
-        nameCatalogInput.addEventListener('input', validateCatalogForm);
-
-        // Kiểm tra form khi người dùng submit
-        function disableButtonOnSubmit() {
-            if (nameCatalogInput.value.trim() === '') {
-                return false;  // Ngăn submit nếu input trống
-            }
-            btnSubmitCatalog.disabled = true;  // Vô hiệu hóa nút sau khi submit
-            return true;  // Cho phép submit form
-        }
-    });
-
-    // validate task
-    document.addEventListener('DOMContentLoaded', function() {
-        const taskNameInputs = document.querySelectorAll('.taskNameInput');
-        const btnSubmitTasks = document.querySelectorAll('.btnSubmitTask');
-
-        taskNameInputs.forEach((input, index) => {
-            const btnSubmit = btnSubmitTasks[index];
-
-            input.addEventListener('input', function() {
-                const isTaskNameFilled = input.value.trim() !== '';
-                btnSubmit.disabled = !isTaskNameFilled;
-            });
-        });
-
-        window.disableButtonOnSubmitTask = function(form) {
-            const input = form.querySelector('.taskNameInput');
-            const btnSubmit = form.querySelector('.btnSubmitTask');
-            if (input.value.trim() === '') {
-                return false;
-            }
-            btnSubmit.disabled = true;
-            return true;
-        }
-    });
-</script>
-
+<script src="{{ asset('js/board.js') }}"></script>
+<script src="{{ asset('js/home.js') }}"></script>
 @yield('script')
-
+<script !src="">
+    function notificationWeb(action, title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: action,
+            title: title
+        });
+    }
+</script>
+<script>
+    window.userId = {{ auth()->user()->id }};
+</script>
 </body>
 
 </html>

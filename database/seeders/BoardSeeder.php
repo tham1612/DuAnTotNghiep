@@ -19,7 +19,7 @@ class BoardSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         for ($WorkspaceID = 1; $WorkspaceID < 10; $WorkspaceID++) {
-            $name = fake()->text(100);
+            $name = fake()->text(50);
             $description = fake()->text(200);
             $access = \App\Enums\AccessEnum::getValues();
             $randomAccess = $access[array_rand($access)];
@@ -47,7 +47,7 @@ class BoardSeeder extends Seeder
                     'user_id' => $userID,
                     'board_id' => $BoardID,
                     'authorize' => $randomAuthorize,
-                    'is_star' => fake()->boolean(10),
+                    'is_star' => fake()->boolean(50),
                     'follow' => fake()->boolean(50),
                     'invite' => fake()->date(),
                 ]);
@@ -55,7 +55,7 @@ class BoardSeeder extends Seeder
             for ($BoardID = 1; $BoardID < 10; $BoardID++) {
                 Catalog::query()->create([
                     'board_id' => $BoardID,
-                    'name' => fake()->text(10),
+                    'name' => fake()->text(20),
                     'image' => fake()->optional()->imageUrl(),
                     'position' => fake()->numberBetween(1, 5),
                 ]);

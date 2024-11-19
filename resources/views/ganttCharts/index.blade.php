@@ -1,6 +1,21 @@
 @extends('layouts.masterMain')
 
 @section('main')
+@if(session('error'))
+<div class="alert alert-danger custom-alert">
+    {{ session('error') }}
+</div>
+@endif
+
+<style>
+.custom-alert {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
     <!DOCTYPE html>
 
     <head>
@@ -37,7 +52,7 @@
             </div>
         @endif --}}
 
-        <div id="gantt_here" style='width:100%; height:350px;'></div>
+        <div id="gantt_here" style='width:100%; height:60vh'></div>
         <br>
 
         <button class="btn btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -49,7 +64,7 @@
             <div class="my-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()">
+                    <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
                         @csrf
                         <div class="mb-2">
                             <input type="text" class="form-control" name="name" id="nameCatalog"
@@ -70,24 +85,21 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()">
+                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
-
                         <div class="mb-2">
                             <input type="text" class="form-control" name="text" placeholder="Nhập tên thẻ..."
                                 required />
                         </div>
-
                         <div class="mb-2">
-                            <select class="form-select">
-                                <option value="">---Lựa chọn---</option>
+                            <select name="parent"  class="form-select">
+                                <option value="">Parent</option>
                                 @foreach ($tasks as $task)
                                     <option value="{{ $task->id }}">{{ $task->text }}</option>
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>
                             <input type="datetime-local" class="form-control" name="start_date" id="start_date" required />
@@ -97,16 +109,14 @@
                             <label class="form-label" for="">Ngày kết thúc</label>
                             <input type="datetime-local" class="form-control" name="end_date" id="end_date" required />
                         </div>
-
                         <div class="mb-2">
                             <select name="catalog_id" id="" class="form-select">
-                                <option value="">---Lựa chọn---</option>
-                                @foreach ($catalogs as $catalog)
+                                <option value="">Catalog</option>
+                                @foreach ($board->catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="mb-2 d-grid">
                             <button type="submit" class="btn btn-primary">Thêm Task</button>
                         </div>
@@ -160,25 +170,16 @@
             ];
 
             // Giả sử bạn đã có dữ liệu catalogs từ server
-            var catalogs = @json($catalogs);
+            var catalogs = @json($board->catalogs);
 
             // Hàm để lấy catalog theo ID
             function getCatalogById(catalog_id) {
                 return catalogs.find(catalog => catalog.id == catalog_id);
             }
 
-            // Hàm để mở modal tùy chỉnh
-            function openCustomModal(taskId) {
-                // Lấy phần tử modal dựa vào ID của nó
-                var modalElement = document.getElementById('detailCardModal' + taskId);
+            // Hàm để mở modal tùy chỉn
 
-                if (modalElement) {
-                    var modalInstance = new bootstrap.Modal(modalElement);
-                    modalInstance.show();
-                } else {
-                    console.error("Modal không tồn tại!");
-                }
-            }
+
             gantt.attachEvent("onTaskCreated", function(task) {
                 // goi modal tuy chinh
                 openCustomModal(task.id);
@@ -188,7 +189,7 @@
             gantt.templates.grid_row_class = function(start, end, task) {
                 return "custom_grid_background"; // Thay đổi màu nền của hàng lưới
             };
-            gantt.templates.task_cell_class = function(task, date) {
+            gantt.templates.timeline_cell_class = function(task, date) {
                 return "custom_task_background"; // Thay đổi màu nền của ô nhiệm vụ
             };
         </script>

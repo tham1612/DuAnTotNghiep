@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BoardMember extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -21,7 +21,7 @@ class BoardMember extends Model
         'is_accept_invite'
     ];
     protected $casts = [
-       'is_star' => 'boolean',
+        'is_star' => 'boolean',
         'follow' => 'boolean',
         'authorize' => AuthorizeEnum::class,
 
@@ -34,5 +34,6 @@ class BoardMember extends Model
     {
         return $this->belongsTo(Board::class);
     }
+
 
 }

@@ -28,6 +28,8 @@ class StoreTaskRequest extends FormRequest
             'progress' => 'nullable|numeric|min:0|max:100',
             'start_date' => 'nullable|date_format:Y-m-d\TH:i|before:end_date',
             'end_date'   => 'nullable|date_format:Y-m-d\TH:i|after:start_date',
+            'reminder_date' => 'nullable|date_format:Y-m-d\TH:i|after:start_date|before:end_date',
+            'image' => 'nullable|image',
         ];
     }
     public function messages(){

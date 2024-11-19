@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\TaskUpdated;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\GoogleApiClientController;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,13 @@ use function Laravel\Prompts\text;
 
 class TaskController extends Controller
 {
+    protected $googleApiClient;
+
+    public function __construct(GoogleApiClientController $googleApiClient)
+    {
+        $this->googleApiClient = $googleApiClient;
+    }
+
     public function store(Request $request)
     {
         // $request->validate([
@@ -37,6 +45,8 @@ class TaskController extends Controller
 
     public function update($id, Request $request)
     {
+        $data = $request->all();
+        $data['id'] = $id;
         $task = Task::find($id);
         $task->text = $request->text;
         $task->start_date = $request->start_date;
@@ -44,7 +54,7 @@ class TaskController extends Controller
         // Tính toán end_date dựa trên start_date và duration (nếu duration vẫn gửi từ client)
         if ($request->has('duration')) {
             $task->end_date = \Carbon\Carbon::parse($request->start_date)
-                               ->addDays($request->duration);
+                ->addDays($request->duration);
         }
 
         // Nếu client gửi end_date, cập nhật end_date
@@ -65,24 +75,32 @@ class TaskController extends Controller
             $this->updateOrder($id, $request->target);
         }
         activity('Cập nhật task')
-        ->performedOn($task)
-        ->causedBy(Auth::user())
-        ->withProperties([
-            'task_id' => $task->id,
-            'task_name'=>$task->text,
-            'board_id' => $task->catalog->board_id,
-        ])
-        ->tap(function (Activity $activity) use ($task) {
-            $activity->catalog_id = $task->catalog_id;
-            $activity->task_id = $task->id;
-            $activity->board_id = $task->catalog->board_id;
-        })
-        ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+            ->performedOn($task)
+            ->causedBy(Auth::user())
+            ->withProperties([
+                'task_id' => $task->id,
+                'task_name' => $task->text,
+                'board_id' => $task->catalog->board_id,
+            ])
+            ->tap(function (Activity $activity) use ($task) {
+                $activity->catalog_id = $task->catalog_id;
+                $activity->task_id = $task->id;
+                $activity->board_id = $task->catalog->board_id;
+            })
+            ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
+
+        if (isset($data['start_date']) || isset($data['end_date'])) {
+            if ($task->id_google_calendar) {
+                $this->googleApiClient->updateEvent($data);
+            } else {
+                $this->googleApiClient->createEvent($data); // them du lieu vao gg calendar
+            }
+        }
+
         return response()->json([
             "action" => "updated"
         ]);
     }
-
 
 
     private function updateOrder($taskId, $target)
@@ -110,21 +128,21 @@ class TaskController extends Controller
         $updatedTask->save();
 
         activity('Cập nhật thứ tự task')
-        ->causedBy(Auth::user()) // Người dùng thực hiện hành động
-        ->performedOn($updatedTask) // Task được cập nhật
-        ->withProperties([
-            'task_id' => $updatedTask->id,
-            'task_name' => $updatedTask->text,
-            'old_order' => $oldOrder,
-            'new_order' => $targetOrder,
-            'board_id' => $updatedTask->catalog->board_id,
-        ])
-        ->tap(function (Activity $activity) use ($updatedTask) {
-            $activity->catalog_id = $updatedTask->catalog_id;
-            $activity->task_id = $updatedTask->id;
-            $activity->board_id = $updatedTask->catalog->board_id;
-        })
-        ->log('Task đã được cập nhật thứ tự');
+            ->causedBy(Auth::user()) // Người dùng thực hiện hành động
+            ->performedOn($updatedTask) // Task được cập nhật
+            ->withProperties([
+                'task_id' => $updatedTask->id,
+                'task_name' => $updatedTask->text,
+                'old_order' => $oldOrder,
+                'new_order' => $targetOrder,
+                'board_id' => $updatedTask->catalog->board_id,
+            ])
+            ->tap(function (Activity $activity) use ($updatedTask) {
+                $activity->catalog_id = $updatedTask->catalog_id;
+                $activity->task_id = $updatedTask->id;
+                $activity->board_id = $updatedTask->catalog->board_id;
+            })
+            ->log('Task đã được cập nhật thứ tự');
 
 
     }

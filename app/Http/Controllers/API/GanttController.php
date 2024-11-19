@@ -4,17 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Board;
-use App\Models\Link;
 use App\Models\Task;
 use App\Models\TaskLink;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Broadcast;
-use Illuminate\Support\Facades\Log;
 
 class GanttController extends Controller
 {
     public function data($boardId)
-    {
+    {   
         $board = Board::with([
             'catalogs.tasks',
         ])->findOrFail($boardId);
@@ -38,8 +36,10 @@ class GanttController extends Controller
             ->filter(function ($task) {
                 return $task->duration > 0;
             });
-        $links = Link::all();
-        Log::info($links);
+
+
+
+        $links = TaskLink::all();
         return response()->json(['data' => $tasks, 'links' => $links]); // Trả dữ liệu dưới dạng JSON
     }
 }

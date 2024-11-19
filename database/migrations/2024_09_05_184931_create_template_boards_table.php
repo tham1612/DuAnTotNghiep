@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('template_boards', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->integer('complete')->default(0);
             $table->timestamps();
         });
     }

@@ -13,5 +13,11 @@ class TemplateBoard extends Model
         'name',
         'description',
         'image',
+        'complete'
     ];
+
+    public function templateCatalogs()
+    {
+        return $this->hasMany(TemplateCatalog::class);
+    }
 }

@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->boolean('is_complete')->default(false);
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->date('reminder_date')->nullable();
-            $table->softDeletes();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+            $table->dateTime('reminder_date')->nullable();
+//            $table->softDeletes();
             $table->timestamps();
         });
     }

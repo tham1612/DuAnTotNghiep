@@ -11,5 +11,16 @@ class CheckList extends Model
     protected $fillable=[
         'task_id',
         'name',
+        'progress',
     ];
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function checkListItems()
+    {
+        return $this->hasMany(CheckListItem::class);
+    }
 }

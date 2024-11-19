@@ -70,7 +70,9 @@
                     <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 90%">
                         <h5 class="text-center">Đóng bảng?</h5>
                         <p>Bạn có thể tìm và mở lại các bảng đã đóng ở cài đặt tài khoản</p>
-                        <button class="btn btn-danger w-100">Đóng</button>
+                        <button class="btn btn-danger w-100"
+                                onclick="archiverBoard({{request()->route('id')}})">Đóng
+                        </button>
                     </div>
                 </li>
             </ul>
@@ -78,7 +80,7 @@
     </div>
 
 </div>
-{{--chi tiet bang--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="detailBoard" aria-labelledby="detailBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -94,20 +96,23 @@
                 <p class="fs-16 mt-3 ms-1">Quản trị viên của bảng</p>
             </div>
             <div class="d-flex flex-row">
-                @if(!empty($board_owner))
-                    @if ($board_owner->image)
-                        <img src="{{ Storage::url($board_owner->image) ? Storage::url($board_owner->image) : '' }}"
+                @if(!empty($boardOwner))
+                    @if ($boardOwner->image)
+                        <img src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
                              alt="" class="rounded-circle avatar-xs object-fit-cover" style="width: 60px;height: 60px"/>
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                              style="width: 40px;height: 40px">
-                            {{ strtoupper(substr($board_owner->name, 0, 1)) }}
+                            {{ strtoupper(substr($boardOwner->name, 0, 1)) }}
                         </div>
                     @endif
-                    <span class="fs-15 ms-2 d-flex flex-column">
-                          {{ \Illuminate\Support\Str::limit($board_owner->name, 16) }}
-                         <a href="{{route('user',Auth::id())}}">Sửa thông tin cá nhân</a>
-                    </span>
+                    <div class="fs-15 ms-2 d-flex flex-column">
+                        <p> {{ \Illuminate\Support\Str::limit($boardOwner->name, 16) }}</p>
+                        <p style="margin-top: -15px">  {{  $boardOwner->fullName
+                              ? '@' . $boardOwner->fullName
+                              : '@' . $boardOwner->name
+                              }}</p>
+                    </div>
                 @endif
             </div>
             <div>
@@ -134,7 +139,7 @@
     </div>
 
 </div>
-{{--hoat dong--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="activityBoard" aria-labelledby="activityCanvasLabel"
      style="width: 350px;">
     <div class="offcanvas-header">
@@ -179,7 +184,7 @@
     </div>
 </div>
 
-{{--muc da luu tru--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="storageBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -195,83 +200,103 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#storageCatalog" role="tab">
                         Danh sách lưu trữ
                     </a>
-                    {{--                    <span class="badge bg-dark align-items-center justify-content-center d-flex"--}}
-                    {{--                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))--}}
-                    {{--                            {{ $board_m_invite->count() }}--}}
-                    {{--                        @endif</span>--}}
+                    <span class="badge bg-dark align-items-center justify-content-center d-flex"
+                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
+                            {{ $board_m_invite->count() }}
+                        @endif</span>
                 </li>
                 <li class="nav-item d-flex align-items-center justify-content-between">
                     <a class="nav-link" data-bs-toggle="tab" href="#storageTask" role="tab">
                         Thẻ đã lưu trữ
                     </a>
-                    {{--                    <span class="badge bg-dark align-items-center justify-content-center d-flex"--}}
-                    {{--                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))--}}
-                    {{--                            {{ $board_m_invite->count() }}--}}
-                    {{--                        @endif</span>--}}
+                    <span class="badge bg-dark align-items-center justify-content-center d-flex"
+                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
+                            {{ $board_m_invite->count() }}
+                        @endif</span>
                 </li>
             </ul>
 
             <div class="tab-content text-muted">
                 <div class="tab-pane active" id="storageCatalog" role="tabpanel">
-                    <form action="" method="post">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
 
-                        <div class="row p-3 ">
-                            <div
-                                class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle">
-                                <p class="fs-16 text-danger mt-3">Teen danh sach</p>
-                                <button class="btn btn-outline-dark">
-                                    Khôi phục
-                                </button>
-                                <button class="btn btn-outline-dark">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
+                    <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
+
+                    <div class="row p-3 " id="catalog-container-setting-board">
+                        @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
+                            <div id="catalog_id_archiver_{{$archiverCatalog->id}}"
+                                class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle mt-2">
+                                <p class="fs-16 text-danger mt-3">{{$archiverCatalog->name}}</p>
+                                <div>
+                                    <button class="btn btn-outline-dark"
+                                            onclick="restoreCatalog({{ $archiverCatalog->id }})">
+                                        Khôi phục
+                                    </button>
+                                    <button class="btn btn-outline-dark"
+                                            onclick="destroyCatalog({{ $archiverCatalog->id }})">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+
                             </div>
+                        @endforeach
+                    </div>
 
-                        </div>
-                    </form>
                 </div>
                 <div class="tab-pane" id="storageTask" role="tabpanel">
-                    <form action="" method="post">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
 
-                        <div class="row p-3 ">
-                            <div class="bg-warning-subtle border rounded">
-                                <p class="fs-16 mt-2 text-danger">Teen ther</p>
-                                <ul class="link-inline" style="margin-left: -32px">
-                                    <!-- theo dõi -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-eye-line align-bottom"></i>
-                                            04</a>
-                                    </li>
-                                    <!-- bình luận -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-question-answer-line align-bottom"></i>
-                                            19</a>
-                                    </li>
-                                    <!-- tệp đính kèm -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-attachment-2 align-bottom"></i>
-                                            02</a>
-                                    </li>
-                                    <!-- checklist -->
-                                    <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="text-muted">
-                                            <i class="ri-checkbox-line align-bottom"></i>
-                                            2/4</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <p class="fs-13 fw-bold">
-                                <a href="" class="text-primary">Khôi phục</a>
-                                -
-                                <a href="" class="text-danger">Xóa</a>
-                            </p>
-                        </div>
-                    </form>
+                    <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
+
+                    <div class="row p-3 " id="task-container-setting-board">
+                        @php $board->load(['catalogs.tasks' => function ($query) {
+                                $query->onlyTrashed(); // Chỉ lấy tasks đã xóa mềm
+                            }]);
+                        @endphp
+                        @foreach($board->catalogs as $catalog)
+                            @foreach($catalog->tasks as $archiverTask)
+                                <div id="task_id_archiver_{{$archiverTask->id}}">
+                                    <div class="bg-warning-subtle border rounded ps-2"
+                                    >
+                                        <p class="fs-16 mt-2 text-danger">{{$archiverTask->text}}</p>
+                                        <ul class="link-inline" style="margin-left: -32px">
+                                            <!-- theo dõi -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-eye-line align-bottom"></i>
+                                                    </a>
+                                            </li>
+                                            <!-- bình luận -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-question-answer-line align-bottom"></i>
+                                                   </a>
+                                            </li>
+                                            <!-- tệp đính kèm -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-attachment-2 align-bottom"></i>
+                                                    </a>
+                                            </li>
+                                            <!-- checklist -->
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" class="text-muted">
+                                                    <i class="ri-checkbox-line align-bottom"></i>
+                                                   </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="fs-13 fw-bold d-flex">
+                                         <span class="text-primary cursor-pointer"
+                                               onclick="restoreTask({{$archiverTask->id}})">Khôi phục</span>
+                                        -
+                                        <span class="text-danger cursor-pointer"
+                                              onclick="destroyTask({{$archiverTask->id}})">Xóa</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endforeach
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -279,7 +304,7 @@
 
 </div>
 
-{{--cai dat--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="generalSettingBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -291,37 +316,79 @@
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
             <div class="p-2">
-                <p class="fw-bold fs-15">Quyền</p>
+                <p class="fw-bold fs-16">Tên bảng</p>
+                <div class="row">
+                    <input type="text" name="" id="" class="border-0 form-control fs-18" value="{{$board->name}}"
+                           style="margin-top: -15px" onchange="updatePermission('name', this.value,{{$board->id}})">
+                </div>
+                <p class="fw-bold fs-16 mt-3">Chế độ</p>
+                <div class="row" style="margin-top: -15px">
+                    <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
+                            onchange="updatePermission('access', this.value,{{$board->id}})">
+                        <option value="public" @selected($board->access == 'public')>Công khai</option>
+                        <option value="private" @selected($board->access == 'private')>Riêng tư</option>
+                    </select>
+                </div>
+                <hr>
+                <p class="fw-bold fs-16 mt-3">Quyền</p>
+                <div class="row my-2">
+                    <label class="fs-16">Nhận xét</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="commentPermission"
+                            onchange="updatePermission('commentPermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->comment_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                        <option value="board" @selected($board->comment_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                        <option value="workspace" @selected($board->comment_permission === 'workspace')>Tất cả mọi người
+                            trong không
+                            gian làm
+                            việc
+                        </option>
+                    </select>
+                </div>
+                <div class="row my-2">
+                    <label class="fs-16">Thêm và xóa thành viên</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="memberPermission"
+                            onchange="updatePermission('memberPermission', this.value,{{$board->id}})">
+                        <option value="board" @selected($board->member_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                        <option value="owner" @selected($board->member_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                    </select>
+                </div>
+                <div class="row my-2">
+                    <label class="fs-16">Chỉnh sửa bảng</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="workspaceEditPermission"
+                            onchange="updatePermission('boardEditPermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->edit_board === 'owner')>Chỉ có quản trị viên</option>
+                        <option value="board" @selected($board->edit_board === 'board')>Chỉ có thành viên trong bảng
+                        </option>
+                        <option value="workspace" @selected($board->edit_board === 'workspace')>Mọi người trong không
+                            gian
+                        </option>
+                    </select>
+                </div>
+                <div class="row my-2">
+                    <label class="fs-16">Lưu trữ</label>
+                    <select class="form-select border-0 cursor-pointer fs-14" id="archivePermission"
+                            onchange="updatePermission('archivePermission', this.value,{{$board->id}})">
+                        <option value="owner" @selected($board->archiver_permission === 'owner')>Chỉ có quản trị viên
+                        </option>
+                        <option value="board" @selected($board->archiver_permission === 'board')>Tất cả thành viên trong
+                            bảng
+                        </option>
+                    </select>
+                </div>
 
-                <div class="row mt-2">
-                    <label for="">Nhận xét</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Thành viên</option>
-                        <option value="">Chỉ có quản trị viên</option>
-                        <option value="">Tất cả mọi người trong không gian làm việc</option>
-                    </select>
-                </div>
-                <div class="row mt-2">
-                    <label for="">Thêm và xóa thành viên</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Thành viên</option>
-                        <option value="">Chỉ có quản trị viên</option>
-                    </select>
-                </div>
-                <div class="row mt-2">
-                    <label for="">Chỉnh sửa Không gian làm việc</label>
-                    <select class="form-select border-0" id="">
-                        <option value="">Mọi người trong không gian</option>
-                        <option value="">Chỉ có thành viên trong bảng</option>
-                    </select>
-                </div>
             </div>
         </div>
     </div>
 
 </div>
 
-{{--nhãn--}}
+
 <div class="offcanvas offcanvas-end" tabindex="-1" id="tagBoard" aria-labelledby="storageBoardLabel"
      style="width: 350px;">
     <div class="offcanvas-header border-bottom">
@@ -331,66 +398,69 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
-        <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
+        <div data-simplebar style="height: calc(100vh)" class="p-2">
             <form action="">
                 <input type="text" name="" id=""
                        class="form-control border-1" placeholder="Tìm nhãn..."/>
                 <div class="mt-3">
-                    <strong class="fs-14">Nhãn</strong>
                     <ul class="" style="list-style: none; margin-left: -32px">
-                        <li class="mt-1 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center w-100">
-                                <input type="checkbox" name="" id="danger_tags"
-                                       class="form-check-input"/>
-                                <span class="bg bg-danger mx-2 rounded p-3 col-10"> </span>
-                            </div>
-                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                                @include('dropdowns.createTag')
-                            </div>
-                        </li>
-                        <li class="mt-1 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center w-100">
-                                <input type="checkbox" name="" id="danger_tags"
-                                       class="form-check-input"/>
-                                <span class="bg bg-info mx-2 rounded p-3 col-10"> </span>
-                            </div>
-                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                                @include('dropdowns.createTag')
-                            </div>
-                        </li>
-                        <li class="mt-1 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center w-100">
-                                <input type="checkbox" name="" id="danger_tags"
-                                       class="form-check-input"/>
-                                <span class="bg bg-success mx-2 rounded p-3 col-10">
-                                                            </span>
-                            </div>
-                            <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                               aria-haspopup="true"
-                               aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                                @include('dropdowns.createTag')
-                            </div>
-                        </li>
+                        @foreach($board->tags as $tag)
+                            <li class="mt-1 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center w-100">
+                                    {{--                                    <input type="checkbox" name="" id="danger_tags"--}}
+                                    {{--                                           class="form-check-input"/>--}}
+                                    <span class=" mx-2 rounded p-2 col-11 text-white"
+                                          style="background-color: {{$tag->color_code}}">{{$tag->name}}  </span>
+                                </div>
+                                <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false"></i>
+                                <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
+                                    <h5 class="text-center">Cập nhật</h5>
+                                    <form>
+                                        <input type="hidden" name="board_id" value="{{$tag->board_id}}">
+                                        <div class="mt-3">
+                                            <label class="fs-16">Tiêu đề</label>
+                                            <input type="text" name="name" class="form-control border-1"
+                                                   placeholder="Nhập tên nhãn" value="{{$tag->name}}"/>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label class="fs-14">Chọn màu</label>
+                                            <div class="d-flex flex-wrap gap-2 select-color">
+                                                @foreach($colors as $color)
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                         data-bs-placement="top"
+                                                         title="{{$color->name}}">
+                                                        <div
+                                                            class="color-box border rounded @if($color->code == $tag->color_code) selected-tag @endif"
+                                                            style="width: 50px;height: 30px; background-color: {{$color->code}}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-primary" id="update-tag-form">
+                                                Cập nhật
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="card">
                     <div
-                        class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100 cursor-pointer"
-                        style=" height: 30px; background-color: #c7c7c7">
+                        class="d-flex align-items-center justify-content-center rounded p-3 w-100 cursor-pointer"
+                        style=" height: 30px; background-color: #e4e6ea">
                         <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-bs-offset="110,10">
+                           aria-expanded="false" data-bs-offset="50,-250">
                             Tạo nhãn mới
                         </p>
                         <!--dropdown nhãn-->
                         <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                            @include('dropdowns.createTag')
+                            {{--                                                        @include('dropdowns.createTag')--}}
                         </div>
                     </div>
                 </div>
