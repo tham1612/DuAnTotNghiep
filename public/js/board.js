@@ -19,11 +19,22 @@ function restoreBoard(boardId) {
     $.ajax({
         url: `/b/restoreBoard/${boardId}`,
         type: "POST",
-        success: function(response) {
-            console.log(response);
+
+        success: function (response) {
+            let boardArchiverViewHeader = document.getElementById(`board-archiver-view-header-${boardId}`)
+
             notificationWeb(response.action, response.msg);
-            if (response.action === "success")
-                window.location.href = `http://127.0.0.1:8000/b/${response.board}/edit?viewType=board`;
+
+
+            if (response.action === "success") {
+                if (boardArchiverViewHeader) boardArchiverViewHeader.remove();
+                setTimeout(function () {
+                    window.location.href = `http://127.0.0.1:8000/b/${response.board.id}/edit`;
+                }, 1500)
+
+            }
+
+
         },
         error: function(xhr) {
             notificationWeb(response.action, response.msg);
@@ -36,10 +47,13 @@ function destroyBoard(boardId) {
     $.ajax({
         url: `/b/destroyBoard/${boardId}`,
         type: "POST",
-        success: function(response) {
 
-            $('.archiver-board-' + boardId).remove()
-            notificationWeb(response.action, response.msg)
+        success: function (response) {
+            let boardArchiverViewHeader = document.getElementById(`board-archiver-view-header-${boardId}`)
+            notificationWeb(response.action, response.msg);
+            if (response.action === "success") {
+                if (boardArchiverViewHeader) boardArchiverViewHeader.remove();
+            }
 
         },
         error: function(xhr) {
@@ -88,8 +102,10 @@ $(document).on("change", ".toBoard", function(e) {
     $.ajax({
         url: "/b/getDataBoard",
         method: "POST",
+
         data: { board_id: boardId },
         success: function(data) {
+
             // Xóa các option hiện tại trong Catalog và Position
             toCatalogSelect.empty();
             toPositionSelect.empty();
@@ -160,8 +176,9 @@ function updatePermission(permissionType, value, boardId) {
 }
 
 // tạo bảng mẫu
-// sao chép bảng
-$(".submitFormBoardTemplate").on("submit", function(e) {
+
+$(".submitFormBoardTemplate").on("submit", function (e) {
+
     e.preventDefault();
 
     var form = $(this);
