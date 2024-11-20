@@ -239,11 +239,9 @@ class CatalogControler extends Controller
             }
 
             $catalog->restore();
-
             DB::commit();
-            $catalog = Catalog::withTrashed()->where('board_id',$boardId)->get();
             return response()->json([
-                'action' => 'sucess',
+                'action' => 'success',
                 'msg' => 'Khôi phục danh sách thành công!!',
                 'catalog' => $catalog,
                 'task_count' => $catalog->tasks->count(),

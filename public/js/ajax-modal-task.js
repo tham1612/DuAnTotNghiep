@@ -34,6 +34,12 @@ function updateIsStar(boardId, userId,) {
             user_id: userId,
         },
         success: function (response) {
+            const starButton = document.getElementById(`2_is_star_${boardId}`);
+
+            if (starButton) {
+                // Thêm hoặc xóa lớp 'active' khi thành công
+                starButton.classList.toggle('active');
+            }
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
         },
         error: function (xhr) {
@@ -1992,5 +1998,5 @@ function loadAllTaskComment(taskId) {
 // });
 
 function callEditor(){
-   
+
 }
