@@ -475,24 +475,24 @@ class BoardController extends Controller
         ]);
     }
 
-    public function updateBoardMember2(Request $request, string $id)
-    {
-        $data = $request->only(['user_id', 'board_id']);
-
-
-        $boardMember = BoardMember::where('board_id', $data['board_id'])
-            ->where('user_id', $data['user_id'])
-            ->first();
-
-        if ($boardMember) {
-            $newFollow = $boardMember->follow == 1 ? 0 : 1;
-            $boardMember->update(['follow' => $newFollow]);
-
-            return response()->json([
-                'follow' => $boardMember->follow, // Trả về trạng thái follow mới
-            ]);
-        }
-    }
+//    public function updateBoardMember2(Request $request, string $id)
+//    {
+//        $data = $request->only(['user_id', 'board_id']);
+//
+//
+//        $boardMember = BoardMember::where('board_id', $data['board_id'])
+//            ->where('user_id', $data['user_id'])
+//            ->first();
+//
+//        if ($boardMember) {
+//            $newFollow = $boardMember->follow == 1 ? 0 : 1;
+//            $boardMember->update(['follow' => $newFollow]);
+//
+//            return response()->json([
+//                'follow' => $boardMember->follow, // Trả về trạng thái follow mới
+//            ]);
+//        }
+//    }
 
     //Duyệt người dùng gửi lời mời vào board
     //thông báo done

@@ -228,7 +228,13 @@ function updateIsStar2(boardId, userId,) {
             user_id: userId,
         },
         success: function (response) {
+            // Lấy phần tử nút bấm dựa vào ID
+            const starButton = document.getElementById(`is_star_${boardId}`);
 
+            if (starButton) {
+                // Thêm hoặc xóa lớp 'active' khi thành công
+                starButton.classList.toggle('active');
+            }
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
         },
         error: function (xhr) {

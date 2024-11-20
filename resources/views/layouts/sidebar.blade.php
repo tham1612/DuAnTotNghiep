@@ -280,18 +280,12 @@
                                         <button type="button"
                                                 class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if ($memberIsStar == 1) active @endif"
-                                                onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                id="is_star_{{ $board->id }}">
-                                            <button type="button"
-                                                    class="btn avatar-xs mt-n1 p-0 favourite-btn
-                                        @if ($memberIsStar == 1) active @endif"
                                                     onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
                                                     id="2_is_star_{{ $board->id }}">
                                             <span class="avatar-title bg-transparent fs-15">
                                                 <i class="ri-star-fill fs-20 mx-2"></i>
                                             </span>
                                             </button>
-                                        </button>
                                     </div>
                                 </div>
                             </li>

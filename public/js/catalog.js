@@ -123,7 +123,6 @@ function restoreCatalog(catalogId) {
             if (catalogArchiver) {
                 catalogArchiver.remove();
             }
-            window.tasks_list=response.catalog;
             // nội dung trong của catalog màn board
             let taskHTML = response.tasks.map(task => `
                 <div class="card tasks-box cursor-pointer task-of-catalog-${catalogId}" data-value="${task.id}" id="task_id_view_${task.id}">
@@ -211,8 +210,9 @@ function restoreCatalog(catalogId) {
 
             // Nếu không có catalog nào có position lớn hơn, chèn vào cuối
             if (!inserted) {
-                document.querySelector('.tasks-wrapper').insertAdjacentHTML('beforeend', catalogHTML);
+                document.querySelector('.board-' + response.catalog.board_id).insertAdjacentHTML('beforebegin', catalogHTML);
             }
+            window.tasks_list.push(document.getElementById(`${response.catalog.name}-${response.catalog.id}`));
             // Thông báo thành công
             notificationWeb(response.action, response.msg);
         },
