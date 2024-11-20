@@ -4,11 +4,12 @@
     $workspaces = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
-        ->where('workspace_members.is_accept_invite', 0)
+        // ->where('workspace_members.is_accept_invite', 0)
         ->whereNot('workspace_members.is_active', 1)
+        ->whereNot('workspace_members.authorize', "Viewer")
         ->where('workspace_members.deleted_at', null)
-        ->select('workspaces.*', 'workspace_members.id as workspace_id') // Giữ cột 'workspace_members.id'
-        ->groupBy('workspaces.id', 'workspace_members.id') // Thêm cả 'workspace_members.id' vào GROUP BY
+        ->select('workspaces.*', 'workspace_members.id as workspace_id')
+        ->groupBy('workspaces.id', 'workspace_members.id')
         ->withCount([
             'workspaceMembers as member_count' => function ($query) {
                 $query->whereNull('deleted_at');
@@ -23,7 +24,7 @@
         ->where('workspace_members.is_active', 1)
         ->first();
 
-    Session::put('workspaceChecked', $workspaceChecked);
+        Session::put('workspaceChecked', $workspaceChecked);
 
     if ($workspaceChecked) {
         // Đếm số thành viên trong workspace
@@ -143,11 +144,14 @@
                 {{-- <li class="d-flex">
                     <a href="#">Thêm thành viên</a>
                 </li> --}}
-                <li class="d-flex">
-                    <a href="{{ route('showFormEditWorkspace') }}"
-                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
-                        việc</a>
-                </li>
+                @if ($workspaceChecked->authorize != 'Viewer')
+                    <li class="d-flex">
+                        <a href="{{ route('showFormEditWorkspace') }}"
+                            onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                            việc</a>
+                    </li>
+                @endif
+
                 <li class="border mb-3"></li>
 
                 @foreach ($workspaces as $workspace)
@@ -209,7 +213,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('inbox') }}">
                         <i class=" ri-notification-3-line"></i> <span data-key="">Thông Báo</span>
-                        @if (!empty($allNotifications) && $allNotifications->count() > 0 )
+                        @if (!empty($allNotifications) && $allNotifications->count() > 0)
                             @if ($allNotifications->count() <= 9)
                                 <span
                                     class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
@@ -260,12 +264,13 @@
                                 @php
                                     // $boardMembers = $board->members->unique('id');
 
-                                     $boardMembers = $board->members()
-                                                    ->where('authorize', '!=', 'Viewer')
-                                                    ->distinct('id')
-                                                    ->get();
-                                    $memberIsStar =$boardMembers->where('id', auth()->id())
-                                        ->first()->pivot->is_star ?? null;
+                                    $boardMembers = $board
+                                        ->members()
+                                        ->where('authorize', '!=', 'Viewer')
+                                        ->distinct('id')
+                                        ->get();
+                                    $memberIsStar =
+                                        $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
 
                                     // Lưu vào session
                                     session([

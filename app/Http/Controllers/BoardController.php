@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // use function Laravel\Prompts\select;
 //const PATH_UPLOAD = 'board';
 use App\Enums\AuthorizeEnum;
+use App\Events\EventNotification;
 use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
@@ -42,11 +43,10 @@ class BoardController extends Controller
 
     public function __construct(
         GoogleApiClientController $googleApiClient,
-        CatalogControler          $catalogController,
-        TaskController            $taskController,
-        AuthorizeWeb              $authorizeWeb
-    )
-    {
+        CatalogControler $catalogController,
+        TaskController $taskController,
+        AuthorizeWeb $authorizeWeb
+    ) {
         $this->googleApiClient = $googleApiClient;
         $this->catalogController = $catalogController;
         $this->taskController = $taskController;
@@ -68,8 +68,8 @@ class BoardController extends Controller
                 // Sửa điều kiện này để so sánh với trường lưu thông tin người tạo, ví dụ: 'created_by'
                 $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                        $query->where('user_id', $userId);
-                    });
+                    $query->where('user_id', $userId);
+                });
             })
             ->with(['workspace', 'boardMembers', 'catalogs.tasks']) // Tải các tasks liên quan
             ->get()
@@ -151,8 +151,10 @@ class BoardController extends Controller
 
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
-            return redirect()->route('b.index');
+            return redirect()->route('home');
+
         } catch (\Exception $exception) {
+            DB::rollBack();
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
                 'action' => 'danger'
@@ -296,16 +298,6 @@ class BoardController extends Controller
         $boardMemberInvites = $boardMemberMain->filter(function ($member) {
             return $member->is_accept_invite === 1;
         });
-
-        // Kiểm tra và cập nhật tất cả thành viên   đã được mời vào workspace cùng một lần truy vấn
-        // $userIds = $boardMemberInvites->pluck('user_id')->toArray();
-        // $invitedWorkspaceMembers = WorkspaceMember::whereIn('user_id', $userIds)
-        //     ->where('workspace_id', $board->workspace_id)
-        //     ->get();
-
-        // BoardMember::whereIn('user_id', $invitedWorkspaceMembers->pluck('user_id'))
-        //     ->where('board_id', $board->id)
-        //     ->update(['is_accept_invite' => 0]);
 
         // Lấy ra chủ sở hữu của bảng
         $boardOwner = $boardMemberMain->firstWhere('authorize', AuthorizeEnum::Owner()->value);
@@ -554,6 +546,9 @@ class BoardController extends Controller
         try {
             $title = "Phản hồi về lời mời tham gia bảng";
             $description = "Rất tiếc, lời mời tham gia bảng {{ $boardMember->board->name }} của bạn chưa được phê duyệt. Cảm ơn bạn đã quan tâm, và hy vọng sẽ có cơ hội hợp tác trong các dự án khác!";
+            if ($boardMember->user->id == Auth::id()) {
+                event(new EventNotification("Rất tiếc, lời mời tham gia bảng {{ $boardMember->board->name }} của bạn chưa được phê duyệt", 'success', $boardMember->user->id));
+            }
             $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
             $boardMember->delete();
             return back()->with([
@@ -565,7 +560,7 @@ class BoardController extends Controller
         }
     }
 
-    //Kích thành viên || Rời khỏi không gian làm việc
+    //Kích thành viên || Rời khỏi bảng
     //thông báo done
     public function activateMember($boardMemberId)
     {
@@ -580,14 +575,28 @@ class BoardController extends Controller
             ->where('workspace_id', $boardMember->board->workspace_id)->first();
         try {
             DB::beginTransaction();
-            if ($wspChecked->authorize->value !== "Viewer") {
+            if ($wspChecked->authorize->value == "Owner") {
+                $title = "Rời khỏi bảng công việc";
+                $description = 'Rất tiếc, bạn đã rời khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
+                $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
+                if ($boardMember->user->id == Auth::id()) {
+                    event(new EventNotification("Bạn đã rời khỏi bảng", 'success', $boardMember->user->id));
+                }
+
+            } else if ($wspChecked->authorize->value !== "Viewer" && $wspChecked->authorize->value !== "Owner") {
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
+                if ($boardMember->user->id == Auth::id()) {
+                    event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id));
+                }
                 $boardMember->forceDelete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() > 1) {
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
+                if ($boardMember->user->id == Auth::id()) {
+                    event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id));
+                }
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->forceDelete();
             } else if ($wspChecked->authorize->value == "Viewer" && $boardOneMemberChecked->count() == 1) {
@@ -602,6 +611,9 @@ class BoardController extends Controller
 
                 $title = "Rời khỏi bảng công việc";
                 $description = 'Rất tiếc, bạn đã bị loại khỏi bảng "' . $boardMember->board->name . '" trong không gian làm việc. Chúng tôi hy vọng sẽ có cơ hội làm việc cùng bạn trong tương lai!';
+                if ($boardMember->user->id == Auth::id()) {
+                    event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id));
+                }
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $boardMember->delete();
             }
@@ -658,7 +670,6 @@ class BoardController extends Controller
         } catch (\Throwable $th) {
             dd($th);
         }
-
     }
 
 
@@ -698,7 +709,6 @@ class BoardController extends Controller
                 'msg' => 'Có lỗi xảy ra!!'
             ]);
         }
-
     }
 
     public function destroyBoard(string $id)
@@ -953,10 +963,9 @@ class BoardController extends Controller
 
     // gửi mail thêm người vào bảng
     public
-    function inviteUserBoard(
+        function inviteUserBoard(
         Request $request
-    )
-    {
+    ) {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
@@ -983,12 +992,11 @@ class BoardController extends Controller
     //người dùng tham gia vào bảng
 //thông báo done
     public
-    function acceptInviteBoard(
+        function acceptInviteBoard(
         $uuid,
         $token,
         Request $request
-    )
-    {
+    ) {
         //xử lý khi admin gửi link invite cho người dùng
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
@@ -1170,8 +1178,8 @@ class BoardController extends Controller
     //người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
 //thông báo done
     public
-    function requestToJoinWorkspace()
-    {
+        function requestToJoinWorkspace(
+    ) {
 
         $workspace_member = WorkspaceMember::where('user_id', Auth::id())
             ->with('workspace')
@@ -1199,7 +1207,9 @@ class BoardController extends Controller
             $name = 'không gian làm việc ' . $workspace->name;
             $title = 'Lời mời vào không gian làm việc';
             $description = 'Người dùng "' . $userName . '" Đã gửi lời mời vào không gian làm việc!.';
-
+            if ($user->id == Auth::id()) {
+                event(new EventNotification($description, 'success', $user->id));
+            }
             // Gửi notification cho user
             $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
         });
@@ -1215,11 +1225,10 @@ class BoardController extends Controller
     //mời người dùng từ wsp vào bảng
 //thông báo done
     public
-    function inviteMemberWorkspace(
+        function inviteMemberWorkspace(
         $userId,
         $boardId
-    )
-    {
+    ) {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
@@ -1240,11 +1249,10 @@ class BoardController extends Controller
 
     //thông báo người dùng tham gia vào bảng
     protected
-    function notificationMemberInviteBoard(
+        function notificationMemberInviteBoard(
         $boardID,
         $userName
-    )
-    {
+    ) {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1261,6 +1269,9 @@ class BoardController extends Controller
                     $name = 'Bảng ' . $board->name;
                     $title = 'Thành viên mới trong bảng';
                     $description = 'Người dùng "' . $userName . '" đã được thêm vào bảng "' . $board->name . '".';
+                    if ($user->id == Auth::id()) {
+                        event(new EventNotification($description, 'success', $user->id));
+                    }
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }
             });
@@ -1269,11 +1280,10 @@ class BoardController extends Controller
 
     //thông báo nhượng quyền
     protected
-    function notificationManagementfranchiseBoard(
+        function notificationManagementfranchiseBoard(
         $boardID,
         $userName
-    )
-    {
+    ) {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1290,6 +1300,9 @@ class BoardController extends Controller
                     $name = 'Bảng ' . $board->name;
                     $title = 'Nhượng quyền';
                     $description = 'Người dùng "' . $userName . '" đã được nhượng quyền lên Chủ Nhóm.';
+                    if ($user->id == Auth::id()) {
+                        event(new EventNotification($description, 'success', $user->id));
+                    }
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }
             });
@@ -1298,11 +1311,10 @@ class BoardController extends Controller
 
     //thông báo thăng cấp thành viên
     protected
-    function notificationUpgradeMemberShipBoard(
+        function notificationUpgradeMemberShipBoard(
         $boardID,
         $userName
-    )
-    {
+    ) {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1319,6 +1331,9 @@ class BoardController extends Controller
                     $name = 'Bảng ' . $board->name;
                     $title = 'Thăng cấp thành viên';
                     $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
+                    if ($user->id == Auth::id()) {
+                        event(new EventNotification($description, 'success', $user->id));
+                    }
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }
             });
@@ -1327,11 +1342,10 @@ class BoardController extends Controller
 
     //thông báo thăng cấp thành viên
     protected
-    function notificationAcceptMemberBoard(
+        function notificationAcceptMemberBoard(
         $boardID,
         $userName
-    )
-    {
+    ) {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1348,6 +1362,9 @@ class BoardController extends Controller
                     $name = 'Bảng ' . $board->name;
                     $title = 'Thăng cấp thành viên';
                     $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
+                    if ($user->id == Auth::id()) {
+                        event(new EventNotification($description, 'success', $user->id));
+                    }
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }
             });
