@@ -404,9 +404,11 @@
 
                     @if (!empty(session('board')))
                         @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
+
                             <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
                                  style="background-color: #091e420f"
                                  id="board-archiver-view-header-{{$archiverBoard->id}}">
+
                                 <div class="d-flex align-items-center ">
                                     @if ($archiverBoard->image)
                                         <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
