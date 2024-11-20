@@ -94,16 +94,17 @@
 
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
-    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
-        aria-expanded="false" data-bs-offset="0,20">
+    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
+         data-bs-toggle="dropdown"
+         aria-expanded="false" data-bs-offset="0,20">
 
         @if ($workspaceChecked)
             @if ($workspaceChecked->image)
                 <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt="" class="rounded avatar-sm"
-                    style="width: 25px;height: 25px">
+                     style="width: 25px;height: 25px">
             @else
                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                    style="width: 25px;height: 25px">
+                     style="width: 25px;height: 25px">
                     {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                 </div>
             @endif
@@ -113,14 +114,14 @@
                 <i class=" ri-arrow-drop-down-line fs-20"></i>
             </span>
 
-            <ul class="dropdown-menu dropdown-menu-md p-3" data-simplebar style="max-height: 600px; width:300px">
+            <ul class="dropdown-menu dropdown-menu-md p-3" style=" width:300px">
                 <li class="d-flex">
                     @if ($workspaceChecked->image)
                         <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt=""
-                            class="rounded avatar-sm">
+                             class="rounded avatar-sm">
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                            style="width: 40px;height: 40px">
+                             style="width: 40px;height: 40px">
                             {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                         </div>
                     @endif
@@ -140,33 +141,31 @@
                         </p>
                     </section>
                 </li>
-                {{-- <li class="d-flex">
-                    <a href="#">Thêm thành viên</a>
-                </li> --}}
+
                 <li class="d-flex">
                     <a href="{{ route('showFormEditWorkspace') }}"
-                        onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                       onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
                         việc</a>
                 </li>
                 <li class="border mb-3"></li>
-
-                @foreach ($workspaces as $workspace)
-                    <li class="d-flex">
-                        @if ($workspace->image)
-                            <img src="{{ asset('storage/' . $workspace->image) }}" alt=""
-                                class="rounded-circle avatar-sm">
-                        @else
-                            <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                style="width: 40px;height: 40px">
-                                {{ strtoupper(substr($workspace->name, 0, 1)) }}
-                            </div>
-                        @endif
-                        <section class=" ms-2">
-                            <p class="fs-15 fw-bolder"
-                                onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
-                                {{ \Str::limit($workspace->name, 25) }}
-                            </p>
-                            <p class="fs-10" style="margin-top: -10px">
+                <div data-simplebar style="max-height: 40vh;">
+                    @foreach ($workspaces as $workspace)
+                        <li class="d-flex">
+                            @if ($workspace->image)
+                                <img src="{{ asset('storage/' . $workspace->image) }}" alt=""
+                                     class="rounded-circle avatar-sm">
+                            @else
+                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                     style="width: 40px;height: 40px">
+                                    {{ strtoupper(substr($workspace->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <section class=" ms-2">
+                                <p class="fs-15 fw-bolder"
+                                   onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
+                                    {{ \Str::limit($workspace->name, 25) }}
+                                </p>
+                                <p class="fs-10" style="margin-top: -10px">
                                 <span>
                                     @if ($workspace->access == 'private')
                                         Riêng tư
@@ -175,12 +174,15 @@
                                     @endif
                                 </span>
 
-                                <i class=" ri-subtract-line"></i>
-                                <span>{{ $workspace->member_count }} thành viên</span>
-                            </p>
-                        </section>
-                    </li>
-                @endforeach
+                                    <i class=" ri-subtract-line"></i>
+                                    <span>{{ $workspace->member_count }} thành viên</span>
+                                </p>
+                            </section>
+                        </li>
+                    @endforeach
+                </div>
+
+
                 <li class="d-flex fs-15 text-center align-items-center" style="margin-bottom: -20px"
                     data-bs-toggle="modal" data-bs-target="#workspaceModal">
                     <i class="ri-add-line"></i>
@@ -196,10 +198,6 @@
             </div>
 
             <ul class="navbar-nav" id="navbar-nav">
-
-                <li class="nav-item mt-3">
-
-                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('home') }}">
                         <i class="ri-home-3-line"></i> <span data-key="">Trang Chủ</span>
@@ -221,7 +219,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link"
-                        href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
+                       href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>
@@ -232,124 +230,79 @@
                 </li>
 
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
-                @if (isset($workspaceBoards))
-                    @foreach ($workspaceBoards->boards as $board)
-                        <li class="nav-item">
-                            <div class="nav-link menu-link d-flex text-center align-items-center"
-                                style="justify-content: space-between;">
-                                <a class=""
-                                    href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
-                                    <div class="d-flex justify-content-flex-start align-items-center">
-                                        @if ($board->image)
-                                            <img id="image-board-{{ $board->id }}"
-                                                class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                src="{{ asset('storage/' . $board->image) }}"
-                                                style="width: 30px; height: 30px" alt="image" />
-                                        @else
-                                            <div id="image-board-{{ $board->id }}"class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                style="width: 30px;height: 30px">
-                                                {{ strtoupper(substr($board->name, 0, 1)) }}
-                                            </div>
-                                        @endif
-                                        <span id="name-board-{{ $board->id }}" class="text-white fs-15 text-nowrap"
-                                            style="width: 20px">
+                <div
+                    @if($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0) data-simplebar
+                    style="max-height: 30vh"
+                    @else  data-simplebar style="max-height: 55vh" @endif>
+                    @if (isset($workspaceBoards))
+                        @foreach ($workspaceBoards->boards as $board)
+                            <li class="nav-item">
+                                <div
+                                    class="nav-link menu-link d-flex text-center align-items-center justify-content-between">
+                                    <a class=""
+                                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
+                                        <div class="d-flex justify-content-flex-start align-items-center">
+                                            @if ($board->image)
+                                                <img id="image-board-{{ $board->id }}"
+                                                     class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                     src="{{ asset('storage/' . $board->image) }}"
+                                                     style="width: 30px; height: 30px" alt="image"/>
+                                            @else
+                                                <div id="image-board-{{ $board->id }}"
+                                                     class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                     style="width: 30px;height: 30px">
+                                                    {{ strtoupper(substr($board->name, 0, 1)) }}
+                                                </div>
+                                            @endif
+                                            <span id="name-board-{{ $board->id }}" class="text-white fs-15 text-nowrap"
+                                                  style="width: 20px">
                                             {{ \Str::limit($board->name, 10) }}
                                         </span>
-                                    </div>
-                                </a>
-                                @php
-                                    // $boardMembers = $board->members->unique('id');
+                                        </div>
+                                    </a>
+                                    @php
+                                        // $boardMembers = $board->members->unique('id');
 
-                                     $boardMembers = $board->members()
-                                                    ->where('authorize', '!=', 'Viewer')
-                                                    ->distinct('id')
-                                                    ->get();
-                                    $memberIsStar =$boardMembers->where('id', auth()->id())
-                                        ->first()->pivot->is_star ?? null;
+                                         $boardMembers = $board->members()
+                                                        ->where('authorize', '!=', 'Viewer')
+                                                        ->distinct('id')
+                                                        ->get();
+                                        $memberIsStar =$boardMembers->where('id', auth()->id())
+                                            ->first()->pivot->is_star ?? null;
 
-                                    // Lưu vào session
-                                    session([
-                                        'memberIsStar_' . $board->id => $memberIsStar,
-                                        'boardMembers_' . $board->id => $boardMembers,
-                                    ]);
-                                @endphp
-                                <div class="d-flex justify-content-flex-end align-items-center ms-1">
-                                    <button type="button"
-                                        class="btn avatar-xs mt-n1 p-0 favourite-btn
-                                        @if ($memberIsStar == 1) active @endif"
-                                        onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                        id="is_star_{{ $board->id }}">
+                                        // Lưu vào session
+                                        session([
+                                            'memberIsStar_' . $board->id => $memberIsStar,
+                                            'boardMembers_' . $board->id => $boardMembers,
+                                        ]);
+                                    @endphp
+                                    <div class="d-flex justify-content-flex-end align-items-center ms-1">
                                         <button type="button"
-                                            class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                                class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if ($memberIsStar == 1) active @endif"
-                                            onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                            id="2_is_star_{{ $board->id }}">
+                                                onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                id="is_star_{{ $board->id }}">
+                                            <button type="button"
+                                                    class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                        @if ($memberIsStar == 1) active @endif"
+                                                    onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                                    id="2_is_star_{{ $board->id }}">
                                             <span class="avatar-title bg-transparent fs-15">
                                                 <i class="ri-star-fill fs-20 mx-2"></i>
                                             </span>
+                                            </button>
                                         </button>
-                                        <a class="text-reset dropdown-btn" data-bs-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <span class="fw-medium text-muted fs-12">
-                                                <i class="ri-more-fill fs-20" title=""></i>
-                                            </span>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-start">
-                                            <a class="dropdown-item">
-                                                <input type="text" name="name"
-                                                    class="form-control border-0 text-center fs-16 fw-medium bg-transparent"
-                                                    id="name_board_{{ $board->id }}" value="{{ $board->name }}"
-                                                    onchange="updateBoard({{ $board->id }})" />
-                                            </a>
-                                            <div class="dropdown-item ms-2 me-2">
-                                                <div class="mb-2">
-                                                    <label for="">Ảnh của bảng</label>
-
-                                                    <input type="file" class="form-control" name="image"
-                                                        id="image_board_{{ $board->id }}"
-                                                        value="{{ $board->image }}"
-                                                        onchange="updateBoard({{ $board->id }})" />
-                                                </div>
-                                            </div>
-
-                                            <!-- Đóng bảng -->
-                                            <div
-                                                class="dropdown-item d-flex mt-3 mb-3 justify-content-center cursor-pointer close-board dropdown">
-                                                <div class="d-flex align-items-center justify-content-center rounded p-3 text-white w-100"
-                                                    style="height: 30px; background-color: #c7c7c7;"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ri-archive-line"></i>
-                                                    <p class="ms-2 me-2 mt-3 fs-15">Đóng bảng</p>
-                                                </div>
-                                                <!-- Dropdown Menu con -->
-                                                <ul class="dropdown-menu dropdown-menu-end w-100"
-                                                    style="left: 100%; top: 0;">
-                                                    <h5 class="text-center">Đóng bảng?</h5>
-                                                    <li>
-                                                        <p class="dropdown-item-text">
-                                                            Bạn có thể tìm và mở lại các bảng đã đóng ở cuối
-                                                            <a
-                                                                href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">trang
-                                                                các bảng của bạn</a>.
-                                                        </p>
-
-                                                    </li>
-                                                    <li class="d-flex justify-content-center">
-                                                        <button class="btn btn-danger" type="button">Đóng</button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    @endforeach
-                @endif
+                            </li>
+                        @endforeach
+                    @endif
+                </div>
             </ul>
         </div>
 
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-            id="vertical-hover">
+                id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
 
@@ -359,7 +312,7 @@
         @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                    style="background-color: #f0f4ff; border-radius: 8px;">
+                     style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đang là khách</strong> trong không gian làm việc này.
@@ -371,19 +324,19 @@
                     Yêu cầu tham gia
                 </button>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         const requestButton = document.getElementById('requestJoinButton');
 
                         if (requestButton) {
-                            requestButton.addEventListener('click', function() {
+                            requestButton.addEventListener('click', function () {
                                 // Gửi yêu cầu AJAX
                                 fetch("{{ route('b.requestToJoinWorkspace') }}", {
-                                        method: 'GET',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
-                                        },
-                                    })
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
+                                    },
+                                })
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
@@ -413,7 +366,7 @@
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                    style="background-color: #f0f4ff; border-radius: 8px;">
+                     style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
@@ -425,7 +378,7 @@
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 2)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                    style="background-color: #ffd9d7; border-radius: 8px;">
+                     style="background-color: #ffd9d7; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã bị từ chối yêu cầu</strong> tham gia không gian làm việc: <strong>
@@ -437,19 +390,19 @@
                     Yêu cầu tham gia lại
                 </button>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         const requestButton = document.getElementById('requestJoinButton');
 
                         if (requestButton) {
-                            requestButton.addEventListener('click', function() {
+                            requestButton.addEventListener('click', function () {
                                 // Gửi yêu cầu AJAX
                                 fetch("{{ route('b.requestToJoinWorkspace') }}", {
-                                        method: 'GET',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
-                                        },
-                                    })
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
+                                    },
+                                })
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
@@ -477,13 +430,13 @@
             </div>
         @endif
     @endif
-    <div class="sidebar-background"></div>
+{{--    <div class="sidebar-background"></div>--}}
 </div>
 
 
 <style>
     #scrollbar {
-        height: calc(100vh - 150px);
+        height: calc(100vh);
         /* Điều chỉnh chiều cao để không chạm vào phần thông báo */
         overflow-y: auto;
     }

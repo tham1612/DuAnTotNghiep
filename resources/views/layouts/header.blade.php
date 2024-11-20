@@ -135,7 +135,7 @@
                             <div class="p-2">
 
                                 @if (!empty($boardIsStars))
-                                    @foreach ($boardIsStars as $boardIsStar)
+                                    @forelse($boardIsStars as $boardIsStar)
                                         <div
                                             class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                             <div class="d-flex align-items-center board-star-container">
@@ -176,7 +176,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @empty
+                                        Không có bảng nào đánh dấu sao
+                                    @endforelse
                                 @endif
                             </div>
                         </div>
@@ -403,7 +405,8 @@
                     @if (!empty(session('board')))
                         @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
                             <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
-                                 style="background-color: #091e420f">
+                                 style="background-color: #091e420f"
+                                 id="board-archiver-view-header-{{$archiverBoard->id}}">
                                 <div class="d-flex align-items-center ">
                                     @if ($archiverBoard->image)
                                         <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""

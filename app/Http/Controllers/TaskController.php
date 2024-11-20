@@ -427,9 +427,8 @@ class TaskController extends Controller
         $task = Task::withTrashed()->findOrFail($id);
         $boardId = Task::withTrashed()
             ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
-            ->join('boards', 'catalogs.board_id', '=', 'boards.id')
             ->where('tasks.id', $task->id)
-            ->value('boards.id');
+            ->value('catalogs.board_id');
         $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
         if (!$authorize) {
             return response()->json([

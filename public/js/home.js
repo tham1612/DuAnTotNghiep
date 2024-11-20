@@ -169,8 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function updateBoard(boardId) {
     var formData = new FormData();
-    var boardName = $('#name_board_' + boardId).val();
-    formData.append('name', boardName);
+
     var image = document.getElementById('image_board_' + boardId);
     if (image.files.length > 0) {
         formData.append('image', image.files[0]);

@@ -9,10 +9,15 @@ use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Catalog;
+use App\Models\CheckList;
 use App\Models\CheckListItemMember;
 use App\Models\Color;
+use App\Models\Follow_member;
 use App\Models\Tag;
 use App\Models\Task;
+use App\Models\TaskAttachment;
+use App\Models\TaskComment;
+use App\Models\TaskMember;
 use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
@@ -121,6 +126,13 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
+        $authorize = $this->authorizeWeb->authorizeEditWorkspace($request->workspace_id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
@@ -133,26 +145,27 @@ class BoardController extends Controller
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");
         try {
-            DB::transaction(function () use ($data) {
-                $board = Board::query()->create($data);
-                BoardMember::query()->create([
-                    'user_id' => auth()->id(),
-                    'board_id' => $board->id,
-                    'authorize' => 'Owner',
-                    'invite' => now(),
-                ]);
-                // ghi lại hoạt động của bảng
-                activity('Người dùng đã tạo bảng ')
-                    ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                    ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                    ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
-                    ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
-            });
+            DB::beginTransaction();
+            $board = Board::query()->create($data);
+            BoardMember::query()->create([
+                'user_id' => auth()->id(),
+                'board_id' => $board->id,
+                'authorize' => 'Owner',
+                'invite' => now(),
+            ]);
+            // ghi lại hoạt động của bảng
+            activity('Người dùng đã tạo bảng ')
+                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
+                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
+                ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
+                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
 
+            DB::commit();
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
             session(['action' => 'success']);
-            return redirect()->route('b.index');
+            return redirect()->route('b.edit', $board->id);
         } catch (\Exception $exception) {
+            DB::rollBack();
             return back()->with([
                 'msg' => 'Error: ' . $exception->getMessage(),
                 'action' => 'danger'
@@ -715,30 +728,60 @@ class BoardController extends Controller
         $board = Board::withTrashed()->findOrFail($id);
         $catalogsId = Catalog::withTrashed()
             ->where('board_id', $id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+            ->pluck('id');
 
         try {
             DB::beginTransaction();
 
-            BoardMember::query()->where('board_id', $id)->delete();
+            BoardMember::query()->where('board_id', $board->id)->delete();
 
             foreach ($catalogsId as $catalogId) {
-                $this->catalogController->destroyCatalog($catalogId);
+                $catalog = Catalog::withTrashed()->findOrFail($catalogId);
+                $tasksId = Task::withTrashed()
+                    ->where('catalog_id', $catalogId)
+                    ->pluck('id');
+                foreach ($tasksId as $taskId) {
+                    // đơn
+                    Follow_member::query()->where('task_id', $taskId)->delete();
+                    TaskMember::query()->where('task_id', $taskId)->delete();
+                    TaskTag::query()->where('task_id', $taskId)->delete();
+                    TaskAttachment::query()->where('task_id', $taskId)->delete();
+                    $task = Task::withTrashed()->findOrFail($taskId);
+                    foreach ($task->checkLists as $checklist) {
+                        // Lặp qua các checklist item của mỗi checklist và xóa các item members
+                        foreach ($checklist->checkListItems as $checklistItem) {
+                            $checklistItem->checkListItemMembers()->delete();
+                        }
+                        // Xóa tất cả các checklist items của checklist
+                        $checklist->checkListItems()->delete();
+                    }
+
+                    TaskComment::query()->where('task_id', $taskId)->forceDelete();
+
+                    //  kết hợp
+                    CheckList::query()->where('task_id', $taskId)->delete();
+
+                    $task->forceDelete();
+                    if ($task->id_google_calendar) $this->googleApiClient->deleteEvent($task->id_google_calendar);
+                }
+
+                $catalog->forceDelete();
             }
+//            $tagIds = Tag::where('board_id', $board->id)->pluck('id');
+//            TaskTag::whereIn('tag_id', $tagIds)->delete();
 
-            Tag::query()->where('board_id', $id)->delete();
-
+            Tag::where('board_id', $board->id)->delete();
             $board->forceDelete();
 
             DB::commit();
 
             return response()->json([
                 'action' => 'success',
-                'msg' => 'Xóa bảng thành công!!'
+                'msg' => 'Xóa bảng thành công!!',
+                'board' => $board
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',
@@ -779,7 +822,7 @@ class BoardController extends Controller
             return response()->json([
                 'action' => 'success',
                 'msg' => 'Hoàn tác bảng thành công!!',
-                'board' => $id,
+                'board' => $board,
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
