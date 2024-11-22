@@ -5,6 +5,8 @@ $userId = \Illuminate\Support\Facades\Auth::id();
 
 $template_boards = \App\Models\TemplateBoard::query()->with(['templateCatalogs'])->get();
 
+$currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
+
 $workspace = \App\Models\Workspace::query()
     ->whereHas('users', function ($query) use ($userId) {
         $query->where('user_id', $userId)->where('is_active', 1);
@@ -22,12 +24,13 @@ $boardIsStars = \App\Models\Board::query()
     ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
     ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
     ->join('board_members', 'board_members.board_id', '=', 'boards.id')
+    ->where('workspaces.id', $currentWorkspace->id)
     ->where('workspace_members.is_active', 1)
     ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
     ->where('board_members.is_star', 1)
     ->get();
 
 $userId = \Illuminate\Support\Facades\Auth::id();
-$currentWorkspace = \App\Models\WorkspaceMember::where('user_id', $userId)->where('is_active', 1)->first();
+
 
 

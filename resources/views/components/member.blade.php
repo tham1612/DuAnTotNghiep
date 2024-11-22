@@ -167,13 +167,13 @@
                                                 <i class="ri-more-2-fill"></i>
                                             </button>
                                             <!-- Popup xuất hiện khi nhấn nút ba chấm -->
-                                            {{-- @if (Auth::id() == $boardOwner->user_id)
+                                            @if (Auth::id() == $boardOwner->user_id)
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li><a class="dropdown-item text-danger"
                                                             href="{{ route('b.activateMember', $boardOwner->bm_id) }}">Rời
                                                             khỏi</a></li>
                                                 </ul>
-                                            @endif --}}
+                                            @endif
                                         </div>
                                     </div>
                                 </li>

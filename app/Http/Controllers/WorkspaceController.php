@@ -8,6 +8,15 @@ use App\Events\UserInvitedToWorkspace;
 use App\Http\Requests\UpdateWorkspaceRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
+use App\Models\Catalog;
+use App\Models\CheckList;
+use App\Models\Follow_member;
+use App\Models\Tag;
+use App\Models\Task;
+use App\Models\TaskAttachment;
+use App\Models\TaskComment;
+use App\Models\TaskMember;
+use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
@@ -31,6 +40,12 @@ class WorkspaceController extends Controller
      * Display a listing of the resource.
      */
     const PATH_UPLOAD = 'workspaces';
+    public $authorizeWeb;
+
+    public function __construct(AuthorizeWeb $authorizeWeb)
+    {
+        $this->authorizeWeb = $authorizeWeb;
+    }
 
     public function index(string $id)
     {
@@ -327,8 +342,7 @@ class WorkspaceController extends Controller
                         dd($th);
                         throw $th;
                     }
-                }
-                //xử lý nếu bảng private
+                } //xử lý nếu bảng private
                 else {
                     BoardMember::create([
                         'user_id' => $user->id,
@@ -415,52 +429,87 @@ class WorkspaceController extends Controller
 
     public function delete(string $id)
     {
-        $userId = Auth::id();
-        $workspaceAuthorize = WorkspaceMember::query()
-            ->select(columns: 'authorize')
-            ->where('user_id', $userId)
-            ->where('is_active', 1)
-            ->first();
-
-        if ($workspaceAuthorize->authorize->value !== AuthorizeEnum::Owner()->value && $workspaceAuthorize->authorize->value !== AuthorizeEnum::Sub_Owner()->value) {
-            $response = [
-                'success' => false,
-                'message' => 'Bạn không có quyền xóa không gian làm việc.',
-                'action' => 'error'
-            ];
-            return request()->expectsJson() ? response()->json($response, 403) : redirect()->route('showFormEditWorkspace')->with($response);
+        $authorize = $this->authorizeWeb->authorizeWorkspaceOwner($id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
         }
 
+        $wsp = Workspace::query()->findOrFail($id);
+        $boards = Board::withTrashed()
+            ->where('workspace_id', $wsp->id)
+            ->get();
+//        dd($boards);
+
+
         try {
-            $ws = WorkspaceMember::query()->find($id);
-            $ws->update([
-                'is_active' => 0
+            DB::beginTransaction();
+            foreach ($boards as $board) {
+                BoardMember::query()->where('board_id', $board->id)->delete();
+                $catalogs = Catalog::withTrashed()
+                    ->where('board_id', $board->id)
+                    ->get();
+
+                foreach ($catalogs as $catalog) {
+                    $tasks = Task::withTrashed()
+                        ->where('catalog_id', $catalog->id)
+                        ->get();
+                    foreach ($tasks as $task) {
+                        // đơn
+                        Follow_member::query()->where('task_id', $task->id)->delete();
+                        TaskMember::query()->where('task_id', $task->id)->delete();
+                        TaskTag::query()->where('task_id', $task->id)->delete();
+                        TaskAttachment::query()->where('task_id', $task->id)->delete();
+
+                        foreach ($task->checkLists as $checklist) {
+                            // Lặp qua các checklist item của mỗi checklist và xóa các item members
+                            foreach ($checklist->checkListItems as $checklistItem) {
+                                $checklistItem->checkListItemMembers()->delete();
+                            }
+                            // Xóa tất cả các checklist items của checklist
+                            $checklist->checkListItems()->delete();
+                        }
+
+                        TaskComment::query()->where('task_id', $task->id)->forceDelete();
+
+                        //  kết hợp
+                        CheckList::query()->where('task_id', $task->id)->delete();
+
+                        $task->forceDelete();
+                        if ($task->id_google_calendar) $this->googleApiClient->deleteEvent($task->id_google_calendar);
+                    }
+
+                    $catalog->forceDelete();
+                }
+                Tag::where('board_id', $board->id)->delete();
+                $board->forceDelete();
+            }
+
+
+            WorkspaceMember::query()->where('workspace_id', $wsp->id)->forceDelete();
+
+            $wsp->delete();
+            $wsChecked = WorkspaceMember::query()->where('user_id', Auth::id())->inRandomOrder('id')->first();
+            if ($wsChecked) {
+                $wsChecked->update([
+                    'is_active' => 1,
+                ]);
+            }
+
+            DB::commit();
+            return response()->json([
+                'action' => 'success',
+                'msg' => 'Bạn đã xóa Thành công không gian làm việc!!',
             ]);
-            $ws->delete();
-
-            activity('Workspace Deleted')
-                ->causedBy(Auth::user())
-                ->withProperties(['workspace_name' => $ws->name])
-                ->log('Người dùng đã xóa không gian làm việc.');
-
-            $response = [
-                'success' => true,
-                'message' => 'Xóa không gian làm việc thành công.',
-                'action' => 'warning'
-            ];
-
-            return request()->expectsJson()
-                ? response()->json($response)
-                : redirect()->route('user', $userId)->with($response);
-        } catch (\Throwable $th) {
-            $response = [
-                'success' => false,
-                'message' => 'Có lỗi xảy ra: ' . $th->getMessage(),
-                'action' => 'error'
-            ];
-            return request()->expectsJson()
-                ? response()->json($response, 500)
-                : redirect()->route('user', $userId)->with($response);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            dd($exception->getMessage());
+            return back()->with([
+                'msg' => 'Error: ' . $exception->getMessage(),
+                'action' => 'danger'
+            ]);
         }
     }
 
@@ -861,7 +910,7 @@ class WorkspaceController extends Controller
             Auth::logout();
             Session::put('workspace_id', $workspace->id);
             Session::put('access', $workspace->access);
-            Session::put('authorize', AuthorizeEnum::Member());
+            Session::put('authorize', AuthorizeEnum::Viewer());
             Session::put('invited', value: 'case3');
             return redirect()->route('login');
         }
@@ -980,7 +1029,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -1004,7 +1053,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -1030,7 +1079,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -1053,7 +1102,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 
@@ -1075,7 +1124,7 @@ class WorkspaceController extends Controller
         $workspace = Workspace::with([
             'users' => function ($query) {
                 $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
+                ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
             }
         ])->find($workspaceID);
 

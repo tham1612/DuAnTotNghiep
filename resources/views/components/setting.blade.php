@@ -118,6 +118,17 @@
             <div>
                 <section class="d-flex mt-3 fs-20">
                     <i class="ri-menu-2-line"></i>
+                    <p class="ms-2">Ảnh của bảng</p>
+                </section>
+                <input type="file" class="form-control" name="image"
+                       id="image_board_{{ $board->id }}"
+                       value="{{ $board->image }}"
+                       onchange="updateBoard({{ $board->id }})"/>
+            </div>
+
+            <div>
+                <section class="d-flex mt-3 fs-20">
+                    <i class="ri-menu-2-line"></i>
                     <p class="ms-2">Mô tả</p>
                 </section>
                 <form action="#" method="post">
@@ -224,7 +235,7 @@
                     <div class="row p-3 " id="catalog-container-setting-board">
                         @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
                             <div id="catalog_id_archiver_{{$archiverCatalog->id}}"
-                                class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle mt-2">
+                                 class="d-flex align-items-center justify-content-between  border rounded bg-warning-subtle mt-2">
                                 <p class="fs-16 text-danger mt-3">{{$archiverCatalog->name}}</p>
                                 <div>
                                     <button class="btn btn-outline-dark"
@@ -262,25 +273,25 @@
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-eye-line align-bottom"></i>
-                                                    </a>
+                                                </a>
                                             </li>
                                             <!-- bình luận -->
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-question-answer-line align-bottom"></i>
-                                                   </a>
+                                                </a>
                                             </li>
                                             <!-- tệp đính kèm -->
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-attachment-2 align-bottom"></i>
-                                                    </a>
+                                                </a>
                                             </li>
                                             <!-- checklist -->
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" class="text-muted">
                                                     <i class="ri-checkbox-line align-bottom"></i>
-                                                   </a>
+                                                </a>
                                             </li>
                                         </ul>
                                     </div>

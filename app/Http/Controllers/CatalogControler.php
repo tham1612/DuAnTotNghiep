@@ -169,10 +169,7 @@ class CatalogControler extends Controller
     public function destroyCatalog(string $id)
     {
         $catalog = Catalog::withTrashed()->findOrFail($id);
-        $boardId = Catalog::withTrashed()
-            ->join('boards', 'catalogs.board_id', '=', 'boards.id')
-            ->where('catalogs.id', $catalog->id)
-            ->value('boards.id');
+        $boardId = $catalog->board_id;
         $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
         if (!$authorize) {
             return response()->json([
@@ -183,9 +180,7 @@ class CatalogControler extends Controller
 
         $tasksId = Task::withTrashed()
             ->where('catalog_id', $id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+            ->pluck('id');
 
         try {
 
@@ -203,6 +198,7 @@ class CatalogControler extends Controller
                 'msg' => 'Xóa vĩnh viễn danh sách thành công!!'
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',
@@ -214,7 +210,9 @@ class CatalogControler extends Controller
 
     public function restoreCatalog(string $id)
     {
+
         $catalog = Catalog::withTrashed()->findOrFail($id);
+
         $boardId = Catalog::withTrashed()
             ->join('boards', 'catalogs.board_id', '=', 'boards.id')
             ->where('catalogs.id', $catalog->id)
@@ -241,12 +239,13 @@ class CatalogControler extends Controller
             }
 
             $catalog->restore();
-
             DB::commit();
             return response()->json([
-                'action' => 'sucess',
+                'action' => 'success',
                 'msg' => 'Khôi phục danh sách thành công!!',
-                'catalog' => $catalog
+                'catalog' => $catalog,
+                'task_count' => $catalog->tasks->count(),
+                'tasks'=>$catalog->tasks
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
