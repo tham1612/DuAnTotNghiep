@@ -194,8 +194,9 @@ class CatalogControler extends Controller
 
             DB::commit();
             return response()->json([
-                'action' => 'sucess',
-                'msg' => 'Xóa vĩnh viễn danh sách thành công!!'
+                'action' => 'success',
+                'msg' => 'Xóa vĩnh viễn danh sách thành công!!',
+                'catalog' => $catalog,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -245,7 +246,7 @@ class CatalogControler extends Controller
                 'msg' => 'Khôi phục danh sách thành công!!',
                 'catalog' => $catalog,
                 'task_count' => $catalog->tasks->count(),
-                'tasks'=>$catalog->tasks
+                'tasks' => $catalog->tasks
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());

@@ -634,12 +634,6 @@
         });
     });
 
-    // Lặp qua tất cả các phần tử delete-archiver và thêm sự kiện
-    deleteArchivers.forEach((deleteArchiver) => {
-        deleteArchiver.addEventListener('click', () => {
-            window.location.reload();
-        });
-    });
 
     // Hàm ẩn khối bình luận và hiện textarea khi người dùng nhấp vào
     function toggleCommentForm(element) {

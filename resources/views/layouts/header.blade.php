@@ -475,19 +475,20 @@
         const searchDropdown = document.getElementById('search-dropdown');
         const workspaceId = document.getElementById('workspace-id').value;
 
-        // Hiện dropdown với chữ "Tìm Kiếm" khi nhấn vào ô input
-        searchInput.addEventListener('focus', function () {
-            searchDropdown.classList.add('show');
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
 
-            // Hiển thị "Tìm Kiếm" khi không có input
-            if (searchInput.value === '') {
-                searchDropdown.innerHTML =
-                    '<div class="dropdown-header">Tìm Kiếm bảng, danh sách, thẻ công việc</div>';
-            }
-        });
+        function handleSearch() {
 
-        // Lắng nghe sự kiện input
-        searchInput.addEventListener('input', function () {
             const query = searchInput.value;
             if (query.length > 1) {
                 fetch(`/api/search?query=${query}&workspace_id=${workspaceId}`)
@@ -580,7 +581,21 @@
                 // Hiển thị "Tìm Kiếm" nếu input rỗng
                 searchDropdown.innerHTML = '<div class="dropdown-header">Tìm Kiếm</div>';
             }
+        }
+
+        // Hiện dropdown với chữ "Tìm Kiếm" khi nhấn vào ô input
+        searchInput.addEventListener('focus', function () {
+            searchDropdown.classList.add('show');
+
+            // Hiển thị "Tìm Kiếm" khi không có input
+            if (searchInput.value === '') {
+                searchDropdown.innerHTML =
+                    '<div class="dropdown-header">Tìm Kiếm bảng, danh sách, thẻ công việc</div>';
+            }
         });
+
+        // Lắng nghe sự kiện input
+        searchInput.addEventListener('input', debounce(handleSearch, 1000));
     });
 </script>
 
