@@ -121,6 +121,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
             ->name('tags.update');
 
+        Route::delete('/tasks/tag/delete', [\App\Http\Controllers\TagController::class, 'destroy'])
+            ->name('tags.delete');
 
         //        attachment
         Route::post('/tasks/attachments/create', [\App\Http\Controllers\AttachmentController::class, 'store'])

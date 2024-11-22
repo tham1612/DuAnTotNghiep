@@ -113,17 +113,13 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             $.ajax({
                 url: `/tasks/updatePosition/${taskId}`,
                 type: "PUT",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                dataType: "json",
                 data: {
                     position,
                     catalog_id_old,
                     catalog_id
                 },
                 success: function (response) {
-                    notificationWeb(response.action, response.msg)
+                    if (response) notificationWeb(response.action, response.msg)
                 }
             })
             // })
