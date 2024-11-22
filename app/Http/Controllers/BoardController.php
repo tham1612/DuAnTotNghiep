@@ -601,7 +601,7 @@ class BoardController extends Controller
                 } else {
                     return back()->with([
                         'msg' => "Bạn phải nhượng quyền cho người khác trước khi rời khỏi bảng",
-                        'action' => 'error'
+                        'action' => 'danger'
                     ]);
                 }
             } else if ($boardMember->authorize->value !== "Viewer" && $boardMember->authorize->value !== "Owner") {
