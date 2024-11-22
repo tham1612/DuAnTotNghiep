@@ -173,6 +173,7 @@ class TaskController extends Controller
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
                 $activity->board_id = $task->catalog->board_id;
+                $activity->workspace_id = $task->catalog->board->workspace_id;
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
         if (Auth::user()->access_token) {
@@ -246,6 +247,7 @@ class TaskController extends Controller
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
                 $activity->board_id = $task->catalog->board_id;
+                $activity->workspace_id = $task->catalog->board->workspace_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
 
@@ -314,6 +316,7 @@ class TaskController extends Controller
                     $activity->catalog_id = $task->catalog_id;
                     $activity->task_id = $task->id;
                     $activity->board_id = $task->catalog->board_id;
+                    $activity->workspace_id = $task->catalog->board->workspace_id;
                 })
                 ->log('vị trí các task trong catalog mới đã thay đổi.');
             // cap nhat lai vi tri o catalog cu
@@ -336,6 +339,7 @@ class TaskController extends Controller
                     $activity->catalog_id = $task->catalog_id;
                     $activity->task_id = $task->id;
                     $activity->board_id = $task->catalog->board_id;
+                    $activity->workspace_id = $task->catalog->board->workspace_id;
                 })
                 ->log('Vị trí các task trong catalog cũ đã thay đổi.');
         } else {
@@ -365,6 +369,7 @@ class TaskController extends Controller
                     $activity->catalog_id = $task->catalog_id;
                     $activity->task_id = $task->id;
                     $activity->board_id = $task->catalog->board_id;
+                    $activity->workspace_id = $task->catalog->board->workspace_id;
                 })
                 ->log('Vị trí các task trong cùng catalog đã thay đổi.');
         }

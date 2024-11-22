@@ -29,12 +29,16 @@ class ChecklistController extends Controller
             ->withProperties([
                 'checklist_name' => $checkList->name,
                 'task_id' => $checkList->task_id,
+                'catalog_id' => $checkList->task->catalog_id,
                 'board_id' => $checkList->task->catalog->board_id,
+                'workspace_id' => $checkList->task->catalog->board->workspace_id,
             ])
             ->tap(function (Activity $activity) use ($checkList) {
                 $activity->checklist_id = $checkList->id;
                 $activity->task_id = $checkList->task_id;
+                $activity->catalog_id = $checkList->task->catalog_id;
                 $activity->board_id = $checkList->task->catalog->board_id;
+                $activity->workspace_id = $checkList->task->catalog->board->workspace_id;
             })
             ->log('Checklist "' . $checkList->name . '" đã được thêm vào task "' . $checkList->task->text . '"');
         return response()->json([
@@ -156,12 +160,16 @@ class ChecklistController extends Controller
                 ->withProperties([
                     'checklist_name' => $checkList->name,
                     'task_id' => $checkList->task_id,
+                    'catalog_id' => $checkList->task->catalog_id,
                     'board_id' => $checkList->task->catalog->board_id,
+                    'workspace_id' => $checkList->task->catalog->board->workspace_id,
                 ])
                 ->tap(function (Activity $activity) use ($checkList) {
                     $activity->checklist_id = $checkList->id;
                     $activity->task_id = $checkList->task_id;
+                    $activity->catalog_id = $checkList->task->catalog_id;
                     $activity->board_id = $checkList->task->catalog->board_id;
+                    $activity->workspace_id = $checkList->task->catalog->board->workspace_id;
                 })
                 ->log('Checklist "' . $checkList->name . '" đã được xóa "' . $checkList->task->text . '"');
             return response()->json([
@@ -197,11 +205,15 @@ class ChecklistController extends Controller
                     'checklist_item_id' => $checkListItem->id,
                     'checklist_name' => $checkList->name,
                     'task_id' => $checkList->task_id,
+                    'catalog_id' => $checkList->task->catalog_id,
                     'board_id' => $checkList->task->catalog->board_id ?? null,  // Kiểm tra sự tồn tại của board_id
+                    'workspace_id' => $checkList->task->catalog->board->workspace_id,
                 ])
                 ->tap(function (Activity $activity) use ($checkList) {
                     $activity->checklist_id = $checkList->id;
                     $activity->task_id = $checkList->task_id;
+                    $activity->catalog_id = $checkList->task->catalog_id;
+                    $activity->workspace_id = $checkList->task->catalog->board->workspace_id;
                     $activity->board_id = $checkList->task->catalog->board_id ?? null;
                 })
                 ->log('Checklist Item đã được thêm vào Checklist "' . $checkList->name . '" thuộc Task "' . $checkList->task->text . '"');
@@ -238,12 +250,16 @@ class ChecklistController extends Controller
                 ->withProperties([
                     'checklist_item_id' => $checkListItem->id,
                     'checklist_name' => $checkList->name,
+                    'catalog_id' => $checkList->task->catalog_id,
                     'task_id' => $task->id,
+                    'workspace_id' => $checkList->task->catalog->board->workspace_id,
                     'board_id' => $task->catalog->board_id ?? null,  // Kiểm tra sự tồn tại của board_id
                 ])
                 ->tap(function (Activity $activity) use ($checkList, $task) {
                     $activity->checklist_id = $checkList->id;
                     $activity->task_id = $task->id;
+                    $activity->catalog_id = $checkList->task->catalog_id;
+                    $activity->workspace_id = $checkList->task->catalog->board->workspace_id;
                     $activity->board_id = $task->catalog->board_id ?? null;
                 })
                 ->log('Checklist Item "' . $checkListItem->text . '" đã được xóa khỏi Checklist "' . $checkList->name . '" thuộc Task "' . $task->text . '"');
