@@ -195,9 +195,7 @@ class BoardController extends Controller
             'board' => $board,
             'colors' => $colors,
         ]);
-
         $viewType = \request('viewType', 'board');
-
         // https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
         // https://laravel.com/docs/10.x/eloquent-relationships#nested-eager-loading
         $board->load([
@@ -221,7 +219,9 @@ class BoardController extends Controller
                             'taskComments',
                             'taskComments.user',
                         ])->where(function ($subQuery) use ($request) {
-
+                            if (!empty($request->search)) {
+                                $subQuery->where('text', 'LIKE', "%{$request->search}%");
+                            }
                             // Điều kiện 1: Lọc thành viên
                             if ($request->has('no_member') || $request->has('it_me')) {
                                 $subQuery->where(function ($query) use ($request) {
@@ -877,17 +877,20 @@ class BoardController extends Controller
                 'authorize' => 'Owner',
                 'invite' => now(),
             ]);
+            $tagMap = [];
+
             if (isset($data['isTag'])) {
                 $tagOld = Tag::query()->where('board_id', $data['id'])->get();
                 foreach ($tagOld as $tag) {
-                    Tag::query()->create([
+                    $newTag = Tag::query()->create([
                         'board_id' => $boardNew->id,
                         'color_code' => $tag['color_code'],
                         'name' => $tag['name'],
                     ]);
+                    $tagMap[$tag->id] = $newTag->id;
                 }
             }
-            if ($data['isCatalog']) {
+            if (isset($data['isCatalog'])) {
                 $catalogOld = Catalog::query()->where('board_id', $data['id'])->get();
                 foreach ($catalogOld as $catalog) {
                     $catalogNew = Catalog::query()->create([
@@ -918,13 +921,15 @@ class BoardController extends Controller
 
                             //                            xử lý thêm tag vào từng task
                             if (isset($data['isTag'])) {
-                                $tagOld = TaskTag::query()->where('task_id', $task['id'])->get();
+                                $taskTagOld = TaskTag::query()->where('task_id', $task['id'])->get();
 
-                                foreach ($tagOld as $tag) {
-                                    TaskTag::query()->create([
-                                        'task_id' => $taskNew->id,
-                                        'tag_id' => $tag['tag_id'],
-                                    ]);
+                                foreach ($taskTagOld as $taskTag) {
+                                    if (isset($tagMap[$taskTag->tag_id])) {
+                                        TaskTag::query()->create([
+                                            'task_id' => $taskNew->id,
+                                            'tag_id' => $tagMap[$taskTag->tag_id], // Use the new Tag ID
+                                        ]);
+                                    }
                                 }
                             }
                         }
@@ -932,7 +937,6 @@ class BoardController extends Controller
                 }
 
             }
-
             // ghi lại hoạt động của bảng
             activity('Người dùng đã tạo bảng ')
                 ->performedOn($boardNew) // đối tượng liên quan là bảng vừa tạo
@@ -1025,11 +1029,20 @@ class BoardController extends Controller
     public
         function inviteUserBoard(
         Request $request
-    ) {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+
+    )
+    {
+        $authorize = $this->authorizeWeb->authorizeDeleteCreateMember($request->id);
+        if (!$authorize) {
+//            return response()->json([
+//                'action' => 'error',
+//                'msg' => 'Bạn không có quyền!!',
+//            ]);
+            session(['msg' => 'Bạn không có quyền!!']);
+            session(['action' => 'danger']);
+            return back();
+
         }
-        session()->forget('view_only');
         $boardId = $request->id;
         $board = Board::query()
             ->where('id', $boardId)

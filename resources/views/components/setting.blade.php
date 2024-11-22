@@ -43,9 +43,13 @@
                     <i class=" ri-price-tag-3-line fs-22"></i>
                     <p class="ms-3 fs-14 mt-3">Nhãn</p>
                 </li>
+                {{--                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">--}}
+                {{--                    <i class="ri-eye-line fs-22"></i>--}}
+                {{--                    <p class="ms-3 fs-14 mt-3">Theo dõi</p>--}}
+                {{--                </li>--}}
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
-                    <i class="ri-eye-line fs-22"></i>
-                    <p class="ms-3 fs-14 mt-3">Theo dõi</p>
+                    <i class=" ri-share-line fs-22"></i>
+                    <p class="ms-3 fs-14 mt-3">In, xuất và chia sẻ</p>
                 </li>
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
                 >
@@ -57,10 +61,7 @@
                         @include('dropdowns.copyBoard')
                     </div>
                 </li>
-                <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer">
-                    <i class=" ri-share-line fs-22"></i>
-                    <p class="ms-3 fs-14 mt-3">In, xuất và chia sẻ</p>
-                </li>
+
                 <li class=" d-flex align-items-center justify-content-flex-start cursor-pointer"
                 >
                     <i class="ri-subtract-line fs-22"></i>
@@ -211,26 +212,18 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#storageCatalog" role="tab">
                         Danh sách lưu trữ
                     </a>
-                    <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
-                            {{ $board_m_invite->count() }}
-                        @endif</span>
                 </li>
                 <li class="nav-item d-flex align-items-center justify-content-between">
                     <a class="nav-link" data-bs-toggle="tab" href="#storageTask" role="tab">
                         Thẻ đã lưu trữ
                     </a>
-                    <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                          style="border-radius: 100%; width: 20px ;height: 20px;">@if(!empty( $board_m_invite))
-                            {{ $board_m_invite->count() }}
-                        @endif</span>
                 </li>
             </ul>
 
             <div class="tab-content text-muted">
                 <div class="tab-pane active" id="storageCatalog" role="tabpanel">
 
-                    <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">
+{{--                    <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">--}}
 
                     <div class="row p-3 " id="catalog-container-setting-board">
                         @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
@@ -255,7 +248,7 @@
                 </div>
                 <div class="tab-pane" id="storageTask" role="tabpanel">
 
-                    <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">
+{{--                    <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">--}}
 
                     <div class="row p-3 " id="task-container-setting-board">
                         @php $board->load(['catalogs.tasks' => function ($query) {
@@ -411,16 +404,16 @@
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh)" class="p-2">
             <form action="">
-                <input type="text" name="" id=""
-                       class="form-control border-1" placeholder="Tìm nhãn..."/>
+                {{--                <input type="text" name="" id=""--}}
+                {{--                       class="form-control border-1" placeholder="Tìm nhãn..."/>--}}
                 <div class="mt-3">
-                    <ul class="" style="list-style: none; margin-left: -32px">
+                    <ul class="ul-tag-board" style="list-style: none; margin-left: -32px">
                         @foreach($board->tags as $tag)
-                            <li class="mt-1 d-flex justify-content-between align-items-center">
+                            <li class="mt-1 d-flex justify-content-between align-items-center"
+                                id="tag-board-item-{{$tag->id}}">
                                 <div class="d-flex align-items-center w-100">
-                                    {{--                                    <input type="checkbox" name="" id="danger_tags"--}}
-                                    {{--                                           class="form-check-input"/>--}}
                                     <span class=" mx-2 rounded p-2 col-11 text-white"
+                                          id="tag-board-{{$tag->id}}"
                                           style="background-color: {{$tag->color_code}}">{{$tag->name}}  </span>
                                 </div>
                                 <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
@@ -429,6 +422,7 @@
                                 <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
                                     <h5 class="text-center">Cập nhật</h5>
                                     <form>
+                                        <input type="hidden" name="id" value="{{$tag->id}}">
                                         <input type="hidden" name="board_id" value="{{$tag->board_id}}">
                                         <div class="mt-3">
                                             <label class="fs-16">Tiêu đề</label>
@@ -443,7 +437,8 @@
                                                          data-bs-placement="top"
                                                          title="{{$color->name}}">
                                                         <div
-                                                            class="color-box border rounded @if($color->code == $tag->color_code) selected-tag @endif"
+                                                            class="color-box border rounded
+                                                            @if($color->code == $tag->color_code) selected-tag @endif"
                                                             style="width: 50px;height: 30px; background-color: {{$color->code}}">
                                                         </div>
                                                     </div>
@@ -451,8 +446,11 @@
                                             </div>
                                         </div>
                                         <div class="mt-3">
-                                            <button class="btn btn-primary" id="update-tag-form">
+                                            <button class="btn btn-outline-primary update-tag-form">
                                                 Cập nhật
+                                            </button>
+                                            <button class="btn btn-outline-danger delete-tag-form">
+                                                Xóa
                                             </button>
                                         </div>
                                     </form>
@@ -466,12 +464,44 @@
                         class="d-flex align-items-center justify-content-center rounded p-3 w-100 cursor-pointer"
                         style=" height: 30px; background-color: #e4e6ea">
                         <p class="ms-2 mt-3 fs-15" data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-bs-offset="50,-250">
+                           aria-expanded="false" data-bs-offset="0,0">
                             Tạo nhãn mới
                         </p>
                         <!--dropdown nhãn-->
                         <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 100%">
-                            {{--                                                        @include('dropdowns.createTag')--}}
+                            <h5 class="text-center">Tạo nhãn mới</h5>
+                            <form>
+                                <input type="hidden" name="board_id" value="{{request()->route('id')}}">
+                                <div class="mt-3">
+                                    <label for="">Tiêu đề</label>
+                                    <input type="text" name="name" class="name-input form-control border-1"
+                                           placeholder="Nhập tên nhãn"/>
+                                </div>
+
+                                <div class="mt-3">
+                                    <label class="fs-14">Chọn màu</label>
+                                    <div class="d-flex flex-wrap gap-2 select-color" id="color-options">
+                                        @if (isset($colors))
+                                            @foreach ($colors as $color)
+                                                <div class="color-option" data-color="{{ $color->code }}"
+                                                     data-bs-toggle="tooltip"
+                                                     data-bs-trigger="hover" data-bs-placement="top"
+                                                     title="{{ $color->name }}">
+                                                    <div class="color-box border rounded"
+                                                         style="width: 50px;height: 30px; background-color: {{ $color->code }}"></div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <button type="button"
+                                            class="btn btn-outline-primary waves-effect waves-light create-board-tag-form">
+                                        Tạo mới
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -480,3 +510,167 @@
     </div>
 
 </div>
+<script>
+    let selectedColor;
+    document.querySelectorAll('.color-box').forEach(box => {
+        box.addEventListener('click', function () {
+            // Xóa lớp 'selected' khỏi tất cả các ô màu
+            document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected-tag'));
+            // Thêm lớp 'selected' vào ô màu đang được click
+            this.classList.add('selected-tag');
+        });
+    });
+
+    // Hàm tạo ra ID ngẫu nhiên với độ dài tùy chỉnh
+    function generateRandomId(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    // Gán ID ngẫu nhiên cho mỗi form và thêm thuộc tính data-form-id cho các button
+    $('form').each(function () {
+        const randomId = generateRandomId(10);
+        $(this).attr('id', randomId); // Gán ID cho form
+        $(this).find('button').attr('data-form-id', randomId); // Gán data-form-id cho button
+    });
+
+    // Hàm chuyển đổi từ RGB sang HEX
+    function rgbToHex(rgb) {
+        const rgbValues = rgb.match(/\d+/g); // Tách chuỗi RGB thành r, g, b
+        const r = parseInt(rgbValues[0]).toString(16).padStart(2, '0');
+        const g = parseInt(rgbValues[1]).toString(16).padStart(2, '0');
+        const b = parseInt(rgbValues[2]).toString(16).padStart(2, '0');
+        return `#${r}${g}${b}`.toUpperCase(); // Trả về mã màu HEX
+    }
+
+
+    // Gán sự kiện cho phần tử cha
+    $('.select-color').on('click', 'div', function (e) {
+        e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+        console.log("Đã click vào ô màu."); // Log để kiểm tra
+        // Đảm bảo lấy đúng element chứa màu
+        const rgb = $(this).css('background-color'); // Lấy giá trị background-color của div được click
+
+        // Kiểm tra nếu giá trị thực sự là dạng rgb trước khi chuyển sang hex
+        if (rgb && rgb.startsWith('rgb')) {
+            selectedColor = rgbToHex(rgb); // Chuyển đổi sang mã màu HEX
+            console.log('Màu đã chọn (HEX):', selectedColor); // Hiển thị mã màu đã chọn
+        } else {
+            console.log('Không có màu hợp lệ được chọn.');
+        }
+    });
+    // Sự kiện click cho button tạo thẻ tag
+    $('button.update-tag-form').off('click').on('click', function (e) {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của button
+        const formId = $(this).data('form-id'); // Lấy ID của form từ button
+        const form = $('#' + formId); // Lấy form theo ID
+
+        // Lấy dữ liệu từ form cụ thể
+        const formData = {
+            id: form.find('input[name="id"]').val(),
+            board_id: form.find('input[name="board_id"]').val(),
+            task_id: form.find('input[name="task_id"]').val(),
+            name: form.find('input[name="name"]').val(),
+            color_code: selectedColor // Sử dụng mã màu đã chọn trước đó
+        };
+
+        // Gửi dữ liệu qua AJAX
+        $.ajax({
+            type: 'POST',
+            url: '/tasks/tag/update',
+            data: formData,
+            success: function (response) {
+                const tagBoard = $(`#tag-board-${response.tag.id}`);
+                if (tagBoard) {
+                    tagBoard.css('background-color', response.tag.color_code);
+
+                    // Cập nhật nội dung
+                    tagBoard.text(response.tag.name);
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi:', error);
+            }
+        });
+    });
+
+    $('button.delete-tag-form').off('click').on('click', function (e) {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của button
+        const formId = $(this).data('form-id'); // Lấy ID của form từ button
+        const form = $('#' + formId); // Lấy form theo ID
+
+        // Lấy dữ liệu từ form cụ thể
+        const formData = {
+            id: form.find('input[name="id"]').val(),
+        };
+
+        // Gửi dữ liệu qua AJAX
+        $.ajax({
+            type: 'DELETE',
+            url: '/tasks/tag/delete',
+            data: formData,
+            success: function (response) {
+                const tagBoard = $(`#tag-board-item-${response.tag.id}`);
+                tagBoard.remove();
+            },
+            error: function (error) {
+                console.error('Lỗi:', error);
+            }
+        });
+    });
+
+    $('button.create-board-tag-form').off('click').on('click', function (e) {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của button
+        const formId = $(this).data('form-id'); // Lấy ID của form từ button
+        const form = $('#' + formId); // Lấy form theo ID
+
+        // Lấy dữ liệu từ form cụ thể
+        const formData = {
+            board_id: form.find('input[name="board_id"]').val(),
+            name: form.find('input[name="name"]').val(),
+            color_code: selectedColor // Sử dụng mã màu đã chọn trước đó
+        };
+
+        // Gửi dữ liệu qua AJAX
+        $.ajax({
+            type: 'POST',
+            url: '/b/tag/create',
+            data: formData,
+            success: function (response) {
+                notificationWeb(response.action, response.msg);
+                appendTagBoard(response.tag);
+                $('.dropdown-menu').dropdown('hide');
+
+            },
+            error: function (error) {
+                console.error('Lỗi:', error);
+            }
+        });
+    });
+
+    function appendTagBoard(tag) {
+        // Tạo phần tử <li> mới
+        const newLi = document.createElement("li");
+        newLi.className = "mt-1 d-flex justify-content-between align-items-center";
+
+        // Nội dung HTML bên trong thẻ <li>
+        newLi.innerHTML = `
+        <div class="d-flex align-items-center w-100">
+            <span class="mx-2 rounded p-2 col-11 text-white"
+                  style="background-color: ${tag.color_code}">${tag.name}</span>
+        </div>
+        <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false"></i>
+    `;
+
+        // Chèn <li> mới vào cuối <ul>
+        const ulElement = document.querySelector(".ul-tag-board"); // Lấy thẻ ul theo selector
+        if (ulElement) {
+            ulElement.appendChild(newLi);
+        }
+    }
+</script>

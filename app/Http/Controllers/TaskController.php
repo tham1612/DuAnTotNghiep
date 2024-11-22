@@ -204,10 +204,7 @@ class TaskController extends Controller
 
     public function updatePosition(Request $request, string $id)
     {
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
+
 
         $task = Task::query()->findOrFail($id);
         $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);

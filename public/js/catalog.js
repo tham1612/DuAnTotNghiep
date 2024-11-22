@@ -45,22 +45,22 @@ function archiverAllTasks(catalogId) {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Lưu trữ",
-        cancelButtonText: "Đóng",
+        cancelButtonText: "Hủy",
     }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: `/catalogs/archiverAllTasks/${catalogId}`,
-                type: 'POST',
-                success: function (response) {
-                    console.log(response.task)
-                    response.task.forEach(item => {
-                        $('.task-of-catalog-' + catalogId).hide()
-                        let taskViewBoard = document.getElementById(`task_id_view_${item.id}`)
-                        if (taskViewBoard) {
-                            taskViewBoard.remove();
-                        }
-                        // Tạo cấu trúc HTML cho task mới
-                        let taskHtml = `
+            if (result.isConfirmed) {
+                $.ajax({
+                        url: `/catalogs/archiverAllTasks/${catalogId}`,
+                        type: 'POST',
+                        success: function (response) {
+                            notificationWeb(response.action, response.msg)
+                            response.task.forEach(item => {
+                                $('.task-of-catalog-' + catalogId).hide()
+                                let taskViewBoard = document.getElementById(`task_id_view_${item.id}`)
+                                if (taskViewBoard) {
+                                    taskViewBoard.remove();
+                                }
+                                // Tạo cấu trúc HTML cho task mới
+                                let taskHtml = `
             <div id="task_id_archiver_${item.id}">
                 <div class="bg-warning-subtle border rounded ps-2">
                     <p class="fs-16 mt-2 text-danger">${item.text}</p>
@@ -93,24 +93,23 @@ function archiverAllTasks(catalogId) {
                 </div>
             </div>`;
 
-                        // Thêm vào DOM ở vị trí phù hợp
-                        let container = document.getElementById('task-container-setting-board'); // Chỉnh sửa ID của container theo nhu cầu
-                        container.insertAdjacentHTML('beforeend', taskHtml);
-                    });
-                // })
-            notificationWeb(response.action, response.msg)
-        },
-            error: function (xhr) {
-                notificationWeb(response.action, response.msg)
+                                // Thêm vào DOM ở vị trí phù hợp
+                                let container = document.getElementById('task-container-setting-board'); // Chỉnh sửa ID của container theo nhu cầu
+                                container.insertAdjacentHTML('beforeend', taskHtml);
+                            });
+                            // })
+
+                        },
+                        error: function (xhr) {
+                            notificationWeb(response.action, response.msg)
+                        }
+                    }
+                )
+                ;
             }
         }
     )
-        ;
-    }
-}
-
-)
-;
+    ;
 }
 
 function restoreCatalog(catalogId) {
@@ -129,7 +128,7 @@ function restoreCatalog(catalogId) {
                     <div class="card-body">
                         <div class="d-flex mb-2">
                             <h6 class="fs-15 mb-0 flex-grow-1" data-bs-toggle="modal" data-bs-target="#detailCardModal" data-task-id="${task.id}">
-                                ${task.text }
+                                ${task.text}
                             </h6>
                         </div>
                         <div class="mt-3" data-bs-toggle="modal" data-bs-target="#detailCardModal">
@@ -225,16 +224,35 @@ function restoreCatalog(catalogId) {
 
 
 function destroyCatalog(catalogId) {
-    $.ajax({
-        url: `/catalogs/destroyCatalog/${catalogId}`,
-        type: 'POST',
-        success: function (response) {
-            notificationWeb(response.action, response.msg)
-        },
-        error: function (xhr) {
-            notificationWeb(response.action, response.msg)
+    Swal.fire({
+        title: "Xóa vĩnh viễn danh sách",
+        text: "Xóa vĩnh viễn danh sách bạn không thể khôi phục lại, bạn có chắc muốn tiếp tục?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/catalogs/destroyCatalog/${catalogId}`,
+                type: 'POST',
+                success: function (response) {
+                    notificationWeb(response.action, response.msg)
+                    // Xóa catalog khỏi danh sách lưu trữ
+                    let catalogArchiver = document.getElementById(`catalog_id_archiver_${catalogId}`);
+                    if (catalogArchiver) {
+                        catalogArchiver.remove();
+                    }
+                },
+                error: function (xhr) {
+                    notificationWeb(response.action, response.msg)
+                }
+            });
         }
     });
+
 }
 
 // cập nhật danh sách
