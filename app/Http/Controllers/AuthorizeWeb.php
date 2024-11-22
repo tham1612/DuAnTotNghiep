@@ -100,11 +100,11 @@ class AuthorizeWeb extends Controller
             ->where('id', $boardId)
             ->first()
             ? Board::query()
-            ->where('id', $boardId)
-            ->first()
+                ->where('id', $boardId)
+                ->first()
             : Board::withTrashed()
-            ->where('id', $boardId)
-            ->first();
+                ->where('id', $boardId)
+                ->first();
 
         if ($authorize->archiver_permission == 'board') {
             //            tất cả thành viên trong bảng
@@ -133,14 +133,41 @@ class AuthorizeWeb extends Controller
             : false;
     }
 
-    public function authorizeCreateBoardOnWorkspace($ws)
+    public function authorizeCreateBoardOnWorkspace($workspaceId)
     {
         $checkAuthorize = WorkspaceMember::query()
             ->where('user_id', auth()->id())
-            ->where('id', $ws)
+            ->where('workspace_id', $workspaceId)
             ->first();
         if ($checkAuthorize) {
             return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member')
+                ? true
+                : false;
+        }
+        return false;
+    }
+
+    public function authorizeWorkspaceOwner($workspaceId)
+    {
+        $checkAuthorize = WorkspaceMember::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $workspaceId)
+            ->first();
+        if ($checkAuthorize) {
+            return $checkAuthorize->authorize == 'Owner'
+                ? true
+                : false;
+        }
+        return false;
+    }
+    public function authorizeEditWorkspace($workspaceId)
+    {
+        $checkAuthorize = WorkspaceMember::query()
+            ->where('user_id', auth()->id())
+            ->where('id', $workspaceId)
+            ->first();
+        if ($checkAuthorize) {
+            return $checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member'
                 ? true
                 : false;
         }

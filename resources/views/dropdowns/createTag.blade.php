@@ -92,7 +92,7 @@
 
         // Kiểm tra xem người dùng đã chọn màu chưa
         if (!selectedColor) {
-            alert('Vui lòng chọn một màu trước khi tạo tag.');
+            notificationWeb('error', 'Vui lòng chọn một màu trước khi tạo tag.')
             return; // Ngừng nếu chưa chọn màu
         }
 
@@ -124,11 +124,11 @@
                 let tagTaskAdd = `
             <div data-bs-toggle="tooltip" data-bs-trigger="hover"
                  data-bs-placement="top" data-tag-id="${formData.task_id}-${response.tag_id}"
-                 title="${ response.tagTaskName}">
+                 title="${response.tagTaskName}">
                 <div
                     class="badge border rounded d-flex align-items-center justify-content-center"
-                    style=" background-color: ${ response.tagTaskColor}">
-                    ${ response.tagTaskName}
+                    style=" background-color: ${response.tagTaskColor}">
+                    ${response.tagTaskName}
                 </div>
             </div>
             `;
@@ -139,7 +139,7 @@
                         <input type="checkbox" checked
                                class="form-check-input-tag" value="${formData.task_id}-${response.tag_id}"/>
                         <span class="mx-2 rounded p-2 col-10 text-white"
-                              style="background-color: ${ response.tagTaskColor}">${response.tagTaskName}</span>
+                              style="background-color: ${response.tagTaskColor}">${response.tagTaskName}</span>
                     </div>
                     <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
                        aria-haspopup="true"

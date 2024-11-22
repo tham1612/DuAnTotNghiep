@@ -169,8 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function updateBoard(boardId) {
     var formData = new FormData();
-    var boardName = $('#name_board_' + boardId).val();
-    formData.append('name', boardName);
+
     var image = document.getElementById('image_board_' + boardId);
     if (image.files.length > 0) {
         formData.append('image', image.files[0]);
@@ -229,7 +228,13 @@ function updateIsStar2(boardId, userId,) {
             user_id: userId,
         },
         success: function (response) {
+            // Lấy phần tử nút bấm dựa vào ID
+            const starButton = document.getElementById(`is_star_${boardId}`);
 
+            if (starButton) {
+                // Thêm hoặc xóa lớp 'active' khi thành công
+                starButton.classList.toggle('active');
+            }
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
         },
         error: function (xhr) {

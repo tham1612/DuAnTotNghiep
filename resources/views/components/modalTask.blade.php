@@ -289,7 +289,7 @@
                     </div>
                     <div class="col-4">
                         <label for="">Rủi do</label>
-                        <select name="" id="" class="form-select no-arrow"
+                        <select name="" id="" class="form-select"
                                 onchange="updatePriorityOrRisk('risk', this.value, {{$task->id}})">
                             <option value="" hidden selected>Chọn...</option>
                             <option value="High" @selected($task->risk == 'High')>Cao</option>
@@ -546,8 +546,10 @@
     </div>
 
 </div>
+
+
 <script>
-     function debounce(func, wait) {
+    function debounce(func, wait) {
         let timeout;
         return function (...args) {
             const context = this;
@@ -632,12 +634,6 @@
         });
     });
 
-    // Lặp qua tất cả các phần tử delete-archiver và thêm sự kiện
-    deleteArchivers.forEach((deleteArchiver) => {
-        deleteArchiver.addEventListener('click', () => {
-            window.location.reload();
-        });
-    });
 
     // Hàm ẩn khối bình luận và hiện textarea khi người dùng nhấp vào
     function toggleCommentForm(element) {
@@ -686,3 +682,9 @@
         }
     }
 </script>
+
+
+
+
+
+

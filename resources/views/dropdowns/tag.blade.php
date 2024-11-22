@@ -1,56 +1,19 @@
 <h5 class="text-center">Nhãn</h5>
 <form action="">
-    <input type="text" name="" id=""
-           class="form-control border-1" placeholder="Tìm nhãn..."/>
+{{--    <input type="text" name="" id=""--}}
+{{--           class="form-control border-1" placeholder="Tìm nhãn..."/>--}}
     <div class="mt-3">
         <strong class="fs-14">Nhãn</strong>
-        <ul class=""  data-simplebar style="list-style: none; margin-left: -32px; max-height: 200px;" id="danh-sach-tag-{{$boardId}}">
+        <ul class="" data-simplebar style="list-style: none; margin-left: -32px; max-height: 200px;"
+            id="danh-sach-tag-{{$boardId}}">
             @foreach($tags as $tag)
                 <li class="mt-1 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center w-100">
                         <input type="checkbox" {{ $tag->isChecked ? 'checked' : '' }}
                         class="form-check-input-tag" value="{{$taskId}}-{{$tag->id}}"/>
-                        <span class=" mx-2 rounded p-2 col-10 text-white"
+                        <span class=" mx-2 rounded p-2 col-11 text-white"
                               style="background-color: {{$tag->color_code}}">{{$tag->name}} </span>
                     </div>
-                    <i class="ri-pencil-line fs-20 cursor-pointer" data-bs-toggle="dropdown"
-                       aria-haspopup="true"
-                       aria-expanded="false"></i>
-
-
-{{--                    <div class="dropdown-menu dropdown-menu-md p-3 border-2" style="width: 110%">--}}
-{{--                        <h5 class="text-center">Cập nhật</h5>--}}
-{{--                        <form>--}}
-{{--                            <input type="hidden" name="board_id" value="{{$tag->board_id}}">--}}
-{{--                            <div class="mt-3">--}}
-{{--                                <label for="">Tiêu đề</label>--}}
-{{--                                <input type="text" name="name" class="form-control border-1"--}}
-{{--                                       placeholder="Nhập tên nhãn" value="{{$tag->name}}"/>--}}
-{{--                            </div>--}}
-{{--                            <div class="mt-3">--}}
-{{--                                <label class="fs-14">Chọn màu</label>--}}
-{{--                                <div class="d-flex flex-wrap gap-2 select-color">--}}
-{{--                                    @if(isset($colors))--}}
-{{--                                        @foreach($colors as $color)--}}
-{{--                                            <div data-bs-toggle="tooltip" data-bs-trigger="hover"--}}
-{{--                                                 data-bs-placement="top"--}}
-{{--                                                 title="{{$color->name}}">--}}
-{{--                                                <div--}}
-{{--                                                    class="color-box border rounded @if($color->code == $tag->color_code) selected-tag @endif"--}}
-{{--                                                    style="width: 50px;height: 30px; background-color: {{$color->code}}">--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        @endforeach--}}
-{{--                                    @endif--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            <div class="mt-3">--}}
-{{--                                <button class="btn btn-primary" id="update-tag-form">--}}
-{{--                                    Cập nhật--}}
-{{--                                </button>--}}
-{{--                            </div>--}}
-{{--                        </form>--}}
-{{--                    </div>--}}
                 </li>
             @endforeach
         </ul>
@@ -67,7 +30,7 @@
             <!--dropdown nhãn-->
             <div class="dropdown-menu dropdown-menu-md p-3 dropdown-menu-creat-tag" style="width: 125%"
                  id="dropdown-create-tag-{{ $taskId }}">
-{{--                dropdowns.createTag--}}
+                {{--                dropdowns.createTag--}}
             </div>
         </div>
     </div>

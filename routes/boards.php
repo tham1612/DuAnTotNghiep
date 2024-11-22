@@ -73,7 +73,9 @@ Route::middleware(['auth', 'isWorkspace'])
 
                     Route::post('/destroyBoard/{id}', [BoardController::class, 'destroyBoard'])->name('destroyBoard');
 
-
+                    // tạo tag
+                    Route::post('/tag/create', [\App\Http\Controllers\TagController::class, 'createBoardTag'])
+                        ->name('tags.createBoardTag');
                 });
         });
 

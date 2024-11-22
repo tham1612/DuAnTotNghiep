@@ -191,7 +191,7 @@ function submitAddCatalog(boardId) {
             }
 
             $('#nameCatalog').val('');
-
+            window.tasks_list.push(document.getElementById(`${response.catalog.name}-${response.catalog.id}`));
             $('.dropdown-menu').dropdown('hide');
             console.log('Catalog đã được thêm thành công!', response);
         },

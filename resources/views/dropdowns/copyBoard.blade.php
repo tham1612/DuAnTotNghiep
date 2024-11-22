@@ -19,17 +19,18 @@
                 <input type="checkbox" name="isCatalog" id=""
                        class="form-check-input" checked value="1"/>
                 <label for="">Danh sách công việc</label>
-                <span>(1)</span>
+                <span>({{$board->catalogs->count()}})</span>
             </li>
-{{--            <li>--}}
-{{--                <input type="checkbox" name="isTask" id=""--}}
-{{--                       class="form-check-input" checked value="1"/>--}}
-{{--                <label for="">Thẻ công việc</label> <span>(1)</span>--}}
-{{--            </li>--}}
+            {{--            <li>--}}
+            {{--                <input type="checkbox" name="isTask" id=""--}}
+            {{--                       class="form-check-input" checked value="1"/>--}}
+            {{--                <label for="">Thẻ công việc</label> <span>(1)</span>--}}
+            {{--            </li>--}}
             <li>
                 <input type="checkbox" name="isTag" id=""
                        class="form-check-input" checked value="1"/>
-                <label for="">Nhãn công việc</label> <span>(1)</span>
+                <label for="">Nhãn công việc</label>
+                <span>({{$board->tags->count()}})</span>
             </li>
         </ul>
     </div>

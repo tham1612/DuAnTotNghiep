@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\User::class)->constrained();
             $table->foreignIdFor(\App\Models\Board::class)->constrained();
             $table->enum('authorize',  \App\Enums\AuthorizeEnum::getValues());
-            $table->boolean('is_star')->default(false);
-            $table->boolean('follow')->default(false);
+            $table->boolean('is_star')->default(false);        
             $table->date('invite');
             $table->softDeletes();
 

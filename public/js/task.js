@@ -94,14 +94,14 @@ function restoreTask(taskId) {
 
 function destroyTask(taskId) {
     Swal.fire({
-        title: "Xóa vĩnh viễn task",
-        text: "Xóa vĩnh viễn task bạn không thể khôi phục lại, bạn có chắc muốn tiếp tục?",
-        icon: "error",
+        title: "Xóa vĩnh viễn thẻ",
+        text: "Xóa vĩnh viễn thẻ bạn không thể khôi phục lại, bạn có chắc muốn tiếp tục?",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
         cancelButtonColor: "#3085d6",
-        confirmButtonText: "Xóa",
-        cancelButtonText: "Đóng",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({

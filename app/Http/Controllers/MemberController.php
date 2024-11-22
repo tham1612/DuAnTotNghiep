@@ -31,11 +31,6 @@ class MemberController extends Controller
     public function addMemberTask(Request $request)
     {
 
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-
         $data = $request->all();
 
         $task = Task::query()->findOrFail($data['task_id']);
