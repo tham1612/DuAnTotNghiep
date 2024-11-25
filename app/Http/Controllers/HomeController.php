@@ -34,8 +34,13 @@ class HomeController extends Controller
 
         $userId = Auth::id();
 
+        $currentWorkspace = WorkspaceMember::where('user_id', $userId)
+        ->where('is_active', 1)
+        ->first();
+
         // Lấy tất cả các bảng mà người dùng tạo hoặc thuộc về workspace
-        $boards = Board::whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
+        $boards = Board::whereNull('deleted_at')
+        ->whereHas('workspace.workspaceMembers', function ($query) use ($userId) {
             $query->where('is_active', 1)->where('user_id', $userId); // Người dùng là thành viên của workspace
         })
         ->with(['workspace', 'boardMembers']) // Tải thông tin workspace và boardMembers
@@ -52,6 +57,13 @@ class HomeController extends Controller
 
             // Đếm số thành viên theo dõi bảng
             $board->total_followers = $board->boardMembers->where('follow', 1)->count();
+  
+            // Tính tổng số nhiệm vụ và tổng progress của các task trong bảng
+            $totalTasks = $board->catalogs->pluck('tasks')->flatten()->count();
+            $totalProgress = $board->catalogs->pluck('tasks')->flatten()->sum('progress');
+
+            // Tính phần trăm tiến độ (progress)
+            $board->complete = $totalTasks > 0 ? round($totalProgress / $totalTasks, 2) : 0;
 
             return $board;
         });
@@ -59,7 +71,7 @@ class HomeController extends Controller
         $ownerBoards = $boards->filter(function ($board) use ($userId) {
             return $board->boardMembers->filter(function ($member) use ($userId) {
                 return $member->user_id == $userId && $member->authorize == AuthorizeEnum::Owner;
-            })->isNotEmpty(); // Kiểm tra có member nào thỏa mãn không
+            })->isNotEmpty(); 
         });
         // dd($ownerBoards);
 
@@ -70,7 +82,7 @@ class HomeController extends Controller
             // Kiểm tra nếu người dùng là "Viewer"
             if ($workspaceMember && $workspaceMember->authorize == \App\Enums\AuthorizeEnum::Viewer) {
                 // Nếu bảng là "public" hoặc người dùng là thành viên của bảng (ngay cả khi bảng là "private"), cho phép xem bảng
-                return $board->access == 'public' || $board->boardMembers->contains(fn($member) => $member->user_id == $userId);
+                return $board->boardMembers->contains(fn($member) => $member->user_id == $userId);
             }
         
             // Các quyền khác được phép xem tất cả bảng
@@ -95,24 +107,35 @@ class HomeController extends Controller
         ->whereNull('deleted_at') // Chỉ lấy những thành viên không bị xóa (nếu có soft delete)
         ->get();
 
-        // Lấy tất cả các task trong các workspace mà user là thành viên
-        $tasks = Task::with(['catalog.board.workspace', 'catalog.board.boardMembers', 'members'])
-            ->whereIn('catalog_id', function ($query) use ($userId) {
-                $query->select('catalogs.id')
-                    ->from('catalogs')
-                    ->join('boards', 'catalogs.board_id', '=', 'boards.id')
-                    ->join('board_members', 'boards.id', '=', 'board_members.board_id')
-                    ->where('board_members.user_id', $userId);
-            })
-            ->get()
-            ->map(function ($task) {
-                $task->catalog_name = $task->catalog->name;
-                $task->board_name = $task->catalog->board->name;
-                $task->board_id = $task->catalog->board->id;
-                return $task;
-            });
-    
+        // Kiểm tra nếu người dùng hiện tại là "Viewer" trong bất kỳ workspace nào
+        $isViewer = $workspaceMembers->contains(function ($member) use ($userId) {
+            return $member->user_id == $userId && $member->authorize == \App\Enums\AuthorizeEnum::Viewer;
+        });
 
+        $tasks = Task::whereNull('deleted_at') 
+        ->with(['catalog.board.workspace', 'catalog.board.boardMembers', 'members'])
+        ->whereHas('catalog.board.workspace', function ($query) use ($currentWorkspace) {
+            $query->where('id', $currentWorkspace->workspace_id);
+        })
+        ->whereIn('catalog_id', function ($query) use ($userId, $isViewer) {
+            $query->select('catalogs.id')
+                ->from('catalogs')
+                ->join('boards', 'catalogs.board_id', '=', 'boards.id')
+                ->join('board_members', 'boards.id', '=', 'board_members.board_id')
+                ->where(function ($boardQuery) use ($userId, $isViewer) {
+                    if ($isViewer) {
+                        $boardQuery->where('board_members.user_id', $userId);
+                    }
+                });
+        })
+        ->get()
+        ->map(function ($task) {
+            $task->catalog_name = $task->catalog->name;
+            $task->board_name = $task->catalog->board->name;
+            $task->board_id = $task->catalog->board->id;
+            return $task;
+        });
+    
         // Tách các task của riêng user ra
         $userTasks = $tasks->filter(function ($task) use ($userId) {
         return $task->members->contains('id', $userId);
@@ -146,10 +169,6 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $currentWorkspace = WorkspaceMember::where('user_id', $userId)
-            ->where('is_active', 1)
-            ->first();
-
         // Truyền các biến này sang view
         return view('homes.home', compact(
             'boards',
@@ -164,7 +183,8 @@ class HomeController extends Controller
             'upcomingTasks',
             'myAssignedTasks',
             'tasksExpiringSoon',
-            'currentWorkspace'
+            'currentWorkspace',
+            'isViewer'
         ));
     }
 }
