@@ -36,7 +36,7 @@ function submitAddCatalog(boardId) {
             // màn board
             let listCatalog = $('.board-' + boardId);
             let catalog = `
-            <div class="tasks-list rounded-3 p-2 border" data-value="${response.catalog.id}">
+            <div class="tasks-list rounded-3 p-2 border"id="catalog_view_board_${response.catalog.id}" data-value="${response.catalog.id}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
@@ -93,7 +93,7 @@ function submitAddCatalog(boardId) {
             }
             let listCatalogList = $('.list-catalog-' + boardId);
             let catalogList = `
-             <div class="card" id="${response.catalog.id}">
+             <div class="card" id="catalog_view_list_${response.catalog.id}">
                 <div class="card-header border-0">
                     <div class="d-flex align-items-center">
                         <div class="d-flex flex-grow-1">
@@ -191,7 +191,7 @@ function submitAddCatalog(boardId) {
             }
 
             $('#nameCatalog').val('');
-
+            window.tasks_list.push(document.getElementById(`${response.catalog.name}-${response.catalog.id}`));
             $('.dropdown-menu').dropdown('hide');
             console.log('Catalog đã được thêm thành công!', response);
         },
@@ -256,7 +256,7 @@ function submitAddTask(catalogId, catalogName) {
             }
             let listTask = document.getElementById(catalogName + '-' + catalogId);
             let task = `
-            <div class="card tasks-box cursor-pointer" data-value="${response.task.id}">
+            <div class="card tasks-box cursor-pointer task-of-catalog-${catalogId}" data-value="${response.task.id}" id="task_id_view_${response.task.id}">
                 <div class="card-body">
                     <div class="d-flex mb-2">
                             <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
@@ -295,7 +295,7 @@ function submitAddTask(catalogId, catalogName) {
 
             let taskList = `
             <input type="hidden" id="text_${response.task.id}" value="${response.task.text}">
-            <tr draggable="true">
+            <tr draggable="true" class="task-of-catalog-${catalogId}">
                 <td class="col-2">
                     <div class="d-flex">
                         <div class="flex-grow-1" data-bs-toggle="modal" data-bs-target="#detailCardModal" data-task-id="${response.task.id}">

@@ -135,7 +135,7 @@
                             <div class="p-2">
 
                                 @if (!empty($boardIsStars))
-                                    @foreach ($boardIsStars as $boardIsStar)
+                                    @forelse($boardIsStars as $boardIsStar)
                                         <div
                                             class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                             <div class="d-flex align-items-center board-star-container">
@@ -176,7 +176,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @empty
+                                        Không có bảng nào đánh dấu sao
+                                    @endforelse
                                 @endif
                             </div>
                         </div>
@@ -402,8 +404,11 @@
 
                     @if (!empty(session('board')))
                         @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
+
                             <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
-                                 style="background-color: #091e420f">
+                                 style="background-color: #091e420f"
+                                 id="board-archiver-view-header-{{$archiverBoard->id}}">
+
                                 <div class="d-flex align-items-center ">
                                     @if ($archiverBoard->image)
                                         <img src="{{ asset('storage/' . $archiverBoard->image) }}" alt=""
@@ -470,19 +475,20 @@
         const searchDropdown = document.getElementById('search-dropdown');
         const workspaceId = document.getElementById('workspace-id').value;
 
-        // Hiện dropdown với chữ "Tìm Kiếm" khi nhấn vào ô input
-        searchInput.addEventListener('focus', function () {
-            searchDropdown.classList.add('show');
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
 
-            // Hiển thị "Tìm Kiếm" khi không có input
-            if (searchInput.value === '') {
-                searchDropdown.innerHTML =
-                    '<div class="dropdown-header">Tìm Kiếm bảng, danh sách, thẻ công việc</div>';
-            }
-        });
+        function handleSearch() {
 
-        // Lắng nghe sự kiện input
-        searchInput.addEventListener('input', function () {
             const query = searchInput.value;
             if (query.length > 1) {
                 fetch(`/api/search?query=${query}&workspace_id=${workspaceId}`)
@@ -575,7 +581,21 @@
                 // Hiển thị "Tìm Kiếm" nếu input rỗng
                 searchDropdown.innerHTML = '<div class="dropdown-header">Tìm Kiếm</div>';
             }
+        }
+
+        // Hiện dropdown với chữ "Tìm Kiếm" khi nhấn vào ô input
+        searchInput.addEventListener('focus', function () {
+            searchDropdown.classList.add('show');
+
+            // Hiển thị "Tìm Kiếm" khi không có input
+            if (searchInput.value === '') {
+                searchDropdown.innerHTML =
+                    '<div class="dropdown-header">Tìm Kiếm bảng, danh sách, thẻ công việc</div>';
+            }
         });
+
+        // Lắng nghe sự kiện input
+        searchInput.addEventListener('input', debounce(handleSearch, 1000));
     });
 </script>
 

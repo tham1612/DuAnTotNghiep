@@ -30,7 +30,7 @@ class TemplateController extends Controller
     public function createBoardTemplate(Request $request)
     {
         $data = $request->all();
-    
+
         $authorize = $this->authorizeWeb->authorizeCreateBoardOnWorkspace($data['workspace_id']);
         if (!$authorize) {
             return response()->json([
@@ -38,7 +38,7 @@ class TemplateController extends Controller
                 'msg' => 'Bạn không có quyền tạo bảng mẫu trong không gian làm việc này!!',
             ]);
         }
-        dd();
+//        dd();
         $uuid = Str::uuid();
         $token = Str::random(40);
         $data['link_invite'] = url("taskflow/invite/b/{$uuid}/{$token}");

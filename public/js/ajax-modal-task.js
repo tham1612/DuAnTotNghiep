@@ -34,6 +34,12 @@ function updateIsStar(boardId, userId,) {
             user_id: userId,
         },
         success: function (response) {
+            const starButton = document.getElementById(`2_is_star_${boardId}`);
+
+            if (starButton) {
+                // Thêm hoặc xóa lớp 'active' khi thành công
+                starButton.classList.toggle('active');
+            }
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
         },
         error: function (xhr) {
@@ -293,8 +299,8 @@ function updateTask2(taskId) {
             if (response.task.image) {
                 $('#detailCardModalLabel').css('background-image', `url('/storage/${response.task.image}')`);
             }
-            notificationWeb(response.action, response.msg);
-            console.log('Task updated successfully:', response);
+            // notificationWeb(response.action, response.msg);
+
         },
         error: function (xhr) {
             console.error('An error occurred:', xhr.responseText);
@@ -583,7 +589,10 @@ $(document).ready(function () {
         $.ajax({
             url: '/tasks/tag/update', // Địa chỉ endpoint của bạn
             type: 'POST',
-            data: {data: data},
+            data: {
+                data: data,
+                updateOrDeleteTag: true
+            },
             success: function (response) {
                 let tagSection = document.getElementById(`tag-section-${response.task_id}`);
                 let tagTask = document.getElementById('tag-task-' + response.task_id);
@@ -1991,6 +2000,6 @@ function loadAllTaskComment(taskId) {
 //     $form.on('input change', debouncedHandleFormChange);
 // });
 
-function callEditor(){
-   
+function callEditor() {
+
 }

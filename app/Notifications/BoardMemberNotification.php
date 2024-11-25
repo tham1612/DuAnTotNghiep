@@ -57,10 +57,17 @@ class BoardMemberNotification extends Notification implements ShouldQueue
      *
      * @return array<string, mixed>
      */
-    // public function toArray(object $notifiable): array
-    // {
-    //     return [
-    //         //
-    //     ];
-    // }
+    public function toDatabase($notifiable)
+    {
+        // Lưu thông báo vào database
+        return [
+            'user_id' => $this->user->id,
+            'board_id' => $this->board->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'readed' => false,
+            'title' => $this->title,
+            'date' => now(),
+        ];
+    }
 }

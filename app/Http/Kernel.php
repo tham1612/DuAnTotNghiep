@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isWorkspace'=>isWorkspace::class,
         'check.board.access' =>\App\Http\Middleware\CheckBoardAccessInWorkspace::class,
+        'isViewer' => \App\Http\Middleware\IsViewer::class,
     ];
 }

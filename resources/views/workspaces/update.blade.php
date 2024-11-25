@@ -1,7 +1,6 @@
 @extends('layouts.masterMain')
 @section('main')
 
-
     <div class="row justify-content-center">
         <div class="col-xxl-9">
             <div class="card">
@@ -28,6 +27,9 @@
 
                                     <div class="d-flex align-items-center">
                                         <div class="profile-user position-relative d-inline-block mx-auto mb-4">
+                                            <input type="hidden" value="{{ $workspaceChecked->workspace_id }}"
+                                                name="workspace_id">
+
                                             @if ($workspaceChecked->image)
                                                 <img class="rounded avatar-xl img-thumbnail user-profile-imager"
                                                     src="{{ \Illuminate\Support\Facades\Storage::url($workspaceChecked->image) }}"
@@ -85,7 +87,7 @@
                         </div>
 
                         <!--end col-->
-                        <div class="col-lg-5 ms-auto">
+                        <div class="col-lg-6 ms-auto">
                             <div class="mt-5">
                                 <div class="bg-primary p-2 rounded text-center">
                                     <i class="ri-user-add-line text-white"></i>
@@ -146,7 +148,8 @@
                                                         </div>
                                                         <div class="col-6 d-flex flex-column">
                                                             <section class="fs-12">
-                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia
+                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo
+                                                                    gia
                                                                     với tư cách thành viên</p>
                                                                 <span><a href="#" onclick="copyLink()">Sao chép liên
                                                                         kết</a></span>
@@ -250,7 +253,8 @@
                                                                     <div
                                                                         class="col-5 d-flex align-items-center justify-content-end">
                                                                         <button class="btn btn-outline-danger">Quản trị
-                                                                            viên</button>
+                                                                            viên
+                                                                        </button>
                                                                         <!-- Nút ba chấm -->
 
                                                                         <div class="dropdown ms-2">
@@ -261,7 +265,7 @@
                                                                                 aria-expanded="false">
                                                                                 <i class="ri-more-2-fill"></i>
                                                                             </button>
-                                                                            {{-- @if (!empty($wspOwner))
+                                                                            @if (!empty($wspOwner))
                                                                                 @if ($wspOwner->user_id == $userId)
                                                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                                                     <ul class="dropdown-menu"
@@ -272,7 +276,7 @@
                                                                                         </li>
                                                                                     </ul>
                                                                                 @endif
-                                                                            @endif --}}
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -326,7 +330,8 @@
                                                                         <div
                                                                             class="col-5 d-flex align-items-center justify-content-end">
                                                                             <button class="btn btn-outline-success">Phó
-                                                                                nhóm</button>
+                                                                                nhóm
+                                                                            </button>
                                                                             <!-- Nút ba chấm -->
                                                                             <div class="dropdown ms-2">
                                                                                 <button
@@ -339,7 +344,8 @@
                                                                                 @if ($item->user_id === $userId)
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Rời
                                                                                                 khỏi</a>
                                                                                         </li>
@@ -347,12 +353,14 @@
                                                                                 @elseif($workspaceChecked->authorize == 'Owner')
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Kích
                                                                                                 phó
                                                                                                 nhóm</a>
                                                                                         </li>
-                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-primary"
                                                                                                 href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
                                                                                                 quyền</a>
                                                                                         </li>
@@ -415,8 +423,10 @@
                                                                         </div>
                                                                         <div
                                                                             class="col-5 d-flex align-items-center justify-content-end">
-                                                                            <button class="btn btn-outline-primary">Thành
-                                                                                viên</button>
+                                                                            <button class="btn btn-outline-primary">
+                                                                                Thành
+                                                                                viên
+                                                                            </button>
                                                                             <!-- Nút ba chấm -->
                                                                             <div class="dropdown ms-2">
                                                                                 <button
@@ -430,7 +440,8 @@
                                                                                 @if ($item->user_id === $userId)
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Rời
                                                                                                 khỏi</a>
                                                                                         </li>
@@ -438,23 +449,33 @@
                                                                                 @elseif($workspaceChecked->authorize == 'Owner')
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Kích
                                                                                                 thành
-                                                                                                viên</a></li>
-                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                                viên</a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-primary"
                                                                                                 href="{{ route('upgradeMemberShip', $item->wm_id) }}">Thăng
                                                                                                 cấp
                                                                                                 thành
-                                                                                                viên</a></li>
+                                                                                                viên</a>
+                                                                                        </li>
+                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                                href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
+                                                                                                quyền</a>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 @elseif ($workspaceChecked->authorize == 'Sub_Owner')
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Kích
                                                                                                 thành
-                                                                                                viên</a></li>
+                                                                                                viên</a>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 @endif
 
@@ -521,7 +542,8 @@
                                                                                         value="{{ $item->workspace_id }}"
                                                                                         name="workspace_id">
                                                                                     <button class="btn btn-primary me-2"
-                                                                                        type="submit">Duyệt</button>
+                                                                                        type="submit">Duyệt
+                                                                                    </button>
                                                                                 </form>
                                                                                 <form
                                                                                     action="{{ route('refuse_member', $item->wm_id) }}"
@@ -530,14 +552,15 @@
                                                                                     @method('DELETE')
                                                                                     @csrf
                                                                                     <button class="btn btn-danger"
-                                                                                        type="submit">Từ chối</button>
+                                                                                        type="submit">Từ chối
+                                                                                    </button>
                                                                                 </form>
                                                                             </div>
                                                                         </li>
                                                                         <br>
                                                                     @endforeach
                                                                 </ul>
-                                                            {{-- </div> --}}
+                                                                {{-- </div> --}}
                                                             </div>
                                                         @endif
 
@@ -590,7 +613,7 @@
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
-                                                        {{-- </div> --}}
+                                                            {{-- </div> --}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -615,12 +638,12 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <p><i class="{{ $icon }}"></i> {{ $access }} - {{ $ws_desrip }}</p>
-                        {{-- <button class="btn btn-primary">Thay đổi</button> --}}
+                    <div class="mt-3 d-flex justify-content-between">
+                        <p class="col-10"><i class="{{ $icon }}"></i> {{ $access }} - {{ $ws_desrip }}
+                        </p>
 
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#customModal">
+                            data-bs-target="#customModal" style="height: 35px">
                             Mở cài đặt
                         </button>
 
@@ -647,7 +670,8 @@
                                                     <i class="ri-lock-2-line fs-20 text-danger"></i>Riêng tư
                                                 </label>
                                                 <p class="option-description">
-                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không gian
+                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không
+                                                    gian
                                                     làm việc có thể truy cập hoặc nhìn thấy Không gian làm việc.
                                                 </p>
                                             </div>
@@ -660,14 +684,16 @@
                                                     <i class="ri-earth-line fs-20 text-success"></i>Công khai
                                                 </label>
                                                 <p class="option-description">
-                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới Không
-                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm việc.
+                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới
+                                                    Không
+                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm
+                                                    việc.
                                                 </p>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Đóng</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                            </button>
                                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                                         </div>
                                     </form>
@@ -680,18 +706,13 @@
                         </div>
                     </div>
                 </div>
-                {{-- <a style="margin-left: 15px; padding-bottom:20px"
-                    href="{{ route('workspaces.delete', $workspaceChecked->wm_id) }}"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa bỏ không gian làm việc?')" class="text-danger">Xóa
-                    Không gian
-                    làm việc này?</a> --}}
-                <!-- Modal HTML -->
-                <a style="margin-left: 15px; padding-bottom:20px" href="#" class="text-danger"
-                    data-bs-toggle="modal" data-bs-target="#deleteWorkspaceModal"
-                    onclick="setDeleteAction('{{ route('workspaces.delete', $workspaceChecked->wm_id) }}')">
+
+                <a style="margin-left: 15px; padding-bottom:20px; " class="text-danger cursor-pointer fw-bold fs-16"
+                    onclick="setDeleteAction()">
                     Xóa Không gian làm việc này?
                 </a>
-                <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
+
+                {{-- <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
                     aria-labelledby="deleteWorkspaceModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -709,14 +730,42 @@
                             </div>
                         </div>
                     </div>
+                </div> --}}
+
+                <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
+                    aria-labelledby="deleteWorkspaceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteWorkspaceModalLabel">Xác nhận xóa</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bạn có chắc chắn muốn xóa không gian làm việc này? Hành động này không thể hoàn tác.</p>
+                                <p>Vui lòng nhập <strong id="workspaceNameConfirm"></strong> để xác nhận:</p>
+                                <input type="text" id="workspaceNameInput" class="form-control"
+                                    placeholder="Nhập tên không gian làm việc" />
+                                <div id="errorText" class="text-danger mt-2" style="display: none;">Tên không đúng, vui
+                                    lòng thử lại.</div>
+                                <input type="hidden" id="workspace" value="{{ $workspaceChecked->name }}">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="button" id="confirmDeleteButton" class="btn btn-danger"
+                                    disabled>Xóa</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
 
             </div>
         </div>
         <!--end col-->
     </div>
 
-    </div>
 @endsection
 
 @section('title')
@@ -724,17 +773,6 @@
 @endsection
 
 @section('script')
-    <!-- dropzone min -->
-    <script src="assets/libs/dropzone/dropzone-min.js"></script>
-
-    <!-- cleave.js -->
-    <script src="assets/libs/cleave.js/cleave.min.js"></script>
-
-    <!--Invoice create init js-->
-    <script src="assets/js/pages/invoicecreate.init.js"></script>
-
-    <!-- Sweet Alerts js -->
-    <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script>
         function copyLink() {
             const link = '{{ $workspaceChecked->link_invite }}'; // Lấy link từ biến Laravel
@@ -764,6 +802,8 @@
             });
         }
     </script>
+
+
     {{-- update thông tin workspace --}}
     <script>
         $(document).ready(function() {
@@ -820,7 +860,9 @@
                     url: $(this).attr('action'), // Lấy URL từ form
                     method: $(this).attr('method'), // Lấy method từ form
                     data: formData,
+
                     success: function(response) {
+
                         // $('#formResponse').html('<div class="alert alert-success">' + response.message + '</div>');
                         notificationWeb(response.action, response.message);
                         document.getElementById('access').innerText = "Riêng tư";
@@ -849,37 +891,86 @@
 
     {{-- delete workspace --}}
     <script>
-        let deleteUrl = ''; // Biến toàn cục để lưu URL xóa
+        function setDeleteAction() {
 
-        function setDeleteAction(actionUrl) {
-            deleteUrl = actionUrl; // Cập nhật URL xóa khi mở modal
+            const correctString = '{{ $workspaceChecked->name }}';
+            Swal.fire({
+                title: 'Xóa không gian làm việc?',
+                html: `
+                <div style="text-align: left;">
+                <strong>Nhập tên không gian làm việc "{{ $workspaceChecked->name }}" để xóa </strong>
+                  <p class="fs-15">Những điều cần biết</p>
+                     <ul class="fs-14">
+                         <li>Điều này là vĩnh viễn và không thể hoàn tác.</li>
+                         <li>Các bảng thuộc không gian làm việc bị xóa vĩnh viễn</li>
+                     </ul>
+                </div>
+                `,
+                input: 'text',
+                inputPlaceholder: 'Nhập tên Không gian làm việc để xóa',
+                {{-- inputValue: '{{$workspaceChecked->name}}', --}}
+                showCancelButton: false,
+                confirmButtonColor: "#d63036",
+                confirmButtonText: 'Xóa không gian làm việc',
+                preConfirm: (inputValue) => {
+                    // Chuỗi chính xác mà bạn muốn so sánh
+
+                    // Kiểm tra nếu inputValue khớp với chuỗi chính xác
+                    if (inputValue !== correctString) {
+                        // Nếu không khớp, hiển thị thông báo lỗi
+                        Swal.showValidationMessage('Bạn nhập sai thông tin!!');
+                        return false;
+                    }
+                    return true;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route('workspaces.delete', $workspaceChecked->wm_id) }}',
+                        type: "DELETE",
+                        success: function(response) {
+                            notificationWeb(response.action, response.msg);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000)
+
+                        },
+                        error: function(xhr) {
+                            console.log(xhr)
+                            notificationWeb('error', 'Có lỗi xảy ra ròi');
+                        },
+                    });
+                }
+            });
         }
+    </script>
 
-        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-            if (!deleteUrl) return;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            const workspaceNameInput = document.getElementById('workspaceNameInput');
+            const workspaceNameConfirm = document.getElementById('workspaceNameConfirm');
+            const errorText = document.getElementById('errorText');
 
-            fetch(deleteUrl, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}', // Gửi CSRF token
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        notificationWeb(response.action, response.message); // Thông báo thành công
-                        // Cập nhật giao diện hoặc redirect
-                    } else {
-                        notificationWeb(response.action, response.message); // Thông báo lỗi
-                    }
-                    // Đóng modal sau khi xử lý
-                    $('#deleteWorkspaceModal').modal('hide');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    notificationWeb('error', 'Có lỗi xảy ra, vui lòng thử lại.');
-                });
+            // Gán tên không gian làm việc từ server
+            const workspaceName = document.getElementById('workspace').value; // Thay bằng giá trị động từ server
+            workspaceNameConfirm.textContent = 'Tên không gian làm việc';
+
+            workspaceNameInput.addEventListener('input', function() {
+                if (workspaceNameInput.value === workspaceName) {
+                    confirmDeleteButton.disabled = false;
+                    errorText.style.display = 'none';
+                } else {
+                    confirmDeleteButton.disabled = true;
+                    errorText.style.display = 'block';
+                }
+            });
+
+            confirmDeleteButton.addEventListener('click', function() {
+                // Tiến hành xóa khi nhập đúng
+                console.log('Không gian làm việc đã được xóa!');
+                // Thực hiện submit form hoặc gọi API tại đây
+            });
         });
     </script>
 @endsection

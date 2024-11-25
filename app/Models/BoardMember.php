@@ -16,13 +16,11 @@ class BoardMember extends Model
         'board_id',
         'authorize',
         'is_star',
-        'follow',
         'invite',
         'is_accept_invite'
     ];
     protected $casts = [
         'is_star' => 'boolean',
-        'follow' => 'boolean',
         'authorize' => AuthorizeEnum::class,
 
     ];
