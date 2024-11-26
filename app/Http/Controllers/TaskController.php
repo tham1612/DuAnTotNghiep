@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeTaskKanban;
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -222,95 +223,106 @@ class TaskController extends Controller
         $positionOldSameCatalog = Task::query()
             ->select('position', 'id')
             ->findOrFail($id);
+        try {
+            DB::beginTransaction();
+            if ($task->catalog_id != $data['catalog_id']) {
+                //            dd($data['position']);
+                $positionChangeNew = Task::query()
+                    ->whereNotBetween('position', [1, $data['position'] - 1])
+                    ->where('catalog_id', $data['catalog_id'])
+                    ->get();
 
-        if ($task->catalog_id != $data['catalog_id']) {
-            //            dd($data['position']);
-            $positionChangeNew = Task::query()
-                ->whereNotBetween('position', [1, $data['position'] - 1])
-                ->where('catalog_id', $data['catalog_id'])
-                ->get();
+                $positionChangeOld = Task::query()
+                    ->where('position', '>', $positionOldSameCatalog->position)
+                    ->where('catalog_id', $task->catalog_id)
+                    ->get();
 
-            $positionChangeOld = Task::query()
-                ->where('position', '>', $positionOldSameCatalog->position)
-                ->where('catalog_id', $task->catalog_id)
-                ->get();
+                //            dd($positionChangeOld->toArray());
+                // cap nhat vi tri o catalog moi
+                foreach ($positionChangeNew as $item) {
+                    Task::query()
+                        ->where('id', $item->id)
+                        ->update([
+                            'position' => $item->position + 1
+                        ]);
+                }
+                activity('thay đổi vị trí trong task')
+                    ->causedBy(Auth::user())
+                    ->withProperties([
+                        'task_id' => $id,
+                        'catalog_id_new' => $data['catalog_id'],
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                    ])
+                    ->tap(function (Activity $activity) use ($task) {
+                        $activity->catalog_id = $task->catalog_id;
+                        $activity->task_id = $task->id;
+                        $activity->board_id = $task->catalog->board_id;
+                    })
+                    ->log('vị trí các task trong catalog mới đã thay đổi.');
+                // cap nhat lai vi tri o catalog cu
+                foreach ($positionChangeOld as $item) {
+                    Task::query()
+                        ->where('id', $item->id)
+                        ->update([
+                            'position' => $item->position - 1
+                        ]);
+                }
+                activity('thay đổi vị trí trong task')
+                    ->causedBy(Auth::user())
+                    ->withProperties([
+                        'task_id' => $id,
+                        'catalog_id_old' => $task->catalog_id,
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                    ])
+                    ->tap(function (Activity $activity) use ($task) {
+                        $activity->catalog_id = $task->catalog_id;
+                        $activity->task_id = $task->id;
+                        $activity->board_id = $task->catalog->board_id;
+                    })
+                    ->log('Vị trí các task trong catalog cũ đã thay đổi.');
+            } else {
 
-            //            dd($positionChangeOld->toArray());
-            // cap nhat vi tri o catalog moi
-            foreach ($positionChangeNew as $item) {
-                Task::query()
-                    ->where('id', $item->id)
-                    ->update([
-                        'position' => $item->position + 1
-                    ]);
+                $positionChange = Task::query()
+                    ->whereBetween('position', $positionOldSameCatalog->position > $data['position'] ? [$data['position'], $positionOldSameCatalog->position] : [$positionOldSameCatalog->position, $data['position']])
+                    ->where('catalog_id', $data['catalog_id'])
+                    ->whereNot('id', $id)
+                    ->get();
+
+                foreach ($positionChange as $item) {
+                    Task::query()
+                        ->where('id', $item->id)
+                        ->update([
+                            'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
+                        ]);
+                }
+                activity('Thay đổi vị trí task')
+                    ->causedBy(Auth::user())
+                    ->withProperties([
+                        'task_id' => $id,
+                        'catalog_id' => $data['catalog_id'],
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected' => $positionChange->pluck('id')->toArray(),
+                    ])
+                    ->tap(function (Activity $activity) use ($task) {
+                        $activity->catalog_id = $task->catalog_id;
+                        $activity->task_id = $task->id;
+                        $activity->board_id = $task->catalog->board_id;
+                    })
+                    ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
-            activity('thay đổi vị trí trong task')
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'task_id' => $id,
-                    'catalog_id_new' => $data['catalog_id'],
-                    'board_id' => $task->catalog->board_id,
-                    'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
-                ])
-                ->tap(function (Activity $activity) use ($task) {
-                    $activity->catalog_id = $task->catalog_id;
-                    $activity->task_id = $task->id;
-                    $activity->board_id = $task->catalog->board_id;
-                })
-                ->log('vị trí các task trong catalog mới đã thay đổi.');
-            // cap nhat lai vi tri o catalog cu
-            foreach ($positionChangeOld as $item) {
-                Task::query()
-                    ->where('id', $item->id)
-                    ->update([
-                        'position' => $item->position - 1
-                    ]);
-            }
-            activity('thay đổi vị trí trong task')
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'task_id' => $id,
-                    'catalog_id_old' => $task->catalog_id,
-                    'board_id' => $task->catalog->board_id,
-                    'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
-                ])
-                ->tap(function (Activity $activity) use ($task) {
-                    $activity->catalog_id = $task->catalog_id;
-                    $activity->task_id = $task->id;
-                    $activity->board_id = $task->catalog->board_id;
-                })
-                ->log('Vị trí các task trong catalog cũ đã thay đổi.');
-        } else {
+            $task->update($data);
 
-            $positionChange = Task::query()
-                ->whereBetween('position', $positionOldSameCatalog->position > $data['position'] ? [$data['position'], $positionOldSameCatalog->position] : [$positionOldSameCatalog->position, $data['position']])
-                ->where('catalog_id', $data['catalog_id'])
-                ->whereNot('id', $id)
-                ->get();
-
-            foreach ($positionChange as $item) {
-                Task::query()
-                    ->where('id', $item->id)
-                    ->update([
-                        'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
-                    ]);
-            }
-            activity('Thay đổi vị trí task')
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'task_id' => $id,
-                    'catalog_id' => $data['catalog_id'],
-                    'board_id' => $task->catalog->board_id,
-                    'tasks_affected' => $positionChange->pluck('id')->toArray(),
-                ])
-                ->tap(function (Activity $activity) use ($task) {
-                    $activity->catalog_id = $task->catalog_id;
-                    $activity->task_id = $task->id;
-                    $activity->board_id = $task->catalog->board_id;
-                })
-                ->log('Vị trí các task trong cùng catalog đã thay đổi.');
+            DB::commit();
+            Log::debug('trước khi chạy broadcast');
+            event(new RealtimeTaskKanban($task, $request->catalog_id_old, $request->catalog_id));
+            Log::debug('đã chạy broadcast');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
         }
-        $task->update($data);
+
     }
 
     public function updateFolow(Request $request, string $id)
