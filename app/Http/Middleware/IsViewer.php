@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Auth;
 use Closure;
 use Illuminate\Http\Request;
 use Session;
@@ -16,12 +17,8 @@ class IsViewer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $workspaceChecked = Session::get('workspaceChecked'); // Lấy từ session
-        if ($workspaceChecked && $workspaceChecked->authorize === "Viewer") {
-            return redirect()->back()->with([
-                'msg' => 'Bạn không có quyền chỉnh sửa workspace.',
-                'action' => 'danger',
-            ]);
+        if (Auth::user()->isViewer()) {
+            return redirect()->route('inbox');
         }
 
         return $next($request); // Tiếp tục xử lý yêu cầu

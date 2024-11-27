@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
+use App\Models\Follow_member;
 use App\Models\Tag;
 use App\Models\Task;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
@@ -20,6 +23,15 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkList = CheckList::create($data);
+
+        $followMember = Follow_member::where('task_id', $checkList->task->id)
+            ->where('follow', 1)
+            ->get();
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $checkList->task->text . " đã thêm checklist ". $checkList->name.". Xem chi tiết! ", 'success', $member->user->id));
+            }
+        }
         return response()->json([
             'success' => "them thao tác thành công",
             'msg' => true,
@@ -153,6 +165,15 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkListItem = CheckListItem::create($data);
+
+        $followMember = Follow_member::where('task_id', $checkListItem->checkList->task->id)
+            ->where('follow', 1)
+            ->get();
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $checkListItem->checkList->task->text . " đã thêm checklist " . $checkListItem->name . ". Xem chi tiết! ", 'success', $member->user->id));
+            }
+        }
         return response()->json([
             'success' => "them ChecklistItem thành công",
             'msg' => true,

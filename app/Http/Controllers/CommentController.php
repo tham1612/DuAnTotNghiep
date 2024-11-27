@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\CheckList;
+use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskAttachment;
 use App\Models\TaskComment;
@@ -47,6 +49,14 @@ class CommentController extends Controller
             : null;
         $auth = Auth::id();
 
+        $followMember = Follow_member::where('task_id', $taskComment->task_id)
+            ->where('follow', 1)
+            ->get();
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $taskComment->task->text . " đã thêm bình luận. Xem chi tiết! ", 'success', $member->user->id));
+            }
+        }
         return response()->json([
             'action' => 'success',
             'msg' => 'them taskComment thành công',

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Session;
 
 class User extends Authenticatable
 {
@@ -101,6 +102,16 @@ class User extends Authenticatable
 
         return $this->hasWorkspaceCache;
     }
+
+    public function isViewer()
+    {
+        $workspaceChecked = Session::get('workspaceChecked'); // Lấy từ session
+        if ($workspaceChecked && $workspaceChecked->authorize === "Viewer") {
+            return true;
+        }
+        return false;
+    }
+
     public function followMembers()
     {
         return $this->hasMany(Follow_member::class);
