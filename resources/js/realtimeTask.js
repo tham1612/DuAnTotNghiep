@@ -1,6 +1,7 @@
 import './bootstrap';
 
-Echo.channel('tasks')
+// Echo.channel(`tasks`)
+    Echo.channel(`tasks.${boardId}`)
     .listen('RealtimeCreateTask', (e) => {
         console.log("Nhận sự kiện TaskCreated:", e);
 

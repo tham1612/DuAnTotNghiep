@@ -25,7 +25,7 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
-    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js'])
+    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js','resources/js/realtimeBoard.js'])
     <script !src="">
         const PATH_ROOT = "/theme/";
     </script>
@@ -106,7 +106,7 @@
 @php
     include  resource_path('views/resourceHome.php');
 @endphp
-    <!-- Begin page -->
+        <!-- Begin page -->
 <div id="layout-wrapper">
     {{-- header website --}}
     @include('layouts.header')
@@ -291,6 +291,7 @@
 </script>
 <script>
     window.userId = {{ auth()->user()->id }};
+    window.boardId = {{ request()->route('id') }};
 </script>
 </body>
 

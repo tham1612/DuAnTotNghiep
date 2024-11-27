@@ -33,6 +33,10 @@ Broadcast::channel('notifications.{id}', function ($user, $id) {
 Broadcast::channel('catalogs', function () {
     return true;
 });
-Broadcast::channel('tasks', function ($board_id) {
+Broadcast::channel('tasks.{boardId}', function ($user, $boardId) {
+    return $user->boards()->where('id', $boardId)->exists();
+});
+Broadcast::channel('boards.{boardId}', function ($user, $boardId) {
+//    return $user->boards()->where('id', $boardId)->exists();
     return true;
 });
