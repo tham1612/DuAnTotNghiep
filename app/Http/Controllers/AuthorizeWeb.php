@@ -105,7 +105,7 @@ class AuthorizeWeb extends Controller
             : Board::withTrashed()
                 ->where('id', $boardId)
                 ->first();
-
+//dd($checkAuthorize);
         if ($authorize->archiver_permission == 'board') {
             //            tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
@@ -160,12 +160,14 @@ class AuthorizeWeb extends Controller
         }
         return false;
     }
+
     public function authorizeEditWorkspace($workspaceId)
     {
         $checkAuthorize = WorkspaceMember::query()
             ->where('user_id', auth()->id())
-            ->where('id', $workspaceId)
+            ->where('workspace_id', $workspaceId)
             ->first();
+//        dd($checkAuthorize, $workspaceId, auth()->id());
         if ($checkAuthorize) {
             return $checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member'
                 ? true

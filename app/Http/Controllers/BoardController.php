@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 //const PATH_UPLOAD = 'board';
 use App\Enums\AuthorizeEnum;
 use App\Events\EventNotification;
+use App\Events\RealtimeBoardDetail;
 use App\Events\UserInvitedToBoard;
 use App\Models\Board;
 use App\Models\BoardMember;
@@ -48,10 +49,11 @@ class BoardController extends Controller
 
     public function __construct(
         GoogleApiClientController $googleApiClient,
-        CatalogControler $catalogController,
-        TaskController $taskController,
-        AuthorizeWeb $authorizeWeb
-    ) {
+        CatalogControler          $catalogController,
+        TaskController            $taskController,
+        AuthorizeWeb              $authorizeWeb
+    )
+    {
         $this->googleApiClient = $googleApiClient;
         $this->catalogController = $catalogController;
         $this->taskController = $taskController;
@@ -73,8 +75,8 @@ class BoardController extends Controller
                 // Sửa điều kiện này để so sánh với trường lưu thông tin người tạo, ví dụ: 'created_by'
                 $query->where('created_at', $userId)
                     ->orWhereHas('boardMembers', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
+                        $query->where('user_id', $userId);
+                    });
             })
             ->with(['workspace', 'boardMembers', 'catalogs.tasks']) // Tải các tasks liên quan
             ->get()
@@ -128,15 +130,11 @@ class BoardController extends Controller
     {
         $authorize = $this->authorizeWeb->authorizeEditWorkspace($request->workspace_id);
         if (!$authorize) {
-            return response()->json([
-                'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
-            ]);
+            session(['msg' => 'Bạn không có quyền!!']);
+            session(['action' => 'danger']);
+            return back();
         }
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
+
         $data = $request->except(['image', 'link_invite']);
         if ($request->hasFile('image')) {
             $data['image'] = Storage::put(self::PATH_UPLOAD, $request->file('image'));
@@ -435,7 +433,7 @@ class BoardController extends Controller
         }
 
         $board->update($data);
-
+        broadcast(new RealtimeBoardDetail($board, $board->id))->toOthers();
         return response()->json([
             'msg' => $board['name'] . ' đã được cập nhật thành công!',
             'action' => 'success',
@@ -1001,7 +999,7 @@ class BoardController extends Controller
                 'name' => $request->value
             ]);
         }
-
+        broadcast(new RealtimeBoardDetail($board, $board->id))->toOthers();
         return response()->json([
             'action' => 'success',
             'msg' => 'Thay đổi quyền thành công!!',
@@ -1027,7 +1025,7 @@ class BoardController extends Controller
 
     // gửi mail thêm người vào bảng
     public
-        function inviteUserBoard(
+    function inviteUserBoard(
         Request $request
 
     )
@@ -1065,11 +1063,12 @@ class BoardController extends Controller
     //người dùng tham gia vào bảng
 //thông báo done
     public
-        function acceptInviteBoard(
+    function acceptInviteBoard(
         $uuid,
         $token,
         Request $request
-    ) {
+    )
+    {
         //xử lý khi admin gửi link invite cho người dùng
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
@@ -1251,8 +1250,8 @@ class BoardController extends Controller
     //người dùng đang ở bảng mà chưa trong wsp thì bấm vào nút xin và wsp
 //thông báo done
     public
-        function requestToJoinWorkspace(
-    ) {
+    function requestToJoinWorkspace()
+    {
 
         $workspace_member = WorkspaceMember::where('user_id', Auth::id())
             ->with('workspace')
@@ -1298,10 +1297,11 @@ class BoardController extends Controller
     //mời người dùng từ wsp vào bảng
 //thông báo done
     public
-        function inviteMemberWorkspace(
+    function inviteMemberWorkspace(
         $userId,
         $boardId
-    ) {
+    )
+    {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
@@ -1322,10 +1322,11 @@ class BoardController extends Controller
 
     //thông báo người dùng tham gia vào bảng
     protected
-        function notificationMemberInviteBoard(
+    function notificationMemberInviteBoard(
         $boardID,
         $userName
-    ) {
+    )
+    {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1353,10 +1354,11 @@ class BoardController extends Controller
 
     //thông báo nhượng quyền
     protected
-        function notificationManagementfranchiseBoard(
+    function notificationManagementfranchiseBoard(
         $boardID,
         $userName
-    ) {
+    )
+    {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1384,10 +1386,11 @@ class BoardController extends Controller
 
     //thông báo thăng cấp thành viên
     protected
-        function notificationUpgradeMemberShipBoard(
+    function notificationUpgradeMemberShipBoard(
         $boardID,
         $userName
-    ) {
+    )
+    {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1415,10 +1418,11 @@ class BoardController extends Controller
 
     //thông báo thăng cấp thành viên
     protected
-        function notificationActivateMember(
+    function notificationActivateMember(
         $boardID,
         $userName
-    ) {
+    )
+    {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {
@@ -1443,12 +1447,14 @@ class BoardController extends Controller
             });
         }
     }
+
     //thông báo thăng cấp thành viên
     protected
-        function notificationAcceptMemberBoard(
+    function notificationAcceptMemberBoard(
         $boardID,
         $userName
-    ) {
+    )
+    {
         // Eager load boardMembers và user, lọc authorize != Viewer
         $board = Board::with([
             'boardMembers' => function ($query) {

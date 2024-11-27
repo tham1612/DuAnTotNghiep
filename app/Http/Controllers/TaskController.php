@@ -102,7 +102,7 @@ class TaskController extends Controller
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
 
-        broadcast(new RealtimeCreateTask($task))->toOthers();
+        broadcast(new RealtimeCreateTask($task, $task->catalog->board->id))->toOthers();
         // ghi lại hoạt động khi thêm
         activity('thêm mới task')
             ->performedOn($task)
@@ -316,7 +316,8 @@ class TaskController extends Controller
 
             DB::commit();
             Log::debug('trước khi chạy broadcast');
-            event(new RealtimeTaskKanban($task, $request->catalog_id_old, $request->catalog_id));
+//            broadcast(new RealtimeTaskKanban($task))->toOthers();
+            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id))->toOthers();
             Log::debug('đã chạy broadcast');
         } catch (\Exception $e) {
             DB::rollBack();
