@@ -1414,35 +1414,35 @@ class BoardController extends Controller
     }
 
     //thông báo thăng cấp thành viên
-    protected
-        function notificationActivateMember(
-        $boardID,
-        $userName
-    ) {
-        // Eager load boardMembers và user, lọc authorize != Viewer
-        $board = Board::with([
-            'boardMembers' => function ($query) {
-                $query->where('authorize', '!=', 'Viewer');
-            },
-            'boardMembers.user' // Eager load user
-        ])->find($boardID);
+    // protected
+    //     function notificationActivateMember(
+    //     $boardID,
+    //     $userName
+    // ) {
+    //     // Eager load boardMembers và user, lọc authorize != Viewer
+    //     $board = Board::with([
+    //         'boardMembers' => function ($query) {
+    //             $query->where('authorize', '!=', 'Viewer');
+    //         },
+    //         'boardMembers.user' // Eager load user
+    //     ])->find($boardID);
 
-        if ($board) {
-            // Gửi thông báo tới các thành viên hợp lệ
-            $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
-                $user = $boardMember->user;
-                if ($user) {
-                    $name = 'Bảng ' . $board->name;
-                    $title = 'Thăng cấp thành viên';
-                    $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
-                    if ($user->id == Auth::id()) {
-                        event(new EventNotification($description, 'success', $user->id));
-                    }
-                    $user->notify(new BoardNotification($user, $board, $name, $description, $title));
-                }
-            });
-        }
-    }
+    //     if ($board) {
+    //         // Gửi thông báo tới các thành viên hợp lệ
+    //         $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
+    //             $user = $boardMember->user;
+    //             if ($user) {
+    //                 $name = 'Bảng ' . $board->name;
+    //                 $title = 'Thăng cấp thành viên';
+    //                 $description = 'Người dùng "' . $userName . '" đã được thăng cấp lên Phó Nhóm.';
+    //                 if ($user->id == Auth::id()) {
+    //                     event(new EventNotification($description, 'success', $user->id));
+    //                 }
+    //                 $user->notify(new BoardNotification($user, $board, $name, $description, $title));
+    //             }
+    //         });
+    //     }
+    // }
     //thông báo thăng cấp thành viên
     protected
         function notificationAcceptMemberBoard(
@@ -1466,7 +1466,7 @@ class BoardController extends Controller
                     $title = 'Rời khỏi bảng';
                     $description = 'Người dùng "' . $userName . '" đã rời khỏi bảng.';
                     if ($user->id == Auth::id()) {
-                        event(new EventNotification($description, 'success', $user->id));
+                        event(new EventNotification($description, 'error', $user->id));
                     }
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }

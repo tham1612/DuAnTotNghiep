@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
 
-        Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
+        Route::middleware('isViewer')->get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::group(['middleware' => ['auth', 'check.board.access']], function () {
             Route::prefix('b')
