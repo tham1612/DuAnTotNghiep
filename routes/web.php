@@ -27,11 +27,11 @@ Route::get('/', function () {
 Route::middleware(['auth', 'isWorkspace'])
     ->group(function () {
 
-        Route::get('/home', [HomeController::class, 'index'])->name('home');
+        Route::middleware('isViewer')->get('/home', [HomeController::class, 'index'])->name('home');
 
         Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
             ->name('chat');
-      
+
         Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');

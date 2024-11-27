@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Events\EventNotification;
 use App\Events\RealtimeCreateTask;
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
@@ -40,9 +41,8 @@ class TaskController extends Controller
 
     public function __construct(
         GoogleApiClientController $googleApiClient,
-        AuthorizeWeb              $authorizeWeb
-    )
-    {
+        AuthorizeWeb $authorizeWeb
+    ) {
         $this->googleApiClient = $googleApiClient;
         $this->authorizeWeb = $authorizeWeb;
     }
@@ -88,16 +88,16 @@ class TaskController extends Controller
             $data['start_date'] = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
         }
 
-        $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
+        $maxPosition = Task::where('catalog_id', $request->catalog_id)
             ->max('position');
         $data['position'] = $maxPosition + 1;
-        $maxSortorder = \App\Models\Task::where('catalog_id', $request->catalog_id)
+        $maxSortorder = Task::where('catalog_id', $request->catalog_id)
             ->max('sortorder');
         $data['sortorder'] = $maxSortorder + 1;
         $data['creator_email'] = Auth::user()->email;
         $data['risk'] = $data['risk'] ?? 'Medium';
         $data['priority'] = $data['priority'] ?? 'Medium';
-//        dd($data['start'], $data['end']);
+        //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
 
@@ -169,7 +169,16 @@ class TaskController extends Controller
         $data['id_gg_calendar'] = $task->id_google_calendar;
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
-// xử lý thêm vào gg calendar
+
+        $followMember = Follow_member::where('task_id', $id)
+            ->where('follow', 1)
+            ->get();
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $task->text . " có sự thay đổi. Xem chi tiết! ", 'success', $member->user->id));
+            }
+        }
+        // xử lý thêm vào gg calendar
         if (Auth::user()->access_token) {
             if ($task->id_google_calendar) {
                 $this->googleApiClient->updateEvent($data);
@@ -425,7 +434,7 @@ class TaskController extends Controller
         $boardId = Task::withTrashed()
             ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
             ->where('tasks.id', $task->id)
-            ->value('catalogs.board_id');
+            ->value(column: 'catalogs.board_id');
         $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
         if (!$authorize) {
             return response()->json([
@@ -458,7 +467,8 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-            if ($task->id_google_calendar) $this->googleApiClient->deleteEvent($task->id_google_calendar);
+            if ($task->id_google_calendar)
+                $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([
@@ -549,12 +559,14 @@ class TaskController extends Controller
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
-            return response()->json(['action' => 'error',
-                'msg' => 'Có lỗi xảy ra!!']);
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
         }
     }
 
-// call giao diện
+    // call giao diện
 
     public function getFormDateTask($taskID)
     {
@@ -563,7 +575,7 @@ class TaskController extends Controller
         }
         session()->forget('view_only');
         $task = Task::findOrFail($taskID);
-//        dd( $task);
+        //        dd( $task);
 
         $htmlForm = View::make('dropdowns.date', [
             'task' => $task
@@ -574,7 +586,8 @@ class TaskController extends Controller
 
     public function getModalTask($taskId)
     {
-        $task = Task::with(['catalog',
+        $task = Task::with([
+            'catalog',
             'catalog.board',
             'members',
             'checkLists',
