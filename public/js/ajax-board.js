@@ -1,9 +1,9 @@
-
+// call forrm thêm catalog màn board, list
 function loadFormAddCatalog(boardId) {
     $.ajax({
         url: `/catalogs/getFormCreateCatalog/${boardId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function (response) {
+        success: function(response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('.dropdown-content-add-catalog-' + boardId).html(response.html);
@@ -11,7 +11,7 @@ function loadFormAddCatalog(boardId) {
                 console.log('No HTML returned');
             }
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
@@ -31,13 +31,16 @@ function submitAddCatalog(boardId) {
         url: `/catalogs`,
         type: 'POST',
         data: formData,
-        success: function (response) {
+        success: function(response) {
             notificationWeb(response.action, response.msg);
+            setTimeout(() => {
+                isSubmittingCatalog = false;
+            }, 2000);
             // màn board
             let listCatalog = $('.board-' + boardId);
             let catalog = `
             <div class="tasks-list rounded-3 p-2 border"id="catalog_view_board_${response.catalog.id}" data-value="${response.catalog.id}">
-                <div class="d-flex mb-3 d-flex align-items-center">
+                <div class="d-flex mb-3 align-items-center">
                     <div class="flex-grow-1">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
                          id="title-catalog-view-board-${response.catalog.id}">
@@ -76,7 +79,13 @@ function submitAddCatalog(boardId) {
             </div>
             `;
             if (listCatalog) {
-                listCatalog.before(catalog)
+                listCatalog.before(catalog);
+                const elementId = `${response.catalog.name}-${response.catalog.id}`;
+                const element = document.getElementById(elementId);
+
+                if (element) {
+                    window.tasks_list.push(element);
+                }
             } else {
                 console.error('Không tìm thấy phần tử checkListcreat');
             }
@@ -104,47 +113,14 @@ function submitAddCatalog(boardId) {
                                     ${response.task_count}</small>
                             </h6>
                             <div class="d-flex ms-4">
-                                <div class="dropdown">
-                                    <a href="javascript:void(0);" class="text-muted" id="dropdownMenuLink1"
-                                       data-bs-toggle="dropdown" aria-expanded="false"><i
-                                            class="ri-more-fill"></i></a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                        <li>
-                                            <a class="dropdown-item" href="#"><i
-                                                    class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                Thay đổi tên</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#"><i
-                                                    class="ri-edit-2-line align-bottom me-2 text-muted"></i>
-                                                Thêm thẻ</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Sao chép danh sách</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Di chuyển danh sách</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Sao chép danh sách</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" href="#"><i
-                                                    class="ri-delete-bin-5-line align-bottom me-2 text-muted"></i>
-                                                Lưu trữ danh sách</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                               <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                                           data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="${response.catalog.id}">
+                                            <i class="ri-more-fill"></i>
+                                        </a>
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset{{ $catalog->id }}"
+                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset${response.catalog.id}"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
                                         onclick="loadFormAddTask(${response.catalog.id})">
                                     <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
@@ -191,15 +167,15 @@ function submitAddCatalog(boardId) {
             }
 
             $('#nameCatalog').val('');
-            window.tasks_list.push(document.getElementById(`${response.catalog.name}-${response.catalog.id}`));
+
             $('.dropdown-menu').dropdown('hide');
             console.log('Catalog đã được thêm thành công!', response);
         },
-        error: function (xhr) {
+        error: function(xhr) {
             notificationWeb(false, 'Thêm mới không thành công!')
             console.log(xhr.responseText);
         },
-        complete: function () {
+        complete: function() {
             // Đặt lại cờ sau 3 giây để cho phép gửi lại
             setTimeout(() => {
                 isSubmittingCatalog = false;
@@ -209,11 +185,12 @@ function submitAddCatalog(boardId) {
     return false;
 }
 
+// call forrm thêm task màn board, list
 function loadFormAddTask(catalogId) {
     $.ajax({
         url: `/tasks/getFormCreateTask/${catalogId}`, // Đường dẫn API hoặc route để lấy form
         method: 'GET',
-        success: function (response) {
+        success: function(response) {
             if (response.html) {
                 // Chèn HTML đã render vào dropdown
                 $('.dropdown-content-add-task-' + catalogId).html(response.html);
@@ -221,16 +198,35 @@ function loadFormAddTask(catalogId) {
                 console.log('No HTML returned');
             }
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
+            console.log('Error: ' + error);
+        }
+    });
+}
+// call forrm thêm task màn table
+function loadFormAddTaskViewTable(boardId) {
+    $.ajax({
+        url: `/tasks/getFormCreateTaskViewTable/${boardId}`, // Đường dẫn API hoặc route để lấy form
+        method: 'GET',
+        success: function(response) {
+            if (response.html) {
+                // Chèn HTML đã render vào dropdown
+                $('.dropdown-add-task-view-table-' + boardId).html(response.html);
+            } else {
+                console.log('No HTML returned');
+            }
+        },
+        error: function(xhr, status, error) {
             console.log('Error: ' + error);
         }
     });
 }
 
+
 function submitAddTask(catalogId, catalogName) {
     if (isSubmittingTask) return; // Nếu đang xử lý, không cho phép submit
     isSubmittingTask = true;
-    let name = $('#add-task-catalog-' + catalogId).val();
+    let name =   $('#add-task-catalog-' + catalogId).val();
     let formData = {
         catalog_id: catalogId,
         text: name,
@@ -240,8 +236,13 @@ function submitAddTask(catalogId, catalogName) {
         url: `/tasks`,
         type: 'POST',
         data: formData,
-        success: function (response) {
-            notificationWeb(response.action, response.msg)
+        success: function(response) {
+            $('#add-task-catalog-' + catalogId).val('');
+            notificationWeb(response.action, response.msg);
+            $('.dropdown-menu').dropdown('hide');
+            setTimeout(() => {
+                isSubmittingTask = false;
+            }, 2000);
             let currentTaskCountElement = $('.totaltask-catalog-' + catalogId);
             if (currentTaskCountElement.length) {
                 let currentTaskCount = parseInt(currentTaskCountElement.text());
@@ -291,6 +292,7 @@ function submitAddTask(catalogId, catalogName) {
             } else {
                 console.error('Không tìm thấy phần tử này ở màn board');
             }
+            //  thêm task màn list
             let listTaskList = document.getElementById('body-catalog-' + catalogId);
 
             let taskList = `
@@ -348,14 +350,14 @@ function submitAddTask(catalogId, catalogName) {
             </tr>
             `;
 
-// Chèn taskList vào trong danh sách nếu tồn tại
+            // Chèn taskList vào trong danh sách nếu tồn tại
             if (listTaskList) {
                 listTaskList.innerHTML += taskList;
             } else {
                 console.error('Không tìm thấy phần tử body-catalog-' + catalogId);
             }
 
-// Hàm để lấy lớp CSS cho priority
+            // Hàm để lấy lớp CSS cho priority
             function getPriorityBadgeClass(priority) {
                 switch (priority) {
                     case 'High':
@@ -369,7 +371,7 @@ function submitAddTask(catalogId, catalogName) {
                 }
             }
 
-// Hàm để tạo các option cho priority
+            // Hàm để tạo các option cho priority
             function generatePriorityOptions(selectedPriority) {
                 const priorities = ['High', 'Medium', 'Low', 'Info'];
                 return priorities.map(priority => `
@@ -379,7 +381,7 @@ function submitAddTask(catalogId, catalogName) {
             `).join('');
             }
 
-// Hàm để tạo các option cho catalog_id
+            // Hàm để tạo các option cho catalog_id
             function generateCatalogOptions(catalogs, selectedCatalogId) {
                 // Kiểm tra nếu catalogs là mảng, nếu không thì chuyển nó thành một mảng rỗng
                 if (!Array.isArray(catalogs)) {
@@ -401,17 +403,15 @@ function submitAddTask(catalogId, catalogName) {
 
             }
 
-            $('#add-task-catalog-' + catalogId).val('');
-            notificationWeb(response.action, response.msg);
-            $('.dropdown-menu').dropdown('hide');
+
             getModalTaskEvents();
             console.log('task đã được thêm thành công!', response);
         },
-        error: function (xhr) {
+        error: function(xhr) {
             notificationWeb(false, 'thêm mới không thành công!')
             console.log(xhr.responseText);
         },
-        complete: function () {
+        complete: function() {
             // Đặt lại cờ sau 3 giây để cho phép gửi lại
             setTimeout(() => {
                 isSubmittingTask = false;
@@ -422,19 +422,18 @@ function submitAddTask(catalogId, catalogName) {
 }
 
 // load modal cài đặt catalog
-$(document).on('click', '[data-bs-toggle="modal"][data-setting-catalog-id]', function () {
+$(document).on('click', '[data-bs-toggle="modal"][data-setting-catalog-id]', function() {
     const catalogId = $(this).data('setting-catalog-id');
 
     $.ajax({
         url: `/catalogs/getModalSettingCatalog/${catalogId}`,
         type: 'GET',
-        success: function (response) {
+        success: function(response) {
             $('#detailCardModalCatalog').modal('show');
             $('.modal-setting-catalog').html(response.html);
         },
-        error: function (xhr) {
-            console.error("Không thể tải dữ liệu catalog:", xhr);
+        error: function(xhr) {
+            // console.error("Không thể tải dữ liệu catalog:", xhr);
         }
     });
 });
-

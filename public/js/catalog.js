@@ -55,6 +55,10 @@ function archiverAllTasks(catalogId) {
                             notificationWeb(response.action, response.msg)
                             response.task.forEach(item => {
                                 $('.task-of-catalog-' + catalogId).hide()
+                                let currentTaskCountElement = $('.totaltask-catalog-' + catalogId);
+                                if (currentTaskCountElement.length) {
+                                        currentTaskCountElement.text(0);
+                                }
                                 let taskViewBoard = document.getElementById(`task_id_view_${item.id}`)
                                 if (taskViewBoard) {
                                     taskViewBoard.remove();

@@ -22,6 +22,9 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::get('/tasks/getFormCreateTask/{id}', [TaskController::class, 'getFormCreateTask'])
             ->name('catalogs.getFormCreateTask');
 
+        Route::get('/tasks/getFormCreateTaskViewTable/{id}', [TaskController::class, 'getFormCreateTaskViewTable'])
+            ->name('catalogs.getFormCreateTaskViewTable');
+
         Route::resource('tasks', TaskController::class);
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);

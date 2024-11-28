@@ -27,7 +27,7 @@
                         </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody id="list-task-table-{{$board->id}}">
 
                         @if (!empty($board))
                             @foreach($board->catalogs as $catalog)
@@ -160,39 +160,18 @@
                onclick="loadFormAddCatalog({{ $board->id }})"
                data-bs-offset="200,-250">Danh sách</p>
             <div class="dropdown-menu dropdown-menu-end p-3 dropdown-content-add-catalog-{{$board->id }}"
-                 style="width: 200%">
+                 style="width: 200%" aria-labelledby="addCatalog">
                 {{--dropdown.createCatalog--}}
             </div>
         </div>
-
         <div class="mt-2 cursor-pointer">
-            <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
-            <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmit()"
-                      class="formItem">
-                    @csrf
-                    <h5 class="text-center">Thêm thẻ</h5>
-                    <div class="mb-2">
-                        <input type="text" class="form-control taskNameInput" name="text"
-                               value="{{ old('text') }}" placeholder="Nhập tên thẻ..."/>
-                        @error('text')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-2">
-                        <select name="catalog_id" id="" class="form-select">
-                            <option value="">---Lựa chọn---</option>
-                            @foreach ($board->catalogs as $catalog)
-                                <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-2 d-grid">
-                        <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
-                            Thêm thẻ
-                        </button>
-                    </div>
-                </form>
+            <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"
+               onclick="loadFormAddTaskViewTable({{ $board->id }})"> Thẻ</p>
+            <div class="dropdown-menu dropdown-menu-end p-3  dropdown-add-task-view-table-{{$board->id }}"
+                 style="width: 200%" >
+
+                {{--      dropdown.createTaskViewTable.blade      --}}
+
             </div>
         </div>
         <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="addCatalog1">

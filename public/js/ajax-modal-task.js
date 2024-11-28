@@ -158,7 +158,7 @@ function getModalTaskEvents() {
                     callEditor();
                 },
                 error: function (xhr) {
-                    console.error("Không thể tải dữ liệu task:", xhr);
+                    // console.error("Không thể tải dữ liệu task:", xhr);
                 }
             });
         });
