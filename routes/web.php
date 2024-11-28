@@ -24,9 +24,9 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('guest');
 
-Route::middleware(['auth', 'isWorkspace'])
+Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
     ->group(function () {
-
+        Route::view('/boardError', '/pageError/boardError');
         Route::middleware('isViewer')->get('/home', [HomeController::class, 'index'])->name('home');
 
         Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
@@ -72,4 +72,3 @@ Route::post('/update-status', [UserController::class, 'updateStatus']);
 
 Route::get('/user/status/{id}', [UserController::class, 'checkStatus']);
 Route::get('/latest-message/{currentUserId}/{otherUserId}', [UserController::class, 'getLatestMessage']);
-

@@ -1,7 +1,7 @@
 import './bootstrap';
 
 // Echo.channel(`tasks`)
-    Echo.channel(`tasks.${boardId}`)
+Echo.channel(`tasks.${boardId}`)
     .listen('RealtimeCreateTask', (e) => {
         console.log("Nhận sự kiện TaskCreated:", e);
 
@@ -73,6 +73,16 @@ import './bootstrap';
             console.error('Không tìm thấy danh sách tương ứng cho catalog');
         }
 
+    })
+    .listen('RealtimeTaskArchiver', (e) => {
+        console.log("Nhận sự kiện RealtimeTaskArchiver:", e);
+        let task = document.getElementById(`task_id_view_${e.task.id}`);
+        let countCatalogViewBoard = document.querySelector(`.totaltask-catalog-${e.task.catalog_id}`);
+        if (countCatalogViewBoard) countCatalogViewBoard.innerHTML = e.countCatalog
+        if (task) {
+            task.remove();
+        }
+        notificationWeb('', `Thẻ ${e.task.text} đã bị quản trị viên lưu trữ.`)
     });
 
 function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {

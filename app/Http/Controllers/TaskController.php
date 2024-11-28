@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Events\EventNotification;
 use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeTaskArchiver;
 use App\Events\RealtimeTaskKanban;
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
@@ -42,8 +43,9 @@ class TaskController extends Controller
 
     public function __construct(
         GoogleApiClientController $googleApiClient,
-        AuthorizeWeb $authorizeWeb
-    ) {
+        AuthorizeWeb              $authorizeWeb
+    )
+    {
         $this->googleApiClient = $googleApiClient;
         $this->authorizeWeb = $authorizeWeb;
     }
@@ -409,10 +411,13 @@ class TaskController extends Controller
             ]);
         }
         $task->delete();
+
+        broadcast(new RealtimeTaskArchiver($task, $task->catalog->board->id))->toOthers();
         return response()->json([
             'action' => 'success',
             'msg' => 'Lưu trữ thẻ thành công!!',
-            'task' => $task
+            'task' => $task,
+            'countCatalog' => Catalog::query()->findOrFail($task->catalog_id)->tasks->count()
         ]);
     }
 

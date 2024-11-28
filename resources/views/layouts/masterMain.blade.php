@@ -106,7 +106,7 @@
 @php
     include  resource_path('views/resourceHome.php');
 @endphp
-        <!-- Begin page -->
+    <!-- Begin page -->
 <div id="layout-wrapper">
     {{-- header website --}}
     @include('layouts.header')
@@ -290,8 +290,8 @@
     }
 </script>
 <script>
-    window.userId = {{ auth()->user()->id }};
-    window.boardId = {{ request()->route('id') }};
+    window.userId = {{ auth()->user()->id ? auth()->user()->id : null }};
+    window.boardId = {{ request()->route('id') ? request()->route('id') : 0 }};
 </script>
 </body>
 
