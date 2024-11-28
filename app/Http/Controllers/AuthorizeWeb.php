@@ -31,6 +31,7 @@ class AuthorizeWeb extends Controller
                 ? true
                 : false;
         }
+        return false;
     }
 
     public function authorizeEdit($boardId)
@@ -59,6 +60,7 @@ class AuthorizeWeb extends Controller
             //       tất cả thành viên trong workspace
             return true;
         }
+        return false;
     }
 
     public function authorizeComment($boardId)
@@ -87,6 +89,7 @@ class AuthorizeWeb extends Controller
             //       tất cả thành viên trong workspace
             return true;
         }
+        return false;
     }
 
     public function authorizeArchiver($boardId)
@@ -105,7 +108,7 @@ class AuthorizeWeb extends Controller
             : Board::withTrashed()
                 ->where('id', $boardId)
                 ->first();
-
+//dd($checkAuthorize);
         if ($authorize->archiver_permission == 'board') {
             //            tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
@@ -120,6 +123,7 @@ class AuthorizeWeb extends Controller
                 ? true
                 : false;
         }
+        return false;
     }
 
     public function authorizeEditPermissionBoard($boardId)
@@ -151,8 +155,9 @@ class AuthorizeWeb extends Controller
     {
         $checkAuthorize = WorkspaceMember::query()
             ->where('user_id', auth()->id())
-            ->where('id', $workspaceId)
+            ->where('workspace_id', $workspaceId)
             ->first();
+
         if ($checkAuthorize) {
             return $checkAuthorize->authorize == 'Owner'
                 ? true
@@ -160,12 +165,14 @@ class AuthorizeWeb extends Controller
         }
         return false;
     }
+
     public function authorizeEditWorkspace($workspaceId)
     {
         $checkAuthorize = WorkspaceMember::query()
             ->where('user_id', auth()->id())
-            ->where('id', $workspaceId)
+            ->where('workspace_id', $workspaceId)
             ->first();
+
         if ($checkAuthorize) {
             return $checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member'
                 ? true

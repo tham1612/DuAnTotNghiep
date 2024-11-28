@@ -1,10 +1,26 @@
 import './bootstrap';
 
 
-Echo.channel('catalogs')
+Echo.channel(`catalogs.${boardId}`)
     .listen('RealtimeCreateCatalog', (e) => {
         console.log("Nhận sự kiện CatalogCreated:", e);
         addCatalogToCurrentView(e); // Gọi hàm chính để thêm catalog vào view hiện tại
+    })
+    .listen('RealtimeCatalogArchiver', (e) => {
+        console.log("Nhận sự kiện RealtimeCatalogArchiver:", e);
+        let catalogViewBoard = document.getElementById(`catalog_view_board_${e.catalog.id}`)
+        if (catalogViewBoard) {
+            catalogViewBoard.remove();
+        }
+        notificationWeb('', `Quản trị viên đã lưu trữ danh sách "${e.catalog.name}"`)
+    })
+    .listen('RealtimeCatalogDetail', (e) => {
+        console.log("Nhận sự kiện RealtimeCatalogDetail:", e);
+        let titleCatalogViewBoard = document.getElementById(`title-catalog-view-board-${e.catalog.id}`);
+        // Cập nhật tên ở màn hình board
+        if (titleCatalogViewBoard) {
+            titleCatalogViewBoard.innerHTML = e.catalog.name;
+        }
     });
 
 function addCatalogToCurrentView(catalog) {

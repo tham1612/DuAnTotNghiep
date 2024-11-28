@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Events\EventNotification;
 use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeTaskArchiver;
+use App\Events\RealtimeTaskKanban;
 use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -108,20 +111,20 @@ class TaskController extends Controller
             $data['start_date'] = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
         }
 
-        $maxPosition = \App\Models\Task::where('catalog_id', $request->catalog_id)
+        $maxPosition = Task::where('catalog_id', $request->catalog_id)
             ->max('position');
         $data['position'] = $maxPosition + 1;
-        $maxSortorder = \App\Models\Task::where('catalog_id', $request->catalog_id)
+        $maxSortorder = Task::where('catalog_id', $request->catalog_id)
             ->max('sortorder');
         $data['sortorder'] = $maxSortorder + 1;
         $data['creator_email'] = Auth::user()->email;
         $data['risk'] = $data['risk'] ?? 'Medium';
         $data['priority'] = $data['priority'] ?? 'Medium';
-//        dd($data['start'], $data['end']);
+        //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
 
-        broadcast(new RealtimeCreateTask($task))->toOthers();
+        broadcast(new RealtimeCreateTask($task, $task->catalog->board->id))->toOthers();
         // ghi lại hoạt động khi thêm
         activity('thêm mới task')
             ->performedOn($task)
@@ -189,7 +192,16 @@ class TaskController extends Controller
         $data['id_gg_calendar'] = $task->id_google_calendar;
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
-// xử lý thêm vào gg calendar
+
+        $followMember = Follow_member::where('task_id', $id)
+            ->where('follow', 1)
+            ->get();
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $task->text . " có sự thay đổi. Xem chi tiết! ", 'success', $member->user->id));
+            }
+        }
+        // xử lý thêm vào gg calendar
         if (Auth::user()->access_token) {
             if ($task->id_google_calendar) {
                 $this->googleApiClient->updateEvent($data);
@@ -242,95 +254,107 @@ class TaskController extends Controller
         $positionOldSameCatalog = Task::query()
             ->select('position', 'id')
             ->findOrFail($id);
+        try {
+            DB::beginTransaction();
+            if ($task->catalog_id != $data['catalog_id']) {
+                //            dd($data['position']);
+                $positionChangeNew = Task::query()
+                    ->whereNotBetween('position', [1, $data['position'] - 1])
+                    ->where('catalog_id', $data['catalog_id'])
+                    ->get();
 
-        if ($task->catalog_id != $data['catalog_id']) {
-            //            dd($data['position']);
-            $positionChangeNew = Task::query()
-                ->whereNotBetween('position', [1, $data['position'] - 1])
-                ->where('catalog_id', $data['catalog_id'])
-                ->get();
+                $positionChangeOld = Task::query()
+                    ->where('position', '>', $positionOldSameCatalog->position)
+                    ->where('catalog_id', $task->catalog_id)
+                    ->get();
 
-            $positionChangeOld = Task::query()
-                ->where('position', '>', $positionOldSameCatalog->position)
-                ->where('catalog_id', $task->catalog_id)
-                ->get();
+                //            dd($positionChangeOld->toArray());
+                // cap nhat vi tri o catalog moi
+                foreach ($positionChangeNew as $item) {
+                    Task::query()
+                        ->where('id', $item->id)
+                        ->update([
+                            'position' => $item->position + 1
+                        ]);
+                }
+                activity('thay đổi vị trí trong task')
+                    ->causedBy(Auth::user())
+                    ->withProperties([
+                        'task_id' => $id,
+                        'catalog_id_new' => $data['catalog_id'],
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                    ])
+                    ->tap(function (Activity $activity) use ($task) {
+                        $activity->catalog_id = $task->catalog_id;
+                        $activity->task_id = $task->id;
+                        $activity->board_id = $task->catalog->board_id;
+                    })
+                    ->log('vị trí các task trong catalog mới đã thay đổi.');
+                // cap nhat lai vi tri o catalog cu
+                foreach ($positionChangeOld as $item) {
+                    Task::query()
+                        ->where('id', $item->id)
+                        ->update([
+                            'position' => $item->position - 1
+                        ]);
+                }
+                activity('thay đổi vị trí trong task')
+                    ->causedBy(Auth::user())
+                    ->withProperties([
+                        'task_id' => $id,
+                        'catalog_id_old' => $task->catalog_id,
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                    ])
+                    ->tap(function (Activity $activity) use ($task) {
+                        $activity->catalog_id = $task->catalog_id;
+                        $activity->task_id = $task->id;
+                        $activity->board_id = $task->catalog->board_id;
+                    })
+                    ->log('Vị trí các task trong catalog cũ đã thay đổi.');
+            } else {
 
-            //            dd($positionChangeOld->toArray());
-            // cap nhat vi tri o catalog moi
-            foreach ($positionChangeNew as $item) {
-                Task::query()
-                    ->where('id', $item->id)
-                    ->update([
-                        'position' => $item->position + 1
-                    ]);
+                $positionChange = Task::query()
+                    ->whereBetween('position', $positionOldSameCatalog->position > $data['position'] ? [$data['position'], $positionOldSameCatalog->position] : [$positionOldSameCatalog->position, $data['position']])
+                    ->where('catalog_id', $data['catalog_id'])
+                    ->whereNot('id', $id)
+                    ->get();
+
+                foreach ($positionChange as $item) {
+                    Task::query()
+                        ->where('id', $item->id)
+                        ->update([
+                            'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
+                        ]);
+                }
+                activity('Thay đổi vị trí task')
+                    ->causedBy(Auth::user())
+                    ->withProperties([
+                        'task_id' => $id,
+                        'catalog_id' => $data['catalog_id'],
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected' => $positionChange->pluck('id')->toArray(),
+                    ])
+                    ->tap(function (Activity $activity) use ($task) {
+                        $activity->catalog_id = $task->catalog_id;
+                        $activity->task_id = $task->id;
+                        $activity->board_id = $task->catalog->board_id;
+                    })
+                    ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
-            activity('thay đổi vị trí trong task')
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'task_id' => $id,
-                    'catalog_id_new' => $data['catalog_id'],
-                    'board_id' => $task->catalog->board_id,
-                    'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
-                ])
-                ->tap(function (Activity $activity) use ($task) {
-                    $activity->catalog_id = $task->catalog_id;
-                    $activity->task_id = $task->id;
-                    $activity->board_id = $task->catalog->board_id;
-                })
-                ->log('vị trí các task trong catalog mới đã thay đổi.');
-            // cap nhat lai vi tri o catalog cu
-            foreach ($positionChangeOld as $item) {
-                Task::query()
-                    ->where('id', $item->id)
-                    ->update([
-                        'position' => $item->position - 1
-                    ]);
-            }
-            activity('thay đổi vị trí trong task')
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'task_id' => $id,
-                    'catalog_id_old' => $task->catalog_id,
-                    'board_id' => $task->catalog->board_id,
-                    'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
-                ])
-                ->tap(function (Activity $activity) use ($task) {
-                    $activity->catalog_id = $task->catalog_id;
-                    $activity->task_id = $task->id;
-                    $activity->board_id = $task->catalog->board_id;
-                })
-                ->log('Vị trí các task trong catalog cũ đã thay đổi.');
-        } else {
+            $task->update($data);
 
-            $positionChange = Task::query()
-                ->whereBetween('position', $positionOldSameCatalog->position > $data['position'] ? [$data['position'], $positionOldSameCatalog->position] : [$positionOldSameCatalog->position, $data['position']])
-                ->where('catalog_id', $data['catalog_id'])
-                ->whereNot('id', $id)
-                ->get();
-
-            foreach ($positionChange as $item) {
-                Task::query()
-                    ->where('id', $item->id)
-                    ->update([
-                        'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
-                    ]);
-            }
-            activity('Thay đổi vị trí task')
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'task_id' => $id,
-                    'catalog_id' => $data['catalog_id'],
-                    'board_id' => $task->catalog->board_id,
-                    'tasks_affected' => $positionChange->pluck('id')->toArray(),
-                ])
-                ->tap(function (Activity $activity) use ($task) {
-                    $activity->catalog_id = $task->catalog_id;
-                    $activity->task_id = $task->id;
-                    $activity->board_id = $task->catalog->board_id;
-                })
-                ->log('Vị trí các task trong cùng catalog đã thay đổi.');
+            DB::commit();
+            Log::debug('trước khi chạy broadcast');
+//            broadcast(new RealtimeTaskKanban($task))->toOthers();
+            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id))->toOthers();
+            Log::debug('đã chạy broadcast');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
         }
-        $task->update($data);
+
     }
 
     public function updateFolow(Request $request, string $id)
@@ -407,10 +431,13 @@ class TaskController extends Controller
             ]);
         }
         $task->delete();
+
+        broadcast(new RealtimeTaskArchiver($task, $task->catalog->board->id))->toOthers();
         return response()->json([
             'action' => 'success',
             'msg' => 'Lưu trữ thẻ thành công!!',
-            'task' => $task
+            'task' => $task,
+            'countCatalog' => Catalog::query()->findOrFail($task->catalog_id)->tasks->count()
         ]);
     }
 
@@ -445,7 +472,7 @@ class TaskController extends Controller
         $boardId = Task::withTrashed()
             ->join('catalogs', 'tasks.catalog_id', '=', 'catalogs.id')
             ->where('tasks.id', $task->id)
-            ->value('catalogs.board_id');
+            ->value(column: 'catalogs.board_id');
         $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
         if (!$authorize) {
             return response()->json([
@@ -478,7 +505,8 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-            if ($task->id_google_calendar) $this->googleApiClient->deleteEvent($task->id_google_calendar);
+            if ($task->id_google_calendar)
+                $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([
@@ -569,12 +597,14 @@ class TaskController extends Controller
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
-            return response()->json(['action' => 'error',
-                'msg' => 'Có lỗi xảy ra!!']);
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Có lỗi xảy ra!!'
+            ]);
         }
     }
 
-// call giao diện
+    // call giao diện
 
     public function getFormDateTask($taskID)
     {
@@ -583,7 +613,7 @@ class TaskController extends Controller
         }
         session()->forget('view_only');
         $task = Task::findOrFail($taskID);
-//        dd( $task);
+        //        dd( $task);
 
         $htmlForm = View::make('dropdowns.date', [
             'task' => $task
@@ -594,7 +624,8 @@ class TaskController extends Controller
 
     public function getModalTask($taskId)
     {
-        $task = Task::with(['catalog',
+        $task = Task::with([
+            'catalog',
             'catalog.board',
             'members',
             'checkLists',
