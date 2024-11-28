@@ -45,5 +45,12 @@ Echo.channel(`boards.${boardId}`)
             }
         }
         notificationWeb('', 'Quản trị viên đã thay đổi thông tin của bảng')
+    })
+    .listen('RealtimeBoardArchiver', (e) => {
+        console.log("Nhận sự kiện RealtimeBoardArchiver:", e);
+        notificationWeb('', 'Quản trị viên đã đóng bảng.')
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     });
 

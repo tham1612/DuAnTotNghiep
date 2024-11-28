@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware(['auth', 'isWorkspace'])
+Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
     ->group(function () {
 
         Route::middleware('isViewer')->get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
@@ -30,7 +30,7 @@ Route::middleware(['auth', 'isWorkspace'])
 
                     Route::post('store', [BoardController::class, 'store'])->name('store');
 
-                    Route::get('{id}/edit', [BoardController::class, 'edit'])->name('edit');
+                    Route::get('{id}/edit', [BoardController::class, 'edit'])->middleware('isActiveBoard')->name('edit');
 
                     Route::post('{id}/filter', [BoardController::class, 'filter']);
 

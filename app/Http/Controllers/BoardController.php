@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 //const PATH_UPLOAD = 'board';
 use App\Enums\AuthorizeEnum;
 use App\Events\EventNotification;
+use App\Events\RealtimeBoardArchiver;
 use App\Events\RealtimeBoardDetail;
 use App\Events\UserInvitedToBoard;
 use App\Models\Board;
@@ -712,6 +713,7 @@ class BoardController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
+        $board = Board::query()->findOrFail($id);
         $catalogsId = Catalog::query()
             ->where('board_id', $id)
             ->get()
@@ -722,9 +724,10 @@ class BoardController extends Controller
             foreach ($catalogsId as $catalogId) {
                 $this->catalogController->destroy($catalogId);
             }
-            Board::query()->findOrFail($id)->delete();
+            $board->delete();
 
             DB::commit();
+            broadcast(new RealtimeBoardArchiver($board, $board->id))->toOthers();
             return response()->json([
                 'action' => 'success',
                 'msg' => 'Lưu trữ bảng thành công!!'

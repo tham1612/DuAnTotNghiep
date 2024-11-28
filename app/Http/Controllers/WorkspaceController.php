@@ -57,7 +57,7 @@ class WorkspaceController extends Controller
         WorkspaceMember::query()
             ->where('id', $id)
             ->update(['is_active' => 1]);
-            Session::forget('workspaceChecked');
+        Session::forget('workspaceChecked');
         return redirect()->route('home')->with([
             'msg' => "Bạn đã chuyển đổi không gian làm việc",
             'action' => 'success'
@@ -935,8 +935,8 @@ class WorkspaceController extends Controller
             ->first();
 
         try {
-            if($wsp->authorize == "Owner"){
-                if($data->users->count() == 1){
+            if ($wsp->authorize == "Owner") {
+                if ($data->users->count() == 1) {
                     $wsp->forceDelete();
                     $title = "Rời Khỏi Không Gian Làm Việc";
                     $description = 'Chúng tôi rất tiếc phải thông báo rằng bạn đã bị xóa khỏi không gian làm việc "' . $wsp->workspace->name . '". Hy vọng sẽ có cơ hội gặp lại bạn trong tương lai!';

@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RealtimeCreateCatalog implements ShouldBroadcast
+class RealtimeCatalogDetail implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,13 +32,13 @@ class RealtimeCreateCatalog implements ShouldBroadcast
         return new Channel('catalogs.'.$this->boardId);
     }
 
-    public function broadcastWith()
-    {
-        return [
-            'id' => $this->catalog->id,
-            'name' => $this->catalog->name,
-            'board_id' => $this->catalog->board_id,
-        ];
-    }
+//    public function broadcastWith()
+//    {
+//        return [
+//            'id' => $this->catalog->id,
+//            'name' => $this->catalog->name,
+//            'board_id' => $this->catalog->board_id,
+//        ];
+//    }
 
 }
