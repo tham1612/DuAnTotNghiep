@@ -54,19 +54,31 @@ function getCurrentView() {
 
 // Hàm thêm catalog vào Kanban Board (view1)
 function addCatalogToKanbanBoard(kanbanBoard, catalog) {
+    let listCatalog = $('.board-' + catalog.board_id);
     const newCatalogDiv = document.createElement("div");
-    newCatalogDiv.classList.add("tasks-list", "rounded-3", "p-2", "border", "shadow-sm", "mb-4");
+    newCatalogDiv.classList.add("tasks-list", "rounded-3", "p-2", "border",`position-${catalog.position}`);
     newCatalogDiv.setAttribute("data-value", catalog.id);
+    newCatalogDiv.setAttribute("id", `catalog_view_board_${catalog.id}`);
 
     newCatalogDiv.innerHTML = `
         <div class="d-flex mb-3 align-items-center">
             <div class="flex-grow-1">
-                <h6 class="fs-14 text-uppercase fw-semibold mb-0">
+                <h6 class="fs-14 text-uppercase fw-semibold mb-0"  id="title-catalog-view-board-${catalog.id}">
                     ${catalog.name}
-                    <small class="badge bg-success align-bottom ms-1 totaltask-badge">0</small>
+                   <small class="badge bg-success align-bottom ms-1 totaltask-badge
+                                totaltask-catalog-${catalog.id}">0</small>
                 </h6>
             </div>
-
+             <div class="flex-shrink-0">
+                <div class="dropdown card-header-dropdown">
+                   <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                       data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="${catalog.id}">
+                        <span class="fw-medium text-muted fs-12">
+                            <i class="ri-more-fill fs-20" title="Cài Đặt"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
         </div>
         <div data-simplebar class="tasks-wrapper px-3 mx-n3">
             <div id="${catalog.name}-${catalog.id}" class="tasks">
@@ -90,8 +102,8 @@ function addCatalogToKanbanBoard(kanbanBoard, catalog) {
             </div>
         </div>
     `;
+    listCatalog.before(newCatalogDiv)
 
-    kanbanBoard.insertBefore(newCatalogDiv, kanbanBoard.firstChild);
 }
 
 // Hàm thêm catalog vào View2 với giao diện đơn giản hơn
@@ -108,19 +120,26 @@ function addCatalogToView2(catalog) {
     }
     let listCatalogList = $('.list-catalog-' + catalog.board_id);
     let catalogList = `
-             <div class="card" id="${catalog.id}">
+             <div class="card" id="catalog_view_list_${catalog.id}">
                 <div class="card-header border-0">
                     <div class="d-flex align-items-center">
                         <div class="d-flex flex-grow-1">
                             <h6 class="fs-14 fw-semibold mb-0" value="${catalog.id}">${catalog.name}
-                                <small
-                                    class="badge bg-warning align-bottom ms-1 totaltask-badge">0</small>
+                                  <small
+                                    class="badge bg-warning align-bottom ms-1 totaltask-badge
+                                     totaltask-catalog-${catalog.id}">
+                                    0</small>
                             </h6>
-
+                            <div class="d-flex ms-4">
+                               <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
+                                   data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="${catalog.id}">
+                                    <i class="ri-more-fill"></i>
+                                </a>
+                            </div>
                         </div>
                         <div>
-                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset{{ $catalog->id }}"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
+                            <button class="btn btn-primary ms-3" id="dropdownMenuOffset${catalog.id}"
+                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,-50"
                                         onclick="loadFormAddTask(${catalog.id})">
                                     <i class="ri-add-line align-bottom me-1"></i>Thêm thẻ
                                 </button>

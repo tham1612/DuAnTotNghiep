@@ -55,6 +55,10 @@ function archiverAllTasks(catalogId) {
                             notificationWeb(response.action, response.msg)
                             response.task.forEach(item => {
                                 $('.task-of-catalog-' + catalogId).hide()
+                                let currentTaskCountElement = $('.totaltask-catalog-' + catalogId);
+                                if (currentTaskCountElement.length) {
+                                        currentTaskCountElement.text(0);
+                                }
                                 let taskViewBoard = document.getElementById(`task_id_view_${item.id}`)
                                 if (taskViewBoard) {
                                     taskViewBoard.remove();
@@ -117,13 +121,16 @@ function restoreCatalog(catalogId) {
         url: `/catalogs/restoreCatalog/${catalogId}`,
         type: 'POST',
         success: function (response) {
-            // Xóa catalog khỏi danh sách lưu trữ
-            let catalogArchiver = document.getElementById(`catalog_id_archiver_${catalogId}`);
-            if (catalogArchiver) {
-                catalogArchiver.remove();
-            }
-            // nội dung trong của catalog màn board
-            let taskHTML = response.tasks.map(task => `
+            // Thông báo thành công
+            notificationWeb(response.action, response.msg);
+            if (response.action == 'success') {
+                // Xóa catalog khỏi danh sách lưu trữ
+                let catalogArchiver = document.getElementById(`catalog_id_archiver_${catalogId}`);
+                if (catalogArchiver) {
+                    catalogArchiver.remove();
+                }
+                // nội dung trong của catalog màn board
+                let taskHTML = response.tasks.map(task => `
                 <div class="card tasks-box cursor-pointer task-of-catalog-${catalogId}" data-value="${task.id}" id="task_id_view_${task.id}">
                     <div class="card-body">
                         <div class="d-flex mb-2">
@@ -158,8 +165,8 @@ function restoreCatalog(catalogId) {
                 </div>
             `).join('');
 
-            //  catalog màn board
-            let catalogHTML = `
+                //  catalog màn board
+                let catalogHTML = `
             <div class="tasks-list rounded-3 p-2 border position-${response.catalog.position}" id="catalog_view_board_${response.catalog.id}" data-value="${response.catalog.id}">
                 <div class="d-flex mb-3 d-flex align-items-center">
                     <div class="flex-grow-1">
@@ -192,28 +199,27 @@ function restoreCatalog(catalogId) {
             </div>
             `;
 
-            // Tìm danh sách catalog hiện tại
-            let catalogs = Array.from(document.querySelectorAll('.tasks-list'));
+                // Tìm danh sách catalog hiện tại
+                let catalogs = Array.from(document.querySelectorAll('.tasks-list'));
 
-            // Xác định vị trí chèn dựa trên position
-            let inserted = false;
-            for (let catalog of catalogs) {
-                let currentPosition = parseInt(catalog.className.match(/position-(\d+)/)?.[1] || 0, 10);
-                if (response.catalog.position < currentPosition) {
-                    // Chèn catalog trước catalog hiện tại
-                    catalog.insertAdjacentHTML('beforebegin', catalogHTML);
-                    inserted = true;
-                    break;
+                // Xác định vị trí chèn dựa trên position
+                let inserted = false;
+                for (let catalog of catalogs) {
+                    let currentPosition = parseInt(catalog.className.match(/position-(\d+)/)?.[1] || 0, 10);
+                    if (response.catalog.position < currentPosition) {
+                        // Chèn catalog trước catalog hiện tại
+                        catalog.insertAdjacentHTML('beforebegin', catalogHTML);
+                        inserted = true;
+                        break;
+                    }
                 }
-            }
 
-            // Nếu không có catalog nào có position lớn hơn, chèn vào cuối
-            if (!inserted) {
-                document.querySelector('.board-' + response.catalog.board_id).insertAdjacentHTML('beforebegin', catalogHTML);
+                // Nếu không có catalog nào có position lớn hơn, chèn vào cuối
+                if (!inserted) {
+                    document.querySelector('.board-' + response.catalog.board_id).insertAdjacentHTML('beforebegin', catalogHTML);
+                }
+                window.tasks_list.push(document.getElementById(`${response.catalog.name}-${response.catalog.id}`));
             }
-            window.tasks_list.push(document.getElementById(`${response.catalog.name}-${response.catalog.id}`));
-            // Thông báo thành công
-            notificationWeb(response.action, response.msg);
         },
         error: function (xhr) {
             // Thông báo lỗi

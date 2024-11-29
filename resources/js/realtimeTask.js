@@ -86,6 +86,17 @@ Echo.channel(`tasks.${boardId}`)
     });
 
 function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
+    let currentTaskCountElement = $('.totaltask-catalog-' + task.catalog_id);
+    if (currentTaskCountElement.length) {
+        let currentTaskCount = parseInt(currentTaskCountElement.text());
+        // Kiểm tra xem currentTaskCount có phải là số hợp lệ không, nếu có thì tăng lên 1
+        if (!isNaN(currentTaskCount)) {
+            currentTaskCountElement.text(currentTaskCount + 1);
+        } else {
+            // Nếu không phải là số hợp lệ, đặt về 1
+            currentTaskCountElement.text(1);
+        }
+    }
     let listTask = document.getElementById(`${catalog_name}-${task.catalog_id}`);
     let tasks = `
             <div class="card tasks-box cursor-pointer" data-value="${task.id}">
