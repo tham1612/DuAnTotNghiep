@@ -61,7 +61,7 @@
 
 @extends('layouts.masterMain')
 @section('title')
-    Dashbroad_board
+    Bảng điều khiển - TaskFlow
 @endsection
 @section('main')
     @if (session('error'))

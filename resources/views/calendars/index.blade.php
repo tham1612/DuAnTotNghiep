@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Calendar - TaskFlow
+    Lịch - TaskFlow
 @endsection
 @section('main')
     <style>
