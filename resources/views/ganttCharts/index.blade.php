@@ -62,23 +62,12 @@
         </button>
         <div class="dropdown-menu dropdown-menu-end p-3">
             <div class="my-2 cursor-pointer">
-                <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
-                <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form action="{{ route('catalogs.store') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
-                        @csrf
-                        <div class="mb-2">
-                            <input type="text" class="form-control" name="name" id="nameCatalog"
-                                value="{{ old('name') }}" placeholder="Nhập tên danh sách..." />
-                            <input type="hidden" name="board_id" value="{{ $board->id }}">
-                        </div>
-                        <div class="mb-2 d-flex align-items-center">
-                            <button type="submit" id="btnSubmitCatalog" class="btn btn-primary" disabled>
-                                Thêm danh sách
-                            </button>
-                            <i class="ri-close-line fs-22 ms-2 cursor-pointer closeDropdown" role="button" tabindex="0"
-                                aria-label="Close" data-dropdown-id="dropdownMenuOffset3"></i>
-                        </div>
-                    </form>
+                <p data-bs-toggle="dropdown" aria-expanded="false"
+                   onclick="loadFormAddCatalog({{ $board->id }})"
+                   data-bs-offset="200,-250">Danh sách</p>
+                <div class="dropdown-menu dropdown-menu-end p-3 dropdown-content-add-catalog-{{$board->id }}"
+                     style="width: 200%" aria-labelledby="addCatalog">
+                    {{--dropdown.createCatalog--}}
                 </div>
             </div>
 

@@ -17,10 +17,10 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->enum('comment_permission', ['owner', 'board', 'workspace'])->default('owner')->comment('có quyền cmt');
-            $table->enum('member_permission', ['owner', 'board'])->default('owner')->comment('quyền thêm , xóa');
-            $table->enum('archiver_permission', ['owner', 'board'])->default('owner')->comment('quyền lưu trữ');
-            $table->enum('edit_board', ['owner', 'board', 'workspace'])->default('owner')->comment('quyền sửa bảng');
+            $table->enum('comment_permission', ['owner', 'board', 'workspace'])->default('board')->comment('có quyền cmt');
+            $table->enum('member_permission', ['owner', 'board'])->default('board')->comment('quyền thêm , xóa');
+            $table->enum('archiver_permission', ['owner', 'board'])->default('board')->comment('quyền lưu trữ');
+            $table->enum('edit_board', ['owner', 'board', 'workspace'])->default('board')->comment('quyền sửa bảng');
             $table->string('link_invite');
             $table->integer('complete')->default(0);
             $table->softDeletes();

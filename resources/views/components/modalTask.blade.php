@@ -591,23 +591,7 @@
     });
 </script>
 <script>
-    document.addEventListener('click', function (event) {
-        // Sự kiện cho nút hiển thị form 'Thêm mục'
-        if (event.target.classList.contains('display-checklist')) {
-            const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
-            formElement.classList.toggle('d-none'); // Hiện hoặc ẩn form
-            event.target.classList.add('d-none'); // Ẩn nút hiển thị form
-        }
 
-        // Sự kiện cho nút 'Hủy'
-        if (event.target.classList.contains('disable-checklist')) {
-            const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
-            const inputElement = formElement.querySelector('.checklistItem');
-            inputElement.value = ""; // Xóa nội dung ô nhập liệu
-            formElement.classList.add('d-none'); // Ẩn form
-            event.target.closest('.row').querySelector('.display-checklist').classList.remove('d-none'); // Hiện lại nút hiển thị form
-        }
-    });
 
 
     //     xử lý lưu trữ cảu card

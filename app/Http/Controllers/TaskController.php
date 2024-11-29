@@ -69,6 +69,27 @@ class TaskController extends Controller
         return response()->json(['html' => $htmlForm]);
     }
 
+    public function getFormCreateTaskViewTable($boardId)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        if (!$boardId) {
+            return response()->json(['error' => 'boardId is missing'], 400);
+        }
+        $catalogs = Catalog::with('board')
+            ->where('board_id',$boardId)
+            ->get();
+        $htmlForm = View::make('dropdowns.createTaskViewTable', [
+            'catalogs' => $catalogs,
+            'boardId'=>$boardId
+        ])->render();
+
+        // Trả về HTML cho frontend
+        return response()->json(['html' => $htmlForm]);
+    }
+
     public function store(StoreTaskRequest $request)
     {
         if (session('view_only', false)) {
@@ -127,6 +148,7 @@ class TaskController extends Controller
             'success' => true,
             'task' => $task,
             'catalogs' => $task->catalog->board->catalogs,
+            'boarId'=> $task->catalog->board->id,
             'task_count' => count($catalog->tasks),
         ]);
     }
