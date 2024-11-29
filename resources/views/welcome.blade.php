@@ -88,7 +88,7 @@
                 <div class="row justify-content-between align-items-center">
                     <div class="col-lg-6">
                         <div>
-                            <h1 class="display-6 fw-semibold text-capitalize mb-3 lh-base">PHẦN MỀM QUẢN LÝ công việc TRỰC
+                            <h1 class="display-6 fw-semibold text-capitalize mb-3 lh-base">PHẦN MỀM QUẢN LÝ CÔNG VIỆC TRỰC
                                 TUYẾN.</h1>
                             <p class="lead text-muted lh-base mb-4">Phần mềm quản lý công việc TaskFlow giúp quản lý tập
                                 trung hàng trăm công việc trực tuyến trên một màn hình .</p>
