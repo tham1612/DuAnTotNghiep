@@ -43,23 +43,45 @@ function restoreBoard(boardId) {
 }
 
 function destroyBoard(boardId) {
-    console.log(boardId);
-    $.ajax({
-        url: `/b/destroyBoard/${boardId}`,
-        type: "POST",
+    Swal.fire({
+        // title: "Xóa bảng vĩnh viễn?",
+        html: `
+                <div>
+                <strong class="fs-20">Xóa bảng vĩnh viễn?</strong>
+                  <p class="fs-15 mt-2" style="text-align: left">Những điều cần biết</p>
+                     <ul class="fs-14" style="text-align: left;margin-top: -10px">
+                         <li>Điều này là vĩnh viễn và không thể hoàn tác.</li>
+                         <li>Các danh sách, thẻ thuộc bảng sẽ bị xóa vĩnh viễn</li>
+                     </ul>
+                </div>
+                `,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/b/destroyBoard/${boardId}`,
+                type: "POST",
 
-        success: function (response) {
-            let boardArchiverViewHeader = document.getElementById(`board-archiver-view-header-${boardId}`)
-            notificationWeb(response.action, response.msg);
-            if (response.action === "success") {
-                if (boardArchiverViewHeader) boardArchiverViewHeader.remove();
-            }
+                success: function (response) {
+                    let boardArchiverViewHeader = document.getElementById(`board-archiver-view-header-${boardId}`)
+                    notificationWeb(response.action, response.msg);
+                    if (response.action === "success") {
+                        if (boardArchiverViewHeader) boardArchiverViewHeader.remove();
+                    }
 
-        },
-        error: function (xhr) {
-            notificationWeb(response.action, response.msg);
-        },
+                },
+                error: function (xhr) {
+                    notificationWeb(response.action, response.msg);
+                },
+            });
+        }
     });
+
 }
 
 // sao chép bảng

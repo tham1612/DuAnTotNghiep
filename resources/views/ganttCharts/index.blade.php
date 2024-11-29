@@ -52,7 +52,7 @@
             </div>
         @endif --}}
 
-        <div id="gantt_here" style='width:100%; height:60vh'></div>
+        <div id="gantt_here" style='width:100%; height:50vh'></div>
         <br>
 
         <button class="btn btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"

@@ -16,12 +16,14 @@
                         <div class="text-center">
                             <div class="profile-user position-relative d-inline-block mx-auto mb-4">
                                 @if (auth()->user()->image)
-                                    <img class="rounded-circle avatar-xl img-thumbnail user-profile-imager object-fit-cover"
-                                         src="{{asset('storage/' . auth()->user()->image)}}"
-                                         alt="Avatar"/>
+                                    <img
+                                        class="rounded-circle avatar-xl img-thumbnail user-profile-imager object-fit-cover"
+                                        src="{{asset('storage/' . auth()->user()->image)}}"
+                                        alt="Avatar"/>
                                 @else
-                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center fs-20"
-                                         style="width: 80px;height: 80px">
+                                    <div
+                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center fs-20"
+                                        style="width: 80px;height: 80px">
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </div>
                                 @endif
@@ -88,6 +90,11 @@
                             <li class="nav-item">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab">
                                     <i class="fas fa-home"></i>Thông tin người dùng
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#socialNetworkLinks" role="tab">
+                                    <i class="fas fa-home"></i>Liên kết
                                 </a>
                             </li>
                         </ul>
@@ -166,7 +173,8 @@
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label for="social_name"
-                                                       class="form-label  @error('social_name') is-invalid @enderror">Tên mạng xã hội:</label>
+                                                       class="form-label  @error('social_name') is-invalid @enderror">Tên
+                                                    mạng xã hội:</label>
                                                 <input type="text" class="form-control" name="social_name"
                                                        id="social_name" placeholder="PH33245 Đinh Thị Minh Nguyệt"
                                                        value="{{ old('social_name', $user->social_name) }}"/>
@@ -177,7 +185,8 @@
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="mb-3 pb-2">
-                                                <label for="introduce" class="form-label">Giới thiệu về bản thân:</label>
+                                                <label for="introduce" class="form-label">Giới thiệu về bản
+                                                    thân:</label>
                                                 <textarea name="introduce"
                                                           class="form-control  @error('introduce') is-invalid @enderror"
                                                           id="introduce"
@@ -197,21 +206,80 @@
                                         <!--end col-->
                                     </div>
                                     <!--end row-->
+                                </form>
+                            </div>
+                            <div class="tab-pane" id="socialNetworkLinks" role="tabpanel">
+
+
+                                <div class="mb-3 ">
+                                    <label for="fullName" class="form-label fs-16">Google Calendar</label>
+                                    <div
+                                        class="border rounded-1 w-100 h-auto p- d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ri-lock-2-line fs-24 ms-2"></i>
+                                            <section class="ms-4 mt-3 fs-13">
+                                                <strong class="fs-15">Tạo liên kết cá nhân</strong>
+                                                <p>Một kết nối chỉ dành cho bạn</p>
+                                            </section>
+                                        </div>
+
+
+                                        <a href="{{route('google.redirect')}}"
+                                           id="link-user"
+                                           class="btn btn-primary col-2 me-3
+                                           @if(\Illuminate\Support\Facades\Auth::user()->access_token) d-none @endif">Liên
+                                            kết</a>
+
+                                        <button class="btn btn-danger col-2 me-3
+                                         @if(!\Illuminate\Support\Facades\Auth::user()->access_token) d-none @endif"
+                                                id="unlink-user"
+                                                onclick="confirmUnlink(event,{{\Illuminate\Support\Facades\Auth::id()}})">
+                                            Hủy liên
+                                            kết
+                                        </button>
+
+                                    </div>
+
+                                </div>
 
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
         </div>
+        <script !src="">
+            function confirmUnlink(e, userId) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "Hủy liên kết Google Calendar?",
+                    text: "Bạn có chắc chắn muốn hủy không!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Đồng ý",
+                    cancelButtonText: "Hủy",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/unlink/google-calendar/${userId}`,
+                            method: 'POST',
+                            success: function (response) {
+                                notificationWeb(response.action, response.msg);
+                                let userUnlink = document.querySelector('#unlink-user');
+                                let userLink = document.querySelector('#link-user');
+                                userUnlink.classList.toggle('d-none');
+                                userLink.classList.toggle('d-none');
+                            },
+                            error: function (xhr, status, error) {
+                                alert('Có lỗi xảy ra khi gửi form!');
 
-    </form>
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
 @endsection

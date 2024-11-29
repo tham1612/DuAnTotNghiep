@@ -24,13 +24,8 @@ $boardIsStars = \App\Models\Board::query()
     ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id')
     ->join('workspace_members', 'workspace_members.workspace_id', '=', 'workspaces.id')
     ->join('board_members', 'board_members.board_id', '=', 'boards.id')
-    ->where('workspaces.id', $currentWorkspace->id)
+    ->where('workspaces.id', $currentWorkspace->workspace_id)
     ->where('workspace_members.is_active', 1)
     ->where('board_members.user_id', \Illuminate\Support\Facades\Auth::id())
     ->where('board_members.is_star', 1)
     ->get();
-
-$userId = \Illuminate\Support\Facades\Auth::id();
-
-
-

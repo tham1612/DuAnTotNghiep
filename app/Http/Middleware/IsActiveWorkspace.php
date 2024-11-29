@@ -24,6 +24,6 @@ class IsActiveWorkspace
         if ($activeWsp) {
             return $next($request);
         }
-        return Auth::user()->hasActiveWorkspace();
+        return Auth::user() ? Auth::user()->hasActiveWorkspace() : $next($request);
     }
 }

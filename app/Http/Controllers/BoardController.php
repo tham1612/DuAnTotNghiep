@@ -453,14 +453,14 @@ class BoardController extends Controller
             $boardMember->update(['is_star' => !$boardMember->is_star]);
 
             return response()->json([
-                'message' => 'Người dùng cập nhật dấu sao bảng thành công',
-                'msg' => true
+                'msg' => 'Người dùng cập nhật dấu sao bảng thành công',
+                'action' => 'success'
             ]);
         }
 
         return response()->json([
-            'message' => 'Không tồn tại người dùng trong bảng',
-            'msg' => false
+            'msg' => 'Không tồn tại người dùng trong bảng',
+            'action' => 'error'
         ]);
     }
 

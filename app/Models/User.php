@@ -106,6 +106,7 @@ class User extends Authenticatable
         return $this->hasWorkspaceCache;
     }
 
+//    dùng check xem người dùng còn wsp nào không khi bị xóa khỏi wsp hoặc wsp bị xóa
     public function hasActiveWorkspace()
     {
         $activeWsp = WorkspaceMember::query()

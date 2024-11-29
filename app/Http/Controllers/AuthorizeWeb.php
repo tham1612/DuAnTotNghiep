@@ -94,21 +94,18 @@ class AuthorizeWeb extends Controller
 
     public function authorizeArchiver($boardId)
     {
-        $checkAuthorize = BoardMember::query()
+        $checkAuthorizeBoard = BoardMember::query()
             ->where('user_id', auth()->id())
             ->where('board_id', $boardId)
             ->value('authorize');
-
-        $authorize = Board::query()
+        $checkAuthorizeWsp = WorkspaceMember::query()
+            ->where('user_id', auth()->id())
+            ->value('authorize');
+        $checkAuthorize = $checkAuthorizeBoard ? $checkAuthorizeBoard : $checkAuthorizeWsp;
+        $authorize = Board::withTrashed()
             ->where('id', $boardId)
-            ->first()
-            ? Board::query()
-                ->where('id', $boardId)
-                ->first()
-            : Board::withTrashed()
-                ->where('id', $boardId)
-                ->first();
-//dd($checkAuthorize);
+            ->first();
+
         if ($authorize->archiver_permission == 'board') {
             //            tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
