@@ -401,8 +401,12 @@
                                 @foreach ($task_over as $task)
                                     <tr >
                                         <td>{{ $task->id }}</td>
+
                                         <td> <h6 class="fs-15 mb-0 flex-grow-1  task-title" data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal{{ $task->id }}">{{ $task->text }}</h6></td>
+                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}">
+                                                {{ \Illuminate\Support\Str::limit($task->text, 30) }}
+                                            </h6>
+                                        </td>
                                         <td>
                                             <div class="avatar-group d-flex justify-content-center" id="newMembar">
                                                 @if ($task->members->isNotEmpty())

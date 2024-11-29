@@ -97,7 +97,7 @@
                        href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}" role="tab"
                        aria-controls="pills-profile"
                        aria-selected="{{ request()->get('type') == 'board' ? 'true' : 'false' }}">
-                        <i class="ri-table-line fs-20"></i> <span class="readonly fs-14"> Bảng </span>
+                        <i class="ri-table-line fs-20"></i> <span class="readonly fs-14"> Bảng Kanban</span>
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">

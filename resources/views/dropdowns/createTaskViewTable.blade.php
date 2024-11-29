@@ -1,7 +1,7 @@
 <form>
     <h5 class="text-center">Thêm thẻ</h5>
     <div class="mb-2">
-        <input type="text" class="form-control add-task-all-view" name="text"
+        <input type="text" id=" " class="form-control add-task-all-view" name="text"
                value="{{ old('text') }}" placeholder="Nhập tên thẻ..."/>
         @error('text')
         <div class="invalid-feedback">{{ $message }}</div>
@@ -17,7 +17,7 @@
     </div>
     <div class="mb-2 d-grid">
         <button type="button" class="btn btn-primary"
-                onclick="submitAddTask({{$catalog->id}},'{{$catalog->name}}')">
+                onclick="submitAddTaskViewTable({{$catalog->id}},'{{$boardId}}')">
             Thêm thẻ
         </button>
     </div>

@@ -19,6 +19,7 @@ function loadFormAddCatalog(boardId) {
 
 let isSubmittingCatalog = false;
 let isSubmittingTask = false;
+let isSubmittingTaskViewTable = false;
 
 function submitAddCatalog(boardId) {
     if (isSubmittingCatalog) return; // Nếu đang xử lý, không cho phép submit
@@ -226,7 +227,7 @@ function loadFormAddTaskViewTable(boardId) {
 function submitAddTask(catalogId, catalogName) {
     if (isSubmittingTask) return; // Nếu đang xử lý, không cho phép submit
     isSubmittingTask = true;
-    let name =   $('#add-task-catalog-' + catalogId).val();
+    let name = $('#add-task-catalog-' + catalogId).val();
     let formData = {
         catalog_id: catalogId,
         text: name,
@@ -403,20 +404,123 @@ function submitAddTask(catalogId, catalogName) {
 
             }
 
-
             getModalTaskEvents();
             console.log('task đã được thêm thành công!', response);
         },
         error: function(xhr) {
-            notificationWeb(false, 'thêm mới không thành công!')
+           notificationWeb('error', 'Có lỗi xảy ra!!')
             console.log(xhr.responseText);
         },
-        complete: function() {
-            // Đặt lại cờ sau 3 giây để cho phép gửi lại
+
+    });
+    return false;
+}
+
+function submitAddTaskViewTable(catalogId, boarId) {
+    if (isSubmittingTaskViewTable) return; // Nếu đang xử lý, không cho phép submit
+    isSubmittingTaskViewTable = true;
+    let name = $('.add-task-all-view').val();
+    let formData = {
+        catalog_id: catalogId,
+        text: name,
+    };
+    console.log(formData.text)
+    $.ajax({
+        url: `/tasks`,
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            $('.add-task-all-view').val('');
+            notificationWeb(response.action, response.msg);
+            $('.dropdown-menu').dropdown('hide');
             setTimeout(() => {
-                isSubmittingTask = false;
+                isSubmittingTaskViewTable = false;
             }, 2000);
-        }
+            //  thêm task màn table
+            let listTaskTable = document.getElementById('list-task-table-' + boarId);
+
+            let taskTable = `
+            <input type="hidden" id="text_${response.task.id}" value="${response.task.text}">
+            <tr>
+                <td>${response.task.id}</td>
+                <td data-bs-toggle="modal" data-bs-target="#detailCardModal"
+                    data-task-id="{{ $task->id }}">
+                   ${response.task.text.substring(0, 30)}
+                </td>
+                <td  id="tag-view-table-task-${response.task.id}">
+                                <!--     nhãn của task-->
+                </td>
+                <td class="col-1">
+                    <div id="member1"
+                         class="member cursor-pointer">
+                        <div class="avatar-group d-flex justify-content-center" id="newMembar">
+                            <span>
+                                <i class="bx fs-20 bxs-user-plus cursor-pointer"
+                                   data-bs-toggle="tooltip" title="Thêm thành viên"></i>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+                <form id="updateTaskForm${response.task.id}">
+                    <td>
+                        <select name="catalog_id" id="catalog_id_{{ $task->id }}"
+                                class="form-select no-arrow"
+                                onchange="updateTask(${response.task.id})">
+                             ${generateCatalogOptionsViewTable(response.catalogs, response.task.catalog_id)}
+                        </select>
+                    </td>
+
+                    <td class="col-2">
+                        <input type="datetime-local" name="start_date"
+                               id="start_date_${response.task.id}" value="${response.task.start_date || ''}"
+                               class="form-control no-arrow"
+                               onchange="updateTask(${response.task.id})">
+                    </td>
+
+                    <td class="col-2">
+                        <input type="datetime-local" name="end_date"
+                               value="${response.task.end_date || ''}"
+                               id="end_date_${response.task.id}" class="form-control no-arrow"
+                               onchange="updateTask(${response.task.id})">
+                    </td>
+                </form>
+
+            </tr>
+            `;
+            if (listTaskTable) {
+                listTaskTable.innerHTML += taskTable;
+            } else {
+                console.error('Không tìm thấy phần tử body-catalog-' + catalogId);
+            }
+            // Hàm để tạo các option cho catalog_id
+            function generateCatalogOptionsViewTable(catalogs, selectedCatalogId) {
+                // Kiểm tra nếu catalogs là mảng, nếu không thì chuyển nó thành một mảng rỗng
+                if (!Array.isArray(catalogs)) {
+                    console.error("Catalogs is not an array:", catalogs);
+                    catalogs = []; // Gán giá trị mặc định để tránh lỗi
+                }
+
+                // Duyệt qua từng catalog và tạo các option
+                return catalogs.map(catalog => {
+                    // So sánh catalog.id và selectedCatalogId dưới dạng chuỗi để đảm bảo chính xác
+                    const isSelected = String(selectedCatalogId) === String(catalog.id) ? 'selected' : '';
+
+                    return `
+            <option value="${catalog.id}" ${isSelected}>
+                ${catalog.name}
+            </option>
+        `;
+                }).join('');
+
+            }
+            getModalTaskEvents();
+            console.log('task đã được thêm thành công!', response);
+        },
+        error: function(xhr) {
+           notificationWeb('error', 'Có lỗi xảy ra!!')
+            console.log(xhr.responseText);
+        },
+
     });
     return false;
 }

@@ -83,6 +83,7 @@ class TaskController extends Controller
             ->get();
         $htmlForm = View::make('dropdowns.createTaskViewTable', [
             'catalogs' => $catalogs,
+            'boardId'=>$boardId
         ])->render();
 
         // Trả về HTML cho frontend
@@ -147,6 +148,7 @@ class TaskController extends Controller
             'success' => true,
             'task' => $task,
             'catalogs' => $task->catalog->board->catalogs,
+            'boarId'=> $task->catalog->board->id,
             'task_count' => count($catalog->tasks),
         ]);
     }

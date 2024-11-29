@@ -34,12 +34,12 @@
                                 @foreach ($catalog->tasks as $task)
                                     <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                     <tr>
-                                        <td>{{ $loop->iteration  }}</td>
+                                        <td>{{  $task->id  }}</td>
                                         <td data-bs-toggle="modal" data-bs-target="#detailCardModal"
                                             data-task-id="{{ $task->id }}">
                                             {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                         </td>
-                                        <td class="col-2">
+                                        <td  id="tag-view-table-task-{{  $task->id  }}">
                                             @if ($task->tags->isNotEmpty())
                                                 <div class="flex-grow-1 d-flex flex-wrap align-items-center" >
                                                     @foreach($task->tags as $tag)
@@ -289,6 +289,24 @@
         });
 
         function updateTask(taskId) {
+            const startDateInput1 = document.getElementById('start_date_' + taskId).value;
+            const endDateInput1 = document.getElementById('end_date_' + taskId).value;
+
+            // Chuyển đổi giá trị sang đối tượng Date để so sánh
+            const startDate1 = new Date(startDateInput1);
+            const endDate1 = new Date(endDateInput1);
+
+            // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
+            if (startDateInput1 && endDateInput1 && startDate1 >= endDate1) {
+                // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+                })
+                return ; // Dừng thực hiện hàm nếu có lỗi
+            }
+
             var formData = {
                 catalog_id: $('#catalog_id_' + taskId).val(),
                 start_date: $('#start_date_' + taskId).val(),
