@@ -1,6 +1,9 @@
 @extends('layouts.masterMain')
-
+@section('title')
+    Lịch trình - TaskFlow
+@endsection
 @section('main')
+
 @if(session('error'))
 <div class="alert alert-danger custom-alert">
     {{ session('error') }}
