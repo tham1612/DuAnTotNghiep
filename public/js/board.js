@@ -3,12 +3,12 @@ function archiverBoard(boardId) {
     $.ajax({
         url: `/b/${boardId}`,
         type: "POST",
-        success: function(response) {
+        success: function (response) {
             notificationWeb(response.action, response.msg);
             if (response.action === "success")
                 window.location.href = "http://127.0.0.1:8000/home";
         },
-        error: function(xhr) {
+        error: function (xhr) {
             notificationWeb(response.action, response.msg);
         },
     });
@@ -36,7 +36,7 @@ function restoreBoard(boardId) {
 
 
         },
-        error: function(xhr) {
+        error: function (xhr) {
             notificationWeb(response.action, response.msg);
         },
     });
@@ -56,14 +56,14 @@ function destroyBoard(boardId) {
             }
 
         },
-        error: function(xhr) {
+        error: function (xhr) {
             notificationWeb(response.action, response.msg);
         },
     });
 }
 
 // sao chép bảng
-$(".submitFormCopyBoard").on("submit", function(e) {
+$(".submitFormCopyBoard").on("submit", function (e) {
     e.preventDefault();
 
     var name = $("#nameCopyBoard").val().trim();
@@ -76,11 +76,11 @@ $(".submitFormCopyBoard").on("submit", function(e) {
         url: "/b/copyBoard",
         type: "POST",
         data: $(this).serialize(), // Lấy dữ liệu từ form
-        success: function(response) {
+        success: function (response) {
             notificationWeb("success", "Sao chép bảng thành công");
             window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             notificationWeb("error", "Có lỗi xảy ra!!");
         },
     });
@@ -88,7 +88,7 @@ $(".submitFormCopyBoard").on("submit", function(e) {
 
 //xử lý chọn board + catalog
 // Khi chọn Board, lấy các Catalog tương ứng
-$(document).on("change", ".toBoard", function(e) {
+$(document).on("change", ".toBoard", function (e) {
     var boardId = $(this).val();
     var toCatalogSelect = $(this)
         .closest(".mt-2")
@@ -103,21 +103,21 @@ $(document).on("change", ".toBoard", function(e) {
         url: "/b/getDataBoard",
         method: "POST",
 
-        data: { board_id: boardId },
-        success: function(data) {
+        data: {board_id: boardId},
+        success: function (data) {
 
             // Xóa các option hiện tại trong Catalog và Position
             toCatalogSelect.empty();
             toPositionSelect.empty();
 
             // Thêm các option mới cho Catalog
-            $.each(data.catalogs, function(index, catalog) {
+            $.each(data.catalogs, function (index, catalog) {
                 toCatalogSelect.append(
                     `<option value="${catalog.id}" data-task-count="${catalog.task_count}">${catalog.name}</option>`
                 );
             });
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error("AJAX error:", xhr.responseText); // Ghi lại lỗi nếu có
         },
     });
@@ -132,7 +132,7 @@ function updatePermission(permissionType, value, boardId) {
             permissionType: permissionType,
             value: value,
         },
-        success: function(response) {
+        success: function (response) {
             console.log(response.board);
             notificationWeb(response.action, response.msg);
 
@@ -152,24 +152,15 @@ function updatePermission(permissionType, value, boardId) {
             titleBoardNavbar.innerHTML = response.board.name;
             titleBoardSidebar.innerHTML = response.board.name;
 
-            if (response.board.access === "private") {
-                iconAccessBoardNavbar.classList.add("ri-lock-2-line");
-                iconAccessBoardNavbar.classList.add("text-danger");
-                iconAccessBoardNavbar.classList.remove("ri-shield-user-fill");
-                iconAccessBoardNavbar.classList.remove("text-primary");
-                textAccessBoardNavbar.innerHTML = "Riêng tư";
-            }
+            const isPrivate = response.board.access === "private";
+            iconAccessBoardNavbar.classList.toggle("ri-lock-2-line", isPrivate);
+            iconAccessBoardNavbar.classList.toggle("text-danger", isPrivate);
+            iconAccessBoardNavbar.classList.toggle("ri-shield-user-fill", !isPrivate);
+            iconAccessBoardNavbar.classList.toggle("text-primary", !isPrivate);
 
-            if (response.board.access === "public") {
-                iconAccessBoardNavbar.classList.add("ri-shield-user-fill");
-                iconAccessBoardNavbar.classList.add("text-primary");
-                iconAccessBoardNavbar.classList.remove("ri-lock-2-line");
-                iconAccessBoardNavbar.classList.remove("text-danger");
-
-                textAccessBoardNavbar.innerHTML = "Công khai";
-            }
+            textAccessBoardNavbar.innerHTML = isPrivate ? "Riêng tư" : "Công khai";
         },
-        error: function(error) {
+        error: function (error) {
             notificationWeb(response.action, response.msg);
         },
     });
@@ -192,12 +183,12 @@ $(".submitFormBoardTemplate").on("submit", function (e) {
         url: "/boardTemplate/create",
         type: "POST",
         data: $(this).serialize(), // Lấy dữ liệu từ form
-        success: function(response) {
+        success: function (response) {
             notificationWeb(response.action, response.msg);
             if (response.action == "success")
                 window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             notificationWeb("error", "Có lỗi xảy ra!!");
         },
     });

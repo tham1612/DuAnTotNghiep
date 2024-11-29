@@ -39,7 +39,7 @@ Route::middleware(['auth', 'isWorkspace'])
             });
 
         //edit workspace
-        Route::get('workspace/edit-workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
+        Route::middleware('isViewer')->get('workspace/edit-workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
             ->name('showFormEditWorkspace');
 
         Route::post('workspace/update-workspaces', [WorkspaceController::class, 'editWorkspace'])

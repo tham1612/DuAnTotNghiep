@@ -2,7 +2,8 @@
 
 namespace App\Events;
 
-use App\Models\Catalog;
+use App\Models\Board;
+use App\Models\Task;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,35 +11,34 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class RealtimeCreateCatalog implements ShouldBroadcast
+class RealtimeBoardArchiver implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $board, $boardId;
 
     /**
      * Create a new event instance.
      */
-    public $catalog,$boardId;
-
-    public function __construct(Catalog $catalog,$boardId)
+    public function __construct(Board $board, $boardId)
     {
-        $this->catalog = $catalog;
+        $this->board = $board;
         $this->boardId = $boardId;
     }
 
 
     public function broadcastOn()
     {
-        return new Channel('catalogs.'.$this->boardId);
+        return new Channel('boards.' . $this->boardId);
     }
 
-    public function broadcastWith()
-    {
-        return [
-            'id' => $this->catalog->id,
-            'name' => $this->catalog->name,
-            'board_id' => $this->catalog->board_id,
-        ];
-    }
-
+//    public function broadcastWith()
+//    {
+//        return [
+//            'task' => $this->task,
+//            'board_id' => $this->task->catalog->board->id,
+//        ];
+//    }
 }

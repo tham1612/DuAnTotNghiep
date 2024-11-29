@@ -52,7 +52,7 @@
         <div data-simplebar data-bs-target="#list-example" data-bs-offset="0"  class=" me-3 ms-3 list-catalog-{{$board->id }}" >
             @if (!empty($board))
                 @foreach ($board->catalogs as $catalog)
-                    <div class="card"  id="catalog_view_list_{{$catalog->id}}">
+                    <div class="card" id="catalog_view_list_{{$catalog->id}}">
                         <div class="card-header border-0">
                             <div class="d-flex align-items-center">
                                 <div class="d-flex flex-grow-1">
@@ -62,7 +62,8 @@
                                     </h6>
                                     <div class="d-flex ms-4">
                                         <a class="text-reset dropdown-btn cursor-pointer" data-bs-toggle="modal"
-                                           data-bs-target="#detailCardModalCatalog" data-setting-catalog-id="{{$catalog->id}}">
+                                           data-bs-target="#detailCardModalCatalog"
+                                           data-setting-catalog-id="{{$catalog->id}}">
                                             <i class="ri-more-fill"></i>
                                         </a>
                                     </div>
@@ -99,9 +100,11 @@
                                     </tr>
                                     </thead>
                                     <tbody id="body-catalog-{{$catalog->id}}">
+{{--                                    <tbody id="{{ $catalog->name . '-' . $catalog->id }}">--}}
                                     @foreach ($catalog->tasks as $task)
                                         <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
-                                        <tr draggable="true" class="task-of-catalog-{{$catalog->id}}">
+                                        <tr class="task-of-catalog-{{$catalog->id}}"
+                                            id="task_id_view_{{$task->id}}">
                                             <td class="col-2">
                                                 <div class="d-flex">
                                                     <div class="flex-grow-1" data-bs-toggle="modal"

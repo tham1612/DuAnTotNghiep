@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
 use App\Models\CheckListItemMember;
+use App\Models\Follow_member;
 use App\Models\Tag;
 use App\Models\Task;
-use Spatie\Activitylog\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -22,25 +23,6 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkList = CheckList::create($data);
-
-        activity('thêm mới checklist')
-            ->performedOn($checkList)
-            ->causedBy(Auth::user())
-            ->withProperties([
-                'checklist_name' => $checkList->name,
-                'task_id' => $checkList->task_id,
-                'catalog_id' => $checkList->task->catalog_id,
-                'board_id' => $checkList->task->catalog->board_id,
-                'workspace_id' => $checkList->task->catalog->board->workspace_id,
-            ])
-            ->tap(function (Activity $activity) use ($checkList) {
-                $activity->checklist_id = $checkList->id;
-                $activity->task_id = $checkList->task_id;
-                $activity->catalog_id = $checkList->task->catalog_id;
-                $activity->board_id = $checkList->task->catalog->board_id;
-                $activity->workspace_id = $checkList->task->catalog->board->workspace_id;
-            })
-            ->log('Checklist "' . $checkList->name . '" đã được thêm vào task "' . $checkList->task->text . '"');
         return response()->json([
             'success' => "them thao tác thành công",
             'msg' => true,
@@ -194,43 +176,19 @@ class ChecklistController extends Controller
         session()->forget('view_only');
         $data = $request->except(['_token', '_method']);
         $checkListItem = CheckListItem::create($data);
-        $checkList = CheckList::with('task')->find($checkListItem->check_list_id);
-
-        // Ghi nhận hoạt động khi tạo mới checklist item
-        if ($checkList) {
-            activity('thêm mới checklist item')
-                ->performedOn($checkListItem)
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'checklist_item_id' => $checkListItem->id,
-                    'checklist_name' => $checkList->name,
-                    'task_id' => $checkList->task_id,
-                    'catalog_id' => $checkList->task->catalog_id,
-                    'board_id' => $checkList->task->catalog->board_id ?? null,  // Kiểm tra sự tồn tại của board_id
-                    'workspace_id' => $checkList->task->catalog->board->workspace_id,
-                ])
-                ->tap(function (Activity $activity) use ($checkList) {
-                    $activity->checklist_id = $checkList->id;
-                    $activity->task_id = $checkList->task_id;
-                    $activity->catalog_id = $checkList->task->catalog_id;
-                    $activity->workspace_id = $checkList->task->catalog->board->workspace_id;
-                    $activity->board_id = $checkList->task->catalog->board_id ?? null;
-                })
-                ->log('Checklist Item đã được thêm vào Checklist "' . $checkList->name . '" thuộc Task "' . $checkList->task->text . '"');
-
-            return response()->json([
-                'success' => "Thêm ChecklistItem thành công",
-                'msg' => true,
-                'checkListItem' => $checkListItem,
-                'check_list_id' => $checkListItem->check_list_id,
-                'id' => $checkListItem->id,
-                'is_complete' => $checkListItem->is_complete,
-                'start_date' => $checkListItem->start_date,
-                'end_date' => $checkListItem->end_date,
-                'reminder_date' => $checkListItem->reminder_date,
-                'task_id' => $checkList->task_id,
-            ]);
-        }
+        return response()->json([
+            'success' => "them ChecklistItem thành công",
+            'msg' => true,
+            'checkListItem' => $checkListItem,
+            'check_list_id' => $checkListItem->check_list_id,
+            'id' => $checkListItem->id,
+            'is_complete' => $checkListItem->is_complete,
+            'start_date' => $checkListItem->start_date,
+            'end_date' => $checkListItem->end_date,
+            'reminder_date' => $checkListItem->reminder_date,
+            'task_id' => CheckList::with('checkListItems')
+                ->where('id', $checkListItem->check_list_id)->value('task_id'),
+        ]);
     }
     public function deleteChecklistItem(Request $request)
     {

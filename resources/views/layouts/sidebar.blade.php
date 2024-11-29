@@ -4,11 +4,12 @@
     $workspaces = \App\Models\Workspace::query()
         ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
         ->where('workspace_members.user_id', $userId)
-        ->where('workspace_members.is_accept_invite', 0)
+        // ->where('workspace_members.is_accept_invite', 0)
         ->whereNot('workspace_members.is_active', 1)
+        // ->whereNot('workspace_members.authorize', 'Viewer')
         ->where('workspace_members.deleted_at', null)
-        ->select('workspaces.*', 'workspace_members.id as workspace_id') // Giữ cột 'workspace_members.id'
-        ->groupBy('workspaces.id', 'workspace_members.id') // Thêm cả 'workspace_members.id' vào GROUP BY
+        ->select('workspaces.*', 'workspace_members.id as workspace_id')
+        ->groupBy('workspaces.id', 'workspace_members.id')
         ->withCount([
             'workspaceMembers as member_count' => function ($query) {
                 $query->whereNull('deleted_at');
@@ -94,17 +95,16 @@
 
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
-    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start "
-         data-bs-toggle="dropdown"
-         aria-expanded="false" data-bs-offset="0,20">
+    <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
+        aria-expanded="false" data-bs-offset="0,20">
 
         @if ($workspaceChecked)
             @if ($workspaceChecked->image)
                 <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt="" class="rounded avatar-sm"
-                     style="width: 25px;height: 25px">
+                    style="width: 25px;height: 25px">
             @else
                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                     style="width: 25px;height: 25px">
+                    style="width: 25px;height: 25px">
                     {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                 </div>
             @endif
@@ -118,10 +118,10 @@
                 <li class="d-flex">
                     @if ($workspaceChecked->image)
                         <img src="{{ asset('storage/' . $workspaceChecked->image) }}" alt=""
-                             class="rounded avatar-sm">
+                            class="rounded avatar-sm">
                     @else
                         <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                             style="width: 40px;height: 40px">
+                            style="width: 40px;height: 40px">
                             {{ strtoupper(substr($workspaceChecked->name, 0, 1)) }}
                         </div>
                     @endif
@@ -141,38 +141,43 @@
                         </p>
                     </section>
                 </li>
+                {{-- <li class="d-flex">
+                    <a href="#">Thêm thành viên</a>
+                </li> --}}
+                @if ($workspaceChecked->authorize != 'Viewer')
+                    <li class="d-flex">
+                        <a href="{{ route('showFormEditWorkspace') }}"
+                            onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
+                            việc</a>
+                    </li>
+                @endif
 
-                <li class="d-flex">
-                    <a href="{{ route('showFormEditWorkspace') }}"
-                       onclick="window.location.href='{{ route('showFormEditWorkspace') }}'">Cài đặt không gian làm
-                        việc</a>
-                </li>
                 <li class="border mb-3"></li>
                 <div data-simplebar style="max-height: 40vh;">
                     @foreach ($workspaces as $workspace)
                         <li class="d-flex">
                             @if ($workspace->image)
                                 <img src="{{ asset('storage/' . $workspace->image) }}" alt=""
-                                     class="rounded-circle avatar-sm">
+                                    class="rounded-circle avatar-sm">
                             @else
                                 <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
-                                     style="width: 40px;height: 40px">
+                                    style="width: 40px;height: 40px">
                                     {{ strtoupper(substr($workspace->name, 0, 1)) }}
                                 </div>
                             @endif
                             <section class=" ms-2">
                                 <p class="fs-15 fw-bolder"
-                                   onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
+                                    onclick="window.location.href='{{ route('workspaces.index', $workspace->workspace_id) }}'">
                                     {{ \Str::limit($workspace->name, 25) }}
                                 </p>
                                 <p class="fs-10" style="margin-top: -10px">
-                                <span>
-                                    @if ($workspace->access == 'private')
-                                        Riêng tư
-                                    @elseif ($workspace->access == 'public')
-                                        Công khai
-                                    @endif
-                                </span>
+                                    <span>
+                                        @if ($workspace->access == 'private')
+                                            Riêng tư
+                                        @elseif ($workspace->access == 'public')
+                                            Công khai
+                                        @endif
+                                    </span>
 
                                     <i class=" ri-subtract-line"></i>
                                     <span>{{ $workspace->member_count }} thành viên</span>
@@ -199,7 +204,8 @@
 
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('home') }}">
+                    <a class="nav-link menu-link" href="{{ route('home') }}"
+                        @if ($workspaceChecked->authorize == 'Viewer') style="pointer-events: none;" @endif>
                         <i class="ri-home-3-line"></i> <span data-key="">Trang Chủ</span>
                     </a>
                 </li>
@@ -207,7 +213,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('inbox') }}">
                         <i class=" ri-notification-3-line"></i> <span data-key="">Thông Báo</span>
-                        @if (!empty($allNotifications) && $allNotifications->count() > 0 )
+                        @if (!empty($allNotifications) && $allNotifications->count() > 0)
                             @if ($allNotifications->count() <= 9)
                                 <span
                                     class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
@@ -219,7 +225,8 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link"
-                       href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}">
+                        href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}"
+                        @if ($workspaceChecked->authorize == 'Viewer') style="pointer-events: none;" @endif>
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>
@@ -231,7 +238,7 @@
 
                 <li class="menu-title"><span data-key="t-menu">My Boards</span></li>
                 <div
-                    @if($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0) data-simplebar
+                    @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0) data-simplebar
                     style="max-height: 30vh"
                     @else  data-simplebar style="max-height: 55vh" @endif>
                     @if (isset($workspaceBoards))
@@ -240,35 +247,35 @@
                                 <div
                                     class="nav-link menu-link d-flex text-center align-items-center justify-content-between">
                                     <a class=""
-                                       href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
+                                        href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}">
                                         <div class="d-flex justify-content-flex-start align-items-center">
                                             @if ($board->image)
                                                 <img id="image-board-{{ $board->id }}"
-                                                     class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                     src="{{ asset('storage/' . $board->image) }}"
-                                                     style="width: 30px; height: 30px" alt="image"/>
+                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                    src="{{ asset('storage/' . $board->image) }}"
+                                                    style="width: 30px; height: 30px" alt="image" />
                                             @else
                                                 <div id="image-board-{{ $board->id }}"
-                                                     class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
-                                                     style="width: 30px;height: 30px">
+                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center me-2"
+                                                    style="width: 30px;height: 30px">
                                                     {{ strtoupper(substr($board->name, 0, 1)) }}
                                                 </div>
                                             @endif
-                                            <span id="name-board-{{ $board->id }}" class="text-white fs-15 text-nowrap"
-                                                  style="width: 20px">
-                                            {{ \Str::limit($board->name, 10) }}
-                                        </span>
+                                            <span id="name-board-{{ $board->id }}"
+                                                class="text-white fs-15 text-nowrap" style="width: 20px">
+                                                {{ \Str::limit($board->name, 10) }}
+                                            </span>
                                         </div>
                                     </a>
                                     @php
                                         // $boardMembers = $board->members->unique('id');
-
-                                         $boardMembers = $board->members()
-                                                        ->where('authorize', '!=', 'Viewer')
-                                                        ->distinct('id')
-                                                        ->get();
-                                        $memberIsStar =$boardMembers->where('id', auth()->id())
-                                            ->first()->pivot->is_star ?? null;
+                                        $boardMembers = $board
+                                            ->members()
+                                            ->where('authorize', '!=', 'Viewer')
+                                            ->distinct('id')
+                                            ->get();
+                                        $memberIsStar =
+                                            $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
 
                                         // Lưu vào session
                                         session([
@@ -278,14 +285,14 @@
                                     @endphp
                                     <div class="d-flex justify-content-flex-end align-items-center ms-1">
                                         <button type="button"
-                                                class="btn avatar-xs mt-n1 p-0 favourite-btn
+                                            class="btn avatar-xs mt-n1 p-0 favourite-btn
                                         @if ($memberIsStar == 1) active @endif"
-                                                    onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
-                                                    id="2_is_star_{{ $board->id }}">
+                                            onclick="updateIsStar2({{ $board->id }},{{ auth()->id() }})"
+                                            id="2_is_star_{{ $board->id }}">
                                             <span class="avatar-title bg-transparent fs-15">
                                                 <i class="ri-star-fill fs-20 mx-2"></i>
                                             </span>
-                                            </button>
+                                        </button>
                                     </div>
                                 </div>
                             </li>
@@ -296,7 +303,7 @@
         </div>
 
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-                id="vertical-hover">
+            id="vertical-hover">
             <i class="ri-record-circle-line"></i>
         </button>
 
@@ -306,7 +313,7 @@
         @if ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 0)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                     style="background-color: #f0f4ff; border-radius: 8px;">
+                    style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đang là khách</strong> trong không gian làm việc này.
@@ -318,19 +325,19 @@
                     Yêu cầu tham gia
                 </button>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const requestButton = document.getElementById('requestJoinButton');
 
                         if (requestButton) {
-                            requestButton.addEventListener('click', function () {
+                            requestButton.addEventListener('click', function() {
                                 // Gửi yêu cầu AJAX
                                 fetch("{{ route('b.requestToJoinWorkspace') }}", {
-                                    method: 'GET',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
-                                    },
-                                })
+                                        method: 'GET',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
+                                        },
+                                    })
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
@@ -360,7 +367,7 @@
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 1)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                     style="background-color: #f0f4ff; border-radius: 8px;">
+                    style="background-color: #f0f4ff; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã gửi yêu cầu</strong><br>tham gia không gian làm việc: <strong>
@@ -372,7 +379,7 @@
         @elseif ($workspaceMemberChecked->authorize == 'Viewer' && $workspaceMemberChecked->is_accept_invite == 2)
             <div class="guest-notice" style="position: absolute; bottom: 10px; width: 100%; padding: 15px;">
                 <div class="alert alert-info d-flex align-items-center" role="alert"
-                     style="background-color: #ffd9d7; border-radius: 8px;">
+                    style="background-color: #ffd9d7; border-radius: 8px;">
                     <i class="ri-information-line me-2" style="font-size: 24px;"></i>
                     <div>
                         <strong>Bạn đã bị từ chối yêu cầu</strong> tham gia không gian làm việc: <strong>
@@ -384,19 +391,19 @@
                     Yêu cầu tham gia lại
                 </button>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const requestButton = document.getElementById('requestJoinButton');
 
                         if (requestButton) {
-                            requestButton.addEventListener('click', function () {
+                            requestButton.addEventListener('click', function() {
                                 // Gửi yêu cầu AJAX
                                 fetch("{{ route('b.requestToJoinWorkspace') }}", {
-                                    method: 'GET',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
-                                    },
-                                })
+                                        method: 'GET',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token bảo mật CSRF
+                                        },
+                                    })
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data.success) {
@@ -424,7 +431,7 @@
             </div>
         @endif
     @endif
-{{--    <div class="sidebar-background"></div>--}}
+    {{--    <div class="sidebar-background"></div> --}}
 </div>
 
 

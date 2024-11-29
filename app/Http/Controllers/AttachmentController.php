@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\CheckList;
+use App\Models\Follow_member;
 use App\Models\TaskAttachment;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -35,6 +38,15 @@ class AttachmentController extends Controller
                         'name' => $attachment->name
                     ];
 
+                    $followMember = Follow_member::where('task_id', $attachment->task_id)
+                        ->where('follow', 1)
+                        ->get();
+                    foreach ($followMember as $member) {
+                        if ($member->user->id != Auth::id()) {
+                            event(new EventNotification("Nhiệm vụ " . $attachment->task->text . " đã thêm file " . $attachment->name. ". Xem chi tiết! ", 'success', $member->user->id));
+                        }
+                    }
+
 //                    session(['msg' => 'Hệ thống đã tải tệp thành công!']);
 //                    session(['action' => 'success']);
                 } else {
@@ -44,6 +56,7 @@ class AttachmentController extends Controller
                     ], 500);
                 }
             }
+
 
             return response()->json([
                 'success' => true,

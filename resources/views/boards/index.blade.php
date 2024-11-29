@@ -40,8 +40,9 @@
                                 //                                $task = json_decode(json_encode($task));
                                 //                                dd($task)
                             @endphp
-                            <div class="card tasks-box cursor-pointer task-of-catalog-{{$catalog->id}}" id="task_id_view_{{$task->id}}"
-                                 data-value="{{ $task->id }}">
+                            <div class="card tasks-box cursor-pointer task-of-catalog-{{$catalog->id}}"
+                                 id="task_id_view_{{$task->id}}"
+                                 data-value="{{ $task->id }}" data-position-value="{{$task->position}}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
                                         <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
