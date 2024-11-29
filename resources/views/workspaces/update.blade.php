@@ -204,8 +204,8 @@
                                                             {{-- <div class="scrollable-content"
                                                                 style="max-height: 400px; overflow-y: auto;"> --}}
                                                             <ul style="margin-left: -32px;">
-                                                                <li class="d-flex">
-                                                                    <div class="col-1">
+                                                                <li class="d-flex justify-content-between">
+                                                                    <div class="d-flex">
                                                                         <a href="javascript: void(0);"
                                                                            class="avatar-group-item"
                                                                            data-bs-toggle="tooltip"
@@ -232,31 +232,33 @@
                                                                                 @endif
                                                                             @endif
                                                                         </a>
-                                                                    </div>
-                                                                    <div class="col-6 d-flex flex-column">
-                                                                        @if (!empty($wspOwner))
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                   class="text-danger fw-bloder">
-                                                                                    {{ $wspOwner->name }}
-                                                                                    @if ($wspOwner->user_id == $userId)
-                                                                                        <span
-                                                                                            class="text-danger fw-bloder">(bạn)</span>
-                                                                                    @else
-                                                                                        <span
-                                                                                            class="text-danger fw-bold">(chủ)</span>
-                                                                                    @endif
-                                                                                </p>
-                                                                                <span>@ {{ $wspOwner->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Quản trị viên không gian làm
+                                                                        <div class="ms-3 d-flex flex-column">
+                                                                            @if (!empty($wspOwner))
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                       class="text-danger fw-bloder">
+                                                                                        {{ $wspOwner->name }}
+                                                                                        @if ($wspOwner->user_id == $userId)
+                                                                                            <span
+                                                                                                class="text-danger fw-bloder">(bạn)</span>
+                                                                                        @else
+                                                                                            <span
+                                                                                                class="text-danger fw-bold">(chủ)</span>
+                                                                                        @endif
+                                                                                    </p>
+                                                                                    <span>
+                                                                                    {{ $wspOwner->fullName ? '@' . $wspOwner->fullName : '@' . $wspOwner->name }}
+                                                                                    </span>
+                                                                                    <span>-</span>
+                                                                                    <span>Quản trị viên không gian làm
                                                                                     việc</span>
-                                                                            </section>
-                                                                        @endif
+                                                                                </section>
+                                                                            @endif
+                                                                        </div>
                                                                     </div>
+
                                                                     <div
-                                                                        class="col-5 d-flex align-items-center justify-content-end">
+                                                                        class=" d-flex align-items-center justify-content-end">
                                                                         <button class="btn btn-outline-danger">Quản trị
                                                                             viên
                                                                         </button>
@@ -264,13 +266,10 @@
 
                                                                         <div class="dropdown ms-2">
 
-                                                                            <button class="btn btn-link dropdown-toggle"
-                                                                                    type="button"
-                                                                                    id="dropdownMenuButton"
-                                                                                    data-bs-toggle="dropdown"
-                                                                                    aria-expanded="false">
-                                                                                <i class="ri-more-2-fill"></i>
-                                                                            </button>
+                                                                            <i class="ri-more-2-fill cursor-pointer"
+                                                                               id="dropdownMenuButton"
+                                                                               data-bs-toggle="dropdown"
+                                                                               aria-expanded="false"></i>
                                                                             @if (!empty($wspOwner))
                                                                                 @if ($wspOwner->user_id == $userId)
                                                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
@@ -289,8 +288,8 @@
                                                                 </li>
                                                                 {{-- Lặp lại các sub owner --}}
                                                                 @foreach ($wspSubOwner as $item)
-                                                                    <li class="d-flex mt-1 mb-1">
-                                                                        <div class="col-1">
+                                                                    <li class="d-flex justify-content-between mt-2">
+                                                                        <div class="d-flex">
                                                                             <a href="javascript: void(0);"
                                                                                class="avatar-group-item"
                                                                                data-bs-toggle="tooltip"
@@ -316,42 +315,41 @@
                                                                                     </span> --}}
                                                                                 @endif
                                                                             </a>
-                                                                        </div>
-                                                                        <div class="col-6 d-flex flex-column">
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                   class="text-black">
-                                                                                    {{ $item->name }}
-                                                                                    @if ($item->user_id == $userId)
-                                                                                        <span
-                                                                                            class="text-success">(Bạn)</span>
-                                                                                    @else
-                                                                                        <span class="text-success">(Phó
+                                                                            <div class="ms-3 d-flex flex-column">
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                       class="text-black">
+                                                                                        {{ $item->name }}
+                                                                                        @if ($item->user_id == $userId)
+                                                                                            <span
+                                                                                                class="text-success">(Bạn)</span>
+                                                                                        @else
+                                                                                            <span class="text-success">(Phó
                                                                                             nhóm)</span>
-                                                                                    @endif
-                                                                                </p>
-                                                                                <span>@ {{ $item->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Thành viên của không gian làm
+                                                                                        @endif
+                                                                                    </p>
+                                                                                    <span>
+                                                                                    {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}
+                                                                                    </span>
+                                                                                    <span>-</span>
+                                                                                    <span>Phó nhóm của không gian làm
                                                                                     việc</span>
-                                                                            </section>
+                                                                                </section>
+                                                                            </div>
                                                                         </div>
+
                                                                         <div
-                                                                            class="col-5 d-flex align-items-center justify-content-end">
+                                                                            class=" d-flex align-items-center justify-content-end">
                                                                             <button class="btn btn-outline-success">Phó
                                                                                 nhóm
                                                                             </button>
                                                                             <!-- Nút ba chấm -->
                                                                             <div class="dropdown ms-2">
-                                                                                <button
-                                                                                    class="btn btn-link dropdown-toggle"
-                                                                                    type="button"
-                                                                                    id="dropdownMenuButton"
-                                                                                    data-bs-toggle="dropdown"
-                                                                                    aria-expanded="false">
-                                                                                    <i class="ri-more-2-fill"></i>
-                                                                                </button>
+
+                                                                                <i class="ri-more-2-fill cursor-pointer"
+                                                                                   id="dropdownMenuButton"
+                                                                                   data-bs-toggle="dropdown"
+                                                                                   aria-expanded="false"></i>
                                                                                 @if ($item->user_id === $userId)
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
@@ -384,8 +382,8 @@
                                                                 @endforeach
                                                                 <!-- Lặp lại với các thành viên -->
                                                                 @foreach ($wspMember as $item)
-                                                                    <li class="d-flex mt-1 mb-1">
-                                                                        <div class="col-1">
+                                                                    <li class="d-flex justify-content-between mt-2">
+                                                                        <div class="d-flex">
                                                                             <a href="javascript: void(0);"
                                                                                class="avatar-group-item"
                                                                                data-bs-toggle="tooltip"
@@ -411,46 +409,45 @@
                                                                                     </span> --}}
                                                                                 @endif
                                                                             </a>
-                                                                        </div>
-                                                                        <div class="col-6 d-flex flex-column">
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                   class="text-black">
-                                                                                    {{ $item->name }}
-                                                                                    @if ($item->user_id == $userId)
-                                                                                        <span
-                                                                                            class="text-success">(Bạn)</span>
-                                                                                    @elseif($item->authorize === 'Sub_Owner')
-                                                                                        <span class="text-primary">(Phó
+                                                                            <div class="ms-3 d-flex flex-column">
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                       class="text-black">
+                                                                                        {{ $item->name }}
+                                                                                        @if ($item->user_id == $userId)
+                                                                                            <span
+                                                                                                class="text-success">(Bạn)</span>
+                                                                                        @elseif($item->authorize === 'Sub_Owner')
+                                                                                            <span class="text-primary">(Phó
                                                                                             nhóm)</span>
-                                                                                    @else
-                                                                                        <span class="text-black">(Thành
+                                                                                        @else
+                                                                                            <span class="text-black">(Thành
                                                                                             viên)</span>
-                                                                                    @endif
-                                                                                </p>
-                                                                                <span>@ {{ $item->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Thành viên của không gian làm
+                                                                                        @endif
+                                                                                    </p>
+                                                                                    <span>
+                                                                                    {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}
+                                                                                    </span>
+                                                                                    <span>-</span>
+                                                                                    <span>Thành viên của không gian làm
                                                                                     việc</span>
-                                                                            </section>
+
+                                                                                </section>
+                                                                            </div>
                                                                         </div>
+
                                                                         <div
-                                                                            class="col-5 d-flex align-items-center justify-content-end">
+                                                                            class=" d-flex align-items-center justify-content-end">
                                                                             <button class="btn btn-outline-primary">
                                                                                 Thành
                                                                                 viên
                                                                             </button>
                                                                             <!-- Nút ba chấm -->
                                                                             <div class="dropdown ms-2">
-                                                                                <button
-                                                                                    class="btn btn-link dropdown-toggle"
-                                                                                    type="button"
-                                                                                    id="dropdownMenuButton"
-                                                                                    data-bs-toggle="dropdown"
-                                                                                    aria-expanded="false">
-                                                                                    <i class="ri-more-2-fill"></i>
-                                                                                </button>
+                                                                                <i class="ri-more-2-fill cursor-pointer"
+                                                                                   id="dropdownMenuButton"
+                                                                                   data-bs-toggle="dropdown"
+                                                                                   aria-expanded="false"></i>
                                                                                 <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                                                 @if ($item->user_id === $userId)
                                                                                     <ul class="dropdown-menu"
@@ -465,10 +462,9 @@
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
                                                                                         <li>
-                                                                                            <a class="dropdown-item text-danger"
-                                                                                               href="{{ route('activateMember', $item->wm_id) }}">Kích
-                                                                                                thành
-                                                                                                viên</a>
+                                                                                            <a class="dropdown-item text-primary"
+                                                                                               href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
+                                                                                                quyền</a>
                                                                                         </li>
                                                                                         <li>
                                                                                             <a class="dropdown-item text-primary"
@@ -478,9 +474,10 @@
                                                                                                 viên</a>
                                                                                         </li>
                                                                                         <li>
-                                                                                            <a class="dropdown-item text-primary"
-                                                                                               href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
-                                                                                                quyền</a>
+                                                                                            <a class="dropdown-item text-danger"
+                                                                                               href="{{ route('activateMember', $item->wm_id) }}">Kích
+                                                                                                thành
+                                                                                                viên</a>
                                                                                         </li>
                                                                                     </ul>
                                                                                 @elseif ($workspaceChecked->authorize == 'Sub_Owner')

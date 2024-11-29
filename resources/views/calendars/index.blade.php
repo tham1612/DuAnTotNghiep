@@ -3,13 +3,6 @@
     Calendar - TaskFlow
 @endsection
 @section('main')
-
-    @if(session('error'))
-        <div class="alert alert-danger custom-alert">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <style>
         .custom-alert {
             border-radius: 0.5rem;
@@ -20,9 +13,7 @@
         }
     </style>
 
-    @if(!\Illuminate\Support\Facades\Auth::user()->access_token)
-        <a href="{{route('google.redirect')}}" class="btn btn-ghost-danger">Liên kết Google Calendar</a>
-    @endif
+
     <div class="p-2" data-simplebar style="max-height: 80vh;">
         <div id="calendar"></div>
     </div>
@@ -31,7 +22,7 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content p-3">
-                <h4 class="text-center">Tạo task</h4>
+                <h4 class="text-center">Tạo thẻ</h4>
                 <form>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Tiêu đề</label>

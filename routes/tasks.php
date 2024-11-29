@@ -35,6 +35,8 @@ Route::middleware(['auth', 'isWorkspace','isActiveWsp'])
 
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
 
+        Route::post('/unlink/google-calendar/{id}', [GoogleApiClientController::class, 'unlink'])->name('google.unlink');
+
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
         Route::put('/tasks/updatePosition/{id}', [TaskController::class, 'updatePosition'])->name('update.position');

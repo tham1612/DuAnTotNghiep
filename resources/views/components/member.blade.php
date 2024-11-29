@@ -7,7 +7,7 @@
                     Chia sẻ bảng
                 </h5>
                 <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
@@ -19,7 +19,7 @@
                         <div class=" d-flex justify-content-between">
                             <div class="col-6">
                                 <input type="text" class="form-control" id="submissionidInput"
-                                    placeholder="Nhập email hoặc tên người dùng" name="email" />
+                                       placeholder="Nhập email hoặc tên người dùng" name="email"/>
                             </div>
                             <div class="col-4 ms-2">
                                 <select name="authorize" id="" class="form-select">
@@ -38,24 +38,23 @@
                     </form>
                     <!--end col-->
                     <div class="d-flex justify-content-between">
-                        <div class="col-1">
+                        <div class=" d-flex">
                             <a href="#">
                                 <i id="copy-icon" class="ri-attachment-2 fs-22" onclick="copyLink()"></i>
                             </a>
-                        </div>
-                        <div class="col-6 d-flex flex-column">
-                            <section class="fs-12">
+                            <section class="ms-3 fs-12">
                                 <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia với tư cách thành viên</p>
                                 <span><a href="#" onclick="copyLink()">Sao chép liên kết</a></span>
                             </section>
                         </div>
-                        <div class="col-5">
+
+                        <div>
                             <!-- Button để mở modal -->
                             @if (!empty($boardMemberChecked->authorize))
                                 @if ($boardMemberChecked->authorize == 'Owner' || $boardMemberChecked->authorize == 'Sub_Owner')
-                                    <button class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#inviteModal">
-                                        Chọn thành viên từ không gian làm việc
+                                    <button class="btn btn-outline-info" data-bs-toggle="modal"
+                                            data-bs-target="#inviteModal">
+                                        Thêm thành viên
                                     </button>
                                 @endif
                             @endif
@@ -87,7 +86,7 @@
                                 Thành viên
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                style="border-radius: 100%; width: 20px ;height: 20px;">
+                                  style="border-radius: 100%; width: 20px ;height: 20px;">
                                 @if (!empty($boardMembers))
                                     {{ $boardMembers->count() + 1 + $boardSubOwner->count() }}
                                 @endif
@@ -100,7 +99,7 @@
                                     Yêu cầu tham gia
                                 </a>
                                 <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                    style="border-radius: 100%; width: 20px ;height: 20px;">
+                                      style="border-radius: 100%; width: 20px ;height: 20px;">
                                     @if (!empty($boardMemberInvites))
                                         {{ $boardMemberInvites->count() }}
                                     @endif
@@ -114,17 +113,19 @@
                         <div class="tab-pane active" id="home1" role="tabpanel">
                             {{-- <div class="scrollable-content" style="max-height: 400px; overflow-y: auto;"> --}}
                             <ul style="margin-left: -32px;">
-                                <li class="d-flex">
-                                    <div class="col-1">
+                                <li class="d-flex justify-content-between">
+                                    <div class="d-flex">
                                         <a href="javascript: void(0);" class="avatar-group-item"
-                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                            title="Nancy">
+                                           data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                           title="Nancy">
                                             @if (!empty($boardOwner))
                                                 @if ($boardOwner->image)
-                                                    <img src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
-                                                        alt="" class="rounded-circle avatar-xs" />
+                                                    <img
+                                                        src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
+                                                        alt="" class="rounded-circle avatar-xs"/>
                                                 @else
-                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                    <div
+                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                         style="width: 25px;height: 25px">
                                                         {{ strtoupper(substr($boardOwner->name, 0, 1)) }}
                                                     </div>
@@ -137,40 +138,40 @@
 
 
                                         </a>
-                                    </div>
-                                    <div class="col-6 d-flex flex-column">
-                                        <section class="fs-12">
-                                            @if (!empty($boardOwner))
-                                                <p style="margin-bottom: 0px;" class="text-danger fw-bloder">
-                                                    {{ $boardOwner->name }}
-                                                    @if ($boardOwner->user_id == Auth::id())
-                                                        <span class="text-danger fw-bloder">(bạn)</span>
-                                                    @else
-                                                        <span class="text-danger fw-bold">(chủ)</span>
-                                                    @endif
+                                        <div class="ms-3 d-flex flex-column">
+                                            <section class="fs-12">
+                                                @if (!empty($boardOwner))
+                                                    <p style="margin-bottom: 0;" class="text-danger fw-bloder">
+                                                        {{ $boardOwner->name }}
+                                                        @if ($boardOwner->user_id == Auth::id())
+                                                            <span class="text-danger fw-bloder">(bạn)</span>
+                                                        @else
+                                                            <span class="text-danger fw-bold">(chủ)</span>
+                                                        @endif
 
-                                                </p>
-                                                <span>{{ $boardOwner->fullName ? '@' . $boardOwner->fullName : '@' . $boardOwner->name }}</span>
-                                                <span>-</span>
-                                                <span>Quản trị viên của bảng</span>
-                                            @endif
-                                        </section>
+                                                    </p>
+                                                    <span>{{ $boardOwner->fullName ? '@' . $boardOwner->fullName : '@' . $boardOwner->name }}</span>
+                                                    <span>-</span>
+                                                    <span>Quản trị viên của bảng</span>
+                                                @endif
+                                            </section>
+                                        </div>
                                     </div>
-                                    <div class="col-5 d-flex align-items-center justify-content-end">
+                                    <div class=" d-flex align-items-center justify-content-end">
                                         <button class="btn btn-outline-danger ">Quản
                                             trị viên
                                         </button>
                                         <div class="dropdown ms-2">
-                                            <button class="btn btn-link dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="ri-more-2-fill"></i>
-                                            </button>
+
+                                            <i class="ri-more-2-fill cursor-pointer" id="dropdownMenuButton"
+                                               data-bs-toggle="dropdown"
+                                               aria-expanded="false"></i>
+
                                             <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                             @if (Auth::id() == $boardOwner->user_id)
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li><a class="dropdown-item text-danger"
-                                                            href="{{ route('b.activateMember', $boardOwner->bm_id) }}">Rời
+                                                           href="{{ route('b.activateMember', $boardOwner->bm_id) }}">Rời
                                                             khỏi</a></li>
                                                 </ul>
                                             @endif
@@ -180,16 +181,18 @@
                                 {{-- lặp cho thằng subowner --}}
                                 @if (!empty($boardSubOwner))
                                     @foreach ($boardSubOwner as $item)
-                                        <li class="d-flex">
-                                            <div class="col-1">
+                                        <li class="d-flex justify-content-between mt-2">
+                                            <div class="d-flex">
                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                    data-bs-item="top" title="Nancy">
+                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                   data-bs-item="top" title="Nancy">
                                                     @if ($item->image)
-                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                            alt="" class="rounded-circle avatar-xs" />
+                                                        <img
+                                                            src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                            alt="" class="rounded-circle avatar-xs"/>
                                                     @else
-                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        <div
+                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                             style="width: 25px;height: 25px">
                                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                                         </div>
@@ -199,38 +202,36 @@
                                                         {{--                                                        </span> --}}
                                                     @endif
                                                 </a>
-                                            </div>
-                                            <div class="col-6 d-flex flex-column">
-                                                <section class="fs-12">
-                                                    <p style="margin-bottom: 0px;" class="text-black">
-                                                        {{ $item->name }}
-                                                        @if ($item->user_id == Auth::id())
-                                                            <span class="text-success">(Bạn)</span>
-                                                        @else
-                                                            <span class="text-success">(Phó
+                                                <div class="ms-3 d-flex flex-column">
+                                                    <section class="fs-12">
+                                                        <p style="margin-bottom: 0px;" class="text-black">
+                                                            {{ $item->name }}
+                                                            @if ($item->user_id == Auth::id())
+                                                                <span class="text-success">(Bạn)</span>
+                                                            @else
+                                                                <span class="text-success">(Phó
                                                                 nhóm)</span>
-                                                        @endif
+                                                            @endif
 
-                                                    </p>
-                                                    <span>{{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}</span>
-                                                    <span><i class="ri-checkbox-blank-circle-fill"></i></span>
-                                                    <span>Thành viên của bảng</span>
-                                                </section>
+                                                        </p>
+                                                        <span>{{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}</span>
+                                                        <span><i class="ri-checkbox-blank-circle-fill"></i></span>
+                                                        <span>Thành viên của bảng</span>
+                                                    </section>
+                                                </div>
                                             </div>
-                                            <div class="col-5 d-flex align-items-center justify-content-end">
+                                            <div class=" d-flex align-items-center justify-content-end">
                                                 <button class="btn btn-outline-success">Phó nhóm</button>
                                                 <div class="dropdown ms-2">
-                                                    <button class="btn btn-link dropdown-toggle" type="button"
-                                                        id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        <i class="ri-more-2-fill"></i>
-                                                    </button>
+                                                    <i class="ri-more-2-fill cursor-pointer" id="dropdownMenuButton"
+                                                       data-bs-toggle="dropdown"
+                                                       aria-expanded="false"></i>
                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                     @if ($item->user_id === Auth::id())
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Rời
+                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Rời
                                                                     khỏi</a>
                                                             </li>
                                                         </ul>
@@ -238,12 +239,12 @@
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Kích
+                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     phó
                                                                     nhóm</a>
                                                             </li>
                                                             <li><a class="dropdown-item text-primary"
-                                                                    href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
+                                                                   href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
                                                                     quyền</a>
                                                             </li>
                                                         </ul>
@@ -256,84 +257,90 @@
                                 {{-- lặp cho thằng member --}}
                                 @if (!empty($boardMembers))
                                     @foreach ($boardMembers as $item)
-                                        <li class="d-flex">
-                                            <div class="col-1">
+                                        <li class="d-flex justify-content-between mt-2">
+                                            <div class="d-flex">
                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                    data-bs-item="top" title="Nancy">
+                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                   data-bs-item="top" title="Nancy">
                                                     @if ($item->image)
-                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                            alt="" class="rounded-circle avatar-xs" />
+                                                        <img
+                                                            src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                            alt="" class="rounded-circle avatar-xs"/>
                                                     @else
-                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        <div
+                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                             style="width: 25px;height: 25px">
                                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                                         </div>
                                                     @endif
                                                 </a>
-                                            </div>
-                                            <div class="col-6 d-flex flex-column">
-                                                <section class="fs-12">
-                                                    <p style="margin-bottom: 0px;" class="text-black">
-                                                        {{ $item->name }}
-                                                        @if ($item->user_id == Auth::id())
-                                                            <span class="text-success">(Bạn)</span>
-                                                        @elseif($item->authorize === 'Sub_Owner')
-                                                            <span class="text-primary">(Phó
+                                                <div class="ms-3 d-flex flex-column">
+                                                    <section class="fs-12">
+                                                        <p style="margin-bottom: 0px;" class="text-black">
+                                                            {{ $item->name }}
+                                                            @if ($item->user_id == Auth::id())
+                                                                <span class="text-success">(Bạn)</span>
+                                                            @elseif($item->authorize === 'Sub_Owner')
+                                                                <span class="text-primary">(Phó
                                                                 nhóm)</span>
-                                                        @else
-                                                            <span class="text-black">(Thành
+                                                            @else
+                                                                <span class="text-black">(Thành
                                                                 viên)</span>
-                                                        @endif
+                                                            @endif
 
-                                                    </p>
-                                                    <span>
+                                                        </p>
+                                                        <span>
                                                         {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}</span>
-                                                    <span>-</span>
-                                                    <span>Thành viên của bảng</span>
-                                                </section>
+                                                        <span>-</span>
+                                                        <span>Thành viên của bảng</span>
+                                                    </section>
+                                                </div>
                                             </div>
-                                            <div class="col-5 d-flex align-items-center justify-content-end">
+
+                                            <div class=" d-flex align-items-center justify-content-end">
                                                 <button class="btn btn-outline-primary">Thành
                                                     viên
                                                 </button>
                                                 <div class="dropdown ms-2">
-                                                    <button class="btn btn-link dropdown-toggle" type="button"
-                                                        id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        <i class="ri-more-2-fill"></i>
-                                                    </button>
+                                                    <i class="ri-more-2-fill cursor-pointer" id="dropdownMenuButton"
+                                                       data-bs-toggle="dropdown"
+                                                       aria-expanded="false"></i>
                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                     @if ($item->user_id === Auth::id())
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Rời
+                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Rời
                                                                     khỏi</a>
                                                             </li>
                                                         </ul>
                                                     @elseif($boardOwner->user_id == Auth::id())
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
-                                                            <li><a class="dropdown-item text-danger"
-                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Kích
-                                                                    thành
-                                                                    viên</a></li>
-                                                            <li><a class="dropdown-item text-primary"
-                                                                    href="{{ route('b.upgradeMemberShip', $item->bm_id) }}">Thăng
+                                                            <li>
+                                                                <a class="dropdown-item text-primary"
+                                                                   href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
+                                                                    quyền</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item text-primary"
+                                                                   href="{{ route('b.upgradeMemberShip', $item->bm_id) }}">Thăng
                                                                     cấp
                                                                     thành
-                                                                    viên</a></li>
-                                                            <li><a class="dropdown-item text-primary"
-                                                                    href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
-                                                                    quyền</a>
+                                                                    viên</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item text-danger"
+                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Kích
+                                                                    thành
+                                                                    viên</a>
                                                             </li>
                                                         </ul>
                                                     @elseif (!empty($boardSubOwnerChecked))
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Kích
+                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     thành
                                                                     viên</a></li>
                                                         </ul>
@@ -356,13 +363,15 @@
                                                 <li class="d-flex justify-content-between">
                                                     <div class="col-1">
                                                         <a href="javascript: void(0);" class="avatar-group-item"
-                                                            data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                            data-bs-placement="top" title="Nancy">
+                                                           data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                           data-bs-placement="top" title="Nancy">
                                                             @if ($item->image)
-                                                                <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                                    alt="" class="rounded-circle avatar-xs" />
+                                                                <img
+                                                                    src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                                    alt="" class="rounded-circle avatar-xs"/>
                                                             @else
-                                                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                <div
+                                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                                     style="width: 25px;height: 25px">
                                                                     {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                 </div>
@@ -389,23 +398,24 @@
 
                                                     <div class="col-4 d-flex justify-content-end">
                                                         <form onsubmit="disableButtonOnSubmit()"
-                                                            action="{{ route('b.acceptMember') }}" method="post">
+                                                              action="{{ route('b.acceptMember') }}" method="post">
                                                             @method('PUT')
                                                             @csrf
                                                             <input type="hidden" value="{{ $item->user_id }}"
-                                                                name="user_id">
+                                                                   name="user_id">
                                                             <input type="hidden" value="{{ $board->id }}"
-                                                                name="board_id">
+                                                                   name="board_id">
                                                             <input type="hidden" value="NULL" name="type_update">
                                                             <button class="btn btn-primary me-2" type="submit">Duyệt
                                                             </button>
                                                         </form>
                                                         <form action="{{ route('b.refuseMember', $item->bm_id) }}"
-                                                            onsubmit="disableButtonOnSubmit()" method="post">
+                                                              onsubmit="disableButtonOnSubmit()" method="post">
                                                             @method('DELETE')
                                                             @csrf
                                                             <button class="btn btn-danger" type="submit">Từ
-                                                                chối</button>
+                                                                chối
+                                                            </button>
                                                         </form>
                                                     </div>
                                                 </li>
@@ -430,13 +440,13 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="inviteModalLabel">Mời thành viên từ không gian làm việc</h5>
+                <h5 class="modal-title" id="inviteModalLabel">Thêm thành viên từ không gian làm việc</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if ($wspMember->count() > 0)
                     <select name="members" class="form-select invite-member-select">
-                        <option value="">Thành viên trong không gian làm việc</option>
+                        <option hidden="">Thành viên trong không gian làm việc</option>
                         @foreach ($wspMember as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
@@ -448,7 +458,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 @if ($wspMember->count() > 0)
-                    <button type="button" class="btn btn-primary" id="inviteButton">Mời thành viên</button>
+                    <button type="button" class="btn btn-primary" id="inviteButton">Thêm thành viên</button>
                 @endif
             </div>
         </div>
@@ -458,7 +468,7 @@
 <script>
     function copyLink() {
         const link = '{{ $board->link_invite }}'; // Lấy link từ biến Laravel
-        navigator.clipboard.writeText(link).then(function() {
+        navigator.clipboard.writeText(link).then(function () {
             // Thay đổi icon sau khi sao chép thành công
             const copyIcon = document.getElementById('copy-icon');
             copyIcon.classList.remove('ri-attachment-2'); // Xóa icon hiện tại
@@ -469,7 +479,7 @@
             copyText.textContent = 'Đã sao chép';
 
             // Đặt thời gian chờ 20 giây trước khi chuyển icon và văn bản về trạng thái ban đầu
-            setTimeout(function() {
+            setTimeout(function () {
                 // Khôi phục lại icon và văn bản sau 20 giây
                 copyIcon.classList.remove('ri-check-line');
                 copyIcon.classList.add('ri-attachment-2');
@@ -478,15 +488,15 @@
                 copyText.textContent = 'Sao chép liên kết';
             }, 5000); // 20000 milliseconds = 20 giây
 
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.error('Error copying text: ', error);
             alert('Có lỗi xảy ra, vui lòng thử lại.');
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Gắn sự kiện khi chọn thành viên từ dropdown
-        document.querySelector('#inviteButton').addEventListener('click', function() {
+        document.querySelector('#inviteButton').addEventListener('click', function () {
             const selectElement = document.querySelector('.invite-member-select');
             const memberId = selectElement.value;
             const memberName = selectElement.options[selectElement.selectedIndex].text;
@@ -496,13 +506,13 @@
             const inviteUrl = `/b/invite-member-workspace/${memberId}/${boardId}`;
 
             fetch(inviteUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                            .getAttribute('content')
-                    }
-                })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');

@@ -507,8 +507,7 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-            if ($task->id_google_calendar)
-                $this->googleApiClient->deleteEvent($task->id_google_calendar);
+            if ($task->id_google_calendar && Auth::user()->access_token)  $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([
