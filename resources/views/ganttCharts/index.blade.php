@@ -64,7 +64,7 @@
             <div class="my-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-250">Danh sách</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form action="{{ route('catalog.CreateGantt') }}" method="post" onsubmit="return disableButtonOnSubmit()" class="formItem">
+                    <form action="{{ route('catalog.CreateGantt') }}" method="POST" onsubmit="return disableButtonOnSubmit()" class="formItem">
                         @csrf
                         <div class="mb-2">
                             <input type="text" class="form-control" name="name" id="nameCatalog"

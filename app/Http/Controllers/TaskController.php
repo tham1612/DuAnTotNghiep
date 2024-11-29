@@ -165,8 +165,7 @@ class TaskController extends Controller
 //        dd($data['start'], $data['end']);
         $task = Task::query()->create($data);
         $data['id'] = $task->id;
-
-        broadcast(new RealtimeCreateTask($task))->toOthers();
+        broadcast(new RealtimeCreateTask($task,$task->catalog->board->id))->toOthers();
         // ghi lại hoạt động khi thêm
         activity('thêm mới task')
             ->performedOn($task)
