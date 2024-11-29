@@ -345,14 +345,14 @@
 
                             <span class="align-middle">Lưu trữ</span></a>
 
-                        <form id="logoutForm" action="{{ route('logout') }}" method="post" class="dropdown-item">
-                            @csrf
-                            <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
-                            <button type="button" class="bg-transparent border-0" data-bs-toggle="modal"
-                                    data-bs-target="#topmodal">
-                                Đăng xuất
-                            </button>
-                        </form>
+                            <form id="logoutForm" action="{{ route('logout') }}" method="post" class="dropdown-item">
+                                @csrf
+                                <i class="mdi mdi-logout text-muted fs-16 align-middle"></i>
+                                <button type="submit" class="bg-transparent border-0">
+                                    Đăng xuất
+                                </button>
+                            </form>
+
                     </div>
                 </div>
             </div>
@@ -445,27 +445,6 @@
     </div>
 </div>
 
-<div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body text-center p-5">
-                <lord-icon src="https://cdn.lordicon.com/pithnlch.json" trigger="loop"
-                           colors="primary:#121331,secondary:#08a88a" style="width:120px;height:120px">
-                </lord-icon>
-                <div class="mt-4">
-                    <h4 class="mb-3">Bạn có muốn đăng xuất không?</h4>
-                    <div class="hstack gap-2 justify-content-center">
-                        <button type="button" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal">
-                            <i class="ri-close-line me-1 align-middle"></i> Hủy
-                        </button>
-                        <!-- Submit form on click -->
-                        <button type="submit" class="btn btn-success" form="logoutForm">Đăng xuất</button>
-                    </div>
-                </div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
 
 {{-- tìm kiếm --}}
 
