@@ -132,6 +132,9 @@ class TaskController extends Controller
 
     public function update(string $id, UpdateTaskRequest $request)
     {
+        $followMember = Follow_member::where('task_id', $id)
+            ->where('follow', 1)
+            ->get();
         $task = Task::query()->findOrFail($id);
         $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
         if (!$authorize) {
@@ -153,6 +156,11 @@ class TaskController extends Controller
             $data['end_date'] = $data['end'];
         } else if (isset($data['start_date']) || isset($data['end_date'])) {
             $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+            foreach ($followMember as $member) {
+                if ($member->user->id != Auth::id()) {
+                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
+                }
+            }
         }
 
         if ($request->hasFile('image')) {
@@ -161,7 +169,21 @@ class TaskController extends Controller
             if ($task->image && Storage::exists($task->image)) {
                 Storage::delete($task->image);
             }
+            foreach ($followMember as $member) {
+                if ($member->user->id != Auth::id()) {
+                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
+                }
+            }
         }
+
+        if (isset($data['text'])) {
+            foreach ($followMember as $member) {
+                if ($member->user->id != Auth::id()) {
+                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã đổi tên thành ". $data['text'], 'success', $member->user->id));
+                }
+            }
+        }
+
 
         $task->update($data);
         $data['id'] = $id;
@@ -171,14 +193,8 @@ class TaskController extends Controller
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
 
-        $followMember = Follow_member::where('task_id', $id)
-            ->where('follow', 1)
-            ->get();
-        foreach ($followMember as $member) {
-            if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $task->text . " có sự thay đổi. Xem chi tiết! ", 'success', $member->user->id));
-            }
-        }
+
+
         // xử lý thêm vào gg calendar
         if (Auth::user()->access_token) {
             if ($task->id_google_calendar) {
