@@ -129,7 +129,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        $authorize = $this->authorizeWeb->authorizeEditWorkspace($request->workspace_id);
+        $authorize = $this->authorizeWeb->authorizeEditWorkspace();
         if (!$authorize) {
             session(['msg' => 'Bạn không có quyền!!']);
             session(['action' => 'danger']);
@@ -831,17 +831,17 @@ class BoardController extends Controller
             ]);
         }
         $board = Board::withTrashed()->findOrFail($id);
-        $catalogsId = Catalog::withTrashed()
+        $catalogs = Catalog::withTrashed()
             ->where('board_id', $id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+            ->get();
 
         try {
             DB::beginTransaction();
 
-            foreach ($catalogsId as $catalogId) {
-                $this->catalogController->restoreCatalog($catalogId);
+            foreach ($catalogs as $catalog) {
+                if ($board->deleted_at == $catalog->deleted_at) {
+                    $this->catalogController->restoreCatalog($catalog->id);
+                }
             }
 
             $board->restore();
@@ -864,6 +864,14 @@ class BoardController extends Controller
 
     public function copyBoard(Request $request)
     {
+        $authorize = $this->authorizeWeb->authorizeCreateBoardOnWorkspace($request->workspace_id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        dd(123);
         $data = $request->all();
         $uuid = Str::uuid();
         $token = Str::random(40);
