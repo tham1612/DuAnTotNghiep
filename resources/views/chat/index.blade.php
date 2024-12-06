@@ -20,88 +20,45 @@
                 let users = response.data;
                 let output = '';
 
-                if (users.length > 0) {
-                    users.forEach(user => {
-                        // Thay thế 'id' trong đường dẫn với user.id
-                        output += `
-    <li>
-        <a href="${checkUserRoute.replace(/\/$/, '')}/${user.id}">
-            <div class="d-flex align-items-center">
-                <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
-                    <div class="avatar-xxs">
-                        <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                             class="rounded-circle img-fluid userprofile" alt="">
-                        ${user.status === 'on' ? '<span class="user-status"></span>' : ''}
-                    </div>
-                </div>
-                <div class="flex-grow-1 overflow-hidden">
-                    <p class="text-truncate mb-0">${user.name}</p>
-                </div>
-            </div>
-        </a>
-    </li>
-    `;
-                    });
-                    document.getElementById('userResults').innerHTML = output;
-                    document.getElementById('tb').innerHTML = '';
-                } else {
-                    document.getElementById('tb').innerHTML = '<p>Tên không phù hợp</p>';
-                    document.getElementById('userResults').innerHTML = '';
-                }
-
-            })
-            .catch(function(error) {
-                console.log('Không lấy được dữ liệu', error);
-            });
-    }
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- Đảm bảo jQuery được tải -->
-<script>
-    // Đường dẫn từ route của Laravel
-    const chatURL = "{{ route('chat', ['roomId' => '']) }}"; // Giả sử bạn không cần cung cấp `roomId` tại đây
-
-    const currentURL = window.location.href;
-
-    function updateUserStatus(status) {
-        $.ajax({
-            url: '/update-status',
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}', // Gửi CSRF token để xác thực
-                status: status // Gửi trạng thái
-            },
-            success: function(response) {
-                if (response.success) {
-                    console.log(`Status đã được cập nhật thành '${status}'`);
-                }
-            },
-            error: function(xhr) {
-                console.error("Có lỗi xảy ra khi cập nhật status:", xhr.responseText);
-            }
-        });
-    }
-
-    // Kiểm tra nếu URL hiện tại là một trang chat
-    if (currentURL.startsWith(chatURL)) {
-        console.log("Người dùng đã vào trang chat");
-
-        // Cập nhật status thành 'on' khi vào trang
-        updateUserStatus('on');
-
-        // Thêm sự kiện trước khi rời khỏi trang
-        window.addEventListener('beforeunload', function() {
-            // Cập nhật status thành 'off' khi thoát
-            updateUserStatus('off');
-        });
-    }
-</script>
-
-
-<style>
-    /* Đặt kiểu chung cho các tin nhắn */
-    .an {
-        display: none;
-    }
+                    if (users.length > 0) {
+                        users.forEach(user => {
+                            // Thay thế 'id' trong đường dẫn với user.id
+                            output += `
+                        <li>
+                            <a href="${checkUserRoute.replace(/\/$/, '')}/${user.id}"> <!-- Thay thế 'id' bằng user.id -->
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                        <div class="avatar-xxs">
+                                            <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                 class="rounded-circle img-fluid userprofile" alt="">
+                                            <span class="user-status"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-truncate mb-0">${user.name}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        `;
+                        });
+                        document.getElementById('userResults').innerHTML = output;
+                        document.getElementById('tb').innerHTML = '';
+                    } else {
+                        document.getElementById('tb').innerHTML = '<p>Tên không phù hợp</p>';
+                        document.getElementById('userResults').innerHTML = '';
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Không lấy được dữ liệu', error);
+                });
+        }
+    </script>
+    <style>
+        /* Đặt kiểu chung cho các tin nhắn */
+        .an {
+            display: none;
+        }
 
     .message {
         padding: 10px;
@@ -124,38 +81,54 @@
     /* Tin nhắn của người khác hiển thị bên trái */
     .message.left {
 
-        /* Màu cho tin nhắn của người khác */
-        text-align: left;
-        float: left;
-        /* Căn về bên trái */
-    }
-</style>
+            /* Màu cho tin nhắn của người khác */
+            text-align: left;
+            float: left;
+            /* Căn về bên trái */
+        }
+    </style>
+</head>
 
-   
-       
-   
-<div class="">
-    <div class="">
-        <div class="container-fluid">
-            <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
-                <!-- sidebar -->
-                <div class="chat-leftsidebar">
-                    <div class="px-4 pt-4 mb-3">
-                        <div class="d-flex align-items-start">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-4">Trò chuyện</h5>
-                            </div>
-                        </div>
-                        <div class="search-box">
-                            <form class="d-flex">
-                                @csrf
-                                <input style="width:220px!important;" type="text" id="searchInput"
-                                    onkeyup="searchData()" class="form-control bg-light border-primary"
-                                    placeholder="Nhập tên người dùng">
-                            </form>
-                            <i class="ri-search-2-line search-icon"></i>
-                        </div>
-                    </div> <!-- .p-4 -->
+<body>
+
+    <!-- Begin page -->
+    <div id="layout-wrapper" style="margin-top:-12px;">
+
+        @include('layouts.header')
+
+
+        <!-- ========== App Menu ========== -->
+        @include('layouts.sidebar')
+        <!-- Left Sidebar End -->
+        <!-- Vertical Overlay-->
+        <div class="vertical-overlay"></div>
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
+                        <!-- sidebar -->
+                        <div class="chat-leftsidebar">
+                            <div class="px-4 pt-4 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-4">Trò chuyện</h5>
+                                    </div>
+                                </div>
+                                <div class="search-box">
+                                    <form class="d-flex">
+                                        @csrf
+                                        <input style="width:220px!important;" type="text" id="searchInput"
+                                            onkeyup="searchData()" class="form-control bg-light border-primary"
+                                            placeholder="Nhập tên người dùng">
+                                    </form>
+                                    <i class="ri-search-2-line search-icon"></i>
+                                </div>
+                            </div> <!-- .p-4 -->
 
                     <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified" role="tablist">
                         <li class="nav-item">
@@ -190,143 +163,114 @@
                                                             in_array($user->id, $membersArray);
                                                     @endphp
 
-                                                    @if ($isInRoom && $user->id !== $currentUserId)
-                                                        <li id="an1">
-                                                            <a href="{{ url('chat/' . $room->id . '/' . $user->id) }}"
-                                                                id="userList">
-                                                                <div class="d-flex align-items-center">
-                                                                    <div
-                                                                        class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                            @if ($isInRoom && $user->id !== $currentUserId)
+                                                                <!-- Thêm điều kiện kiểm tra -->
+                                                                <li id="an1">
+                                                                    <a href="{{ url('chat/' . $room->id . '/' . $user->id) }}"
+                                                                        id="userList">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div
+                                                                                class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                                                <div
+                                                                                    class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
+                                                                                    <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                                                        class="rounded-circle avatar-xs"
+                                                                                        alt="">
+                                                                                    <span class="user-status"></span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div style="margin-left: -15px"
+                                                                                class="flex-grow-1 overflow-hidden">
+                                                                                <p class="text-truncate mb-0 mt-2">
+                                                                                    {{ $user->name }}</p>
+                                                                                    <p>
+                                                                                        @if ($user->latest_sender_id == $currentUserId)
+                                                                                            Bạn: {{ $user->latest_message }}
+                                                                                        @else
+                                                                                            {{ $user->latest_message }}
+                                                                                        @endif
+                                                                                        <span style="float: right; font-size: 0.9em; color: gray;">
+                                                                                            {{ \Carbon\Carbon::parse($user->latest_message_time)->format('d-m-Y H:i') }}
+                                                                                        </span>
+                                                                                    </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
+                                                @else
+                                                    <p class="text-center">Hãy trò chuyện với ai đó</p>
+                                                @endif
+                                            </ul>
+
+                                        </div>
+
+
+                                        <div class="chat-message-list">
+
+                                            {{-- <ul class="list-unstyled chat-list chat-user-list mb-0">
+                                                <li id="contact-id-1"> <a href="{{ url('chat/12') }}" id="userList">
+                                                        <div class="d-flex align-items-center">
+                                                            <div
+                                                                class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                                <div class="avatar-xxs"> <img
+                                                                        src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
+                                                                        class="rounded-circle img-fluid userprofile"
+                                                                        alt="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex-grow-1 overflow-hidden">
+                                                                <p class="text-truncate mb-0">DATN
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-chat  w-100 overflow-hidden">
+                            <div class="chat-content d-lg-flex">
+                                <!-- start chat conversation section -->
+                                <div class="w-100 overflow-hidden position-relative">
+                                    <!-- conversation user -->
+                                    <div class="position-relative">
+                                        <div class="position-relative" id="users-chat">
+                                            @if (isset($receiverId) && $receiverId && isset($userss) && $userss)
+                                                <div class="p-3 user-chat-topbar">
+                                                    <div class="row align-items-center">
+                                                        <!-- avt chat -->
+                                                        <div class="col-sm-4 col-8">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="flex-shrink-0 d-block d-lg-none me-3">
+                                                                    <a href="javascript: void(0);"
+                                                                        class="user-chat-remove fs-18 p-1"><i
+                                                                            class="ri-arrow-left-s-line align-bottom"></i></a>
+                                                                </div>
+                                                                <div class="flex-grow-1 overflow-hidden">
+                                                                    <div class="d-flex align-items-center">
                                                                         <div
                                                                             class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
                                                                             <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
                                                                                 class="rounded-circle avatar-xs"
                                                                                 alt="">
-                                                                            <span
-                                                                                id="status-span-{{ $user->id }}"
-                                                                                class="onof {{ $user->status === 'on' ? 'user-status' : '' }}"></span>
-                                                                            <script>
-                                                                                setInterval(function() {
-                                                                                    fetch('/user/status/{{ $user->id }}')
-                                                                                        .then(response => response.json())
-                                                                                        .then(data => {
-                                                                                            const statusSpan = document.getElementById('status-span-{{ $user->id }}');
-                                                                                            if (data.status === 'on') {
-                                                                                                statusSpan.classList.add('user-status');
-                                                                                            } else {
-                                                                                                statusSpan.classList.remove('user-status');
-                                                                                            }
-                                                                                        })
-                                                                                        .catch(error => console.error('Error fetching status:', error));
-                                                                                }, 1000);
-                                                                            </script>
+                                                                            <span class="user-status"></span>
+                                                                        </div>
+                                                                        <div class="flex-grow-1 overflow-hidden">
+                                                                            <h5 class="text-truncate mb-0 fs-16">
+                                                                                <a>{{ $userss->name }}</a>
+                                                                            </h5>
+                                                                            <p
+                                                                                class="text-truncate text-muted fs-14 mb-0 userStatus">
+                                                                            </p>
                                                                         </div>
                                                                     </div>
-
-                                                                    <div style="margin-left: -15px"
-                                                                        class="flex-grow-1 overflow-hidden">
-                                                                        <p class="text-truncate mb-0 mt-2">
-                                                                            {{ $user->name }}</p>
-                                                                        <p class="latest-message"
-                                                                            data-user-id="{{ $user->id }}">
-                                                                            <!-- Nội dung tin nhắn sẽ được hiển thị ở đây -->
-                                                                        </p>
-
-                                                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                                                        <script>
-                                                                            $(document).ready(function() {
-                                                                                const currentUserId = {{ $currentUserId }};
-                                                                                const otherUserId = {{ $user->id }};
-
-                                                                                function fetchLatestMessage() {
-                                                                                    $.get(`/latest-message/${currentUserId}/${otherUserId}`, function(data) {
-                                                                                        if (data) {
-                                                                                            const messagePrefix = (data.sender_id == currentUserId) ? "Bạn: " : "";
-                                                                                            const messageDate = new Date(data.created_at +
-                                                                                                'Z'); // Thêm 'Z' để xác định đây là UTC
-
-                                                                                            // Chuyển đổi sang giờ Việt Nam (GMT+7)
-                                                                                            const vietnamTimezoneOffset = 7 * 60; // GMT+7
-                                                                                            const localTimezoneOffset = messageDate
-                                                                                                .getTimezoneOffset(); // Lấy offset của thời gian địa phương
-                                                                                            const vietnamDate = new Date(messageDate.getTime() + (vietnamTimezoneOffset +
-                                                                                                localTimezoneOffset) * 60000);
-
-                                                                                            // Hiển thị thời gian
-                                                                                            const formattedDate = vietnamDate.toLocaleDateString('vi-VN');
-                                                                                            const formattedTime = vietnamDate.toLocaleTimeString('vi-VN', {
-                                                                                                hour: '2-digit',
-                                                                                                minute: '2-digit',
-                                                                                                second: '2-digit',
-                                                                                            });
-
-                                                                                            $(`.latest-message[data-user-id="{{ $user->id }}"]`).html(`
-                                                                                            <span>${messagePrefix}${data.message}</span>
-                                                                                            <span style="float: right; font-size: 0.9em; color: gray;">
-                                                                                            ${formattedDate} ${formattedTime}
-                                                                                            </span>
-                                                                                          `);
-                                                                                        }
-                                                                                    });
-                                                                                }
-
-                                                                                // Cập nhật tin nhắn mỗi giây cho từng người dùng
-                                                                                setInterval(fetchLatestMessage, 1000);
-                                                                            });
-                                                                        </script>
-
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            <p class="text-center">Hãy trò chuyện với ai đó</p>
-                                        @endif
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="user-chat  w-100 overflow-hidden">
-                    <div class="chat-content d-lg-flex">
-                        <!-- start chat conversation section -->
-                        <div class="w-100 overflow-hidden position-relative">
-                            <!-- conversation user -->
-                            <div class="position-relative">
-                                <div class="position-relative" id="users-chat">
-                                    @if (isset($receiverId) && $receiverId && isset($userss) && $userss)
-                                        <div class="p-3 user-chat-topbar">
-                                            <div class="row align-items-center">
-                                                <!-- avt chat -->
-                                                <div class="col-sm-4 col-8">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 d-block d-lg-none me-3">
-                                                            <a href="javascript: void(0);"
-                                                                class="user-chat-remove fs-18 p-1"><i
-                                                                    class="ri-arrow-left-s-line align-bottom"></i></a>
-                                                        </div>
-                                                        <div class="flex-grow-1 overflow-hidden">
-                                                            <div class="d-flex align-items-center">
-                                                                <div
-                                                                    class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
-                                                                    <img src="{{ asset('theme/assets/images/users/avatar-2.jpg') }}"
-                                                                        class="rounded-circle avatar-xs"
-                                                                        alt="">
-                                                                    <span id="check"
-                                                                        class=""></span>
-
-                                                                </div>
-                                                                <div class="flex-grow-1 overflow-hidden">
-                                                                    <h5 class="text-truncate mb-0 fs-16">
-                                                                        <a>{{ $userss->name }}</a>
-                                                                    </h5>
-                                                                    <p class="text-truncate text-muted fs-8 mb-0 userStatus"
-                                                                        id="user-status">
-                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </div>

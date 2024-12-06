@@ -1,4 +1,8 @@
 <?php
+
+use App\Models\WorkspaceMember;
+use Illuminate\Support\Facades\DB;
+
 $board = session('board');
 
 $userId = \Illuminate\Support\Facades\Auth::id();

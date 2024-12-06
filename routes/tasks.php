@@ -26,6 +26,8 @@ Route::middleware(['auth', 'isWorkspace','isActiveWsp'])
             ->name('catalogs.getFormCreateTaskViewTable');
 
         Route::resource('tasks', TaskController::class);
+        Route::post('gantt/task', [TaskController::class, 'CreateGantt'])
+        ->name('tasks.CreateGantt');
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);
 
@@ -59,6 +61,7 @@ Route::middleware(['auth', 'isWorkspace','isActiveWsp'])
 //        sao chep
         Route::post('/tasks/copyTask', [TaskController::class, 'copyTask'])
             ->name('tasks.copyTask');
+
 
 //        hoàn tác + xóa vĩnh viễn
         Route::post('/tasks/destroyTask/{id}', [TaskController::class, 'destroyTask'])
