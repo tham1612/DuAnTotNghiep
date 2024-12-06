@@ -949,8 +949,8 @@
                         url: '{{ route('workspaces.delete', $workspaceChecked->workspace_id) }}',
                         type: "DELETE",
                         success: function (response) {
+                            notificationWeb(response.action, response.msg);
                             if (response.action === 'success') {
-                                notificationWeb(response.action, response.msg);
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)

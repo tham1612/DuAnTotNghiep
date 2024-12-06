@@ -170,19 +170,19 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="mb-3">
-                                                <label for="social_name"
-                                                       class="form-label  @error('social_name') is-invalid @enderror">Tên
-                                                    mạng xã hội:</label>
-                                                <input type="text" class="form-control" name="social_name"
-                                                       id="social_name" placeholder="PH33245 Đinh Thị Minh Nguyệt"
-                                                       value="{{ old('social_name', $user->social_name) }}"/>
-                                                @error('social_name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
+{{--                                        <div class="col-lg-6">--}}
+{{--                                            <div class="mb-3">--}}
+{{--                                                <label for="social_name"--}}
+{{--                                                       class="form-label  @error('social_name') is-invalid @enderror">Tên--}}
+{{--                                                    mạng xã hội:</label>--}}
+{{--                                                <input type="text" class="form-control" name="social_name"--}}
+{{--                                                       id="social_name" placeholder="PH33245 Đinh Thị Minh Nguyệt"--}}
+{{--                                                       value="{{ old('social_name', $user->social_name) }}"/>--}}
+{{--                                                @error('social_name')--}}
+{{--                                                <div class="invalid-feedback">{{ $message }}</div>--}}
+{{--                                                @enderror--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                         <div class="col-lg-12">
                                             <div class="mb-3 pb-2">
                                                 <label for="introduce" class="form-label">Giới thiệu về bản
