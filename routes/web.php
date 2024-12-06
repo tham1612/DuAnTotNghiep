@@ -49,7 +49,7 @@ Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
             ->name('users.update');
     });
 
-Route::middleware('auth')->get('inboxs', function () {
+Route::middleware(['auth', 'isActiveWsp'])->get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 

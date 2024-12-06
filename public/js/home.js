@@ -228,6 +228,7 @@ function updateIsStar2(boardId, userId,) {
             user_id: userId,
         },
         success: function (response) {
+            notificationWeb(response.action, response.msg);
             // Lấy phần tử nút bấm dựa vào ID
             const starButton = document.getElementById(`is_star_${boardId}`);
 
@@ -252,6 +253,7 @@ function updateIsStar3(boardId, userId) {
             user_id: userId,
         },
         success: function (response) {
+            notificationWeb(response.action, response.msg);
             console.log('Người dùng đã đánh dấu bảng nối bật:', response);
             $(`#board_star_${boardId}`).closest('.board-star-container').remove();
         },

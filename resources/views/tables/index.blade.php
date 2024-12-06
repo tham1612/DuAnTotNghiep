@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Table - TaskFlow
+    Bảng - TaskFlow
 @endsection
 @section('main')
 @if(session('error'))

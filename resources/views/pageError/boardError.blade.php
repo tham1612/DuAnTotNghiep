@@ -18,12 +18,12 @@
                                                trigger="loop" colors="primary:#405189,secondary:#0ab39c"></lord-icon>
                                     <h1 class="text-primary mb-4">Không có quyền truy cập.</h1>
 {{--                                    <h4 class="text-uppercase">Sorry, Page not Found 😭</h4>--}}
-                                    <p class="text-muted mb-4">Gửi yêu cầu tới quản trị viên bảng này để có quyền truy
-                                        cập. Nếu bạn được chấp thuận tham gia thì bạn sẽ nhận được một email.</p>
-                                    <a href="index.html" class="btn btn-success">
-                                        <i class="mdi mdi-home me-1"></i>
-                                        Gửi yêu cầu
-                                    </a>
+{{--                                    <p class="text-muted mb-4">Gửi yêu cầu tới quản trị viên bảng này để có quyền truy--}}
+{{--                                        cập. Nếu bạn được chấp thuận tham gia thì bạn sẽ nhận được một email.</p>--}}
+{{--                                    <a href="index.html" class="btn btn-success">--}}
+{{--                                        <i class="mdi mdi-home me-1"></i>--}}
+{{--                                        Gửi yêu cầu--}}
+{{--                                    </a>--}}
                                 </div>
                             </div>
                         </div>

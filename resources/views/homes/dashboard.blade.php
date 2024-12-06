@@ -1,7 +1,7 @@
 @extends('layouts.masterMain')
 
 @section('title')
-    Dashbroad
+    Bảng điều khiển - TaskFlow
 @endsection
 
 @section('main')
@@ -74,7 +74,7 @@
                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
-                                        <div class="row mb-3">
+                                        <div class="row m-1">
                                             <div class="col-7 ps-0 d-flex align-items-center ">
                                                 <p class="text-muted mb-0 me-2">Team
                                                 </p>
@@ -196,14 +196,14 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <h5 class="fs-16 mt-3">
+                                        <h5 class="fs-16 my-3">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
-                                        <div class="row mb-3">
+                                        <div class="row m-1">
                                             <div class="col-7 ps-0 d-flex align-items-center">
                                                 <p class="text-muted mb-0 me-2">Team
                                                 </p>

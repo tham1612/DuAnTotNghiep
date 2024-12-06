@@ -23,6 +23,7 @@ Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
         Route::middleware('isViewer')->get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::group(['middleware' => ['auth', 'check.board.access']], function () {
+//        Route::group(['middleware' => ['auth']], function () {
             Route::prefix('b')
                 ->as('b.')
                 ->group(function () {

@@ -52,7 +52,7 @@ document
         const message = messageInput.value.trim();
 
         if (message === "") {
-            alert("Vui lòng nhập tin nhắn");
+            notificationWeb('warning',"Vui lòng nhập tin nhắn")
             return;
         }
 
@@ -91,9 +91,9 @@ function appendMessage(message, senderId) {
     if (senderId === userId) {
         // Thêm thẻ div với CSS trực tiếp vào
         messageElement.innerHTML += `
-        <div style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">           
-            <div class="mb-2" style="background-color: #5F93ED; padding: 10px; border-radius: 5px; color: #ffffff; margin-top: -10px; line-height: 1.2;"> 
-                ${message} 
+        <div style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
+            <div class="mb-2" style="background-color: #5F93ED; padding: 10px; border-radius: 5px; color: #ffffff; margin-top: -10px; line-height: 1.2;">
+                ${message}
             </div>
         </div>
         <div style="font-size: 12px; color: #555; text-align: right; margin-top: -15px;">${currentTime}</div> `;
@@ -103,8 +103,8 @@ function appendMessage(message, senderId) {
             <div class="bg-info-subtle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;">
                 A
             </div>
-            <div style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; margin-top: -10px; line-height: 1.2;"> 
-                ${message} 
+            <div style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; margin-top: -10px; line-height: 1.2;">
+                ${message}
             </div>
         </div>
         <div style="font-size: 12px; color: #555; text-align: right; margin-top: -15px;">${currentTime}</div> <!-- Thời gian -->
