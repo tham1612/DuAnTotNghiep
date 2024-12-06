@@ -429,7 +429,7 @@ class WorkspaceController extends Controller
 
     public function delete(string $id)
     {
-        $authorize = $this->authorizeWeb->authorizeWorkspaceOwner($id);
+        $authorize = $this->authorizeWeb->authorizeEditWorkspace();
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',

@@ -79,11 +79,11 @@ class TaskController extends Controller
             return response()->json(['error' => 'boardId is missing'], 400);
         }
         $catalogs = Catalog::with('board')
-            ->where('board_id',$boardId)
+            ->where('board_id', $boardId)
             ->get();
         $htmlForm = View::make('dropdowns.createTaskViewTable', [
             'catalogs' => $catalogs,
-            'boardId'=>$boardId
+            'boardId' => $boardId
         ])->render();
 
         // Trả về HTML cho frontend
@@ -148,7 +148,7 @@ class TaskController extends Controller
             'success' => true,
             'task' => $task,
             'catalogs' => $task->catalog->board->catalogs,
-            'boarId'=> $task->catalog->board->id,
+            'boarId' => $task->catalog->board->id,
             'task_count' => count($catalog->tasks),
         ]);
     }
@@ -279,6 +279,7 @@ class TaskController extends Controller
                             'position' => $item->position + 1
                         ]);
                 }
+                $msg = 'Thẻ "' . $task->text . '" thay đổi vị trí sang danh sách ' . Catalog::query()->findOrFail($data['catalog_id'])->name;
                 activity('thay đổi vị trí trong task')
                     ->causedBy(Auth::user())
                     ->withProperties([
@@ -330,6 +331,7 @@ class TaskController extends Controller
                             'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
                         ]);
                 }
+                $msg = 'Thẻ "' . $task->text . '" thay đổi vị trí trong danh sách ' . $task->catalog->name;
                 activity('Thay đổi vị trí task')
                     ->causedBy(Auth::user())
                     ->withProperties([
@@ -348,10 +350,11 @@ class TaskController extends Controller
             $task->update($data);
 
             DB::commit();
-            Log::debug('trước khi chạy broadcast');
-//            broadcast(new RealtimeTaskKanban($task))->toOthers();
             broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id))->toOthers();
-            Log::debug('đã chạy broadcast');
+            return response()->json([
+                'action' => 'success',
+                'msg' => $msg,
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
@@ -507,7 +510,7 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-            if ($task->id_google_calendar && Auth::user()->access_token)  $this->googleApiClient->deleteEvent($task->id_google_calendar);
+            if ($task->id_google_calendar && Auth::user()->access_token) $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([
