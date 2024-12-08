@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    List - TaskFlow
+    Danh sách - TaskFlow
 @endsection
 @section('main')
     @if(session('error'))

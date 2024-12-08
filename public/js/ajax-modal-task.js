@@ -158,7 +158,7 @@ function getModalTaskEvents() {
                     callEditor();
                 },
                 error: function (xhr) {
-                    console.error("Không thể tải dữ liệu task:", xhr);
+                    // console.error("Không thể tải dữ liệu task:", xhr);
                 }
             });
         });
@@ -903,6 +903,7 @@ function submitAddCheckList(taskId) {
             <div class="table-responsive table-hover table-card">
                 <table class="table table-nowrap mt-4">
                     <tbody id="check-list-${response.checkListId}">
+                    <tfoot>
                     <tr class="cursor-pointer addOrUpdate-checklist d-none">
                         <td colspan="2">
                             <form class="formItem">
@@ -930,7 +931,7 @@ function submitAddCheckList(taskId) {
 
                         </td>
                     </tr>
-                    </tbody>
+                     </tfoot>
                 </table>
             </div>
             <button class="btn btn-outline-dark ms-3 mt-2 display-checklist"
@@ -947,6 +948,11 @@ function submitAddCheckList(taskId) {
             }
             $('#name_checkList_' + taskId).val('');
             console.log('checklist đã được thêm thành công!', response);
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            });
 
         },
         error: function (xhr) {
@@ -957,6 +963,30 @@ function submitAddCheckList(taskId) {
 
     return false;
 }
+
+document.addEventListener('click', function (event) {
+    // Kiểm tra khi nhấn nút 'Hiển thị form'
+    if (event.target.classList.contains('display-checklist')) {
+        // Tìm form trong phần tử cha của nút
+        const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
+
+        if (formElement) {
+            // Hiển thị form nếu form bị ẩn
+            formElement.classList.remove('d-none');
+        } else {
+            console.error('Không tìm thấy phần tử form');
+        }
+    }
+
+    // Sự kiện cho nút 'Hủy' - Ẩn form
+    if (event.target.classList.contains('disable-checklist')) {
+        const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
+        if (formElement) {
+            formElement.classList.add('d-none'); // Ẩn form
+        }
+    }
+});
+
 
 function submitUpdateCheckList(checklistId, taskId) {
     let formData = {

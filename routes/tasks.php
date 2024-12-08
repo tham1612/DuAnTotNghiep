@@ -17,10 +17,13 @@ use App\Http\Controllers\GoogleApiClientController;
 */
 
 
-Route::middleware(['auth', 'isWorkspace'])
+Route::middleware(['auth', 'isWorkspace','isActiveWsp'])
     ->group(function () {
         Route::get('/tasks/getFormCreateTask/{id}', [TaskController::class, 'getFormCreateTask'])
             ->name('catalogs.getFormCreateTask');
+
+        Route::get('/tasks/getFormCreateTaskViewTable/{id}', [TaskController::class, 'getFormCreateTaskViewTable'])
+            ->name('catalogs.getFormCreateTaskViewTable');
 
         Route::resource('tasks', TaskController::class);
 
@@ -31,6 +34,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
 
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
+
+        Route::post('/unlink/google-calendar/{id}', [GoogleApiClientController::class, 'unlink'])->name('google.unlink');
 
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 

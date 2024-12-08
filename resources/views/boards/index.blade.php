@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Board - TaskFlow
+    Bảng kanban - TaskFlow
 @endsection
 @section('main')
     @if(session('error'))
@@ -12,11 +12,11 @@
         @foreach ($board->catalogs as $catalog)
             <div class="tasks-list rounded-3 p-2 border position-{{$catalog->position}}" data-value="{{ $catalog->id }}"
                  id="catalog_view_board_{{$catalog->id}}">
-                <div class="d-flex mb-3 d-flex align-items-center">
+                <div class="d-flex mb-3 align-items-center">
                     <div class="flex-grow-1 d-flex">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
                             id="title-catalog-view-board-{{$catalog->id}}">
-                            {{ $catalog->name }}
+                            {{ \Str::limit($catalog->name, 25) }}
                         </h6>
                         <small
                             class="badge bg-success align-bottom ms-1 totaltask-badge totaltask-catalog-{{$catalog->id}}">{{ $catalog->tasks->count() }}</small>

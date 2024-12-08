@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RealtimeCatalogArchiver;
+use App\Events\RealtimeCatalogDetail;
 use App\Events\RealtimeCreateCatalog;
 use App\Http\Requests\StoreCatalogRequest;
 use App\Models\Board;
@@ -70,7 +72,7 @@ class CatalogControler extends Controller
         $data['position'] = $maxPosition + 1;
 
         $catalog = Catalog::query()->create($data);
-        broadcast(new RealtimeCreateCatalog($catalog))->toOthers();
+        broadcast(new RealtimeCreateCatalog($catalog, $catalog->board->id))->toOthers();
 
         // lấy thông tin board
         $board = Board::findOrFail($request->board_id);
@@ -104,6 +106,7 @@ class CatalogControler extends Controller
             ]);
         }
         $catalog->update($request->all());
+        broadcast(new RealtimeCatalogDetail($catalog, $catalog->board_id))->toOthers();
         return response()->json([
             'action' => 'success',
             'msg' => 'Chỉnh sửa danh sách thành công!!',
@@ -114,7 +117,7 @@ class CatalogControler extends Controller
     public function destroy(string $id)
     {
         $catalog = Catalog::query()->findOrFail($id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board_id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -143,6 +146,7 @@ class CatalogControler extends Controller
             $catalog->delete();
 
             DB::commit();
+            broadcast(new RealtimeCatalogArchiver($catalog, $catalog->board_id))->toOthers();
             // Ghi log khi xóa danh sách
             activity('Catalog Deleted')
                 ->causedBy(Auth::user()) // Người thực hiện
@@ -158,6 +162,7 @@ class CatalogControler extends Controller
                 'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',

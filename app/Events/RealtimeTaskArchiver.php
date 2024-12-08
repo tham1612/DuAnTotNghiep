@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Catalog;
 use App\Models\Task;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class RealtimeTaskKanban implements ShouldBroadcast
+class RealtimeTaskArchiver implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -34,11 +35,11 @@ class RealtimeTaskKanban implements ShouldBroadcast
 //        return new Channel('tasks');
     }
 
-//    public function broadcastWith()
-//    {
-//        return [
-//            'task' => $this->task,
-//            'board_id' => $this->task->catalog->board->id,
-//        ];
-//    }
+    public function broadcastWith()
+    {
+        return [
+            'task' => $this->task,
+            'countCatalog' => Catalog::query()->findOrFail($this->task->catalog_id)->tasks->count(),
+        ];
+    }
 }

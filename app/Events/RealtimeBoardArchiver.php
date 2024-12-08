@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Board;
 use App\Models\Task;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -12,26 +13,25 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class RealtimeTaskKanban implements ShouldBroadcast
+class RealtimeBoardArchiver implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $task, $boardId;
+    public $board, $boardId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task, $boardId)
+    public function __construct(Board $board, $boardId)
     {
-        $this->task = $task;
+        $this->board = $board;
         $this->boardId = $boardId;
     }
 
 
     public function broadcastOn()
     {
-        return new Channel('tasks.' . $this->boardId);
-//        return new Channel('tasks');
+        return new Channel('boards.' . $this->boardId);
     }
 
 //    public function broadcastWith()

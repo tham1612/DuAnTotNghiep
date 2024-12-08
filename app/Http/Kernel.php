@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AfterMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\BeforeMiddleware;
+use App\Http\Middleware\IsActiveWorkspace;
 use App\Http\Middleware\isWorkspace;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -40,13 +41,14 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+//            IsActiveWorkspace::class
 //            AfterMiddleware::class,
 //            BeforeMiddleware::class,
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -59,6 +61,8 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'isActiveBoard' => \App\Http\Middleware\IsActiveBoard::class,
+        'isActiveWsp' => \App\Http\Middleware\IsActiveWorkspace::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
@@ -70,8 +74,8 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'isWorkspace'=>isWorkspace::class,
-        'check.board.access' =>\App\Http\Middleware\CheckBoardAccessInWorkspace::class,
+        'isWorkspace' => isWorkspace::class,
+        'check.board.access' => \App\Http\Middleware\CheckBoardAccessInWorkspace::class,
         'isViewer' => \App\Http\Middleware\IsViewer::class,
     ];
 }

@@ -18,17 +18,18 @@ class RealtimeCreateCatalog implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public $catalog;
+    public $catalog,$boardId;
 
-    public function __construct(Catalog $catalog)
+    public function __construct(Catalog $catalog,$boardId)
     {
         $this->catalog = $catalog;
+        $this->boardId = $boardId;
     }
 
 
     public function broadcastOn()
     {
-        return new Channel('catalogs');
+        return new Channel('catalogs.'.$this->boardId);
     }
 
     public function broadcastWith()
