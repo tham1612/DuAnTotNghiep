@@ -7,22 +7,22 @@
                     Chia sẻ bảng
                 </h5>
                 <button type="button" class="btn-close" id="btn-close-member" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
                 <div class="row g-3">
-                    <form action="{{ route('b.invite_board') }}" method="post">
+                    {{-- <form action="{{ route('b.invite_board') }}" method="post">
                         @csrf
                         @method('POST')
-                        <input type="hidden" name="id" value="{{ $board->id }}">
+                        <input type="hidden" name="id" id="boardIdInput" value="{{ $board->id }}">
                         <div class=" d-flex justify-content-between">
                             <div class="col-6">
-                                <input type="text" class="form-control" id="submissionidInput"
-                                       placeholder="Nhập email hoặc tên người dùng" name="email"/>
+                                <input type="text" class="form-control" id="emailInput"
+                                    placeholder="Nhập email hoặc tên người dùng" name="email" />
                             </div>
                             <div class="col-4 ms-2">
-                                <select name="authorize" id="" class="form-select">
+                                <select name="authorize" id="authorizeInput" class="form-select">
                                     <option value="Member">Thành Viên</option>
                                     @if ($boardOwner->user_id == Auth::id() || !empty($boardSubOwnerChecked))
                                         <option value="Sub_Owner">Phó nhóm</option>
@@ -30,12 +30,36 @@
                                 </select>
                             </div>
                             <div class="col-2 d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="inviteBoardButton">
+                                    Chia sẻ
+                                </button>
+                            </div>
+                        </div>
+                    </form> --}}
+                    <form id="inviteBoardForm" method="post">
+                        @csrf
+                        <input type="hidden" name="id" id="boardIdInput" value="{{ $board->id }}">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-6">
+                                <input type="text" class="form-control" id="emailInput"
+                                    placeholder="Nhập email hoặc tên người dùng" name="email" />
+                            </div>
+                            <div class="col-4 ms-2">
+                                <select name="authorize" id="authorizeInput" class="form-select">
+                                    <option value="Member">Thành Viên</option>
+                                    @if ($boardOwner->user_id == Auth::id() || !empty($boardSubOwnerChecked))
+                                        <option value="Sub_Owner">Phó nhóm</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-2 d-flex justify-content-center">
+                                <button type="submit" id="inviteBoardButton" class="btn btn-primary">
                                     Chia sẻ
                                 </button>
                             </div>
                         </div>
                     </form>
+
                     <!--end col-->
                     <div class="d-flex justify-content-between">
                         <div class=" d-flex">
@@ -53,7 +77,7 @@
                             @if (!empty($boardMemberChecked->authorize))
                                 @if ($boardMemberChecked->authorize == 'Owner' || $boardMemberChecked->authorize == 'Sub_Owner')
                                     <button class="btn btn-outline-info" data-bs-toggle="modal"
-                                            data-bs-target="#inviteModal">
+                                        data-bs-target="#inviteModal">
                                         Thêm thành viên
                                     </button>
                                 @endif
@@ -86,7 +110,7 @@
                                 Thành viên
                             </a>
                             <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                  style="border-radius: 100%; width: 20px ;height: 20px;">
+                                style="border-radius: 100%; width: 20px ;height: 20px;" id="tab_board_1">
                                 @if (!empty($boardMembers))
                                     {{ $boardMembers->count() + 1 + $boardSubOwner->count() }}
                                 @endif
@@ -99,7 +123,7 @@
                                     Yêu cầu tham gia
                                 </a>
                                 <span class="badge bg-dark align-items-center justify-content-center d-flex"
-                                      style="border-radius: 100%; width: 20px ;height: 20px;">
+                                    style="border-radius: 100%; width: 20px ;height: 20px;" id="tab_board_2">
                                     @if (!empty($boardMemberInvites))
                                         {{ $boardMemberInvites->count() }}
                                     @endif
@@ -112,20 +136,18 @@
                     <div class="tab-content text-muted">
                         <div class="tab-pane active" id="home1" role="tabpanel">
                             {{-- <div class="scrollable-content" style="max-height: 400px; overflow-y: auto;"> --}}
-                            <ul style="margin-left: -32px;">
+                            <ul style="margin-left: -32px;" id="tab-board-ul-1">
                                 <li class="d-flex justify-content-between">
                                     <div class="d-flex">
                                         <a href="javascript: void(0);" class="avatar-group-item"
-                                           data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                           title="Nancy">
+                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                            title="Nancy">
                                             @if (!empty($boardOwner))
                                                 @if ($boardOwner->image)
-                                                    <img
-                                                        src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
-                                                        alt="" class="rounded-circle avatar-xs"/>
+                                                    <img src="{{ Storage::url($boardOwner->image) ? Storage::url($boardOwner->image) : '' }}"
+                                                        alt="" class="rounded-circle avatar-xs" />
                                                 @else
-                                                    <div
-                                                        class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                    <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                         style="width: 25px;height: 25px">
                                                         {{ strtoupper(substr($boardOwner->name, 0, 1)) }}
                                                     </div>
@@ -164,14 +186,13 @@
                                         <div class="dropdown ms-2">
 
                                             <i class="ri-more-2-fill cursor-pointer" id="dropdownMenuButton"
-                                               data-bs-toggle="dropdown"
-                                               aria-expanded="false"></i>
+                                                data-bs-toggle="dropdown" aria-expanded="false"></i>
 
                                             <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                             @if (Auth::id() == $boardOwner->user_id)
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li><a class="dropdown-item text-danger"
-                                                           href="{{ route('b.activateMember', $boardOwner->bm_id) }}">Rời
+                                                            href="{{ route('b.leaveBoard', $boardOwner->bm_id) }}">Rời
                                                             khỏi</a></li>
                                                 </ul>
                                             @endif
@@ -181,18 +202,17 @@
                                 {{-- lặp cho thằng subowner --}}
                                 @if (!empty($boardSubOwner))
                                     @foreach ($boardSubOwner as $item)
-                                        <li class="d-flex justify-content-between mt-2">
+                                        <li class="d-flex justify-content-between mt-2"
+                                            id="li_board_{{ $item->bm_id }}">
                                             <div class="d-flex">
                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                   data-bs-item="top" title="Nancy">
+                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                    data-bs-item="top" title="Nancy">
                                                     @if ($item->image)
-                                                        <img
-                                                            src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                            alt="" class="rounded-circle avatar-xs"/>
+                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                            alt="" class="rounded-circle avatar-xs" />
                                                     @else
-                                                        <div
-                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                             style="width: 25px;height: 25px">
                                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                                         </div>
@@ -210,7 +230,7 @@
                                                                 <span class="text-success">(Bạn)</span>
                                                             @else
                                                                 <span class="text-success">(Phó
-                                                                nhóm)</span>
+                                                                    nhóm)</span>
                                                             @endif
 
                                                         </p>
@@ -221,17 +241,17 @@
                                                 </div>
                                             </div>
                                             <div class=" d-flex align-items-center justify-content-end">
-                                                <button class="btn btn-outline-success">Phó nhóm</button>
+                                                <button class="btn btn-outline-success activate-member">Phó
+                                                    nhóm</button>
                                                 <div class="dropdown ms-2">
                                                     <i class="ri-more-2-fill cursor-pointer" id="dropdownMenuButton"
-                                                       data-bs-toggle="dropdown"
-                                                       aria-expanded="false"></i>
+                                                        data-bs-toggle="dropdown" aria-expanded="false"></i>
                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                     @if ($item->user_id === Auth::id())
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Rời
+                                                                    href="{{ route('b.leaveBoard', $item->bm_id) }}">Rời
                                                                     khỏi</a>
                                                             </li>
                                                         </ul>
@@ -239,12 +259,12 @@
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Kích
+                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     phó
                                                                     nhóm</a>
                                                             </li>
                                                             <li><a class="dropdown-item text-primary"
-                                                                   href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
+                                                                    href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
                                                                     quyền</a>
                                                             </li>
                                                         </ul>
@@ -257,18 +277,17 @@
                                 {{-- lặp cho thằng member --}}
                                 @if (!empty($boardMembers))
                                     @foreach ($boardMembers as $item)
-                                        <li class="d-flex justify-content-between mt-2">
+                                        <li class="d-flex justify-content-between mt-2"
+                                            id="li_board_{{ $item->bm_id }}">
                                             <div class="d-flex">
                                                 <a href="javascript: void(0);" class="avatar-group-item"
-                                                   data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                   data-bs-item="top" title="Nancy">
+                                                    data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                    data-bs-item="top" title="Nancy">
                                                     @if ($item->image)
-                                                        <img
-                                                            src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                            alt="" class="rounded-circle avatar-xs"/>
+                                                        <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                            alt="" class="rounded-circle avatar-xs" />
                                                     @else
-                                                        <div
-                                                            class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                        <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                             style="width: 25px;height: 25px">
                                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                                         </div>
@@ -282,15 +301,15 @@
                                                                 <span class="text-success">(Bạn)</span>
                                                             @elseif($item->authorize === 'Sub_Owner')
                                                                 <span class="text-primary">(Phó
-                                                                nhóm)</span>
+                                                                    nhóm)</span>
                                                             @else
                                                                 <span class="text-black">(Thành
-                                                                viên)</span>
+                                                                    viên)</span>
                                                             @endif
 
                                                         </p>
                                                         <span>
-                                                        {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}</span>
+                                                            {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}</span>
                                                         <span>-</span>
                                                         <span>Thành viên của bảng</span>
                                                     </section>
@@ -298,19 +317,18 @@
                                             </div>
 
                                             <div class=" d-flex align-items-center justify-content-end">
-                                                <button class="btn btn-outline-primary">Thành
+                                                <button class="btn btn-outline-primary activate-member">Thành
                                                     viên
                                                 </button>
                                                 <div class="dropdown ms-2">
                                                     <i class="ri-more-2-fill cursor-pointer" id="dropdownMenuButton"
-                                                       data-bs-toggle="dropdown"
-                                                       aria-expanded="false"></i>
+                                                        data-bs-toggle="dropdown" aria-expanded="false"></i>
                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                     @if ($item->user_id === Auth::id())
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Rời
+                                                                    href="{{ route('b.leaveBoard', $item->bm_id) }}">Rời
                                                                     khỏi</a>
                                                             </li>
                                                         </ul>
@@ -319,19 +337,19 @@
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li>
                                                                 <a class="dropdown-item text-primary"
-                                                                   href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
+                                                                    href="{{ route('b.managementfranchise', ['owner_id' => $boardOwner->bm_id, 'user_id' => $item->bm_id]) }}">Nhượng
                                                                     quyền</a>
                                                             </li>
                                                             <li>
                                                                 <a class="dropdown-item text-primary"
-                                                                   href="{{ route('b.upgradeMemberShip', $item->bm_id) }}">Thăng
+                                                                    href="{{ route('b.upgradeMemberShip', $item->bm_id) }}">Thăng
                                                                     cấp
                                                                     thành
                                                                     viên</a>
                                                             </li>
                                                             <li>
                                                                 <a class="dropdown-item text-danger"
-                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Kích
+                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     thành
                                                                     viên</a>
                                                             </li>
@@ -340,7 +358,7 @@
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <li><a class="dropdown-item text-danger"
-                                                                   href="{{ route('b.activateMember', $item->bm_id) }}">Kích
+                                                                    href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     thành
                                                                     viên</a></li>
                                                         </ul>
@@ -357,21 +375,20 @@
                         @if ($boardOwner->user_id == Auth::id() || !empty($boardSubOwnerChecked))
                             <div class="tab-pane" id="profile1" role="tabpanel">
                                 <div class="scrollable-content" style="max-height: 400px; overflow-y: auto;">
-                                    <ul style="margin-left: -32px;">
+                                    <ul style="margin-left: -32px;" id="tab-board-ul-2">
                                         @if (!empty($boardMembers))
                                             @foreach ($boardMemberInvites as $item)
-                                                <li class="d-flex justify-content-between">
+                                                <li class="d-flex justify-content-between"
+                                                    id="li_board_{{ $item->bm_id }}">
                                                     <div class="col-1">
                                                         <a href="javascript: void(0);" class="avatar-group-item"
-                                                           data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                           data-bs-placement="top" title="Nancy">
+                                                            data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                            data-bs-placement="top" title="Nancy">
                                                             @if ($item->image)
-                                                                <img
-                                                                    src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
-                                                                    alt="" class="rounded-circle avatar-xs"/>
+                                                                <img src="{{ Storage::url($item->image) ? Storage::url($item->image) : '' }}"
+                                                                    alt="" class="rounded-circle avatar-xs" />
                                                             @else
-                                                                <div
-                                                                    class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
+                                                                <div class="bg-info-subtle rounded d-flex justify-content-center align-items-center"
                                                                     style="width: 25px;height: 25px">
                                                                     {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                 </div>
@@ -398,19 +415,21 @@
 
                                                     <div class="col-4 d-flex justify-content-end">
                                                         <form onsubmit="disableButtonOnSubmit()"
-                                                              action="{{ route('b.acceptMember') }}" method="post">
+                                                            action="{{ route('b.acceptMember') }}" method="post">
                                                             @method('PUT')
                                                             @csrf
                                                             <input type="hidden" value="{{ $item->user_id }}"
-                                                                   name="user_id">
+                                                                name="user_id">
+                                                            <input type="hidden" value="{{ $item->bm_id }}"
+                                                                name="bm_id">
                                                             <input type="hidden" value="{{ $board->id }}"
-                                                                   name="board_id">
+                                                                name="board_id">
                                                             <input type="hidden" value="NULL" name="type_update">
                                                             <button class="btn btn-primary me-2" type="submit">Duyệt
                                                             </button>
                                                         </form>
                                                         <form action="{{ route('b.refuseMember', $item->bm_id) }}"
-                                                              onsubmit="disableButtonOnSubmit()" method="post">
+                                                            onsubmit="disableButtonOnSubmit()" method="post">
                                                             @method('DELETE')
                                                             @csrf
                                                             <button class="btn btn-danger" type="submit">Từ
@@ -419,7 +438,6 @@
                                                         </form>
                                                     </div>
                                                 </li>
-                                                <br>
                                             @endforeach
                                         @endif
                                     </ul>
@@ -468,7 +486,7 @@
 <script>
     function copyLink() {
         const link = '{{ $board->link_invite }}'; // Lấy link từ biến Laravel
-        navigator.clipboard.writeText(link).then(function () {
+        navigator.clipboard.writeText(link).then(function() {
             // Thay đổi icon sau khi sao chép thành công
             const copyIcon = document.getElementById('copy-icon');
             copyIcon.classList.remove('ri-attachment-2'); // Xóa icon hiện tại
@@ -479,7 +497,7 @@
             copyText.textContent = 'Đã sao chép';
 
             // Đặt thời gian chờ 20 giây trước khi chuyển icon và văn bản về trạng thái ban đầu
-            setTimeout(function () {
+            setTimeout(function() {
                 // Khôi phục lại icon và văn bản sau 20 giây
                 copyIcon.classList.remove('ri-check-line');
                 copyIcon.classList.add('ri-attachment-2');
@@ -488,15 +506,15 @@
                 copyText.textContent = 'Sao chép liên kết';
             }, 5000); // 20000 milliseconds = 20 giây
 
-        }).catch(function (error) {
+        }).catch(function(error) {
             console.error('Error copying text: ', error);
             alert('Có lỗi xảy ra, vui lòng thử lại.');
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Gắn sự kiện khi chọn thành viên từ dropdown
-        document.querySelector('#inviteButton').addEventListener('click', function () {
+        document.querySelector('#inviteButton').addEventListener('click', function() {
             const selectElement = document.querySelector('.invite-member-select');
             const memberId = selectElement.value;
             const memberName = selectElement.options[selectElement.selectedIndex].text;
@@ -506,13 +524,13 @@
             const inviteUrl = `/b/invite-member-workspace/${memberId}/${boardId}`;
 
             fetch(inviteUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                        .getAttribute('content')
-                }
-            })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content')
+                    }
+                })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -532,6 +550,49 @@
                     console.error('Error inviting member:', error);
                     alert('Có lỗi xảy ra, vui lòng thử lại.');
                 });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#inviteBoardForm').on('submit', function(e) {
+            e.preventDefault();
+
+            // Lấy dữ liệu từ form
+            let boardId = $('#boardIdInput').val();
+            let email = $('#emailInput').val();
+            let authorize = $('#authorizeInput').val();
+
+            // Gửi AJAX
+            $.ajax({
+                url: '{{ route('b.invite_board') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: boardId,
+                    email: email,
+                    authorize: authorize
+                },
+                beforeSend: function() {
+                    $('#inviteBoardButton').prop('disabled', true).text('Đang gửi');
+                },
+                success: function(response) {
+                    if (response.action === 'success') {
+                        notificationWeb(response.action, response
+                            .msg); // Gọi hàm hiển thị thông báo
+                        $('#emailInput').val(''); // Xóa trường email sau khi gửi thành công
+                        $('#authorizeInput').val('Member'); // Reset lựa chọn quyền
+                    } else {
+                        notificationWeb('error', response.msg); // Hiển thị lỗi
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    alert('Đã xảy ra lỗi, vui lòng thử lại.');
+                },
+                complete: function() {
+                    $('#inviteBoardButton').prop('disabled', false).text('Chia sẻ');
+                }
+            });
         });
     });
 </script>
