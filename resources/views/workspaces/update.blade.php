@@ -661,7 +661,8 @@
                                                                                 </li>
                                                                                 <li>
                                                                                     <a class="dropdown-item text-warning"
-                                                                                        href="{{ route('deleteGuest', $item->wm_id) }}">Loại người dùng</a>
+                                                                                        href="{{ route('deleteGuest', $item->wm_id) }}">Loại
+                                                                                        người dùng</a>
                                                                                 </li>
                                                                             </ul>
                                                                         </div>
@@ -902,8 +903,8 @@
                         url: '{{ route('workspaces.delete', $workspaceChecked->workspace_id) }}',
                         type: "DELETE",
                         success: function(response) {
+                            notificationWeb(response.action, response.msg);
                             if (response.action === 'success') {
-                                notificationWeb(response.action, response.msg);
                                 setTimeout(() => {
                                     window.location.reload();
                                 }, 2000)

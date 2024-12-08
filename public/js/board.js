@@ -92,14 +92,13 @@ $(".submitFormCopyBoard").on("submit", function (e) {
         notificationWeb("error", "Vui lòng nhập tiêu đề");
         return;
     }
-    console.log(name);
     $.ajax({
         url: "/b/copyBoard",
         type: "POST",
         data: $(this).serialize(), // Lấy dữ liệu từ form
         success: function (response) {
-            notificationWeb("success", "Sao chép bảng thành công");
-            window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
+            notificationWeb(response.action, response.msg);
+            if (response.action === 'success') window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
         },
         error: function (xhr, status, error) {
             notificationWeb("error", "Có lỗi xảy ra!!");

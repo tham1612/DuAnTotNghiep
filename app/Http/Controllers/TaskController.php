@@ -7,29 +7,20 @@ use App\Events\EventNotification;
 use App\Events\RealtimeCreateTask;
 use App\Events\RealtimeTaskArchiver;
 use App\Events\RealtimeTaskKanban;
-use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Jobs\CreateGoogleApiClientEvent;
-use App\Jobs\UpdateGoogleApiClientEvent;
-use App\Models\Board;
-use App\Models\BoardMember;
 use App\Models\Catalog;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
-use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use App\Models\TaskMember;
 use App\Models\TaskTag;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Mockery\Exception;
@@ -239,10 +230,10 @@ class TaskController extends Controller
             ->performedOn($task)
             ->causedBy(Auth::user())
             ->withProperties([
-                    'task_id' => $task->id,
-                    'task_name' => $task->text,
-                    'board_id' => $task->catalog->board_id,
-                ])
+                'task_id' => $task->id,
+                'task_name' => $task->text,
+                'board_id' => $task->catalog->board_id,
+            ])
             ->tap(function (Activity $activity) use ($task) {
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
@@ -298,17 +289,18 @@ class TaskController extends Controller
                     Task::query()
                         ->where('id', $item->id)
                         ->update([
-                                'position' => $item->position + 1
-                            ]);
+                            'position' => $item->position + 1
+                        ]);
                 }
+                $msg = 'Thẻ "' . $task->text . '" thay đổi vị trí sang danh sách ' . Catalog::query()->findOrFail($data['catalog_id'])->name;
                 activity('thay đổi vị trí trong task')
                     ->causedBy(Auth::user())
                     ->withProperties([
-                            'task_id' => $id,
-                            'catalog_id_new' => $data['catalog_id'],
-                            'board_id' => $task->catalog->board_id,
-                            'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
-                        ])
+                        'task_id' => $id,
+                        'catalog_id_new' => $data['catalog_id'],
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                    ])
                     ->tap(function (Activity $activity) use ($task) {
                         $activity->catalog_id = $task->catalog_id;
                         $activity->task_id = $task->id;
@@ -320,17 +312,17 @@ class TaskController extends Controller
                     Task::query()
                         ->where('id', $item->id)
                         ->update([
-                                'position' => $item->position - 1
-                            ]);
+                            'position' => $item->position - 1
+                        ]);
                 }
                 activity('thay đổi vị trí trong task')
                     ->causedBy(Auth::user())
                     ->withProperties([
-                            'task_id' => $id,
-                            'catalog_id_old' => $task->catalog_id,
-                            'board_id' => $task->catalog->board_id,
-                            'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
-                        ])
+                        'task_id' => $id,
+                        'catalog_id_old' => $task->catalog_id,
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected_new' => $positionChangeNew->pluck('id')->toArray(),
+                    ])
                     ->tap(function (Activity $activity) use ($task) {
                         $activity->catalog_id = $task->catalog_id;
                         $activity->task_id = $task->id;
@@ -349,17 +341,18 @@ class TaskController extends Controller
                     Task::query()
                         ->where('id', $item->id)
                         ->update([
-                                'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
-                            ]);
+                            'position' => $data['position'] < $positionOldSameCatalog->position ? $item->position + 1 : $item->position - 1
+                        ]);
                 }
+                $msg = 'Thẻ "' . $task->text . '" thay đổi vị trí trong danh sách ' . $task->catalog->name;
                 activity('Thay đổi vị trí task')
                     ->causedBy(Auth::user())
                     ->withProperties([
-                            'task_id' => $id,
-                            'catalog_id' => $data['catalog_id'],
-                            'board_id' => $task->catalog->board_id,
-                            'tasks_affected' => $positionChange->pluck('id')->toArray(),
-                        ])
+                        'task_id' => $id,
+                        'catalog_id' => $data['catalog_id'],
+                        'board_id' => $task->catalog->board_id,
+                        'tasks_affected' => $positionChange->pluck('id')->toArray(),
+                    ])
                     ->tap(function (Activity $activity) use ($task) {
                         $activity->catalog_id = $task->catalog_id;
                         $activity->task_id = $task->id;
@@ -370,10 +363,12 @@ class TaskController extends Controller
             $task->update($data);
 
             DB::commit();
-            Log::debug('trước khi chạy broadcast');
-            //            broadcast(new RealtimeTaskKanban($task))->toOthers();
+
             broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id))->toOthers();
-            Log::debug('đã chạy broadcast');
+            return response()->json([
+                'action' => 'success',
+                'msg' => $msg,
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
@@ -529,6 +524,10 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
+
+            // if ($task->id_google_calendar && Auth::user()->access_token)
+            //     $this->googleApiClient->deleteEvent($task->id_google_calendar);
+
             if ($task->id_google_calendar && Auth::user()->access_token)
                 $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
