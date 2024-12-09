@@ -248,11 +248,47 @@ class CatalogControler extends Controller
             DB::commit();
             return response()->json([
                 'action' => 'success',
-                'msg' => 'Khôi phục danh sách thành công!!',
+                'msg' => 'Khôi phục danh sách thành công!',
                 'catalog' => $catalog,
                 'task_count' => $catalog->tasks->count(),
-                'tasks' => $catalog->tasks
+                'tasks' => $catalog->tasks->map(function ($task) {
+                    return [
+                        'id' => $task->id,
+                        'text' => $task->text,
+                        'image' => $task->image,
+                        'start_date'=>$task->start_date,
+                        'end_date'=>$task->end_date,
+                        'totalMember'=>$task->members->count(),
+                        'totalTag'=>$task->tags->count(),
+                        'priority' => $task->priority,
+                        'risk' => $task->risk,
+                        'totalComment' => $task->taskComments->count(),
+                        'totalChecklist' => $task->checklists->count(),
+                        'totalAttachment' => $task->attachments->count(),
+                        'authFlow'=>$task->followMembers->contains('user_id', auth()->id()),
+                        'members' => $task->members->map(function ($member) {
+                            return [
+                                'id' => $member->id,
+                                'name' => $member->name,
+                                'image' => $member->image,
+                            ];
+                        }),
+                        'tags'=>$task->tags->map(function ($tag){
+                                return [
+                                    'name'=>$tag->name,
+                                    'color_code'=>$tag->color_code,
+                                ];
+                            }),
+                        'checklists'=>$task->checklists->map(function ($checklist){
+                            return [
+                                'totalChecklist'=>$checklist->checklistItems->count(),
+                                'totalChecklistComplete'=>$checklist->checklistItems->where('is_complete', true),
+                            ];
+                        })
+                    ];
+                }),
             ]);
+
         } catch (\Exception $e) {
             dd($e->getMessage());
             return response()->json([
