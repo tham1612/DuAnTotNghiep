@@ -129,7 +129,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        $authorize = $this->authorizeWeb->authorizeEditWorkspace();
+        $authorize = $this->authorizeWeb->authorizeCreateBoardOnWorkspace();
         if (!$authorize) {
             session(['msg' => 'Bạn không có quyền!!']);
             session(['action' => 'danger']);
@@ -416,6 +416,7 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
+//        dd($request->all());
         $authorize = $this->authorizeWeb->authorizeEdit($id);
         if (!$authorize) {
             return response()->json([
@@ -436,7 +437,7 @@ class BoardController extends Controller
         $board->update($data);
         broadcast(new RealtimeBoardDetail($board, $board->id))->toOthers();
         return response()->json([
-            'msg' => $board['name'] . ' đã được cập nhật thành công!',
+            'msg' => $board['name'] . '  cập nhật thông tin thành công!',
             'action' => 'success',
             'board' => $board
         ]);
@@ -864,14 +865,13 @@ class BoardController extends Controller
 
     public function copyBoard(Request $request)
     {
-        $authorize = $this->authorizeWeb->authorizeCreateBoardOnWorkspace($request->workspace_id);
+        $authorize = $this->authorizeWeb->authorizeCreateBoardOnWorkspace();
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        dd(123);
         $data = $request->all();
         $uuid = Str::uuid();
         $token = Str::random(40);

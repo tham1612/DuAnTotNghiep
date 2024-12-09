@@ -8,6 +8,7 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
+{{--        <div class="chat-conversation p-3" id="chat-conversation" data-simplebar>--}}
         <div class="chat-conversation p-3" id="chat-conversation">
             <div id="responseBox" class="pb-3">
                 <!-- Hiển thị thông điệp mặc định nếu không có tin nhắn -->
@@ -95,7 +96,7 @@
 </script>
 <style>
     #chat-conversation {
-        height: 550px;
+        height: 72vh;
         /* Adjust as needed */
         overflow-y: auto;
     }
