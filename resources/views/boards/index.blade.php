@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Board - TaskFlow
+    Bảng kanban - TaskFlow
 @endsection
 @section('main')
     @if(session('error'))

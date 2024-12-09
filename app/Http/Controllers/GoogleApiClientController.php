@@ -54,6 +54,25 @@ class GoogleApiClientController extends Controller
         return redirect()->route('home');
     }
 
+
+    public function unlink(string $id)
+    {
+        $user = User::query()->findOrFail($id);
+        if (Auth::id() !== $user->id) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Người dùng không hợp lệ!!'
+            ]);
+        }
+        $user->update([
+            'access_token' => null,
+        ]);
+        return response()->json([
+            'action' => 'success',
+            'msg' => 'Hủy liên kết thành công'
+        ]);
+    }
+
     public function createEvent($data)
     {
         if (isset($data['start']) || isset($data['end'])) {
@@ -149,7 +168,7 @@ class GoogleApiClientController extends Controller
             'task_id' => isset($data['id']) ? $data['id'] : $data['task_id'],
         ];
 
-       UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
+        UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 
         // $client = $this->getClient();
         // $service = new \Google_Service_Calendar($client);
@@ -191,8 +210,6 @@ class GoogleApiClientController extends Controller
         $eventExists = false;
         foreach ($events as $event) {
             if ($event->getId() === $id) {
-                Log::debug($event->getId());
-                Log::debug($id);
                 $eventExists = true;
             }
         }

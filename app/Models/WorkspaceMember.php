@@ -35,5 +35,9 @@ class WorkspaceMember extends Model
     {
         return $this->belongsTo(Workspace::class);
     }
+    public function relatedBoardMembers()
+    {
+        return $this->hasMany(BoardMember::class, 'user_id', 'user_id');
+    }
 
 }

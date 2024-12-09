@@ -88,7 +88,9 @@
         <h5 class="offcanvas-title text-center" id="detailBoardLabel">
             Chi tiết
         </h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        {{--        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>--}}
+        <button type="button" class="btn-close text-reset" data-bs-toggle="offcanvas"
+                data-bs-target="#settingBoard"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
@@ -133,7 +135,8 @@
                     <p class="ms-2">Mô tả</p>
                 </section>
                 <form action="#" method="post">
-                    <textarea class="form-control" id="" cols="30" rows="10"></textarea>
+                    <textarea class="form-control" id="description_board_{{ $board->id }}" rows="5"
+                              onchange="updateBoard({{ $board->id }})">{{$board->description}}</textarea>
                 </form>
             </div>
 
@@ -146,7 +149,9 @@
                 <span>Bình luận trên các thẻ</span>
             </p>
 
-            <button class="btn btn-outline-dark">Thay đổi quyền</button>
+            <button class="btn btn-outline-dark" data-bs-toggle="offcanvas"
+                    data-bs-target="#generalSettingBoard">Thay đổi quyền
+            </button>
         </div>
     </div>
 
@@ -156,7 +161,9 @@
      style="width: 350px;">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="activityCanvasLabel">Hoạt động</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        {{--        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>--}}
+        <button type="button" class="btn-close text-reset" data-bs-toggle="offcanvas"
+                data-bs-target="#settingBoard"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)">
@@ -203,7 +210,9 @@
         <h5 class="offcanvas-title text-center" id="detailBoardLabel">
             Lưu trữ
         </h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        {{--        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>--}}
+        <button type="button" class="btn-close text-reset" data-bs-toggle="offcanvas"
+                data-bs-target="#settingBoard"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
@@ -223,7 +232,7 @@
             <div class="tab-content text-muted">
                 <div class="tab-pane active" id="storageCatalog" role="tabpanel">
 
-{{--                    <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">--}}
+                    {{--                    <input type="text" class="form-control" placeholder="Tìm kiếm danh sách lưu trữ">--}}
 
                     <div class="row p-3 " id="catalog-container-setting-board">
                         @foreach($board->catalogs()->onlyTrashed()->get() as $archiverCatalog)
@@ -248,7 +257,7 @@
                 </div>
                 <div class="tab-pane" id="storageTask" role="tabpanel">
 
-{{--                    <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">--}}
+                    {{--                    <input type="text" class="form-control" placeholder="Tìm kiếm thẻ lưu trữ">--}}
 
                     <div class="row p-3 " id="task-container-setting-board">
                         @php $board->load(['catalogs.tasks' => function ($query) {
@@ -315,7 +324,9 @@
         <h5 class="offcanvas-title text-center" id="detailBoardLabel">
             Thiết lập
         </h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        {{--        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>--}}
+        <button type="button" class="btn-close text-reset" data-bs-toggle="offcanvas"
+                data-bs-target="#settingBoard"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh - 112px)" class="p-2">
@@ -399,7 +410,9 @@
         <h5 class="offcanvas-title text-center" id="detailBoardLabel">
             Nhãn
         </h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        {{--        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>--}}
+        <button type="button" class="btn-close text-reset" data-bs-toggle="offcanvas"
+                data-bs-target="#settingBoard"></button>
     </div>
     <div class="offcanvas-body p-0 overflow-hidden">
         <div data-simplebar style="height: calc(100vh)" class="p-2">

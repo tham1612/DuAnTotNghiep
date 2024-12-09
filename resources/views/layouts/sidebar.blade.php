@@ -272,11 +272,11 @@
                                         $boardMembers = $board
                                             ->members()
                                             ->where('authorize', '!=', 'Viewer')
+                                            ->where('is_accept_invite', '!=', 1)
                                             ->distinct('id')
                                             ->get();
                                         $memberIsStar =
                                             $boardMembers->where('id', auth()->id())->first()->pivot->is_star ?? null;
-
                                         // Lưu vào session
                                         session([
                                             'memberIsStar_' . $board->id => $memberIsStar,

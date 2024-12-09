@@ -183,16 +183,16 @@ class CatalogControler extends Controller
             ]);
         }
 
-        $tasksId = Task::withTrashed()
+        $tasks = Task::withTrashed()
             ->where('catalog_id', $id)
-            ->pluck('id');
+            ->get();
 
         try {
 
             DB::beginTransaction();
 
-            foreach ($tasksId as $taskId) {
-                $this->taskController->destroyTask($taskId);
+            foreach ($tasks as $task) {
+                $this->taskController->destroyTask($task->id);
             }
 
             $catalog->forceDelete();
@@ -231,17 +231,17 @@ class CatalogControler extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        $tasksId = Task::withTrashed()
+        $tasks = Task::withTrashed()
             ->where('catalog_id', $id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
+            ->get();
+//        dd($tasksId);
         try {
             DB::beginTransaction();
 
-            foreach ($tasksId as $taskId) {
-                $this->taskController->restoreTask($taskId);
+            foreach ($tasks as $task) {
+                if ($catalog->deleted_at == $task->deleted_at) {
+                    $this->taskController->restoreTask($task->id);
+                }
             }
 
             $catalog->restore();

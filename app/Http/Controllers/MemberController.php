@@ -35,7 +35,7 @@ class MemberController extends Controller
         $data = $request->all();
 
         $task = Task::query()->findOrFail($data['task_id']);
-        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeDeleteCreateMember($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -103,7 +103,7 @@ class MemberController extends Controller
         $data = $request->all();
 
         $task = Task::query()->where('id', $data['task_id'])->first();
-        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeDeleteCreateMember($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
