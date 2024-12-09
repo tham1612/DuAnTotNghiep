@@ -135,7 +135,8 @@
                     <p class="ms-2">Mô tả</p>
                 </section>
                 <form action="#" method="post">
-                    <textarea class="form-control" id="" cols="30" rows="10"></textarea>
+                    <textarea class="form-control" id="description_board_{{ $board->id }}" rows="5"
+                              onchange="updateBoard({{ $board->id }})">{{$board->description}}</textarea>
                 </form>
             </div>
 

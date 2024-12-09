@@ -168,13 +168,15 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============== sidebar ================
 
 function updateBoard(boardId) {
-    var formData = new FormData();
+    let formData = new FormData();
 
-    var image = document.getElementById('image_board_' + boardId);
+    let image = document.getElementById('image_board_' + boardId);
+    let descriptionBoard = document.getElementById('description_board_' + boardId).value;
     if (image.files.length > 0) {
         formData.append('image', image.files[0]);
     }
     formData.append('id', boardId);
+    formData.append('description', descriptionBoard);
     formData.append('_method', 'PUT');
     console.log(image.files[0]);
     $.ajax({
@@ -184,9 +186,11 @@ function updateBoard(boardId) {
         processData: false,  // Bắt buộc phải false để không xử lý FormData
         contentType: false,  // Bắt buộc phải false để đặt đúng 'multipart/form-data'
         success: function (response) {
+            notificationWeb(response.action, response.msg);
+            image.value = '';
             var nameboard2 = document.getElementById('2-name-board-' + boardId);
             var nameboard = document.getElementById('name-board-' + boardId);
-            if (nameboard && response.board.name && nameboard2 ) {
+            if (nameboard && response.board.name && nameboard2) {
                 // Giới hạn tên mới theo 10 ký tự như trong Blade
                 var limitedName = response.board.name.length > 10 ? response.board.name.substring(0, 10) + '...' : response.board.name;
                 nameboard.textContent = nameboard2.textContent = limitedName;  // Cập nhật tên mới vào thẻ span
@@ -207,8 +211,6 @@ function updateBoard(boardId) {
                 }
             }
 
-            console.log(response.board.image)
-            notificationWeb(response.action, response.msg);
             $('.dropdown-menu').hide()
             console.log('Đã cập nhật bảng:', response);
         },
@@ -243,6 +245,7 @@ function updateIsStar2(boardId, userId,) {
         }
     });
 }
+
 function updateIsStar3(boardId, userId) {
 
     $.ajax({

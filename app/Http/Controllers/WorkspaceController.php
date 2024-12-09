@@ -703,6 +703,13 @@ class WorkspaceController extends Controller
 
     public function editWorkspace(UpdateWorkspaceRequest $request)
     {
+        $authorize = $this->authorizeWeb->authorizeEditWorkspace();
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
         try {
             $user = Auth::user();
 
