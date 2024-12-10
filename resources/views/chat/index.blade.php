@@ -131,9 +131,6 @@
     }
 </style>
 
-   
-       
-   
 <div class="">
     <div class="">
         <div class="container-fluid">
