@@ -103,10 +103,15 @@ class WorkspaceController extends Controller
                     'is_active' => $is_active,
                 ]);
 
-            activity('Workspace Created')
-                ->causedBy(Auth::user())  // Ghi nhận người thực hiện
-                ->performedOn($workspace) // Liên kết với workspace được tạo
-                ->withProperties(['workspace_name' => $workspace->name]) // Thông tin bổ sung
+                activity('Workspace Created')
+                ->causedBy(Auth::user())
+                ->performedOn($workspace)
+                ->withProperties([
+                    'workspace_name' => $workspace->name,
+                ])
+                ->tap(function (Activity $activity) use ($workspace) {
+                    $activity->workspace_id = $workspace->id;
+                })
                 ->log('Người dùng đã tạo không gian làm việc mới.');
             //           update lai cot is_active khi tao ws moi
             WorkspaceMember::query()
@@ -115,13 +120,13 @@ class WorkspaceController extends Controller
                 ->update(['is_active' => 0]);
 
             // lưu lại hoạt động
-            activity('Board Create')
-                ->causedBy(Auth::user())
-                ->withProperties('board_name', $workspace->name)
-                ->tap(function (Activity $activity) use ($workspace) {
-                    $activity->Workspace_id = $workspace->id;
-                })
-                ->log('người dùng đã tạo bảng mới trong ws');
+            // activity('Board Create')
+            //     ->causedBy(Auth::user())
+            //     ->withProperties('board_name', $workspace->name)
+            //     ->tap(function (Activity $activity) use ($workspace) {
+            //         $activity->Workspace_id = $workspace->id;
+            //     })
+            //     ->log('người dùng đã tạo bảng mới trong ws');
 
             //xử lý thêm người dùng khi người dùng đăng ký qua nhập link mời email vào workspace
             if (Session::get('invited') == "case2") {

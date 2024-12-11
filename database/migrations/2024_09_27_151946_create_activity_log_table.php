@@ -15,6 +15,7 @@ class CreateActivityLogTable extends Migration
             $table->unsignedBigInteger('board_id')->nullable(); // ID của board
             $table->unsignedBigInteger('catalog_id')->nullable(); // ID của catalog (list)
             $table->unsignedBigInteger('task_id')->nullable(); // ID của task
+            $table->unsignedBigInteger('checklist_id')->nullable(); // ID của check list
             $table->text('description');
             $table->nullableMorphs('subject', 'subject');
             $table->nullableMorphs('causer', 'causer');

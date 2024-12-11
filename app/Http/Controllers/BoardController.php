@@ -152,11 +152,18 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+            activity('Thêm mới bảng')
+            ->performedOn($board)
+            ->causedBy(Auth::user())
+            ->withProperties([
+                'workspace' => $board->workspace_id,
+                'board_id' => $board->id,
+            ])
+            ->tap(function (Activity $activity) use ($board) {
+                $activity->board_id = $board->id;
+                $activity->workspace_id = $board->workspace_id;
+            })
+            ->log('Người dùng đã thêm bảng mới.');
 
             DB::commit();
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
