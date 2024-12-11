@@ -98,7 +98,8 @@ $(".submitFormCopyBoard").on("submit", function (e) {
         data: $(this).serialize(), // Lấy dữ liệu từ form
         success: function (response) {
             notificationWeb(response.action, response.msg);
-            if (response.action === 'success') window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
+            if (response.action === "success")
+                window.location.href = `http://127.0.0.1:8000/b/${response.board_id}/edit?viewType=board`;
         },
         error: function (xhr, status, error) {
             notificationWeb("error", "Có lỗi xảy ra!!");
@@ -328,6 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const form = this.closest("form"); // Lấy form chứa nút bấm
             const wmId = form.querySelector("input[name='user_id']").value; // Lấy user_id từ form
             const wsmId = form.querySelector("input[name='bm_id']").value; // Lấy user_id từ form
+
             const workspaceId = form.querySelector(
                 "input[name='board_id']"
             ).value; // Lấy workspace_id từ form
