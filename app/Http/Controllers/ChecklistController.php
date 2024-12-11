@@ -9,10 +9,8 @@ use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Tag;
 use App\Models\Task;
-
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\BoardNotification;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Spatie\Activitylog\Models\Activity;
