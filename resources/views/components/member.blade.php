@@ -425,7 +425,7 @@
                                                             <input type="hidden" value="{{ $board->id }}"
                                                                 name="board_id">
                                                             <input type="hidden" value="NULL" name="type_update">
-                                                            <button class="btn btn-primary me-2" type="submit">Duyệt
+                                                            <button class="btn btn-primary me-2 duyet" type="submit">Duyệt
                                                             </button>
                                                         </form>
                                                         <form action="{{ route('b.refuseMember', $item->bm_id) }}"

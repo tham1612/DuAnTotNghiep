@@ -501,11 +501,14 @@ class BoardController extends Controller
 
         $user = User::find($request->user_id);
         $board = Board::find($request->board_id);
+        Log::debug($user);
+        Log::debug($board);
+
         $checkUser = WorkspaceMember::where('user_id', $request->user_id)
-            ->where('Workspace_id', $board->workspace_id)
+            ->where('workspace_id', $board->workspace_id)
             ->first();
         $owner = BoardMember::where('authorize', "Owner")
-            ->where('Workspace_id', $request->board_id)
+            ->where('board_id', $request->board_id)
             ->first();
         try {
             BoardMember::query()

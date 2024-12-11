@@ -11,6 +11,8 @@ use App\Models\Tag;
 use App\Models\Task;
 
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\BoardNotification;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Spatie\Activitylog\Models\Activity;
@@ -31,7 +33,12 @@ class ChecklistController extends Controller
             ->get();
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $checkList->task->text . " đã thêm checklist ". $checkList->name.". Xem chi tiết! ", 'success', $member->user->id));
+                event(new EventNotification("Nhiệm vụ " . $checkList->task->text . " đã thêm checklist " . $checkList->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                $name = 'Task ' . $checkList->task->text;
+                $title = 'Task có thay đổi';
+                $description = 'Task ' . $checkList->task->text . ' đã thay đổi ngày đến hạn';
+                $board = $checkList->task->catalog->board;
+                $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
             }
         }
         activity('Thêm check list')
@@ -74,7 +81,7 @@ class ChecklistController extends Controller
         }
         session()->forget('view_only');
         $checkList = CheckList::query()->findOrFail($id);
-        $data = $request->only(['name', 'task_id','progress']);
+        $data = $request->only(['name', 'task_id', 'progress']);
         $checkList->update($data);
         activity('Cập nhập check list')
         ->performedOn($checkList)
@@ -164,16 +171,18 @@ activity('add member checklist item')
     $activity->board_id = $task->catalog->board_id ?? null;
 })
 ->log('Checklist Item "' . $checkListItemMember->text . '" đã được xóa khỏi Checklist "' . $checkList->name . '" thuộc Task "' . $task->text . '"');
+        $checkListItemMember = CheckListItemMember::create($data);
+        //        dd($checkListItemMember);
         return response()->json([
             'success' => "them CheckListItemMember thành công",
             'msg' => true,
-            'checkListItemMember'=>$checkListItemMember
+            'checkListItemMember' => $checkListItemMember
         ]);
     }
 
     public function deleteMemberChecklist(Request $request)
     {
-//        if (session('view_only', false)) {
+        //        if (session('view_only', false)) {
 //            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
 //        }
 //        session()->forget('view_only');
@@ -208,14 +217,14 @@ activity('add member checklist item')
         ]);
     }
 
-    public function getFormDateChecklistItem( $checkListItemId)
+    public function getFormDateChecklistItem($checkListItemId)
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
         $checklistItem = CheckListItem::findOrFail($checkListItemId);
-//        dd( $checklistItem);
+        //        dd( $checklistItem);
 
         $htmlForm = View::make('dropdowns.dateCheckList', [
             'checklistItem' => $checklistItem
@@ -225,7 +234,6 @@ activity('add member checklist item')
     }
 
     public function deleteChecklist(Request $request)
-
     {
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
@@ -272,7 +280,7 @@ activity('add member checklist item')
         }
     }
 
-//    checklist item
+    //    checklist item
     public function createChecklistItem(Request $request)
     {
 
@@ -310,6 +318,11 @@ activity('add member checklist item')
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
                 event(new EventNotification("Nhiệm vụ " . $checkListItem->checkList->task->text . " đã thêm checklist " . $checkListItem->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                $name = 'Task ' . $checkListItem->checkList->task->text;
+                $title = 'Task có thay đổi';
+                $description = 'Task ' . $checkListItem->checkList->task->text . ' đã thay đổi ngày đến hạn';
+                $board = $checkListItem->checkList->task->catalog->board;
+                $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
             }
         }
         return response()->json([
@@ -376,7 +389,7 @@ activity('add member checklist item')
     }
 
 
-//    call giao diện
+    //    call giao diện
     public function getFormCheckList($taskId)
     {
         if (session('view_only', false)) {
@@ -401,7 +414,7 @@ activity('add member checklist item')
         }
         session()->forget('view_only');
         $checklistItem = CheckListItem::findOrFail($checkListItemId);
-//        dd( $checklistItem);
+        //        dd( $checklistItem);
 
         $htmlForm = View::make('dropdowns.dateCheckList', [
             'checklistItem' => $checklistItem

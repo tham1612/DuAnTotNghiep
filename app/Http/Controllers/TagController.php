@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\Board;
-use App\Models\CheckListItem;
+use App\Models\Follow_member;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Models\TaskTag;
+use App\Notifications\BoardNotification;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Log;
 
 class TagController extends Controller
 {
@@ -93,6 +97,21 @@ class TagController extends Controller
             ]);
         }
 
+        $followMember = Follow_member::where('task_id', $data['task_id'])
+            ->where('follow', 1)
+            ->get();
+        $task = Task::find($data['task_id']);
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $task->text . " tạo thêm nhãn mới. Xem chi tiết! ", 'success', $member->user->id));
+                $name = 'Task ' . $task->text;
+                $title = 'Task có thay đổi';
+                $description = 'Task ' . $task->text . ' tạo thêm nhãn mới';
+                $board = $tag->board;
+                $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+            }
+        }
+
         return response()->json([
             'data' => $data,
             'success' => true,
@@ -132,12 +151,28 @@ class TagController extends Controller
                 'tag' => $tag
             ]);
         }
-//        hiện tại còn lỗi đ chạy đc thì demo kiểu đ j
+        // hiện tại còn lỗi đ chạy đc thì demo kiểu đ j
         if ($request->updateOrDeleteTag) {
             list($task_id, $tag_id) = explode("-", $request->data);
 
             $check = TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->first();
             if ($check) {
+
+                $followMember = Follow_member::where('task_id', $task_id)
+                    ->where('follow', 1)
+                    ->get();
+                $task = Task::find($task_id);
+                foreach ($followMember as $member) {
+                    if ($member->user->id != Auth::id()) {
+                        event(new EventNotification("Nhiệm vụ " . $task->text . " đã xóa nhãn " . $check->tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                        $name = 'Task ' . $task->text;
+                        $title = 'Task có thay đổi';
+                        $description = 'Task ' . $task->text . ' đã xóa nhãn ' . $check->tag->name;
+                        $board = $task->board;
+                        $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+                    }
+                }
+
                 TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->delete();
                 return response()->json([
                     'success' => true,
@@ -153,6 +188,22 @@ class TagController extends Controller
                     'tag_id' => $tag_id,
                 ]);
                 $tag = Tag::find($tag_id); // Lấy thông tin của tag
+
+                $followMember = Follow_member::where('task_id', $task_id)
+                    ->where('follow', 1)
+                    ->get();
+                $task = Task::find($task_id);
+                foreach ($followMember as $member) {
+                    if ($member->user->id != Auth::id()) {
+                        event(new EventNotification("Nhiệm vụ " . $task->text . " đã thêm nhãn " . $tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                        $name = 'Task ' . $task->text;
+                        $title = 'Task có thay đổi';
+                        $description = 'Task ' . $task->text . ' đã thêm nhãn ' . $tag->name;
+                        $board = $task->board;
+                        $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+                    }
+                }
+
                 return response()->json([
                     'success' => true,
                     'action' => 'added',
@@ -173,7 +224,7 @@ class TagController extends Controller
     {
         $tag = Tag::query()->findOrFail($request->id);
         $tagTasks = TaskTag::query()->where('tag_id', $request->id)->get();
-//        dd($tagTasks);
+        //        dd($tagTasks);
         try {
             DB::beginTransaction();
             foreach ($tagTasks as $tagTask) {

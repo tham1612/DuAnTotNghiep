@@ -304,7 +304,6 @@ class WorkspaceController extends Controller
             }
             if (Session::get('invited_board') == "case3") {
                 $user = Auth::user();
-
                 if (Session::get('board_access') == "public") {
 
                     try {
