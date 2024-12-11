@@ -77,7 +77,7 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
+                    <form method="POST" action="{{ route('tasks.CreateGantt') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
                         <div class="mb-2">
@@ -85,12 +85,12 @@
                                 required />
                         </div>
                         <div class="mb-2">
-                            <select name="parent"  class="form-select">
+                            {{-- <select name="parent"  class="form-select">
                                 <option value="">Parent</option>
                                 @foreach ($tasks as $task)
                                     <option value="{{ $task->id }}">{{ $task->text }}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
                         </div>
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>
@@ -102,7 +102,7 @@
                             <input type="datetime-local" class="form-control" name="end_date" id="end_date" required />
                         </div>
                         <div class="mb-2">
-                            <select name="catalog_id" id="" class="form-select">
+                            <select name="catalog_id" id="" class="form-select" >
                                 <option value="">Catalog</option>
                                 @foreach ($board->catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>

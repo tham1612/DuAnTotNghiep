@@ -126,6 +126,7 @@ class TaskController extends Controller
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
                 $activity->board_id = $task->catalog->board_id;
+                $activity->workspace_id = $task->catalog->board->workspace_id;
             })
             ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
         if (Auth::user()->access_token) {
@@ -254,6 +255,7 @@ class TaskController extends Controller
                 $activity->catalog_id = $task->catalog_id;
                 $activity->task_id = $task->id;
                 $activity->board_id = $task->catalog->board_id;
+                $activity->workspace_id = $task->catalog->board->workspace_id;
             })
             ->log('Task "' . $task->text . '" đã được cập nhập vào danh sách "' . $task->catalog->name . '"');
 
@@ -321,6 +323,7 @@ class TaskController extends Controller
                         $activity->catalog_id = $task->catalog_id;
                         $activity->task_id = $task->id;
                         $activity->board_id = $task->catalog->board_id;
+                        $activity->workspace_id = $task->catalog->board->workspace_id;
                     })
                     ->log('vị trí các task trong catalog mới đã thay đổi.');
                 // cap nhat lai vi tri o catalog cu
@@ -343,6 +346,7 @@ class TaskController extends Controller
                         $activity->catalog_id = $task->catalog_id;
                         $activity->task_id = $task->id;
                         $activity->board_id = $task->catalog->board_id;
+                        $activity->workspace_id = $task->catalog->board->workspace_id;
                     })
                     ->log('Vị trí các task trong catalog cũ đã thay đổi.');
             } else {
@@ -373,6 +377,7 @@ class TaskController extends Controller
                         $activity->catalog_id = $task->catalog_id;
                         $activity->task_id = $task->id;
                         $activity->board_id = $task->catalog->board_id;
+                        $activity->workspace_id = $task->catalog->board->workspace_id;
                     })
                     ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
@@ -689,6 +694,61 @@ class TaskController extends Controller
         ])->render();
 
         return response()->json(['html' => $htmlForm]);
+    }
+    public function createGantt(StoreTaskRequest $request)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $catalog = Catalog::query()->findOrFail($request->catalog_id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
+        if (isset($data['start']) || isset($data['end'])) {
+            $data['start_date'] = empty($data['start']) ? $data['end'] : $data['start'];
+            $data['end_date'] = $data['end'];
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
+            $data['start_date'] = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
+        }
+
+        $maxPosition = Task::where('catalog_id', $request->catalog_id)
+            ->max('position');
+        $data['position'] = $maxPosition + 1;
+        $maxSortorder = Task::where('catalog_id', $request->catalog_id)
+            ->max('sortorder');
+        $data['sortorder'] = $maxSortorder + 1;
+        $data['creator_email'] = Auth::user()->email;
+        $data['risk'] = $data['risk'] ?? 'Medium';
+        $data['priority'] = $data['priority'] ?? 'Medium';
+        //        dd($data['start'], $data['end']);
+        $task = Task::query()->create($data);
+        $data['id'] = $task->id;
+
+        broadcast(new RealtimeCreateTask($task, $task->catalog->board->id))->toOthers();
+        // ghi lại hoạt động khi thêm
+        activity('thêm mới task')
+            ->performedOn($task)
+            ->causedBy(Auth::user())
+            ->withProperties(['task_name' => $task->text, 'board_id' => $task->catalog->board_id,])
+            ->tap(function (Activity $activity) use ($task) {
+                $activity->catalog_id = $task->catalog_id;
+                $activity->task_id = $task->id;
+                $activity->board_id = $task->catalog->board_id;
+                $activity->workspace_id = $task->catalog->board->workspace_id;
+            })
+            ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
+        if (Auth::user()->access_token) {
+            if (isset($data['start_date']) || isset($data['end_date'])) {
+                $this->googleApiClient->createEvent($data);
+            }
+        }
+       return back();
     }
 
 }
