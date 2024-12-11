@@ -85,12 +85,12 @@
                                 required />
                         </div>
                         <div class="mb-2">
-                            <select name="parent"  class="form-select">
+                            {{-- <select name="parent"  class="form-select">
                                 <option value="">Parent</option>
                                 @foreach ($tasks as $task)
                                     <option value="{{ $task->id }}">{{ $task->text }}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
                         </div>
                         <div class="mb-2">
                             <label class="form-label" for="">Ngày bắt đầu</label>
@@ -102,7 +102,7 @@
                             <input type="datetime-local" class="form-control" name="end_date" id="end_date" required />
                         </div>
                         <div class="mb-2">
-                            <select name="catalog_id" id="" class="form-select">
+                            <select name="catalog_id" id="" class="form-select" >
                                 <option value="">Catalog</option>
                                 @foreach ($board->catalogs as $catalog)
                                     <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>

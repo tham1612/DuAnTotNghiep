@@ -46,14 +46,14 @@
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                        {{-- <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
+                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/> --}}
                                         <div class="flex-grow-1">
                                             @forelse ($recentBoards as $board)
                                             <h6 class="mt-0 mb-1 fs-14">
                                                 {{-- Liên kết đến bảng --}}
                                                     Board Name: {{ $board->board_name }}
-                                                <span class="text-muted d-block small">Last Activity: {{ $board->last_activity }}</span>
+                                                    <span class="text-muted d-block small">Hoạt động cuối cùng: {{ $board->last_activity }}</span>
                                             </h6>
                                         @empty
                                             <p class="dropdown-item text-center text-muted">Không có hoạt động gần đây.</p>
