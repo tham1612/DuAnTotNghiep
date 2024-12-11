@@ -18,6 +18,7 @@ use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use App\Models\TaskMember;
 use App\Models\TaskTag;
+use App\Notifications\BoardNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -150,6 +151,7 @@ class TaskController extends Controller
             ->where('follow', 1)
             ->get();
         $task = Task::query()->findOrFail($id);
+        $board = $task->catalog->board;
         $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
@@ -172,14 +174,20 @@ class TaskController extends Controller
             $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
+                    $name = 'Task ' . $task->text;
+                    $title = 'Task có thay đổi';
+                    $description = 'Task ' . $task->text . ' đã thay đổi ngày đến hạn';
+                    // $data = [
+                    //     'user_id' => $data['user_id'] ?? 'N/A',
+                    //     'id' => $notification->id,
+                    //     'readed' => $data['readed'] ?? false,
+                    //     'name' => $data['name'] ?? 'N/A',
+                    //     'title' => $data['title'] ?? 'No title',
+                    //     'description' => $data['description'] ?? 'No description',
+                    //     'date' => date('M d', strtotime($notification->created_at)), // Định dạng lại ngày
+                    // ];
                     event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
-                    // $name = 'Task ' . $task->text;
-                    // $title = 'Task có thay đổi';
-                    // $description = 'Task '. $task->text.'đã thay đổi ngày đến hạn';
-                    // // if ($user->id == Auth::id()) {
-                    // //     event(new EventNotification($description, 'success', $user->id));
-                    // // }
-                    // $member->user->notify(new BoardNotification($user, $board, $name, $description, $title));
+                    $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
         }
@@ -193,14 +201,22 @@ class TaskController extends Controller
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
                     event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
+                    $name = 'Task ' . $task->text;
+                    $title = 'Task có thay đổi';
+                    $description = 'Nhiệm vụ ' . $task->text . ' đã thay đổi ảnh';
+                    $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
         }
 
-        if (isset($data['text'])) {
+        if ($data['text'] != $task->text) {
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
                     event(new EventNotification("Nhiệm vụ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
+                    $name = 'Task ' . $task->text;
+                    $title = 'Task có thay đổi';
+                    $description = 'Nhiệm vụ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
+                    $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
         }
