@@ -381,7 +381,8 @@ function restoreCatalog(catalogId) {
         },
         error: function (xhr) {
             // Thông báo lỗi
-            notificationWeb(response.action, response.msg);
+            // notificationWeb(response.action, response.msg);
+            console.log(xhr)
         }
     });
 }

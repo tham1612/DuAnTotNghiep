@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Events\EventNotification;
+use App\Events\RealtimeCatalogRestore;
 use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeNotificationBoard;
 use App\Events\RealtimeTaskArchiver;
 use App\Events\RealtimeTaskKanban;
 use App\Http\Requests\StoreTaskRequest;
@@ -34,8 +36,9 @@ class TaskController extends Controller
 
     public function __construct(
         GoogleApiClientController $googleApiClient,
-        AuthorizeWeb $authorizeWeb
-    ) {
+        AuthorizeWeb              $authorizeWeb
+    )
+    {
         $this->googleApiClient = $googleApiClient;
         $this->authorizeWeb = $authorizeWeb;
     }
@@ -215,7 +218,6 @@ class TaskController extends Controller
         $data['end_date'] = $task->end_date;
 
 
-
         // xử lý thêm vào gg calendar
         if (Auth::user()->access_token) {
             if ($task->id_google_calendar) {
@@ -361,10 +363,10 @@ class TaskController extends Controller
                     ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
             $task->update($data);
-
+            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id, $msg))->toOthers();
             DB::commit();
 
-            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id))->toOthers();
+
             return response()->json([
                 'action' => 'success',
                 'msg' => $msg,
@@ -475,7 +477,7 @@ class TaskController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-
+        broadcast(new RealtimeNotificationBoard('Quản trị viên đã khôi phục thẻ', $boardId))->toOthers();
         $task->restore();
         return response()->json([
             'action' => 'success',
