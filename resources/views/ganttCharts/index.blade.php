@@ -77,7 +77,7 @@
             <div class="mt-2 cursor-pointer">
                 <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
                 <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                    <form method="POST" action="{{ route('tasks.store') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
+                    <form method="POST" action="{{ route('tasks.CreateGantt') }}" onsubmit="formatDateTimeOnSubmit()" class="formItem">
                         @csrf
                         <h5 class="text-center">Thêm Task</h5>
                         <div class="mb-2">

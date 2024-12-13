@@ -103,10 +103,15 @@ class WorkspaceController extends Controller
                     'is_active' => $is_active,
                 ]);
 
-            activity('Workspace Created')
-                ->causedBy(Auth::user())  // Ghi nhận người thực hiện
-                ->performedOn($workspace) // Liên kết với workspace được tạo
-                ->withProperties(['workspace_name' => $workspace->name]) // Thông tin bổ sung
+                activity('Workspace Created')
+                ->causedBy(Auth::user())
+                ->performedOn($workspace)
+                ->withProperties([
+                    'workspace_name' => $workspace->name,
+                ])
+                ->tap(function (Activity $activity) use ($workspace) {
+                    $activity->workspace_id = $workspace->id;
+                })
                 ->log('Người dùng đã tạo không gian làm việc mới.');
             //           update lai cot is_active khi tao ws moi
             WorkspaceMember::query()

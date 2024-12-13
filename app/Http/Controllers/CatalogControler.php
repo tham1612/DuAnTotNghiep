@@ -156,6 +156,7 @@ class CatalogControler extends Controller
                 ->tap(function (Activity $activity) use ($catalog) {
                     $activity->board_id = $catalog->board_id;
                     $activity->catalog_id = $catalog->id;
+                    $activity->workspace_id = $catalog->board->workspace_id;
                 })
                 ->log('Người dùng đã xóa danh sách khỏi bảng');
             return response()->json([
