@@ -871,7 +871,6 @@ class BoardController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        dd(123);
         $data = $request->all();
         $uuid = Str::uuid();
         $token = Str::random(40);
