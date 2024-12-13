@@ -46,76 +46,20 @@
                                 <div
                                     class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
+                                        {{-- {{-- <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
+                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/> --}}
                                         <div class="flex-grow-1">
+                                            @forelse ($recentBoards as $board)
                                             <h6 class="mt-0 mb-1 fs-14">
-                                                {{--    Liên kết đến bảng                                            --}}
-                                                <a href="{{ route('b.edit', ['viewType' => 'list', 'id' => 1]) }}"
-                                                   class="text-reset">Dự án
-                                                    tốt nghiệp</a>
+                                                {{-- Liên kết đến bảng --}}
+                                                    Board Name: {{ $board->board_name }}
+                                                    <span class="text-muted d-block small">Hoạt động cuối cùng: {{ $board->last_activity }}</span>
                                             </h6>
-                                            <p class="mb-0 fs-12 w-100 text-muted">
-                                                FPT Polytechnic workspace
-                                                <i class=" ri-subtract-line"></i>
-                                                20 giờ trước
-                                            </p>
+                                        @empty
+                                            <p class="dropdown-item text-center text-muted">Không có hoạt động gần đây.</p>
+                                        @endforelse
                                         </div>
-                                        <div class="ps-2">
-                                            <button type="button"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
-                                                <i class="ri-star-fill fs-16"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div
-                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                {{--    Liên kết đến bảng                                            --}}
-                                                <a href="apps-ecommerce-product-details.html" class="text-reset">Dự án
-                                                    tốt nghiệp</a>
-                                            </h6>
-                                            <p class="mb-0 fs-12 w-100 text-muted">
-                                                FPT Polytechnic workspace
-                                            </p>
-                                        </div>
-                                        <div class="ps-2">
-                                            <button type="button"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
-                                                <i class="ri-star-fill fs-16"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
-                                    <div class="d-flex align-items-center">
-
-                                        <img src="{{ asset('theme/assets/images/products/img-1.png') }}"
-                                             class="me-3 rounded-circle avatar-sm p-2 bg-light" alt="user-pic"/>
-
-                                        <div class="flex-grow-1">
-                                            <h6 class="mt-0 mb-1 fs-14">
-                                                {{--    Liên kết đến bảng                                            --}}
-                                                <a href="apps-ecommerce-product-details.html" class="text-reset">Dự án
-                                                    tốt nghiệp</a>
-                                            </h6>
-                                            <p class="mb-0 fs-12 w-100 text-muted">
-                                                FPT Polytechnic workspace
-                                            </p>
-                                        </div>
-                                        <div class="ps-2">
-                                            <button type="button"
-                                                    class="btn btn-icon btn-sm btn-ghost-warning remove-item-btn">
-                                                <i class="ri-star-fill fs-16"></i>
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +82,8 @@
 
                                     @foreach($boardIsStars as $boardIsStar)
                                         <div
-                                            class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer">
+                                            class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2 cursor-pointer"
+                                            onclick="window.location.href='http://127.0.0.1:8000/b/{{$boardIsStar['board_id']}}/edit?viewType=board'">
                                             <div class="d-flex align-items-center board-star-container">
                                                 @if ($boardIsStar['image'])
                                                     <img src="{{ asset('storage/' . $boardIsStar['board_image']) }}"
@@ -155,12 +100,8 @@
                                                 @endif
 
                                                 <div class="flex-grow-1">
-                                                    <h6 class="mt-0 mb-1 fs-14">
-                                                        {{--    Liên kết đến bảng                                            --}}
-                                                        <a href="{{ route('b.edit', ['viewType' => 'board', 'id' => $boardIsStar['board_id']]) }}"
-                                                           class="text-reset">
-                                                            {{ $boardIsStar['board_name'] }}
-                                                        </a>
+                                                    <h6 class="mt-2 fs-15 ">
+                                                        {{ \Illuminate\Support\Str::upper($boardIsStar['board_name']) }}
                                                     </h6>
                                                     <p class="mb-0 fs-12 w-100 text-muted">
                                                         {{ $boardIsStar['workspace_name'] }}
@@ -300,12 +241,12 @@
                 {{--                </div> --}}
 
                 {{-- giao diện sáng tối --}}
-                <div class="ms-1 header-item d-none d-sm-flex">
-                    <button type="button"
-                            class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
-                        <i class="bx bx-moon fs-22"></i>
-                    </button>
-                </div>
+{{--                <div class="ms-1 header-item d-none d-sm-flex">--}}
+{{--                    <button type="button"--}}
+{{--                            class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">--}}
+{{--                        <i class="bx bx-moon fs-22"></i>--}}
+{{--                    </button>--}}
+{{--                </div>--}}
                 <div class="dropdown ms-sm-3 header-item topbar-user" style="height: 60px">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
@@ -402,8 +343,8 @@
             <div class="modal-body">
                 <div class="row">
 
-                    @if (!empty(session('board')))
-                        @foreach (session('board')->onlyTrashed()->get() as $archiverBoard)
+                    @if (!empty($workspace))
+                        @foreach ($workspace->boards()->onlyTrashed()->get() as $archiverBoard)
 
                             <div class="d-flex align-items-center justify-content-between  border rounded mt-2"
                                  style="background-color: #091e420f"

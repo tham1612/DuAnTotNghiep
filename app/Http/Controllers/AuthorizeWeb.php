@@ -101,17 +101,16 @@ class AuthorizeWeb extends Controller
         $checkAuthorizeWsp = WorkspaceMember::query()
             ->where('user_id', auth()->id())
             ->where('is_active', 1)
+            ->where('authorize', 'Owner')
             ->value('authorize');
-        $checkAuthorize = $checkAuthorizeBoard ? $checkAuthorizeBoard : $checkAuthorizeWsp;
+        $checkAuthorize = $checkAuthorizeWsp ? $checkAuthorizeWsp : $checkAuthorizeBoard;
         $authorize = Board::withTrashed()
             ->where('id', $boardId)
             ->first();
-//        dd($checkAuthorizeBoard, $checkAuthorizeWsp, auth()->id(),Board::query()->findOrFail($boardId)->workspace_id);
-        if ($authorize->archiver_permission == 'board' && isset($checkAuthorizeWsp)) {
+//        dd($checkAuthorizeWsp);
+        if ($authorize->archiver_permission == 'board' && !empty($checkAuthorizeWsp)) {
 //            owner của wsp có thể đóng bảng
-            return ($checkAuthorize == 'Owner')
-                ? true
-                : false;
+            return true;
         } else if ($authorize->archiver_permission == 'board') {
             //            tất cả thành viên trong bảng
             return ($checkAuthorize == 'Owner'
@@ -140,11 +139,11 @@ class AuthorizeWeb extends Controller
             : false;
     }
 
-    public function authorizeCreateBoardOnWorkspace($workspaceId)
+    public function authorizeCreateBoardOnWorkspace()
     {
         $checkAuthorize = WorkspaceMember::query()
             ->where('user_id', auth()->id())
-            ->where('workspace_id', $workspaceId)
+            ->where('is_active', 1)
             ->first();
         if ($checkAuthorize) {
             return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member')

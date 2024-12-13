@@ -4,32 +4,26 @@ namespace App\Http\Controllers;
 
 
 use App\Events\EventNotification;
+use App\Events\RealtimeCatalogRestore;
 use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeNotificationBoard;
 use App\Events\RealtimeTaskArchiver;
 use App\Events\RealtimeTaskKanban;
-use App\Events\TaskUpdated;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Jobs\CreateGoogleApiClientEvent;
-use App\Jobs\UpdateGoogleApiClientEvent;
-use App\Models\Board;
-use App\Models\BoardMember;
 use App\Models\Catalog;
 use App\Models\CheckList;
 use App\Models\CheckListItem;
-use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Task;
 use App\Models\TaskAttachment;
 use App\Models\TaskComment;
 use App\Models\TaskMember;
 use App\Models\TaskTag;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Notifications\BoardNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Mockery\Exception;
@@ -156,7 +150,11 @@ class TaskController extends Controller
 
     public function update(string $id, UpdateTaskRequest $request)
     {
+        $followMember = Follow_member::where('task_id', $id)
+            ->where('follow', 1)
+            ->get();
         $task = Task::query()->findOrFail($id);
+        $board = $task->catalog->board;
         $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
@@ -177,6 +175,24 @@ class TaskController extends Controller
             $data['end_date'] = $data['end'];
         } else if (isset($data['start_date']) || isset($data['end_date'])) {
             $data['start_date'] = $data['start_date'] == 'Invalid date' ? $data['end_date'] : $data['start_date'];
+            foreach ($followMember as $member) {
+                if ($member->user->id != Auth::id()) {
+                    $name = 'Task ' . $task->text;
+                    $title = 'Task có thay đổi';
+                    $description = 'Task ' . $task->text . ' đã thay đổi ngày đến hạn';
+                    // $data = [
+                    //     'user_id' => $data['user_id'] ?? 'N/A',
+                    //     'id' => $notification->id,
+                    //     'readed' => $data['readed'] ?? false,
+                    //     'name' => $data['name'] ?? 'N/A',
+                    //     'title' => $data['title'] ?? 'No title',
+                    //     'description' => $data['description'] ?? 'No description',
+                    //     'date' => date('M d', strtotime($notification->created_at)), // Định dạng lại ngày
+                    // ];
+                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
+                    $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+                }
+            }
         }
 
         if ($request->hasFile('image')) {
@@ -185,7 +201,29 @@ class TaskController extends Controller
             if ($task->image && Storage::exists($task->image)) {
                 Storage::delete($task->image);
             }
+            foreach ($followMember as $member) {
+                if ($member->user->id != Auth::id()) {
+                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
+                    $name = 'Task ' . $task->text;
+                    $title = 'Task có thay đổi';
+                    $description = 'Nhiệm vụ ' . $task->text . ' đã thay đổi ảnh';
+                    $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+                }
+            }
         }
+
+        if ($data['text'] != $task->text) {
+            foreach ($followMember as $member) {
+                if ($member->user->id != Auth::id()) {
+                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
+                    $name = 'Task ' . $task->text;
+                    $title = 'Task có thay đổi';
+                    $description = 'Nhiệm vụ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
+                    $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+                }
+            }
+        }
+
 
         $task->update($data);
         $data['id'] = $id;
@@ -195,14 +233,7 @@ class TaskController extends Controller
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
 
-        $followMember = Follow_member::where('task_id', $id)
-            ->where('follow', 1)
-            ->get();
-        foreach ($followMember as $member) {
-            if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $task->text . " có sự thay đổi. Xem chi tiết! ", 'success', $member->user->id));
-            }
-        }
+
         // xử lý thêm vào gg calendar
         if (Auth::user()->access_token) {
             if ($task->id_google_calendar) {
@@ -348,9 +379,10 @@ class TaskController extends Controller
                     ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
             $task->update($data);
-
+            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id, $msg))->toOthers();
             DB::commit();
-            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id))->toOthers();
+
+
             return response()->json([
                 'action' => 'success',
                 'msg' => $msg,
@@ -461,7 +493,7 @@ class TaskController extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-
+        broadcast(new RealtimeNotificationBoard('Quản trị viên đã khôi phục thẻ', $boardId))->toOthers();
         $task->restore();
         return response()->json([
             'action' => 'success',
@@ -510,7 +542,12 @@ class TaskController extends Controller
             CheckList::query()->where('task_id', $id)->delete();
 
             $task->forceDelete();
-            if ($task->id_google_calendar && Auth::user()->access_token) $this->googleApiClient->deleteEvent($task->id_google_calendar);
+
+            // if ($task->id_google_calendar && Auth::user()->access_token)
+            //     $this->googleApiClient->deleteEvent($task->id_google_calendar);
+
+            if ($task->id_google_calendar && Auth::user()->access_token)
+                $this->googleApiClient->deleteEvent($task->id_google_calendar);
             // Nếu mọi thứ thành công, commit các thay đổi
             DB::commit();
             return response()->json([
@@ -654,6 +691,61 @@ class TaskController extends Controller
         ])->render();
 
         return response()->json(['html' => $htmlForm]);
+    }
+    public function createGantt(StoreTaskRequest $request)
+    {
+        if (session('view_only', false)) {
+            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
+        }
+        session()->forget('view_only');
+        $catalog = Catalog::query()->findOrFail($request->catalog_id);
+        $authorize = $this->authorizeWeb->authorizeEdit($catalog->board->id);
+        if (!$authorize) {
+            return response()->json([
+                'action' => 'error',
+                'msg' => 'Bạn không có quyền!!',
+            ]);
+        }
+        $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
+        if (isset($data['start']) || isset($data['end'])) {
+            $data['start_date'] = empty($data['start']) ? $data['end'] : $data['start'];
+            $data['end_date'] = $data['end'];
+        } else if (isset($data['start_date']) || isset($data['end_date'])) {
+            $data['start_date'] = empty($data['start_date']) ? $data['end_date'] : $data['start_date'];
+        }
+
+        $maxPosition = Task::where('catalog_id', $request->catalog_id)
+            ->max('position');
+        $data['position'] = $maxPosition + 1;
+        $maxSortorder = Task::where('catalog_id', $request->catalog_id)
+            ->max('sortorder');
+        $data['sortorder'] = $maxSortorder + 1;
+        $data['creator_email'] = Auth::user()->email;
+        $data['risk'] = $data['risk'] ?? 'Medium';
+        $data['priority'] = $data['priority'] ?? 'Medium';
+        //        dd($data['start'], $data['end']);
+        $task = Task::query()->create($data);
+        $data['id'] = $task->id;
+
+        broadcast(new RealtimeCreateTask($task, $task->catalog->board->id))->toOthers();
+        // ghi lại hoạt động khi thêm
+        activity('thêm mới task')
+            ->performedOn($task)
+            ->causedBy(Auth::user())
+            ->withProperties(['task_name' => $task->text, 'board_id' => $task->catalog->board_id,])
+            ->tap(function (Activity $activity) use ($task) {
+                $activity->catalog_id = $task->catalog_id;
+                $activity->task_id = $task->id;
+                $activity->board_id = $task->catalog->board_id;
+                $activity->workspace_id = $task->catalog->board->workspace_id;
+            })
+            ->log('Task "' . $task->text . '" đã được thêm vào danh sách "' . $task->catalog->name . '"');
+        if (Auth::user()->access_token) {
+            if (isset($data['start_date']) || isset($data['end_date'])) {
+                $this->googleApiClient->createEvent($data);
+            }
+        }
+       return back();
     }
 
 }

@@ -135,7 +135,8 @@
                     <p class="ms-2">Mô tả</p>
                 </section>
                 <form action="#" method="post">
-                    <textarea class="form-control" id="" cols="30" rows="10"></textarea>
+                    <textarea class="form-control" id="description_board_{{ $board->id }}" rows="5"
+                              onchange="updateBoard({{ $board->id }})">{{$board->description}}</textarea>
                 </form>
             </div>
 
@@ -190,7 +191,7 @@
                                     {{ $activity->description ?? 'Không có mô tả' }}
                                 </p>
                                 <small class="text-muted">
-                                    {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                                    {{ $activity && $activity->created_at ? $activity->created_at->locale('vi')->diffForHumans() : 'Không xác định thời gian' }}
                                 </small>
                             </div>
                         </li>
