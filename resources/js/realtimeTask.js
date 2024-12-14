@@ -11,7 +11,7 @@ Echo.channel(`tasks.${boardId}`)
         const catalogElement = document.querySelector(`.tasks-list[data-value="${catalogId}"] .tasks`);
 
         if (catalogElement) {
-            addTaskToCatalogViewBoard(catalogElement, e.task, e.catalog_name); // Thêm task vào catalog nếu tìm thấy
+            addTaskToCatalogViewBoard(catalogElement, e.task, e.catalog_name,e.tag_count); // Thêm task vào catalog nếu tìm thấy
         } else {
             console.error(`Không tìm thấy catalog với data-value: ${catalogId}`);
         }
@@ -33,7 +33,7 @@ Echo.channel(`tasks.${boardId}`)
 <div class="card tasks-box cursor-pointer" id="task_id_view_${e.task.id}" data-value="${e.task.id}">
     <div class="card-body">
         <div class="d-flex mb-2">
-            <h6 class="fs-15 mb-0 flex-grow-1" data-bs-toggle="modal"
+            <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-${e.task.id}" data-bs-toggle="modal"
                 data-bs-target="#detailCardModal" data-task-id="${e.task.id}">
                 ${e.task.text}
             </h6>
@@ -85,7 +85,7 @@ Echo.channel(`tasks.${boardId}`)
         notificationWeb('', `Thẻ ${e.task.text} đã bị quản trị viên lưu trữ.`)
     });
 
-function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
+function addTaskToCatalogViewBoard(catalogElement, task, catalog_name,tag_count) {
     let currentTaskCountElement = $('.totaltask-catalog-' + task.catalog_id);
     if (currentTaskCountElement.length) {
         let currentTaskCount = parseInt(currentTaskCountElement.text());
@@ -102,7 +102,7 @@ function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
             <div class="card tasks-box cursor-pointer" data-value="${task.id}">
                 <div class="card-body">
                     <div class="d-flex mb-2">
-                            <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
+                            <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-${task.id}" data-bs-toggle="modal"
                                 data-bs-target="#detailCardModal" data-task-id="${task.id}">
                              ${task.text}
                         </h6>
@@ -116,6 +116,14 @@ function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
                         <!-- ngày bắt đầu & kết thúc -->
 
                         <!-- nhãn -->
+                         <div class="flex-grow-1 d-flex align-items-center tag-task-section-${task.id}
+                            ${tag_count ? '' : 'hidden' }">
+                                <i class="ri-price-tag-3-line fs-20 me-2 ${tag_count ? '' : 'd-none' }
+                                 tag-task-section-${task.id}"></i>
+                                <div class="d-flex flex-wrap gap-2 tag-task-view-${task.id}">
+
+                                </div>
+                         </div>
 
                     </div>
                 </div>

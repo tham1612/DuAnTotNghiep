@@ -35,25 +35,25 @@
                                     <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                     <tr>
                                         <td>{{  $task->id  }}</td>
-                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal"
+                                        <td class="text-task-view-board-{{ $task->id }}" data-bs-toggle="modal" data-bs-target="#detailCardModal"
                                             data-task-id="{{ $task->id }}">
                                             {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                         </td>
                                         <td  id="tag-view-table-task-{{  $task->id  }}">
+                                            <div class="flex-grow-1 d-flex flex-wrap align-items-center tag-task-view-{{$task->id}}" >
                                             @if ($task->tags->isNotEmpty())
-                                                <div class="flex-grow-1 d-flex flex-wrap align-items-center" >
-                                                    @foreach($task->tags as $tag)
-                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top"
-                                                             title="{{$tag->name}}">
-                                                            <div
-                                                                class="badge border rounded d-flex align-items-center justify-content-center"
-                                                                style=" background-color: {{$tag->color_code}}">{{$tag->name}}
-                                                            </div>
+                                                @foreach($task->tags as $tag)
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                         data-bs-placement="top"
+                                                         title="{{$tag->name}}">
+                                                        <div
+                                                            class="badge border rounded d-flex align-items-center justify-content-center"
+                                                            style=" background-color: {{$tag->color_code}}">{{$tag->name}}
                                                         </div>
-                                                    @endforeach
-                                                </div>
+                                                    </div>
+                                                @endforeach
                                             @endif
+                                            </div>
                                         </td>
                                         <td class="col-1">
                                             <div id="member1"

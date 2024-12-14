@@ -242,10 +242,12 @@ class ChecklistController extends Controller
         }
         session()->forget('view_only');
         $checklistItem = CheckListItem::findOrFail($checkListItemId);
+
 //        dd( $checklistItem);
 
         $htmlForm = View::make('dropdowns.dateCheckList', [
-            'checklistItem' => $checklistItem
+            'checklistItem' => $checklistItem,
+            'task'=>$checklistItem->checkList->task
         ])->render();
 
         return response()->json(['html' => $htmlForm]);

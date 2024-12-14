@@ -282,7 +282,7 @@ class CatalogControler extends Controller
                         'checklists'=>$task->checklists->map(function ($checklist){
                             return [
                                 'totalChecklist'=>$checklist->checklistItems->count(),
-                                'totalChecklistComplete'=>$checklist->checklistItems->where('is_complete', true),
+                                'totalChecklistComplete'=>$checklist->checklistItems->where('is_complete', true)->count(),
                             ];
                         })
                     ];
