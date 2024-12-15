@@ -31,34 +31,12 @@ class UserController extends Controller
             $currentUserId = auth()->id(); // Lấy ID của người dùng hiện tại
 
             $users = DB::table('users')
-                ->join('messages', function ($join) use ($currentUserId) {
-                    $join->on('users.id', '=', 'messages.sender_id')
-                        ->orOn('users.id', '=', 'messages.receiver_id');
-                })
-                ->where(function ($query) use ($currentUserId) {
-                    $query->where('messages.sender_id', $currentUserId)
-                        ->orWhere('messages.receiver_id', $currentUserId);
-                })
-                ->select(
-                    'users.*',
-                    DB::raw('(SELECT m.message FROM messages AS m 
-                              WHERE (m.sender_id = users.id OR m.receiver_id = users.id) 
-                              AND (m.sender_id = ' . $currentUserId . ' OR m.receiver_id = ' . $currentUserId . ') 
-                              ORDER BY m.created_at DESC 
-                              LIMIT 1) as latest_message'),
-                    DB::raw('(SELECT m.sender_id FROM messages AS m 
-                              WHERE (m.sender_id = users.id OR m.receiver_id = users.id) 
-                              AND (m.sender_id = ' . $currentUserId . ' OR m.receiver_id = ' . $currentUserId . ') 
-                              ORDER BY m.created_at DESC 
-                              LIMIT 1) as latest_sender_id'),
-                    DB::raw('(SELECT m.created_at FROM messages AS m 
-                              WHERE (m.sender_id = users.id OR m.receiver_id = users.id) 
-                              AND (m.sender_id = ' . $currentUserId . ' OR m.receiver_id = ' . $currentUserId . ') 
-                              ORDER BY m.created_at DESC 
-                              LIMIT 1) as latest_message_time')
-                )
-                ->distinct()
+              
+           
+             
                 ->get();
+            
+       
             $rooms = DB::table('room_chat')
                 ->select('id', 'name', 'members_hash')
                 ->get()->toArray();
@@ -71,6 +49,7 @@ class UserController extends Controller
             return view('chat.index', compact('users', 'roomId', 'receiverId', 'rooms'));
         }
     }
+    
     public function check(string $id = null)
     {
         if (is_null($id)) {
