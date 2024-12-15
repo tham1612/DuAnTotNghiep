@@ -39,7 +39,7 @@ Route::middleware(['auth', 'isWorkspace'])
             });
 
         //edit workspace
-        Route::get('workspace/edit-workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
+        Route::middleware('isViewer')->get('workspace/edit-workspaces', [WorkspaceController::class, 'showFormEditWorkspace'])
             ->name('showFormEditWorkspace');
 
         Route::post('workspace/update-workspaces', [WorkspaceController::class, 'editWorkspace'])
@@ -49,7 +49,9 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('update_ws_access');
 
         Route::put('workspace/accept-member', [WorkspaceController::class, 'accept_member'])
+            ->middleware(['web', 'auth']) // Kiểm tra nếu có middleware nào cần thiết
             ->name('accept_member');
+
 
         Route::delete('workspace/refuse-member/{id}', [WorkspaceController::class, 'refuse_member'])
             ->name('refuse_member');
@@ -61,6 +63,12 @@ Route::middleware(['auth', 'isWorkspace'])
             ->middleware('auth')->name('invite_workspace');
 
         Route::get('workspace/activate-member/{id}', [WorkspaceController::class, 'activateMember'])->name('activateMember');
+
+        Route::get('workspace/add-guest/{id}', [WorkspaceController::class, 'addGuest'])->name('addGuest');
+        
+        Route::get('workspace/delete-guest/{id}', [WorkspaceController::class, 'deleteGuest'])->name('deleteGuest');
+
+        Route::get('workspace/leave-workspace/{id}', [WorkspaceController::class, 'leaveWorkspace'])->name('leaveWorkspace');
 
         Route::get('workspace/upgrade-member-ship/{id}', [WorkspaceController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');
 

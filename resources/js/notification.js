@@ -7,5 +7,7 @@ window.Echo.private(`notifications.${userId}`)
         if(event.userId == userId){
         notificationWeb(event.action, event.message);
         }
+        let documentId = document.getElementById("tab-pane");
+        
     }
 );

@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Board - TaskFlow
+    Bảng kanban - TaskFlow
 @endsection
 @section('main')
     @if(session('error'))
@@ -10,13 +10,13 @@
     @endif
     <div class="tasks-board mb-3 " id="kanbanboard">
         @foreach ($board->catalogs as $catalog)
-            <div class="tasks-list rounded-3 p-2 border" data-value="{{ $catalog->id }}"
+            <div class="tasks-list rounded-3 p-2 border position-{{$catalog->position}}" data-value="{{ $catalog->id }}"
                  id="catalog_view_board_{{$catalog->id}}">
-                <div class="d-flex mb-3 d-flex align-items-center">
+                <div class="d-flex mb-3 align-items-center">
                     <div class="flex-grow-1 d-flex">
                         <h6 class="fs-14 text-uppercase fw-semibold mb-0"
                             id="title-catalog-view-board-{{$catalog->id}}">
-                            {{ $catalog->name }}
+                            {{ \Str::limit($catalog->name, 25) }}
                         </h6>
                         <small
                             class="badge bg-success align-bottom ms-1 totaltask-badge totaltask-catalog-{{$catalog->id}}">{{ $catalog->tasks->count() }}</small>
@@ -36,16 +36,13 @@
                     <div id="{{ $catalog->name . '-' . $catalog->id }}" class="tasks">
                         <!-- task item -->
                         @foreach ($catalog->tasks as $task)
-                            @php
-                                //                                $task = json_decode(json_encode($task));
-                                //                                dd($task)
-                            @endphp
-                            <div class="card tasks-box cursor-pointer" id="task_id_view_{{$task->id}}"
-                                 data-value="{{ $task->id }}">
+                            <div class="card tasks-box cursor-pointer task-of-catalog-{{$catalog->id}}"
+                                 id="task_id_view_{{$task->id}}"
+                                 data-value="{{ $task->id }}" data-position-value="{{$task->position}}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
-                                        <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}">
+                                        <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-{{ $task->id }} " data-bs-toggle="modal"
+                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}" id="">
                                             {{ $task->text }}
                                         </h6>
                                     </div>
@@ -174,13 +171,15 @@
                                             </div>
                                         @endif
                                         <!-- nhãn -->
-                                        @if ($task->tags->isNotEmpty())
-                                            <div class="flex-grow-1 d-flex align-items-center">
-                                                <i class="ri-price-tag-3-line fs-20 me-2"></i>
-                                                <div class="d-flex flex-wrap gap-2">
+                                            <div class="flex-grow-1 d-flex align-items-center tag-task-section-{{ $task->id }}
+                                            {{ (count($task->tags)) ? '' : 'hidden' }}">
+                                                <i class="ri-price-tag-3-line fs-20 me-2 {{ count($task->tags) ? '' : 'd-none' }}
+                                                 tag-task-section-{{ $task->id }}"></i>
+                                                <div class="d-flex flex-wrap gap-2 tag-task-view-{{$task->id}}">
                                                     @foreach ($task->tags as $tag)
                                                         <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top" title="{{ $tag->name }}">
+                                                             data-bs-placement="top" title="{{ $tag->name }}"
+                                                             data-tag-view-id="{{ $task->id }}-{{ $tag->id }}">
                                                             <div
                                                                 class="text-white border rounded d-flex align-items-center justify-content-center"
                                                                 style="width: 40px;height: 15px; background-color: {{ $tag->color_code }}">
@@ -189,48 +188,7 @@
                                                     @endforeach
                                                 </div>
                                             </div>
-                                        @endif
 
-                                        {{--                                        <div class="flex-grow-1 d-flex align-items-center">--}}
-                                        {{--                                            <div class="d-flex flex-wrap gap-2">--}}
-                                        {{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
-                                        {{--                                                @if(!$task->priority) d-none @endif"--}}
-                                        {{--                                                     id="task-priority-view-board-{{$task->id}}"--}}
-                                        {{--                                                     style="height: 20px;--}}
-                                        {{--                                                      @if($task->priority == 'High')--}}
-                                        {{--                                                   background-color: rgba(93,31,26,0.5)--}}
-                                        {{--                                                @elseif($task->priority == 'Medium')--}}
-                                        {{--                                                    background-color: rgba(83,63,4,0.5)--}}
-                                        {{--                                                @elseif($task->priority == 'Low')--}}
-                                        {{--                                                   background-color: rgba(22,69,85,0.5)--}}
-                                        {{--                                                @endif">--}}
-                                        {{--                                                    <p>Độ ưu--}}
-                                        {{--                                                        tiên: {{$task->priority}}--}}
-                                        {{--                                                        --}}{{--                                                        {{ $task->priority == 'High' ? 'Cao' :--}}
-                                        {{--                                                        --}}{{--                                                                ($task->priority == 'Medium' ? 'Trung Bình' :--}}
-                                        {{--                                                        --}}{{--                                                                ($task->priority == 'Low' ? 'Thấp' : '')) }}--}}
-                                        {{--                                                    </p>--}}
-                                        {{--                                                </div>--}}
-
-                                        {{--                                                <div class="fs-10 text-white p-1 rounded w-auto--}}
-                                        {{--                                                @if(!$task->risk) d-none @endif"--}}
-                                        {{--                                                     id="task-risk-view-board-{{$task->id}}"--}}
-                                        {{--                                                     style="height: 20px; @if($task->risk == 'High')--}}
-                                        {{--                                                   background-color: rgba(93,31,26,0.5)--}}
-                                        {{--                                                @elseif($task->risk == 'Medium')--}}
-                                        {{--                                                    background-color: rgba(83,63,4,0.5)--}}
-                                        {{--                                                @elseif($task->risk == 'Low')--}}
-                                        {{--                                                   background-color: rgba(22,69,85,0.5)--}}
-                                        {{--                                                @endif">--}}
-                                        {{--                                                    <p>Độ ưu--}}
-                                        {{--                                                        tiên: {{$task->risk}}--}}
-                                        {{--                                                        --}}{{--                                                        {{ $task->risk == 'High' ? 'Cao' :--}}
-                                        {{--                                                        --}}{{--                                                                ($task->risk == 'Medium' ? 'Trung Bình' :--}}
-                                        {{--                                                        --}}{{--                                                                ($task->risk == 'Low' ? 'Thấp' : '')) }}--}}
-                                        {{--                                                    </p>--}}
-                                        {{--                                                </div>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="card-footer border-top-dashed">
@@ -300,24 +258,12 @@
                                                 @endif
                                                 <!-- checklist -->
                                                 @php
-                                                    //                                                    // Chuyển đổi $task->checklists sang mảng để dễ thao tác
-                                                    //                                                       $checklistsArray = json_decode(json_encode($task->check_lists), true);
-                                                    //
-                                                    //                                                       // Đếm tổng số checklist items
-                                                    //                                                       $totalChecklistItems = collect($checklistsArray)->sum(function($checklist) {
-                                                    //                                                           return count($checklist['checklistItems']);
-                                                    //                                                       });
-                                                    //
-                                                    //                                                       // Đếm số checklist items đã hoàn thành
-                                                    //                                                       $completedChecklistItems = collect($checklistsArray)->sum(function($checklist) {
-                                                    //                                                           return collect($checklist['checklistItems'])->where('is_complete', true)->count();
-                                                    //                                                       });
-                                                                                                       $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
-                                                                                                            return $checklist->checklistItems;
-                                                                                                        });
-                                                                                                        $inProgressItems = $task->checklists->flatMap(function ($checklist) {
-                                                                                                            return $checklist->checklistItems->where('is_complete', true);
-                                                                                                        });
+                                                   $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
+                                                        return $checklist->checklistItems;
+                                                    });
+                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
+                                                        return $checklist->checklistItems->where('is_complete', true);
+                                                    });
                                                 @endphp
 
                                                 @if($task->checkLists->isNotEmpty())

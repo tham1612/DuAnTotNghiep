@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Session;
 
 class User extends Authenticatable
 {
@@ -67,23 +68,26 @@ class User extends Authenticatable
 
     public function Board()
     {
-        return $this->belongsToMany(Board::class,'board_members', 'user_id', 'board_id')
-        ->withPivot('authorize');
+        return $this->belongsToMany(Board::class, 'board_members', 'user_id', 'board_id')
+            ->withPivot('authorize');
     }
 
     public function BoardMember()
     {
         return $this->hasMany(BoardMember::class)->where('is_accept_invite', null);
     }
+
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'task_members')->withPivot('follow');
     }
+
     public function checklistItems()
     {
         return $this->belongsToMany(ChecklistItem::class, 'check_list_item_members', 'user_id', 'check_list_item_id');
 
     }
+
     public function taskComments()
     {
         return $this->hasMany(TaskComment::class);
@@ -101,6 +105,30 @@ class User extends Authenticatable
 
         return $this->hasWorkspaceCache;
     }
+
+//    dùng check xem người dùng còn wsp nào không khi bị xóa khỏi wsp hoặc wsp bị xóa
+    public function hasActiveWorkspace()
+    {
+        $activeWsp = WorkspaceMember::query()
+            ->where('user_id', Auth::id())
+            ->inRandomOrder('id')
+            ->first();
+        $activeWsp->update([
+            'is_active' => 1
+        ]);
+        return redirect('/home');
+    }
+
+
+    public function isViewer()
+    {
+        $workspaceChecked = Session::get('workspaceChecked'); // Lấy từ session
+        if ($workspaceChecked && $workspaceChecked->authorize === "Viewer") {
+            return true;
+        }
+        return false;
+    }
+
     public function followMembers()
     {
         return $this->hasMany(Follow_member::class);

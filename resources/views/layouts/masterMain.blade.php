@@ -25,7 +25,7 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
-    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js'])
+    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js','resources/js/realtimeBoard.js','resources/js/realtimeModalTask.js'])
     <script !src="">
         const PATH_ROOT = "/theme/";
     </script>
@@ -290,7 +290,8 @@
     }
 </script>
 <script>
-    window.userId = {{ auth()->user()->id }};
+    window.userId = {{ auth()->user()->id ? auth()->user()->id : null }};
+    window.boardId = {{ request()->route('id') ? request()->route('id') : 0 }};
 </script>
 </body>
 

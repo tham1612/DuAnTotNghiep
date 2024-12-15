@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Home - TaskFlow
+    Trang chủ - TaskFlow
 @endsection
 @section('main')
     @if (session('error'))
@@ -340,7 +340,7 @@
                                                     {{ $activity->description ?? 'Không có mô tả' }}
                                                 </p>
                                                 <small class="text-muted">
-                                                    {{ $activity && $activity->created_at ? $activity->created_at->diffForHumans() : 'Không xác định thời gian' }}
+                                                    {{ $activity && $activity->created_at ? $activity->created_at->locale('vi')->diffForHumans() : 'Không xác định thời gian' }}
                                                 </small>
                                             </div>
                                         </li>

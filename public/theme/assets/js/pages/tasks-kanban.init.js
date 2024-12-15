@@ -91,9 +91,9 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             const targetList = e.parentElement.closest('.tasks-list');
             catalog_id_old = targetList.dataset.value;
             // lấy id task bị keo
-            console.log('catalog_old ' + catalog_id_old);
+            // console.log('catalog_old ' + catalog_id_old);
             taskId = event.target.closest('.tasks-box').dataset.value;
-            console.log(taskId)
+            // console.log(taskId)
             e.className = e.className.replace("ex-moved", "");
         })
         .on("drop", function (e, target) {
@@ -102,28 +102,24 @@ myModalEl.addEventListener("show.bs.modal", function (e) {
             if (targetList) {
                 // lấy id catalog được thả vào
                 catalog_id = targetList.dataset.value;
-                console.log("Task " + taskId + " được thả vào danh sách với giá trị:", catalog_id); // Xuất giá trị của danh sách ra console
+                // console.log("Task " + taskId + " được thả vào danh sách với giá trị:", catalog_id); // Xuất giá trị của danh sách ra console
             }
             // lấy vị trí cuối cùng trong danh sách
             const tasks = Array.from(target.children);
             const position = tasks.indexOf(e);
-            console.log('vị trí được thả', position)
+            // console.log('vị trí được thả', position)
 
             // $(document).ready(function () {
             $.ajax({
                 url: `/tasks/updatePosition/${taskId}`,
                 type: "PUT",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                dataType: "json",
                 data: {
                     position,
                     catalog_id_old,
                     catalog_id
                 },
                 success: function (response) {
-                    notificationWeb(response.action, response.msg)
+                    if (response) notificationWeb(response.action, response.msg)
                 }
             })
             // })

@@ -289,7 +289,7 @@
                     </div>
                     <div class="col-4">
                         <label for="">Rủi do</label>
-                        <select name="" id="" class="form-select no-arrow"
+                        <select name="" id="" class="form-select"
                                 onchange="updatePriorityOrRisk('risk', this.value, {{$task->id}})">
                             <option value="" hidden selected>Chọn...</option>
                             <option value="High" @selected($task->risk == 'High')>Cao</option>
@@ -546,8 +546,10 @@
     </div>
 
 </div>
+
+
 <script>
-     function debounce(func, wait) {
+    function debounce(func, wait) {
         let timeout;
         return function (...args) {
             const context = this;
@@ -589,23 +591,7 @@
     });
 </script>
 <script>
-    document.addEventListener('click', function (event) {
-        // Sự kiện cho nút hiển thị form 'Thêm mục'
-        if (event.target.classList.contains('display-checklist')) {
-            const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
-            formElement.classList.toggle('d-none'); // Hiện hoặc ẩn form
-            event.target.classList.add('d-none'); // Ẩn nút hiển thị form
-        }
 
-        // Sự kiện cho nút 'Hủy'
-        if (event.target.classList.contains('disable-checklist')) {
-            const formElement = event.target.closest('.row').querySelector('.addOrUpdate-checklist');
-            const inputElement = formElement.querySelector('.checklistItem');
-            inputElement.value = ""; // Xóa nội dung ô nhập liệu
-            formElement.classList.add('d-none'); // Ẩn form
-            event.target.closest('.row').querySelector('.display-checklist').classList.remove('d-none'); // Hiện lại nút hiển thị form
-        }
-    });
 
 
     //     xử lý lưu trữ cảu card
@@ -632,12 +618,6 @@
         });
     });
 
-    // Lặp qua tất cả các phần tử delete-archiver và thêm sự kiện
-    deleteArchivers.forEach((deleteArchiver) => {
-        deleteArchiver.addEventListener('click', () => {
-            window.location.reload();
-        });
-    });
 
     // Hàm ẩn khối bình luận và hiện textarea khi người dùng nhấp vào
     function toggleCommentForm(element) {
@@ -686,3 +666,9 @@
         }
     }
 </script>
+
+
+
+
+
+

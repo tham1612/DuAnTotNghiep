@@ -17,88 +17,6 @@ var getJSON = function (e, t) {
 // Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
 
 
-// Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
-// function loadMailData(emails) {
-//     // Chuyển đến tab chính trong giao diện
-//     document
-//         .querySelector(
-//             '#mail-filter-navlist button[data-bs-target="#pills-primary"]'
-//         )
-//         .click();
-
-//     // Xóa nội dung danh sách email hiện tại
-//     document.querySelector("#mail-list").innerHTML = "";
-
-//     // Duyệt qua từng email trong danh sách
-//     Array.from(emails).forEach(function (email) {
-//         // Kiểm tra nếu email đã đọc hay chưa
-//         var statusClass = email.readed ? "" : "unread";
-//         // Kiểm tra nếu email đã được đánh dấu yêu thích
-//         var starClass = email.starred ? "active" : "";
-//         // Đếm số lượng nếu có
-//         var countedText = email.counted ? "(" + email.counted + ")" : "";
-//         //  if (userId == email.user_id) {
-//         //      email.description =
-//         //          "bạn đã được tham gia vào không gian làm việc " + email.name;
-//         //  }
-//         //  console.log(email.user_id);
-
-//         // Thêm email vào danh sách
-//         document.querySelector("#mail-list").innerHTML +=
-//         '<li class="notification-item ' + statusClass + '" data-id="' + email.id + '">' +
-//             '<div class="col-mail col-mail-1">' +
-//                 '<div class="form-check checkbox-wrapper-mail fs-14">' +
-//                     '<input class="form-check-input" type="checkbox" value="' + email.id + '" id="checkbox-' + email.id + '">' +
-//                     '<label class="form-check-label" for="checkbox-' + email.id + '"></label>' +
-//                 '</div>' +
-//                 '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' + starClass + '"></button>' +
-//                 '<a href="javascript: void(0);" class="title">' +
-//                     '<span class="title-name">' + email.name + '</span> ' + countedText +
-//                 '</a>' +
-//             '</div>' +
-//             '<div class="col-mail col-mail-2">' +
-//                 '<a href="javascript: void(0);" class="subject" style="padding-top: 13px;">' +
-//                     '<span class="subject-title">' + email.title + '</span> – <span class="teaser">' + email.description + '</span>' +
-//                 '</a>' +
-//                 '<div class="date">' + email.date + '</div>' +
-//             '</div>' +
-//         '</li>';
-
-//         // Gọi các hàm xử lý khác để cập nhật giao diện
-//         favouriteBtn();
-//         emailDetailShow();
-//         emailDetailChange();
-//         checkBoxAll();
-//     });
-
-//     // Thêm sự kiện click cho mỗi thông báo để đánh dấu là đã đọc
-//     document.querySelectorAll(".notification-item").forEach(function (item) {
-//         item.addEventListener("click", function () {
-//             var notificationId = this.getAttribute("data-id");
-
-//             // Gửi yêu cầu AJAX để đánh dấu thông báo đã đọc
-//             $.ajax({
-//                 url: "/api/inbox/read/" + notificationId + "/" + userId,
-//                 type: "POST",
-//                 headers: {
-//                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-//                         "content"
-//                     ),
-//                 },
-//                 success: function (response) {
-//                     if (response.status === "success") {
-//                         // Cập nhật giao diện để thông báo đã đọc
-//                         item.classList.remove("unread");
-//                     }
-//                 },
-//                 error: function (xhr) {
-//                     console.error("Something went wrong:", xhr.responseText);
-//                 },
-//             });
-//         });
-//     });
-// }
-
 function loadMailData(emails) {
     // Chuyển đến tab chính trong giao diện
     document
@@ -178,130 +96,130 @@ function loadMailData(emails) {
 
 
 // Hàm này dùng để tải và hiển thị dữ liệu email xã hội vào danh sách
-function loadSocialMailData(emails) {
-    // Duyệt qua từng email trong danh sách
-    Array.from(emails).forEach(function (email) {
-        // Kiểm tra nếu email đã đọc hay chưa
-        var statusClass = email.readed ? "" : "unread";
-        // Kiểm tra nếu email đã được đánh dấu yêu thích
-        var starClass = email.starred ? "active" : "";
-        // Đếm số lượng nếu có
-        var countedText = email.counted ? "(" + email.counted + ")" : "";
+// function loadSocialMailData(emails) {
+//     // Duyệt qua từng email trong danh sách
+//     Array.from(emails).forEach(function (email) {
+//         // Kiểm tra nếu email đã đọc hay chưa
+//         var statusClass = email.readed ? "" : "unread";
+//         // Kiểm tra nếu email đã được đánh dấu yêu thích
+//         var starClass = email.starred ? "active" : "";
+//         // Đếm số lượng nếu có
+//         var countedText = email.counted ? "(" + email.counted + ")" : "";
 
-        // Thêm email vào danh sách xã hội
-        document.getElementById("social-mail-list").innerHTML +=
-            '<li class="' +
-            statusClass +
-            '">' +
-            '<div class="col-mail col-mail-1">' +
-            '<div class="form-check checkbox-wrapper-mail fs-14">' +
-            '<input class="form-check-input" type="checkbox" value="' +
-            email.id +
-            '" id="checkbox-' +
-            email.id +
-            '">' +
-            '<label class="form-check-label" for="checkbox-' +
-            email.id +
-            '"></label>' +
-            "</div>" +
-            '<input type="hidden" value=' +
-            email.userImg +
-            ' class="mail-userimg" />' +
-            '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' +
-            starClass +
-            '">' +
-            '<i class="ri-star-fill"></i>' +
-            "</button>" +
-            '<a href="javascript: void(0);" class="title">' +
-            '<span class="title-name">' +
-            email.name +
-            "</span> " +
-            countedText +
-            "</a>" +
-            "</div>" +
-            '<div class="col-mail col-mail-2">' +
-            '<a href="javascript: void(0);" class="subject">' +
-            '<span class="subject-title">' +
-            email.title +
-            '</span> – <span class="teaser">' +
-            email.description +
-            "</span>" +
-            "</a>" +
-            '<div class="date">' +
-            email.date +
-            "</div>" +
-            "</div>" +
-            "</li>";
+//         // Thêm email vào danh sách xã hội
+//         document.getElementById("social-mail-list").innerHTML +=
+//             '<li class="' +
+//             statusClass +
+//             '">' +
+//             '<div class="col-mail col-mail-1">' +
+//             '<div class="form-check checkbox-wrapper-mail fs-14">' +
+//             '<input class="form-check-input" type="checkbox" value="' +
+//             email.id +
+//             '" id="checkbox-' +
+//             email.id +
+//             '">' +
+//             '<label class="form-check-label" for="checkbox-' +
+//             email.id +
+//             '"></label>' +
+//             "</div>" +
+//             '<input type="hidden" value=' +
+//             email.userImg +
+//             ' class="mail-userimg" />' +
+//             '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' +
+//             starClass +
+//             '">' +
+//             '<i class="ri-star-fill"></i>' +
+//             "</button>" +
+//             '<a href="javascript: void(0);" class="title">' +
+//             '<span class="title-name">' +
+//             email.name +
+//             "</span> " +
+//             countedText +
+//             "</a>" +
+//             "</div>" +
+//             '<div class="col-mail col-mail-2">' +
+//             '<a href="javascript: void(0);" class="subject">' +
+//             '<span class="subject-title">' +
+//             email.title +
+//             '</span> – <span class="teaser">' +
+//             email.description +
+//             "</span>" +
+//             "</a>" +
+//             '<div class="date">' +
+//             email.date +
+//             "</div>" +
+//             "</div>" +
+//             "</li>";
 
-        // Gọi các hàm xử lý khác để cập nhật giao diện
-        emailDetailShow();
-        emailDetailChange();
-        checkBoxAll();
-    });
-}
+//         // Gọi các hàm xử lý khác để cập nhật giao diện
+//         emailDetailShow();
+//         emailDetailChange();
+//         checkBoxAll();
+//     });
+// }
 
 // Hàm này dùng để tải và hiển thị dữ liệu email khuyến mãi vào danh sách
-function loadPromotionsMailData(emails) {
-    // Duyệt qua từng email trong danh sách
-    Array.from(emails).forEach(function (email) {
-        // Kiểm tra nếu email đã đọc hay chưa
-        var statusClass = email.readed ? "" : "unread";
-        // Kiểm tra nếu email đã được đánh dấu yêu thích
-        var starClass = email.starred ? "active" : "";
-        // Đếm số lượng nếu có
-        var countedText = email.counted ? "(" + email.counted + ")" : "";
+// function loadPromotionsMailData(emails) {
+//     // Duyệt qua từng email trong danh sách
+//     Array.from(emails).forEach(function (email) {
+//         // Kiểm tra nếu email đã đọc hay chưa
+//         var statusClass = email.readed ? "" : "unread";
+//         // Kiểm tra nếu email đã được đánh dấu yêu thích
+//         var starClass = email.starred ? "active" : "";
+//         // Đếm số lượng nếu có
+//         var countedText = email.counted ? "(" + email.counted + ")" : "";
 
-        // Thêm email vào danh sách khuyến mãi
-        document.getElementById("promotions-mail-list").innerHTML +=
-            '<li class="' +
-            statusClass +
-            '">' +
-            '<div class="col-mail col-mail-1">' +
-            '<div class="form-check checkbox-wrapper-mail fs-14">' +
-            '<input class="form-check-input" type="checkbox" value="' +
-            email.id +
-            '" id="checkbox-' +
-            email.id +
-            '">' +
-            '<label class="form-check-label" for="checkbox-' +
-            email.id +
-            '"></label>' +
-            "</div>" +
-            '<input type="hidden" value=' +
-            email.userImg +
-            ' class="mail-userimg" />' +
-            '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' +
-            starClass +
-            '">' +
-            '<i class="ri-star-fill"></i>' +
-            "</button>" +
-            '<a href="javascript: void(0);" class="title">' +
-            '<span class="title-name">' +
-            email.name +
-            "</span> " +
-            countedText +
-            "</a>" +
-            "</div>" +
-            '<div class="col-mail col-mail-2">' +
-            '<a href="javascript: void(0);" class="subject">' +
-            '<span class="subject-title">' +
-            email.title +
-            '</span> – <span class="teaser">' +
-            email.description +
-            "</span>" +
-            "</a>" +
-            '<div class="date">' +
-            email.date +
-            "</div>" +
-            "</div>" +
-            "</li>";
+//         // Thêm email vào danh sách khuyến mãi
+//         document.getElementById("promotions-mail-list").innerHTML +=
+//             '<li class="' +
+//             statusClass +
+//             '">' +
+//             '<div class="col-mail col-mail-1">' +
+//             '<div class="form-check checkbox-wrapper-mail fs-14">' +
+//             '<input class="form-check-input" type="checkbox" value="' +
+//             email.id +
+//             '" id="checkbox-' +
+//             email.id +
+//             '">' +
+//             '<label class="form-check-label" for="checkbox-' +
+//             email.id +
+//             '"></label>' +
+//             "</div>" +
+//             '<input type="hidden" value=' +
+//             email.userImg +
+//             ' class="mail-userimg" />' +
+//             '<button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ' +
+//             starClass +
+//             '">' +
+//             '<i class="ri-star-fill"></i>' +
+//             "</button>" +
+//             '<a href="javascript: void(0);" class="title">' +
+//             '<span class="title-name">' +
+//             email.name +
+//             "</span> " +
+//             countedText +
+//             "</a>" +
+//             "</div>" +
+//             '<div class="col-mail col-mail-2">' +
+//             '<a href="javascript: void(0);" class="subject">' +
+//             '<span class="subject-title">' +
+//             email.title +
+//             '</span> – <span class="teaser">' +
+//             email.description +
+//             "</span>" +
+//             "</a>" +
+//             '<div class="date">' +
+//             email.date +
+//             "</div>" +
+//             "</div>" +
+//             "</li>";
 
-        // Gọi các hàm xử lý khác để cập nhật giao diện
-        emailDetailShow();
-        emailDetailChange();
-        checkBoxAll();
-    });
-}
+//         // Gọi các hàm xử lý khác để cập nhật giao diện
+//         emailDetailShow();
+//         emailDetailChange();
+//         checkBoxAll();
+//     });
+// }
 
 // Hàm này dùng để quản lý hành vi của nút đánh dấu yêu thích
 function favouriteBtn() {
@@ -517,8 +435,8 @@ getJSON("mail-list.init.json", function (error, data) {
 
         // Gọi các hàm để hiển thị danh sách email
         loadMailData(allmaillist);
-        loadSocialMailData(socialmaillist);
-        loadPromotionsMailData(promotionsmaillist);
+        // loadSocialMailData(socialmaillist);
+        // loadPromotionsMailData(promotionsmaillist);
     }
 });
 
@@ -568,77 +486,77 @@ Array.from(document.querySelectorAll(".mail-list a")).forEach(function (link) {
 favouriteBtn();
 
 // Khởi tạo trình soạn thảo email
-ClassicEditor.create(document.querySelector("#email-editor"))
-    .then(function (editor) {
-        // Đặt chiều cao cho vùng chỉnh sửa
-        editor.ui.view.editable.element.style.height = "200px";
-    })
-    .catch(function (error) {
-        console.error(error); // Log lỗi nếu có
-    });
+// ClassicEditor.create(document.querySelector("#email-editor"))
+//     .then(function (editor) {
+//         // Đặt chiều cao cho vùng chỉnh sửa
+//         editor.ui.view.editable.element.style.height = "200px";
+//     })
+//     .catch(function (error) {
+//         console.error(error); // Log lỗi nếu có
+//     });
 
-var currentChatId = "users-chat";
+// var currentChatId = "users-chat";
 
 // Hàm cuộn xuống dưới trong cuộc hội thoại chat
-function scrollToBottom(event) {
-    // Đặt thời gian chờ 100ms trước khi thực hiện cuộn
-    setTimeout(() => {
-        // Lấy phần tử cuộn và thiết lập vị trí cuộn đến đáy
-        new SimpleBar(
-            document.getElementById("chat-conversation")
-        ).getScrollElement().scrollTop =
-            document.getElementById("users-conversation").scrollHeight;
-    }, 100);
-}
+// function scrollToBottom(event) {
+//     // Đặt thời gian chờ 100ms trước khi thực hiện cuộn
+//     setTimeout(() => {
+//         // Lấy phần tử cuộn và thiết lập vị trí cuộn đến đáy
+//         new SimpleBar(
+//             document.getElementById("chat-conversation")
+//         ).getScrollElement().scrollTop =
+//             document.getElementById("users-conversation").scrollHeight;
+//     }, 100);
+// }
 
 // Hàm để xử lý việc xóa các mục trong danh sách email
-function removeItems() {
-    // Thêm sự kiện cho modal xóa khi hiển thị
-    document
-        .getElementById("removeItemModal")
-        .addEventListener("show.bs.modal", function (event) {
-            // Thêm sự kiện cho nút xóa trong modal
-            document
-                .getElementById("delete-record")
-                .addEventListener("click", function () {
-                    // Duyệt qua từng mục trong danh sách tin nhắn
-                    Array.from(
-                        document.querySelectorAll(".message-list li")
-                    ).forEach(function (item) {
-                        var itemId;
+// function removeItems() {
+//     // Thêm sự kiện cho modal xóa khi hiển thị
+//     document
+//         .getElementById("removeItemModal")
+//         .addEventListener("show.bs.modal", function (event) {
+//             // Thêm sự kiện cho nút xóa trong modal
+//             document
+//                 .getElementById("delete-record")
+//                 .addEventListener("click", function () {
+//                     // Duyệt qua từng mục trong danh sách tin nhắn
+//                     Array.from(
+//                         document.querySelectorAll(".message-list li")
+//                     ).forEach(function (item) {
+//                         var itemId;
 
-                        // Kiểm tra nếu mục đang ở trạng thái "active"
-                        if (item.classList.contains("active")) {
-                            // Lấy giá trị ID của mục
-                            itemId =
-                                item.querySelector(".form-check-input").value;
+//                         // Kiểm tra nếu mục đang ở trạng thái "active"
+//                         if (item.classList.contains("active")) {
+//                             // Lấy giá trị ID của mục
+//                             itemId =
+//                                 item.querySelector(".form-check-input").value;
 
-                            // Cập nhật danh sách email bằng cách loại bỏ mục đã chọn
-                            allmaillist = allmaillist.filter(function (email) {
-                                return email.id != itemId;
-                            });
+//                             // Cập nhật danh sách email bằng cách loại bỏ mục đã chọn
+//                             allmaillist = allmaillist.filter(function (email) {
+//                                 return email.id != itemId;
+//                             });
 
-                            // Xóa mục khỏi DOM
-                            item.remove();
-                        }
-                    });
+//                             // Xóa mục khỏi DOM
+//                             item.remove();
+//                         }
+//                     });
 
-                    // Đóng modal sau khi xóa
-                    document.getElementById("btn-close").click();
+//                     // Đóng modal sau khi xóa
+//                     document.getElementById("btn-close").click();
 
-                    // Ẩn thanh hành động nếu cần
-                    if (document.getElementById("email-topbar-actions")) {
-                        document.getElementById(
-                            "email-topbar-actions"
-                        ).style.display = "none";
-                    }
+//                     // Ẩn thanh hành động nếu cần
+//                     if (document.getElementById("email-topbar-actions")) {
+//                         document.getElementById(
+//                             "email-topbar-actions"
+//                         ).style.display = "none";
+//                     }
 
-                    // Đặt trạng thái checkbox "check all" về không chọn
-                    checkall.indeterminate = false;
-                    checkall.checked = false;
-                });
-        });
-}
+//                     // Đặt trạng thái checkbox "check all" về không chọn
+//                     checkall.indeterminate = false;
+//                     checkall.checked = false;
+//                 });
+//         });
+// }
 
 // Hàm để xử lý việc xóa một mục email đơn lẻ
 function removeSingleItem() {
@@ -670,148 +588,148 @@ function removeSingleItem() {
     });
 }
 
-scrollToBottom(currentChatId), removeItems(), removeSingleItem();
-var markAllReadBtn = document.getElementById("mark-all-read"),
-    dummyUserImage =
-        (markAllReadBtn.addEventListener("click", function (e) {
-            0 === document.querySelectorAll(".message-list li.unread").length &&
-                ((document.getElementById("unreadConversations").style.display =
-                    "block"),
-                setTimeout(function () {
-                    document.getElementById(
-                        "unreadConversations"
-                    ).style.display = "none";
-                }, 1e3)),
-                Array.from(
-                    document.querySelectorAll(".message-list li.unread")
-                ).forEach(function (e) {
-                    e.classList.contains("unread") &&
-                        e.classList.remove("unread");
-                });
-        }),
-        "assets/images/users/user-dummy-img.jpg"),
-    mailChatDetailElm = !1;
+// scrollToBottom(currentChatId), removeItems(), removeSingleItem();
+// var markAllReadBtn = document.getElementById("mark-all-read"),
+//     dummyUserImage =
+//         (markAllReadBtn.addEventListener("click", function (e) {
+//             0 === document.querySelectorAll(".message-list li.unread").length &&
+//                 ((document.getElementById("unreadConversations").style.display =
+//                     "block"),
+//                 setTimeout(function () {
+//                     document.getElementById(
+//                         "unreadConversations"
+//                     ).style.display = "none";
+//                 }, 1e3)),
+//                 Array.from(
+//                     document.querySelectorAll(".message-list li.unread")
+//                 ).forEach(function (e) {
+//                     e.classList.contains("unread") &&
+//                         e.classList.remove("unread");
+//                 });
+//         }),
+//         "assets/images/users/user-dummy-img.jpg"),
+//     mailChatDetailElm = !1;
 
-function emailDetailChange() {
-    Array.from(document.querySelectorAll(".message-list li")).forEach(function (
-        c
-    ) {
-        c.addEventListener("click", function () {
-            var e = c.querySelector(
-                    ".checkbox-wrapper-mail .form-check-input"
-                ).value,
-                e =
-                    (document
-                        .querySelector(".remove-mail")
-                        .setAttribute("data-remove-id", e),
-                    c.querySelector(".subject-title").innerHTML),
-                a =
-                    ((document.querySelector(".email-subject-title").innerHTML =
-                        e),
-                    c.querySelector(".title-name").innerHTML),
-                t =
-                    (Array.from(
-                        document.querySelectorAll(".accordion-item.left")
-                    ).forEach(function (e) {
-                        e.querySelector(".email-user-name").innerHTML = a;
-                        var t = c.querySelector(".mail-userimg").value;
-                        e.querySelector("img").setAttribute("src", t);
-                    }),
-                    document.querySelector(".user-name-text").innerHTML),
-                l = document
-                    .querySelector(".header-profile-user")
-                    .getAttribute("src");
-            Array.from(
-                document.querySelectorAll(".accordion-item.right")
-            ).forEach(function (e) {
-                (e.querySelector(".email-user-name-right").innerHTML = t),
-                    e.querySelector("img").setAttribute("src", l);
-            });
-        });
-    });
-}
-document.querySelectorAll(".email-chat-list a").forEach(function (l) {
-    var e, t;
-    l.classList.contains("active") &&
-        ((document.getElementById("emailchat-detailElem").style.display =
-            "block"),
-        (e = document
-            .querySelector(".email-chat-list a.active")
-            .querySelector(".chatlist-user-name").innerHTML),
-        (t = document
-            .querySelector(".email-chat-list a.active")
-            .querySelector(".chatlist-user-image img")
-            .getAttribute("src")),
-        (document.querySelector(
-            ".email-chat-detail .profile-username"
-        ).innerHTML = e),
-        document
-            .getElementById("users-conversation")
-            .querySelectorAll(".left .chat-avatar")
-            .forEach(function (e) {
-                t
-                    ? e.querySelector("img").setAttribute("src", t)
-                    : e
-                          .querySelector("img")
-                          .setAttribute("src", dummyUserImage);
-            })),
-        l.addEventListener("click", function (e) {
-            (document.getElementById("emailchat-detailElem").style.display =
-                "block"),
-                (mailChatDetailElm = !0);
-            var t = document.querySelector(".email-chat-list a.active"),
-                t =
-                    (t && t.classList.remove("active"),
-                    this.classList.add("active"),
-                    scrollToBottom("users-chat"),
-                    l.querySelector(".chatlist-user-name").innerHTML),
-                a = l
-                    .querySelector(".chatlist-user-image img")
-                    .getAttribute("src"),
-                t =
-                    ((document.querySelector(
-                        ".email-chat-detail .profile-username"
-                    ).innerHTML = t),
-                    document.getElementById("users-conversation"));
-            Array.from(t.querySelectorAll(".left .chat-avatar")).forEach(
-                function (e) {
-                    a
-                        ? e.querySelector("img").setAttribute("src", a)
-                        : e
-                              .querySelector("img")
-                              .setAttribute("src", dummyUserImage);
-                }
-            );
-        });
-}),
-    document
-        .getElementById("emailchat-btn-close")
-        .addEventListener("click", function () {
-            (document.getElementById("emailchat-detailElem").style.display =
-                "none"),
-                (mailChatDetailElm = !1),
-                document
-                    .querySelector(".email-chat-list a.active")
-                    .classList.remove("active");
-        });
-const triggerTabList = document.querySelectorAll(
-    "#mail-filter-navlist .nav-tabs button"
-);
-function resizeEvent() {
-    var e;
-    document.documentElement.clientWidth < 767 &&
-        ((e = document.querySelector(".email-chat-list a.active")) &&
-            e.classList.remove("active"),
-        (document.getElementById("emailchat-detailElem").style.display =
-            "none"));
-}
-triggerTabList.forEach((e) => {
-    const t = new bootstrap.Tab(e);
-    e.addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelector(".tab-content .tab-pane.show");
-        t.show();
-    });
-}),
-    resizeEvent(),
-    (window.onresize = resizeEvent);
+// function emailDetailChange() {
+//     Array.from(document.querySelectorAll(".message-list li")).forEach(function (
+//         c
+//     ) {
+//         c.addEventListener("click", function () {
+//             var e = c.querySelector(
+//                     ".checkbox-wrapper-mail .form-check-input"
+//                 ).value,
+//                 e =
+//                     (document
+//                         .querySelector(".remove-mail")
+//                         .setAttribute("data-remove-id", e),
+//                     c.querySelector(".subject-title").innerHTML),
+//                 a =
+//                     ((document.querySelector(".email-subject-title").innerHTML =
+//                         e),
+//                     c.querySelector(".title-name").innerHTML),
+//                 t =
+//                     (Array.from(
+//                         document.querySelectorAll(".accordion-item.left")
+//                     ).forEach(function (e) {
+//                         e.querySelector(".email-user-name").innerHTML = a;
+//                         var t = c.querySelector(".mail-userimg").value;
+//                         e.querySelector("img").setAttribute("src", t);
+//                     }),
+//                     document.querySelector(".user-name-text").innerHTML),
+//                 l = document
+//                     .querySelector(".header-profile-user")
+//                     .getAttribute("src");
+//             Array.from(
+//                 document.querySelectorAll(".accordion-item.right")
+//             ).forEach(function (e) {
+//                 (e.querySelector(".email-user-name-right").innerHTML = t),
+//                     e.querySelector("img").setAttribute("src", l);
+//             });
+//         });
+//     });
+// }
+// document.querySelectorAll(".email-chat-list a").forEach(function (l) {
+//     var e, t;
+//     l.classList.contains("active") &&
+//         ((document.getElementById("emailchat-detailElem").style.display =
+//             "block"),
+//         (e = document
+//             .querySelector(".email-chat-list a.active")
+//             .querySelector(".chatlist-user-name").innerHTML),
+//         (t = document
+//             .querySelector(".email-chat-list a.active")
+//             .querySelector(".chatlist-user-image img")
+//             .getAttribute("src")),
+//         (document.querySelector(
+//             ".email-chat-detail .profile-username"
+//         ).innerHTML = e),
+//         document
+//             .getElementById("users-conversation")
+//             .querySelectorAll(".left .chat-avatar")
+//             .forEach(function (e) {
+//                 t
+//                     ? e.querySelector("img").setAttribute("src", t)
+//                     : e
+//                           .querySelector("img")
+//                           .setAttribute("src", dummyUserImage);
+//             })),
+//         l.addEventListener("click", function (e) {
+//             (document.getElementById("emailchat-detailElem").style.display =
+//                 "block"),
+//                 (mailChatDetailElm = !0);
+//             var t = document.querySelector(".email-chat-list a.active"),
+//                 t =
+//                     (t && t.classList.remove("active"),
+//                     this.classList.add("active"),
+//                     scrollToBottom("users-chat"),
+//                     l.querySelector(".chatlist-user-name").innerHTML),
+//                 a = l
+//                     .querySelector(".chatlist-user-image img")
+//                     .getAttribute("src"),
+//                 t =
+//                     ((document.querySelector(
+//                         ".email-chat-detail .profile-username"
+//                     ).innerHTML = t),
+//                     document.getElementById("users-conversation"));
+//             Array.from(t.querySelectorAll(".left .chat-avatar")).forEach(
+//                 function (e) {
+//                     a
+//                         ? e.querySelector("img").setAttribute("src", a)
+//                         : e
+//                               .querySelector("img")
+//                               .setAttribute("src", dummyUserImage);
+//                 }
+//             );
+//         });
+// }),
+//     document
+//         .getElementById("emailchat-btn-close")
+//         .addEventListener("click", function () {
+//             (document.getElementById("emailchat-detailElem").style.display =
+//                 "none"),
+//                 (mailChatDetailElm = !1),
+//                 document
+//                     .querySelector(".email-chat-list a.active")
+//                     .classList.remove("active");
+//         });
+// const triggerTabList = document.querySelectorAll(
+//     "#mail-filter-navlist .nav-tabs button"
+// );
+// function resizeEvent() {
+//     var e;
+//     document.documentElement.clientWidth < 767 &&
+//         ((e = document.querySelector(".email-chat-list a.active")) &&
+//             e.classList.remove("active"),
+//         (document.getElementById("emailchat-detailElem").style.display =
+//             "none"));
+// }
+// triggerTabList.forEach((e) => {
+//     const t = new bootstrap.Tab(e);
+//     e.addEventListener("click", (e) => {
+//         e.preventDefault();
+//         document.querySelector(".tab-content .tab-pane.show");
+//         t.show();
+//     });
+// }),
+//     resizeEvent(),
+//     (window.onresize = resizeEvent);

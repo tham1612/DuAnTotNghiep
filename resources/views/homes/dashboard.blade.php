@@ -1,7 +1,7 @@
 @extends('layouts.masterMain')
 
 @section('title')
-    Dashbroad
+    Bảng điều khiển - TaskFlow
 @endsection
 
 @section('main')
@@ -74,19 +74,7 @@
                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
-                                        <div class="row mb-3">
-                                            <div class="col-5 pe-0">
-
-                                                <button class="btn btn-light px-1 py-1"
-                                                    onclick="updateFollow({{ $board->id }}, {{ auth()->id() }})"
-                                                    id="follow_{{ $board->id }}">
-                                                    <span>
-                                                        <i id="followIcon_{{ $board->id }}"
-                                                            class="{{ $board->follow ? 'ri-eye-line' : 'ri-eye-off-line' }} "></i> Theo
-                                                        dõi
-                                                    </span>
-                                                </button>
-                                            </div>
+                                        <div class="row m-1">
                                             <div class="col-7 ps-0 d-flex align-items-center ">
                                                 <p class="text-muted mb-0 me-2">Team
                                                 </p>
@@ -208,26 +196,14 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <h5 class="fs-16 mt-3">
+                                        <h5 class="fs-16 my-3">
                                             <a href="{{ route('b.edit', ['viewType' => 'dashboard', 'id' => $board->id]) }}"
                                                 role="tab"
                                                 aria-selected="{{ request()->get('type') == 'dashboard' ? 'true' : 'false' }}"
                                                 aria-controls="pills-home nav-link {{ request()->get('type') == 'dashboard' ? 'active' : '' }}"
                                                 class="text-body">{{ \Illuminate\Support\Str::limit($board->name, 30) }}</a>
                                         </h5>
-                                        <div class="row mb-3">
-                                            <div class="col-5 pe-0">
-                                                <button class="btn btn-light px-1 py-1"
-                                                    onclick="updateFollow({{ $board->id }}, {{ auth()->id() }})"
-                                                    id="follow_{{ $board->id }}">
-                                                    <span>
-                                                        <i id="followIcon_{{ $board->id }}"
-                                                            class="{{ $board->follow ? 'ri-eye-line' : 'ri-eye-off-line' }} "></i> Theo
-                                                        dõi
-                                                    </span>
-                                                </button>
-
-                                            </div>
+                                        <div class="row m-1">
                                             <div class="col-7 ps-0 d-flex align-items-center">
                                                 <p class="text-muted mb-0 me-2">Team
                                                 </p>
@@ -352,31 +328,31 @@
             });
         }
 
-        function updateFollow(boardId, userId) {
-
-            $.ajax({
-                url: `/b/${boardId}/updateBoardMember2`,
-                method: "PUT",
-                data: {
-                    board_id: boardId,
-                    user_id: userId,
-                },
-                success: function(response) {
-                    console.log('Người dùng đã folow bảng:', response);
-                    let followIcon = $('#followIcon_' + boardId);
-                    if (response.follow === 1) {
-                        // Nếu người dùng đang theo dõi, cập nhật icon "eye-line" và màu sắc phù hợp
-                        $('#followIcon_' + boardId).removeClass().addClass('ri-eye-line ');
-                    } else {
-                        // Nếu người dùng không theo dõi, cập nhật icon "eye-off-line" và màu sắc phù hợp
-                        $('#followIcon_' + boardId).removeClass().addClass('ri-eye-off-line ');
-                    }
-                },
-                error: function(xhr) {
-                    console.error('An error occurred:', xhr.responseText);
-                }
-            });
-        }
+        // function updateFollow(boardId, userId) {
+        //
+        //     $.ajax({
+        //         url: `/b/${boardId}/updateBoardMember2`,
+        //         method: "PUT",
+        //         data: {
+        //             board_id: boardId,
+        //             user_id: userId,
+        //         },
+        //         success: function(response) {
+        //             console.log('Người dùng đã folow bảng:', response);
+        //             let followIcon = $('#followIcon_' + boardId);
+        //             if (response.follow === 1) {
+        //                 // Nếu người dùng đang theo dõi, cập nhật icon "eye-line" và màu sắc phù hợp
+        //                 $('#followIcon_' + boardId).removeClass().addClass('ri-eye-line ');
+        //             } else {
+        //                 // Nếu người dùng không theo dõi, cập nhật icon "eye-off-line" và màu sắc phù hợp
+        //                 $('#followIcon_' + boardId).removeClass().addClass('ri-eye-off-line ');
+        //             }
+        //         },
+        //         error: function(xhr) {
+        //             console.error('An error occurred:', xhr.responseText);
+        //         }
+        //     });
+        // }
     </script>
 
     <!-- apexcharts -->

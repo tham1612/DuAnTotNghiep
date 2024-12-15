@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Board;
+use App\Events\EventNotification;
 use App\Models\BoardMember;
-use App\Models\CheckList;
+use App\Models\Follow_member;
 use App\Models\Task;
-use App\Models\TaskAttachment;
 use App\Models\TaskComment;
+use App\Notifications\BoardNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class CommentController extends Controller
 {
@@ -47,6 +45,19 @@ class CommentController extends Controller
             : null;
         $auth = Auth::id();
 
+        $followMember = Follow_member::where('task_id', $taskComment->task_id)
+            ->where('follow', 1)
+            ->get();
+        foreach ($followMember as $member) {
+            if ($member->user->id != Auth::id()) {
+                event(new EventNotification("Nhiệm vụ " . $taskComment->task->text . " đã thêm bình luận. Xem chi tiết! ", 'success', $member->user->id));
+                $name = 'Task ' . $taskComment->task->text;
+                $title = 'Task có thay đổi';
+                $description = 'Task ' . $taskComment->task->text . ' đã thêm bình luận';
+                $board = $taskComment->task->catalog->board;
+                $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+            }
+        }
         return response()->json([
             'action' => 'success',
             'msg' => 'them taskComment thành công',

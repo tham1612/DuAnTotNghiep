@@ -1,6 +1,6 @@
 @extends('layouts.masterMain')
 @section('title')
-    Table - TaskFlow
+    Bảng - TaskFlow
 @endsection
 @section('main')
 @if(session('error'))
@@ -27,33 +27,33 @@
                         </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody id="list-task-table-{{$board->id}}">
 
                         @if (!empty($board))
                             @foreach($board->catalogs as $catalog)
                                 @foreach ($catalog->tasks as $task)
                                     <input type="hidden" id="text_{{$task->id}}" value="{{$task->text}}">
                                     <tr>
-                                        <td>{{ $loop->iteration  }}</td>
-                                        <td data-bs-toggle="modal" data-bs-target="#detailCardModal"
+                                        <td>{{  $task->id  }}</td>
+                                        <td class="text-task-view-board-{{ $task->id }}" data-bs-toggle="modal" data-bs-target="#detailCardModal"
                                             data-task-id="{{ $task->id }}">
                                             {{ \Illuminate\Support\Str::limit($task->text, 30) }}
                                         </td>
-                                        <td class="col-2">
+                                        <td  id="tag-view-table-task-{{  $task->id  }}">
+                                            <div class="flex-grow-1 d-flex flex-wrap align-items-center tag-task-view-{{$task->id}}" >
                                             @if ($task->tags->isNotEmpty())
-                                                <div class="flex-grow-1 d-flex flex-wrap align-items-center" >
-                                                    @foreach($task->tags as $tag)
-                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top"
-                                                             title="{{$tag->name}}">
-                                                            <div
-                                                                class="badge border rounded d-flex align-items-center justify-content-center"
-                                                                style=" background-color: {{$tag->color_code}}">{{$tag->name}}
-                                                            </div>
+                                                @foreach($task->tags as $tag)
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                         data-bs-placement="top"
+                                                         title="{{$tag->name}}">
+                                                        <div
+                                                            class="badge border rounded d-flex align-items-center justify-content-center"
+                                                            style=" background-color: {{$tag->color_code}}">{{$tag->name}}
                                                         </div>
-                                                    @endforeach
-                                                </div>
+                                                    </div>
+                                                @endforeach
                                             @endif
+                                            </div>
                                         </td>
                                         <td class="col-1">
                                             <div id="member1"
@@ -160,39 +160,18 @@
                onclick="loadFormAddCatalog({{ $board->id }})"
                data-bs-offset="200,-250">Danh sách</p>
             <div class="dropdown-menu dropdown-menu-end p-3 dropdown-content-add-catalog-{{$board->id }}"
-                 style="width: 200%">
+                 style="width: 200%" aria-labelledby="addCatalog">
                 {{--dropdown.createCatalog--}}
             </div>
         </div>
-
         <div class="mt-2 cursor-pointer">
-            <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"> Thẻ</p>
-            <div class="dropdown-menu dropdown-menu-end p-3" style="width: 200%">
-                <form action="{{ route('tasks.store') }}" method="POST" onsubmit="return disableButtonOnSubmit()"
-                      class="formItem">
-                    @csrf
-                    <h5 class="text-center">Thêm thẻ</h5>
-                    <div class="mb-2">
-                        <input type="text" class="form-control taskNameInput" name="text"
-                               value="{{ old('text') }}" placeholder="Nhập tên thẻ..."/>
-                        @error('text')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-2">
-                        <select name="catalog_id" id="" class="form-select">
-                            <option value="">---Lựa chọn---</option>
-                            @foreach ($board->catalogs as $catalog)
-                                <option value="{{ $catalog->id }}">{{ $catalog->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-2 d-grid">
-                        <button type="submit" class="btn btn-primary btnSubmitTask" disabled>
-                            Thêm thẻ
-                        </button>
-                    </div>
-                </form>
+            <p data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="200,-280"
+               onclick="loadFormAddTaskViewTable({{ $board->id }})"> Thẻ</p>
+            <div class="dropdown-menu dropdown-menu-end p-3  dropdown-add-task-view-table-{{$board->id }}"
+                 style="width: 200%" >
+
+                {{--      dropdown.createTaskViewTable.blade      --}}
+
             </div>
         </div>
         <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="addCatalog1">
@@ -310,6 +289,24 @@
         });
 
         function updateTask(taskId) {
+            const startDateInput1 = document.getElementById('start_date_' + taskId).value;
+            const endDateInput1 = document.getElementById('end_date_' + taskId).value;
+
+            // Chuyển đổi giá trị sang đối tượng Date để so sánh
+            const startDate1 = new Date(startDateInput1);
+            const endDate1 = new Date(endDateInput1);
+
+            // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
+            if (startDateInput1 && endDateInput1 && startDate1 >= endDate1) {
+                // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+                })
+                return ; // Dừng thực hiện hàm nếu có lỗi
+            }
+
             var formData = {
                 catalog_id: $('#catalog_id_' + taskId).val(),
                 start_date: $('#start_date_' + taskId).val(),

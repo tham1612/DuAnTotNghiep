@@ -97,7 +97,7 @@
                        href="{{ route('b.edit', ['viewType' => 'board', 'id' => $board->id]) }}" role="tab"
                        aria-controls="pills-profile"
                        aria-selected="{{ request()->get('type') == 'board' ? 'true' : 'false' }}">
-                        <i class="ri-table-line fs-20"></i> <span class="readonly fs-14"> Bảng </span>
+                        <i class="ri-table-line fs-20"></i> <span class="readonly fs-14"> Bảng Kanban</span>
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -142,7 +142,7 @@
                 </div>
                 <div class="fs-20 fw-lighter text-secondary">|</div>
                 <!-- setting bộ lọc -->
-                <form class="dropdown-menu dropdown-menu-md p-3" style="width: 35%;max-height: 450px" data-simplebar
+                <form class="dropdown-menu dropdown-menu-md p-3" style="width: 35%;max-height: 75vh" data-simplebar
                       action="{{ route('b.edit', $board->id) }}" method="GET">
                     {{--                    @csrf --}}
                     <input type="hidden" name="viewType" id="viewType"
@@ -153,22 +153,22 @@
                     <div class="mt-2">
                         <strong>Từ khóa</strong>
                         <input type="text" name="search" id="search-filter" placeholder="Nhập từ khóa..."
-                               class="form-control"/>
+                               class="form-control" value="{{isset($_GET['search'])?$_GET['search']:''}}"/>
                         <span class="fs-10">Tìm kiếm các thẻ, các thành viên, các nhãn và hơn thế nữa.</span>
                     </div>
 
                     <!-- lọc thành viên -->
                     <div class="mt-2">
                         <p><strong>Thành viên</strong></p>
-                        <label for="no_member">
+                        <label for="no_member" class="cursor-pointer">
                             <input type="checkbox" name="no_member"
                                    id="no_member" @checked(isset($_GET['no_member']) ? $_GET['no_member'] : '') />
                             <span>Không có thành viên</span>
                         </label>
                         <br/>
-                        <label for="it_me">
+                        <label for="it_me" class="cursor-pointer">
                             <input type="checkbox" name="it_me"
-                                   id="it-me" @checked(isset($_GET['it_me']) ? $_GET['it_me'] : '') />
+                                   id="it_me" @checked(isset($_GET['it_me']) ? $_GET['it_me'] : '') />
                             <span>Các thẻ chỉ định cho tôi</span>
                         </label>
                     </div>
@@ -176,20 +176,20 @@
                     <!-- Ngày hết hạn -->
                     <div class="mt-2">
                         <p><strong>Ngày hết hạn</strong></p>
-                        <label for="no_date">
+                        <label for="no_date" class="cursor-pointer">
                             <input type="checkbox" name="no_date"
-                                   id="no-date" @checked(isset($_GET['no_date']) ? $_GET['no_date'] : '') />
+                                   id="no_date" @checked(isset($_GET['no_date']) ? $_GET['no_date'] : '')/>
                             <span>Không có ngày hết hạn</span>
                         </label>
                         <br/>
-                        <label for="no_overdue">
+                        <label for="no_overdue"  class="cursor-pointer">
                             <input type="checkbox" name="no_overdue"
-                                   id="no-overdue" @checked(isset($_GET['no_overdue']) ? $_GET['no_overdue'] : '') />
+                                   id="no_overdue" @checked(isset($_GET['no_overdue']) ? $_GET['no_overdue'] : '') />
                             <span>Quá hạn</span>
                         </label>
                         <br/>
-                        <label for="due_tomorrow">
-                            <input type="checkbox" name="due_tomorrow" id="due-tomorrow"
+                        <label for="due_tomorrow" class="cursor-pointer">
+                            <input type="checkbox" name="due_tomorrow" id="due_tomorrow"
                                 @checked(isset($_GET['due_tomorrow']) ? $_GET['due_tomorrow'] : '') />
                             <span>Hết hạn vào ngày mai</span>
                         </label>
@@ -198,7 +198,7 @@
                     <!-- Nhãn -->
                     <div class="mt-2">
                         <p><strong>Nhãn</strong></p>
-                        <label for="no_tags" class="d-flex align-items-center">
+                        <label for="no_tags" class="d-flex align-items-center cursor-pointer">
                             <input type="checkbox" name="no_tags"
                                    id="no_tags" @checked(isset($_GET['no_tags']) ? $_GET['no_tags'] : '') />
                             <i class="ri-price-tag-3-line mx-2 fs-20"></i>
@@ -206,7 +206,7 @@
                         </label>
                         @foreach ($board->tags as $tag)
                             <label for="{{ $tag->name }}_tags_{{ $tag->id }}"
-                                   class="d-flex align-items-center">
+                                   class="d-flex align-items-center cursor-pointer">
                                 <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
                                        id="{{ $tag->name }}_tags_{{ $tag->id }}"
                                 @if (isset($_GET['tags']))
@@ -221,7 +221,7 @@
                             </label>
                         @endforeach
                     </div>
-                    <button type="submit" class="btn btn-primary m">Lọc</button>
+                    <button type="submit" class="btn btn-outline-primary w-100">Lọc</button>
                 </form>
                 <section class="d-flex">
                     <!-- thêm thành viên & chia sẻ link bảng -->
@@ -239,21 +239,22 @@
 
                                 @foreach ($boardMembers as $boardMember)
                                     @php
-                                           $boardMember = json_decode(json_encode($boardMember));
+                                        $boardMember = json_decode(json_encode($boardMember));
                                     @endphp
                                     @if ($count < $maxDisplay)
                                         <a href="javascript: void(0);" class="avatar-group-item"
 
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ $boardMember->name }}">
+                                           data-bs-toggle="tooltip" data-bs-placement="top"
+                                           title="{{ $boardMember->name }}">
                                             @if ($boardMember->image)
 
                                                 <img src="{{ asset('storage/' . $boardMember->image) }}"
-                                                    alt="" class="rounded-circle avatar-xs object-fit-cover" style="width: 35px;height: 35px">
+                                                     alt="" class="rounded-circle avatar-xs object-fit-cover"
+                                                     style="width: 35px;height: 35px">
                                             @else
                                                 <div class="avatar-xs" style="width: 35px;height: 35px">
                                                     <div class="avatar-title rounded-circle bg-light text-primary"
-                                                           style="width: 40px;height: 40px">
+                                                         style="width: 40px;height: 40px">
                                                         {{ strtoupper(substr($boardMember->name, 0, 1)) }}
                                                     </div>
                                                 </div>
@@ -265,8 +266,8 @@
 
                                 @if (count($boardMembers) > $maxDisplay)
                                     <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="{{ count($boardMembers) - $maxDisplay }} more">
+                                       data-bs-placement="top"
+                                       title="{{ count($boardMembers) - $maxDisplay }} more">
                                         <div class="avatar-xs" style="width: 35px;height: 35px">
                                             <div class="avatar-title rounded-circle" style="width: 35px;height: 35px">
                                                 +{{ count($boardMembers) - $maxDisplay }}

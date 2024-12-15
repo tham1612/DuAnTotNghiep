@@ -15,20 +15,21 @@ class RealtimeCreateTask implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $task;
+    public $task, $boardId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task)
+    public function __construct(Task $task, $boardId)
     {
         $this->task = $task;
+        $this->boardId = $boardId;
     }
 
 
     public function broadcastOn()
     {
-        return new Channel('tasks');
+        return new Channel('tasks.' . $this->boardId);
     }
 
     public function broadcastWith()
@@ -36,6 +37,7 @@ class RealtimeCreateTask implements ShouldBroadcast
         return [
             'task' => $this->task,
             'catalog_name' => $this->task->catalog->name,
+            'tag_count'=>count($this->task->tags)
         ];
     }
 }

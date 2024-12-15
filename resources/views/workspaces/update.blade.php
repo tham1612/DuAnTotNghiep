@@ -1,7 +1,6 @@
 @extends('layouts.masterMain')
 @section('main')
 
-
     <div class="row justify-content-center">
         <div class="col-xxl-9">
             <div class="card">
@@ -28,6 +27,9 @@
 
                                     <div class="d-flex align-items-center">
                                         <div class="profile-user position-relative d-inline-block mx-auto mb-4">
+                                            <input type="hidden" value="{{ $workspaceChecked->workspace_id }}"
+                                                name="workspace_id">
+
                                             @if ($workspaceChecked->image)
                                                 <img class="rounded avatar-xl img-thumbnail user-profile-imager"
                                                     src="{{ \Illuminate\Support\Facades\Storage::url($workspaceChecked->image) }}"
@@ -85,7 +87,7 @@
                         </div>
 
                         <!--end col-->
-                        <div class="col-lg-5 ms-auto">
+                        <div class="col-lg-6 ms-auto">
                             <div class="mt-5">
                                 <div class="bg-primary p-2 rounded text-center">
                                     <i class="ri-user-add-line text-white"></i>
@@ -109,7 +111,7 @@
                                             <div class="modal-body">
 
                                                 <div class="row g-3">
-                                                    <form onsubmit="disableButtonOnSubmit()"
+                                                    {{-- <form onsubmit="disableButtonOnSubmit()"
                                                         action="{{ route('invite_workspace', $workspaceChecked->id) }}"
                                                         method="POST">
                                                         @csrf
@@ -135,7 +137,32 @@
                                                                 </button>
                                                             </div>
                                                         </div>
+                                                    </form> --}}
+                                                    <form id="inviteForm">
+                                                        @csrf
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="col-6">
+                                                                <input type="email" class="form-control"
+                                                                    id="submissionidInput"
+                                                                    placeholder="Nhập email hoặc tên người dùng"
+                                                                    name="email" />
+                                                            </div>
+                                                            <div class="col-4 ms-2">
+                                                                <select name="authorize" id="authorizeInput"
+                                                                    class="form-select">
+                                                                    <option value="Member">Thành Viên</option>
+                                                                    @if ($workspaceChecked->authorize !== 'Member' && $workspaceChecked->authorize !== 'Viewer')
+                                                                        <option value="Sub_Owner">Phó nhóm</option>
+                                                                    @endif
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-2 d-flex justify-content-center">
+                                                                <button type="button" id="inviteButton"
+                                                                    class="btn btn-primary">Chia sẻ</button>
+                                                            </div>
+                                                        </div>
                                                     </form>
+
                                                     <!--end col-->
                                                     <div class="d-flex justify-content-between">
                                                         <div class="col-1">
@@ -146,7 +173,8 @@
                                                         </div>
                                                         <div class="col-6 d-flex flex-column">
                                                             <section class="fs-12">
-                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo gia
+                                                                <p style="margin-bottom: -5px;">Bất kỳ ai có thể theo
+                                                                    gia
                                                                     với tư cách thành viên</p>
                                                                 <span><a href="#" onclick="copyLink()">Sao chép liên
                                                                         kết</a></span>
@@ -166,7 +194,8 @@
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspMemberCount + 1 }}</span>
+                                                                style="border-radius: 100%; width: 20px ;height: 20px;"
+                                                                id='tab_1'>{{ $wspMemberCount + $wspSubOwnerCount + 1 }}</span>
                                                         </li>
                                                         @if ($workspaceChecked->authorize == 'Owner' || $workspaceChecked->authorize == 'Sub_Owner')
                                                             <li
@@ -177,7 +206,8 @@
                                                                 </a>
                                                                 <span
                                                                     class="badge bg-dark align-items-center justify-content-center d-flex"
-                                                                    style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspInviteCount }}</span>
+                                                                    style="border-radius: 100%; width: 20px ;height: 20px;"
+                                                                    id='tab_2'>{{ $wspInviteCount }}</span>
                                                             </li>
                                                         @endif
                                                         <li
@@ -188,6 +218,7 @@
                                                             </a>
                                                             <span
                                                                 class="badge bg-dark align-items-center justify-content-center d-flex"
+                                                                id='tab_3'
                                                                 style="border-radius: 100%; width: 20px ;height: 20px;">{{ $wspViewerCount }}</span>
                                                         </li>
 
@@ -197,9 +228,9 @@
                                                         <div class="tab-pane active" id="home1" role="tabpanel">
                                                             {{-- <div class="scrollable-content"
                                                                 style="max-height: 400px; overflow-y: auto;"> --}}
-                                                            <ul style="margin-left: -32px;">
-                                                                <li class="d-flex">
-                                                                    <div class="col-1">
+                                                            <ul style="margin-left: -32px;" id="tab-ul-1">
+                                                                <li class="d-flex justify-content-between">
+                                                                    <div class="d-flex">
                                                                         <a href="javascript: void(0);"
                                                                             class="avatar-group-item"
                                                                             data-bs-toggle="tooltip"
@@ -224,62 +255,65 @@
                                                                                 @endif
                                                                             @endif
                                                                         </a>
+                                                                        <div class="ms-3 d-flex flex-column">
+                                                                            @if (!empty($wspOwner))
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                        class="text-danger fw-bloder">
+                                                                                        {{ $wspOwner->name }}
+                                                                                        @if ($wspOwner->user_id == $userId)
+                                                                                            <span
+                                                                                                class="text-danger fw-bloder">(bạn)</span>
+                                                                                        @else
+                                                                                            <span
+                                                                                                class="text-danger fw-bold">(chủ)</span>
+                                                                                        @endif
+                                                                                    </p>
+                                                                                    <span>
+                                                                                        {{ $wspOwner->fullName ? '@' . $wspOwner->fullName : '@' . $wspOwner->name }}
+                                                                                    </span>
+                                                                                    <span>-</span>
+                                                                                    <span>Quản trị viên không gian làm
+                                                                                        việc</span>
+                                                                                </section>
+                                                                            @endif
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-6 d-flex flex-column">
-                                                                        @if (!empty($wspOwner))
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                    class="text-danger fw-bloder">
-                                                                                    {{ $wspOwner->name }}
-                                                                                    @if ($wspOwner->user_id == $userId)
-                                                                                        <span
-                                                                                            class="text-danger fw-bloder">(bạn)</span>
-                                                                                    @else
-                                                                                        <span
-                                                                                            class="text-danger fw-bold">(chủ)</span>
-                                                                                    @endif
-                                                                                </p>
-                                                                                <span>@ {{ $wspOwner->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Quản trị viên không gian làm
-                                                                                    việc</span>
-                                                                            </section>
-                                                                        @endif
-                                                                    </div>
+
                                                                     <div
-                                                                        class="col-5 d-flex align-items-center justify-content-end">
+                                                                        class=" d-flex align-items-center justify-content-end">
                                                                         <button class="btn btn-outline-danger">Quản trị
-                                                                            viên</button>
+                                                                            viên
+                                                                        </button>
                                                                         <!-- Nút ba chấm -->
 
                                                                         <div class="dropdown ms-2">
 
-                                                                            <button class="btn btn-link dropdown-toggle"
-                                                                                type="button" id="dropdownMenuButton"
+                                                                            <i class="ri-more-2-fill cursor-pointer"
+                                                                                id="dropdownMenuButton"
                                                                                 data-bs-toggle="dropdown"
-                                                                                aria-expanded="false">
-                                                                                <i class="ri-more-2-fill"></i>
-                                                                            </button>
-                                                                            {{-- @if (!empty($wspOwner))
+                                                                                aria-expanded="false"></i>
+                                                                            @if (!empty($wspOwner))
                                                                                 @if ($wspOwner->user_id == $userId)
                                                                                     <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
-                                                                                                href="{{ route('activateMember', $wspOwner->wm_id) }}">Rời
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
+                                                                                                href="{{ route('leaveWorkspace', $wspOwner->wm_id) }}">Rời
                                                                                                 khỏi</a>
                                                                                         </li>
                                                                                     </ul>
                                                                                 @endif
-                                                                            @endif --}}
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </li>
                                                                 {{-- Lặp lại các sub owner --}}
                                                                 @foreach ($wspSubOwner as $item)
-                                                                    <li class="d-flex mt-1 mb-1">
-                                                                        <div class="col-1">
+                                                                    <li class="d-flex justify-content-between mt-2"
+                                                                        id="li_{{ $item->wm_id }}">
+                                                                        <div class="d-flex">
                                                                             <a href="javascript: void(0);"
                                                                                 class="avatar-group-item"
                                                                                 data-bs-toggle="tooltip"
@@ -302,57 +336,63 @@
                                                                                     </span> --}}
                                                                                 @endif
                                                                             </a>
+                                                                            <div class="ms-3 d-flex flex-column">
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                        class="text-black">
+                                                                                        {{ $item->name }}
+                                                                                        @if ($item->user_id == $userId)
+                                                                                            <span
+                                                                                                class="text-success">(Bạn)</span>
+                                                                                        @else
+                                                                                            <span class="text-success">(Phó
+                                                                                                nhóm)</span>
+                                                                                        @endif
+                                                                                    </p>
+                                                                                    <span>
+                                                                                        {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}
+                                                                                    </span>
+                                                                                    <span>-</span>
+                                                                                    <span>Phó nhóm của không gian làm
+                                                                                        việc</span>
+                                                                                </section>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-6 d-flex flex-column">
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                    class="text-black">
-                                                                                    {{ $item->name }}
-                                                                                    @if ($item->user_id == $userId)
-                                                                                        <span
-                                                                                            class="text-success">(Bạn)</span>
-                                                                                    @else
-                                                                                        <span class="text-success">(Phó
-                                                                                            nhóm)</span>
-                                                                                    @endif
-                                                                                </p>
-                                                                                <span>@ {{ $item->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Thành viên của không gian làm
-                                                                                    việc</span>
-                                                                            </section>
-                                                                        </div>
+
                                                                         <div
-                                                                            class="col-5 d-flex align-items-center justify-content-end">
-                                                                            <button class="btn btn-outline-success">Phó
-                                                                                nhóm</button>
+                                                                            class=" d-flex align-items-center justify-content-end">
+                                                                            <button
+                                                                                class="btn btn-outline-success activate-member"
+                                                                                data-wm-id="{{ $item->wm_id }}">Phó
+                                                                                nhóm
+                                                                            </button>
                                                                             <!-- Nút ba chấm -->
                                                                             <div class="dropdown ms-2">
-                                                                                <button
-                                                                                    class="btn btn-link dropdown-toggle"
-                                                                                    type="button" id="dropdownMenuButton"
+
+                                                                                <i class="ri-more-2-fill cursor-pointer"
+                                                                                    id="dropdownMenuButton"
                                                                                     data-bs-toggle="dropdown"
-                                                                                    aria-expanded="false">
-                                                                                    <i class="ri-more-2-fill"></i>
-                                                                                </button>
+                                                                                    aria-expanded="false"></i>
                                                                                 @if ($item->user_id === $userId)
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
-                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Rời
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
+                                                                                                href="{{ route('leaveWorkspace', $item->wm_id) }}">Rời
                                                                                                 khỏi</a>
                                                                                         </li>
                                                                                     </ul>
                                                                                 @elseif($workspaceChecked->authorize == 'Owner')
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Kích
                                                                                                 phó
                                                                                                 nhóm</a>
                                                                                         </li>
-                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-primary"
                                                                                                 href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
                                                                                                 quyền</a>
                                                                                         </li>
@@ -365,8 +405,9 @@
                                                                 @endforeach
                                                                 <!-- Lặp lại với các thành viên -->
                                                                 @foreach ($wspMember as $item)
-                                                                    <li class="d-flex mt-1 mb-1">
-                                                                        <div class="col-1">
+                                                                    <li class="d-flex justify-content-between mt-2"
+                                                                        id="li_{{ $item->wm_id }}">
+                                                                        <div class="d-flex">
                                                                             <a href="javascript: void(0);"
                                                                                 class="avatar-group-item"
                                                                                 data-bs-toggle="tooltip"
@@ -389,72 +430,93 @@
                                                                                     </span> --}}
                                                                                 @endif
                                                                             </a>
+                                                                            <div class="ms-3 d-flex flex-column">
+                                                                                <section class="fs-12">
+                                                                                    <p style="margin-bottom: 0px;"
+                                                                                        class="text-black">
+                                                                                        {{ $item->name }}
+                                                                                        @if ($item->user_id == $userId)
+                                                                                            <span
+                                                                                                class="text-success">(Bạn)</span>
+                                                                                        @elseif($item->authorize === 'Sub_Owner')
+                                                                                            <span class="text-primary">(Phó
+                                                                                                nhóm)</span>
+                                                                                        @else
+                                                                                            <span class="text-black">(Thành
+                                                                                                viên)</span>
+                                                                                        @endif
+                                                                                    </p>
+                                                                                    <span>
+                                                                                        {{ $item->fullName ? '@' . $item->fullName : '@' . $item->name }}
+                                                                                    </span>
+                                                                                    <span>-</span>
+                                                                                    <span>Thành viên của không gian làm
+                                                                                        việc</span>
+
+                                                                                </section>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-6 d-flex flex-column">
-                                                                            <section class="fs-12">
-                                                                                <p style="margin-bottom: 0px;"
-                                                                                    class="text-black">
-                                                                                    {{ $item->name }}
-                                                                                    @if ($item->user_id == $userId)
-                                                                                        <span
-                                                                                            class="text-success">(Bạn)</span>
-                                                                                    @elseif($item->authorize === 'Sub_Owner')
-                                                                                        <span class="text-primary">(Phó
-                                                                                            nhóm)</span>
-                                                                                    @else
-                                                                                        <span class="text-black">(Thành
-                                                                                            viên)</span>
-                                                                                    @endif
-                                                                                </p>
-                                                                                <span>@ {{ $item->name }}</span>
-                                                                                <span><i
-                                                                                        class="ri-checkbox-blank-circle-fill"></i></span>
-                                                                                <span>Thành viên của không gian làm
-                                                                                    việc</span>
-                                                                            </section>
-                                                                        </div>
+
                                                                         <div
-                                                                            class="col-5 d-flex align-items-center justify-content-end">
-                                                                            <button class="btn btn-outline-primary">Thành
-                                                                                viên</button>
+                                                                            class=" d-flex align-items-center justify-content-end">
+                                                                            <button
+                                                                                class="btn btn-outline-primary activate-member"
+                                                                                data-wm-id="{{ $item->wm_id }}">
+                                                                                Thành
+                                                                                viên
+                                                                            </button>
                                                                             <!-- Nút ba chấm -->
                                                                             <div class="dropdown ms-2">
-                                                                                <button
-                                                                                    class="btn btn-link dropdown-toggle"
-                                                                                    type="button" id="dropdownMenuButton"
+                                                                                <i class="ri-more-2-fill cursor-pointer"
+                                                                                    id="dropdownMenuButton"
                                                                                     data-bs-toggle="dropdown"
-                                                                                    aria-expanded="false">
-                                                                                    <i class="ri-more-2-fill"></i>
-                                                                                </button>
+                                                                                    aria-expanded="false"></i>
                                                                                 <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                                                                 @if ($item->user_id === $userId)
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
-                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Rời
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
+                                                                                                href="{{ route('leaveWorkspace', $item->wm_id) }}">Rời
                                                                                                 khỏi</a>
                                                                                         </li>
                                                                                     </ul>
                                                                                 @elseif($workspaceChecked->authorize == 'Owner')
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
-                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Kích
-                                                                                                thành
-                                                                                                viên</a></li>
-                                                                                        <li><a class="dropdown-item text-primary"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-primary"
+                                                                                                href="{{ route('managementfranchise', ['owner_id' => $wspOwner, 'user_id' => $item->id]) }}">Nhượng
+                                                                                                quyền</a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {{-- <a class="dropdown-item text-primary"
                                                                                                 href="{{ route('upgradeMemberShip', $item->wm_id) }}">Thăng
                                                                                                 cấp
                                                                                                 thành
-                                                                                                viên</a></li>
+                                                                                                viên</a> --}}
+                                                                                            <a class="dropdown-item text-primary upgrade-member"
+                                                                                                data-wm-id="{{ $item->wm_id }}"
+                                                                                                href="javascript:void(0);">
+                                                                                                Thăng cấp thành viên
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
+                                                                                                href="{{ route('activateMember', $item->wm_id) }}">Kích
+                                                                                                thành
+                                                                                                viên</a>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 @elseif ($workspaceChecked->authorize == 'Sub_Owner')
                                                                                     <ul class="dropdown-menu"
                                                                                         aria-labelledby="dropdownMenuButton">
-                                                                                        <li><a class="dropdown-item text-danger"
+                                                                                        <li>
+                                                                                            <a class="dropdown-item text-danger"
                                                                                                 href="{{ route('activateMember', $item->wm_id) }}">Kích
                                                                                                 thành
-                                                                                                viên</a></li>
+                                                                                                viên</a>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 @endif
 
@@ -470,10 +532,11 @@
                                                             <div class="tab-pane" id="profile1" role="tabpanel">
                                                                 {{-- <div class="scrollable-content"
                                                                 style="max-height: 400px; overflow-y: auto;"> --}}
-                                                                <ul
-                                                                    style="margin-left: -32px; max-height: 400px; overflow-y: auto;">
+                                                                <ul style="margin-left: -32px; max-height: 400px; overflow-y: auto;"
+                                                                    id="tab-ul-2">
                                                                     @foreach ($wspInvite as $item)
-                                                                        <li class="d-flex justify-content-between">
+                                                                        <li class="d-flex justify-content-between"
+                                                                            id="li_{{ $item->wm_id }}">
                                                                             <div class="col-1">
                                                                                 <a href="javascript: void(0);"
                                                                                     class="avatar-group-item"
@@ -518,10 +581,14 @@
                                                                                         value="{{ $item->user_id }}"
                                                                                         name="user_id">
                                                                                     <input type="hidden"
+                                                                                        value="{{ $item->wm_id }}"
+                                                                                        name="wsm_id">
+                                                                                    <input type="hidden"
                                                                                         value="{{ $item->workspace_id }}"
                                                                                         name="workspace_id">
                                                                                     <button class="btn btn-primary me-2"
-                                                                                        type="submit">Duyệt</button>
+                                                                                        type="submit">Duyệt
+                                                                                    </button>
                                                                                 </form>
                                                                                 <form
                                                                                     action="{{ route('refuse_member', $item->wm_id) }}"
@@ -530,23 +597,23 @@
                                                                                     @method('DELETE')
                                                                                     @csrf
                                                                                     <button class="btn btn-danger"
-                                                                                        type="submit">Từ chối</button>
+                                                                                        type="submit">Từ chối
+                                                                                    </button>
                                                                                 </form>
                                                                             </div>
                                                                         </li>
                                                                         <br>
                                                                     @endforeach
                                                                 </ul>
-                                                            {{-- </div> --}}
+                                                                {{-- </div> --}}
                                                             </div>
                                                         @endif
 
                                                         <div class="tab-pane" id="profile2" role="tabpanel">
-                                                            {{-- <div class="scrollable-content"
-                                                                style="max-height: 400px; overflow-y: auto;"> --}}
-                                                            <ul style="margin-left: -32px;">
+                                                            <ul style="margin-left: -32px;" id="tab-ul-3">
                                                                 @foreach ($wspViewer as $item)
-                                                                    <li class="d-flex justify-content-between">
+                                                                    <li class="d-flex justify-content-between"
+                                                                        id="li_{{ $item->wm_id }}">
                                                                         <div class="col-1">
                                                                             <a href="javascript: void(0);"
                                                                                 class="avatar-group-item"
@@ -562,12 +629,6 @@
                                                                                         style="width: 25px;height: 25px">
                                                                                         {{ strtoupper(substr($item->name, 0, 1)) }}
                                                                                     </div>
-                                                                                    {{-- <span class="fs-15 ms-2 text-white"
-                                                                                        id="swicthWs">
-                                                                                        {{ \Illuminate\Support\Str::limit($item->name, 16) }}
-                                                                                        <i
-                                                                                            class=" ri-arrow-drop-down-line fs-20"></i>
-                                                                                    </span> --}}
                                                                                 @endif
                                                                             </a>
                                                                         </div>
@@ -583,14 +644,31 @@
                                                                                 <span><i
                                                                                         class="ri-checkbox-blank-circle-fill"></i></span>
                                                                                 <span>Tham quan không gian làm việc</span>
+
                                                                             </section>
                                                                         </div>
                                                                         <div class="col-4 d-flex justify-content-end">
+                                                                            <i class="ri-more-2-fill cursor-pointer ml-4"
+                                                                                id="dropdownMenuButton"
+                                                                                data-bs-toggle="dropdown"
+                                                                                aria-expanded="false"></i>
+                                                                            <ul class="dropdown-menu"
+                                                                                aria-labelledby="dropdownMenuButton">
+                                                                                <li>
+                                                                                    <a class="dropdown-item text-primary"
+                                                                                        href="{{ route('addGuest', $item->wm_id) }}">Thêm
+                                                                                        người dùng</a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a class="dropdown-item text-warning"
+                                                                                        href="{{ route('deleteGuest', $item->wm_id) }}">Loại
+                                                                                        người dùng</a>
+                                                                                </li>
+                                                                            </ul>
                                                                         </div>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
-                                                        {{-- </div> --}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -615,12 +693,12 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <p><i class="{{ $icon }}"></i> {{ $access }} - {{ $ws_desrip }}</p>
-                        {{-- <button class="btn btn-primary">Thay đổi</button> --}}
+                    <div class="mt-3 d-flex justify-content-between">
+                        <p class="col-10"><i class="{{ $icon }}"></i> {{ $access }} - {{ $ws_desrip }}
+                        </p>
 
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#customModal">
+                            data-bs-target="#customModal" style="height: 35px">
                             Mở cài đặt
                         </button>
 
@@ -647,7 +725,8 @@
                                                     <i class="ri-lock-2-line fs-20 text-danger"></i>Riêng tư
                                                 </label>
                                                 <p class="option-description">
-                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không gian
+                                                    Đây là Không gian làm việc riêng tư. Chỉ những người trong Không
+                                                    gian
                                                     làm việc có thể truy cập hoặc nhìn thấy Không gian làm việc.
                                                 </p>
                                             </div>
@@ -660,14 +739,16 @@
                                                     <i class="ri-earth-line fs-20 text-success"></i>Công khai
                                                 </label>
                                                 <p class="option-description">
-                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới Không
-                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm việc.
+                                                    Đây là Không gian làm việc công khai. Bất kỳ ai có đường dẫn tới
+                                                    Không
+                                                    gian làm việc đều có thể nhìn thấy hoặc tìm thấy Không gian làm
+                                                    việc.
                                                 </p>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Đóng</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                            </button>
                                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                                         </div>
                                     </form>
@@ -680,18 +761,13 @@
                         </div>
                     </div>
                 </div>
-                {{-- <a style="margin-left: 15px; padding-bottom:20px"
-                    href="{{ route('workspaces.delete', $workspaceChecked->wm_id) }}"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa bỏ không gian làm việc?')" class="text-danger">Xóa
-                    Không gian
-                    làm việc này?</a> --}}
-                <!-- Modal HTML -->
-                <a style="margin-left: 15px; padding-bottom:20px" href="#" class="text-danger"
-                    data-bs-toggle="modal" data-bs-target="#deleteWorkspaceModal"
-                    onclick="setDeleteAction('{{ route('workspaces.delete', $workspaceChecked->wm_id) }}')">
+
+                <a style="margin-left: 15px; padding-bottom:20px; " class="text-danger cursor-pointer fw-bold fs-16"
+                    onclick="setDeleteAction()">
                     Xóa Không gian làm việc này?
                 </a>
-                <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
+
+                {{-- <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
                     aria-labelledby="deleteWorkspaceModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -709,14 +785,43 @@
                             </div>
                         </div>
                     </div>
+                </div> --}}
+
+                <div class="modal fade" id="deleteWorkspaceModal" tabindex="-1"
+                    aria-labelledby="deleteWorkspaceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteWorkspaceModalLabel">Xác nhận xóa</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bạn có chắc chắn muốn xóa không gian làm việc này? Hành động này không thể hoàn
+                                    tác.</p>
+                                <p>Vui lòng nhập <strong id="workspaceNameConfirm"></strong> để xác nhận:</p>
+                                <input type="text" id="workspaceNameInput" class="form-control"
+                                    placeholder="Nhập tên không gian làm việc" />
+                                <div id="errorText" class="text-danger mt-2" style="display: none;">Tên không đúng, vui
+                                    lòng thử lại.
+                                </div>
+                                <input type="hidden" id="workspace" value="{{ $workspaceChecked->name }}">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="button" id="confirmDeleteButton" class="btn btn-danger" disabled>Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
 
             </div>
         </div>
         <!--end col-->
     </div>
 
-    </div>
 @endsection
 
 @section('title')
@@ -724,17 +829,8 @@
 @endsection
 
 @section('script')
-    <!-- dropzone min -->
-    <script src="assets/libs/dropzone/dropzone-min.js"></script>
+    <script src="{{ asset('js/workspace.js') }}"></script>
 
-    <!-- cleave.js -->
-    <script src="assets/libs/cleave.js/cleave.min.js"></script>
-
-    <!--Invoice create init js-->
-    <script src="assets/js/pages/invoicecreate.init.js"></script>
-
-    <!-- Sweet Alerts js -->
-    <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script>
         function copyLink() {
             const link = '{{ $workspaceChecked->link_invite }}'; // Lấy link từ biến Laravel
@@ -764,122 +860,132 @@
             });
         }
     </script>
-    {{-- update thông tin workspace --}}
-    <script>
-        $(document).ready(function() {
-            $('#editWorkspaceForm').on('submit', function(e) {
-                e.preventDefault(); // Ngăn chặn hành vi submit mặc định
 
-                $('#loading').show(); // Hiển thị loading
-                let formData = new FormData(this);
-
-                $.ajax({
-                    url: $(this).attr('action'), // URL từ action của form
-                    method: $(this).attr('method'), // Phương thức từ form
-                    data: formData,
-                    processData: false, // Không xử lý dữ liệu
-                    contentType: false, // Không đặt kiểu content mặc định
-                    success: function(response) {
-                        notificationWeb(response.action, response.message);
-                        console.log('cật nhật thành công');
-
-                    },
-                    error: function(xhr) {
-                        $('#loading').hide(); // Ẩn loading
-
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            let errorMessages = '';
-                            $.each(errors, function(key, value) {
-                                errorMessages += '<div class="alert alert-danger">' +
-                                    value[0] + '</div>';
-                            });
-                            $('#formResponse').html(errorMessages);
-                        } else {
-                            $('#formResponse').html(
-                                '<div class="alert alert-danger">Có lỗi xảy ra!</div>');
-                        }
-                    }
-                });
-            });
-        });
-    </script>
-
-    {{-- ajax update access --}}
-    <script>
-        $(document).ready(function() {
-            $('#updateAccessForm').on('submit', function(e) {
-                e.preventDefault(); // Ngăn chặn hành vi submit mặc định
-
-                $('#loading').show(); // Hiển thị loading
-                $('#formResponse').html(''); // Xóa các thông báo cũ
-
-                let formData = $(this).serialize(); // Lấy dữ liệu từ form
-
-                $.ajax({
-                    url: $(this).attr('action'), // Lấy URL từ form
-                    method: $(this).attr('method'), // Lấy method từ form
-                    data: formData,
-                    success: function(response) {
-                        // $('#formResponse').html('<div class="alert alert-success">' + response.message + '</div>');
-                        notificationWeb(response.action, response.message);
-                        document.getElementById('access').innerText = "Riêng tư";
-                        setTimeout(function() {
-                            $('#formResponse').html('');
-                        }, 3000);
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            let errorMessages = '';
-                            $.each(errors, function(key, value) {
-                                errorMessages += '<div class="alert alert-danger">' +
-                                    value[0] + '</div>';
-                            });
-                            notificationWeb(response.action, response.message);
-                        } else {
-                            // $('#formResponse').html('<div class="alert alert-danger">Có lỗi xảy ra: ' + xhr.responseJSON.message + '</div>');
-                            notificationWeb(response.action, response.message);
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 
     {{-- delete workspace --}}
+    {{-- để lại --}}
     <script>
-        let deleteUrl = ''; // Biến toàn cục để lưu URL xóa
+        function setDeleteAction() {
 
-        function setDeleteAction(actionUrl) {
-            deleteUrl = actionUrl; // Cập nhật URL xóa khi mở modal
+            const correctString = '{{ $workspaceChecked->name }}';
+            Swal.fire({
+                title: 'Xóa không gian làm việc?',
+                html: `
+                <div style="text-align: left;">
+                <strong>Nhập tên không gian làm việc "{{ $workspaceChecked->name }}" để xóa </strong>
+                  <p class="fs-15">Những điều cần biết</p>
+                     <ul class="fs-14">
+                         <li>Điều này là vĩnh viễn và không thể hoàn tác.</li>
+                         <li>Các bảng thuộc không gian làm việc bị xóa vĩnh viễn</li>
+                     </ul>
+                </div>
+                `,
+                input: 'text',
+                inputPlaceholder: 'Nhập tên Không gian làm việc để xóa',
+                {{-- inputValue: '{{$workspaceChecked->name}}', --}}
+                showCancelButton: false,
+                confirmButtonColor: "#d63036",
+                confirmButtonText: 'Xóa không gian làm việc',
+                preConfirm: (inputValue) => {
+                    // Chuỗi chính xác mà bạn muốn so sánh
+
+                    // Kiểm tra nếu inputValue khớp với chuỗi chính xác
+                    if (inputValue !== correctString) {
+                        // Nếu không khớp, hiển thị thông báo lỗi
+                        Swal.showValidationMessage('Bạn nhập sai thông tin!!');
+                        return false;
+                    }
+                    return true;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route('workspaces.delete', $workspaceChecked->workspace_id) }}',
+                        type: "DELETE",
+                        success: function(response) {
+                            notificationWeb(response.action, response.msg);
+                            if (response.action === 'success') {
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000)
+                            }
+
+                        },
+                        error: function(xhr) {
+                            console.log(xhr)
+                            notificationWeb('error', 'Có lỗi xảy ra ròi');
+                        },
+                    });
+                }
+            });
         }
+    </script>
+    {{--
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            const workspaceNameInput = document.getElementById('workspaceNameInput');
+            const workspaceNameConfirm = document.getElementById('workspaceNameConfirm');
+            const errorText = document.getElementById('errorText');
 
-        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-            if (!deleteUrl) return;
+            // Gán tên không gian làm việc từ server
+            const workspaceName = document.getElementById('workspace').value; // Thay bằng giá trị động từ server
+            workspaceNameConfirm.textContent = 'Tên không gian làm việc';
 
-            fetch(deleteUrl, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}', // Gửi CSRF token
-                        'Content-Type': 'application/json',
+            workspaceNameInput.addEventListener('input', function() {
+                if (workspaceNameInput.value === workspaceName) {
+                    confirmDeleteButton.disabled = false;
+                    errorText.style.display = 'none';
+                } else {
+                    confirmDeleteButton.disabled = true;
+                    errorText.style.display = 'block';
+                }
+            });
+
+            confirmDeleteButton.addEventListener('click', function() {
+                // Tiến hành xóa khi nhập đúng
+                console.log('Không gian làm việc đã được xóa!');
+                // Thực hiện submit form hoặc gọi API tại đây
+            });
+        });
+    </script> --}}
+
+    {{-- để lại --}}
+    <script>
+        $(document).ready(function() {
+            $('#inviteButton').on('click', function(e) {
+                e.preventDefault();
+
+                // Lấy dữ liệu từ form
+                let email = $('#submissionidInput').val();
+                let authorize = $('#authorizeInput').val();
+                let workspaceId = {{ $workspaceChecked->id }}; // ID của workspace
+
+                // Gửi AJAX
+                $.ajax({
+                    url: '{{ route('invite_workspace', $workspaceChecked->id) }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        email: email,
+                        authorize: authorize
+                    },
+                    beforeSend: function() {
+                        $('#inviteButton').prop('disabled', true).text('Đang gửi');
+                    },
+                    success: function(response) {
+                        notificationWeb(response.action, response.msg);
+
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                        alert('Đã xảy ra lỗi, vui lòng thử lại.');
+                    },
+                    complete: function() {
+                        $('#inviteButton').prop('disabled', false).text('Chia sẻ');
                     }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        notificationWeb(response.action, response.message); // Thông báo thành công
-                        // Cập nhật giao diện hoặc redirect
-                    } else {
-                        notificationWeb(response.action, response.message); // Thông báo lỗi
-                    }
-                    // Đóng modal sau khi xử lý
-                    $('#deleteWorkspaceModal').modal('hide');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    notificationWeb('error', 'Có lỗi xảy ra, vui lòng thử lại.');
                 });
+            });
         });
     </script>
 @endsection

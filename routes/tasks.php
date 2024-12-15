@@ -17,12 +17,17 @@ use App\Http\Controllers\GoogleApiClientController;
 */
 
 
-Route::middleware(['auth', 'isWorkspace'])
+Route::middleware(['auth', 'isWorkspace','isActiveWsp'])
     ->group(function () {
         Route::get('/tasks/getFormCreateTask/{id}', [TaskController::class, 'getFormCreateTask'])
             ->name('catalogs.getFormCreateTask');
 
+        Route::get('/tasks/getFormCreateTaskViewTable/{id}', [TaskController::class, 'getFormCreateTaskViewTable'])
+            ->name('catalogs.getFormCreateTaskViewTable');
+
         Route::resource('tasks', TaskController::class);
+        Route::post('gantt/task', [TaskController::class, 'createGantt'])
+        ->name('tasks.CreateGantt');
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);
 
@@ -31,6 +36,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::delete('/delete-event/{id}', [TaskController::class, 'deleteEvent'])->name('delete');
 
         Route::get('/redirect', [GoogleApiClientController::class, 'redirectToGoogle'])->name('google.redirect');
+
+        Route::post('/unlink/google-calendar/{id}', [GoogleApiClientController::class, 'unlink'])->name('google.unlink');
 
         Route::get('/callback', [GoogleApiClientController::class, 'handleGoogleCallback']);
 
@@ -121,6 +128,8 @@ Route::middleware(['auth', 'isWorkspace'])
         Route::post('/tasks/tag/update', [\App\Http\Controllers\TagController::class, 'update'])
             ->name('tags.update');
 
+        Route::delete('/tasks/tag/delete', [\App\Http\Controllers\TagController::class, 'destroy'])
+            ->name('tags.delete');
 
         //        attachment
         Route::post('/tasks/attachments/create', [\App\Http\Controllers\AttachmentController::class, 'store'])

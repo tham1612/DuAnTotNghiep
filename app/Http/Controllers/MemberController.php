@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\CheckListItem;
@@ -31,15 +32,10 @@ class MemberController extends Controller
     public function addMemberTask(Request $request)
     {
 
-        if (session('view_only', false)) {
-            return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
-        }
-        session()->forget('view_only');
-
         $data = $request->all();
 
         $task = Task::query()->findOrFail($data['task_id']);
-        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeDeleteCreateMember($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -73,7 +69,9 @@ class MemberController extends Controller
                 ->first();
             $userName = Auth::user();
             $taskMemberIsSend->user->notify(new TaskAddMemberNotification($taskMemberIsSend->task, $userName));
-
+            if ($taskMemberIsSend->user->id != Auth::id()) {
+                event(new EventNotification("Bạn đã được thêm nhiệm vụ " . $taskMemberIsSend->task->text, 'success', $taskMemberIsSend->user->id));
+            }
             if (Auth::user()->access_token) {
                 if ($task->id_google_calendar) {
                     $this->googleApiClient->updateEvent($data);
@@ -88,7 +86,7 @@ class MemberController extends Controller
         }
 
         return response()->json([
-            'msg' =>'thêm  thành viên vô task thành công !',
+            'msg' => 'thêm  thành viên vô task thành công !',
             'action' => 'success',
             'success' => true,
             'message' => 'Thêm thành viên thành công.'
@@ -105,7 +103,7 @@ class MemberController extends Controller
         $data = $request->all();
 
         $task = Task::query()->where('id', $data['task_id'])->first();
-        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeDeleteCreateMember($task->catalog->board->id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -135,7 +133,9 @@ class MemberController extends Controller
                 ->first();
             $userName = Auth::user();
             $taskMemberIsSend->user->notify(new TaskDeleteMemberNotification($taskMemberIsSend->task, $userName));
-
+            if ($taskMemberIsSend->user->id != Auth::id()) {
+                event(new EventNotification("Bạn đã bị xóa khỏi nhiệm vụ " . $taskMemberIsSend->task->text, 'error', $taskMemberIsSend->user->id));
+            }
             TaskMember::query()
                 ->where('task_id', $data['task_id'])
                 ->where('user_id', $data['user_id'])
@@ -154,7 +154,7 @@ class MemberController extends Controller
         }
 
         return response()->json([
-            'msg' =>'xóa thành viên khỏi task thành công !',
+            'msg' => 'xóa thành viên khỏi task thành công !',
             'action' => 'success',
             'success' => true,
             'message' => 'Xóa thành viên thành công.'
@@ -174,7 +174,9 @@ class MemberController extends Controller
             ->first();
         $userName = Auth::user();
         $checkListItemMemberIsSend->user->notify(new AddMemberChecklistNotification($checkListItemMemberIsSend, $userName));
-
+        if ($checkListItemMemberIsSend->user->id != Auth::id()) {
+            event(new EventNotification("Bạn đã được thêm vào checklist " . $checkListItemMemberIsSend->checkListItem->name, 'success', $checkListItemMemberIsSend->user->id));
+        }
         $userImage = $checkListItemMember->user->image ?? null;
         return response()->json([
             'success' => "them CheckListItemMember thành công",
@@ -201,7 +203,9 @@ class MemberController extends Controller
         $userName = Auth::user();
 
         $checkListItemMemberIsSend->user->notify(new DeleteMemberChecklistNotification($checkListItemMemberIsSend, $userName));
-
+        if ($checkListItemMemberIsSend->user->id != Auth::id()) {
+            event(new EventNotification("Bạn đã bị xóa khỏi checklist " . $checkListItemMemberIsSend->checkListItem->name, 'error', $checkListItemMemberIsSend->user->id));
+        }
         $checklistItem = CheckListItemMember::where('check_list_item_id', $request->check_list_item_id)
             ->where('user_id', $request->user_id)
             ->first();
@@ -219,10 +223,10 @@ class MemberController extends Controller
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-//        $boardMembers0 = session('boardMembers_' . $request->boardId);
+        //        $boardMembers0 = session('boardMembers_' . $request->boardId);
 //        $boardMembers = json_decode(json_encode($boardMembers0));
         $boardMembers = BoardMember::with('user')
-            ->where('board_id',$request->boardId)
+            ->where('board_id', $request->boardId)
             ->where('authorize', '!=', 'Viewer')
             ->get();
 

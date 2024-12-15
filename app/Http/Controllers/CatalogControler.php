@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RealtimeCatalogArchiver;
+use App\Events\RealtimeCatalogDetail;
+use App\Events\RealtimeCatalogRestore;
 use App\Events\RealtimeCreateCatalog;
+use App\Events\RealtimeNotificationBoard;
 use App\Http\Requests\StoreCatalogRequest;
 use App\Models\Board;
 use App\Models\BoardMember;
@@ -70,7 +74,7 @@ class CatalogControler extends Controller
         $data['position'] = $maxPosition + 1;
 
         $catalog = Catalog::query()->create($data);
-        broadcast(new RealtimeCreateCatalog($catalog))->toOthers();
+        broadcast(new RealtimeCreateCatalog($catalog, $catalog->board->id))->toOthers();
 
         // lấy thông tin board
         $board = Board::findOrFail($request->board_id);
@@ -104,6 +108,7 @@ class CatalogControler extends Controller
             ]);
         }
         $catalog->update($request->all());
+        broadcast(new RealtimeCatalogDetail($catalog, $catalog->board_id))->toOthers();
         return response()->json([
             'action' => 'success',
             'msg' => 'Chỉnh sửa danh sách thành công!!',
@@ -114,7 +119,7 @@ class CatalogControler extends Controller
     public function destroy(string $id)
     {
         $catalog = Catalog::query()->findOrFail($id);
-        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeArchiver($catalog->board_id);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
@@ -143,6 +148,7 @@ class CatalogControler extends Controller
             $catalog->delete();
 
             DB::commit();
+            broadcast(new RealtimeCatalogArchiver($catalog, $catalog->board_id))->toOthers();
             // Ghi log khi xóa danh sách
             activity('Catalog Deleted')
                 ->causedBy(Auth::user()) // Người thực hiện
@@ -150,6 +156,7 @@ class CatalogControler extends Controller
                 ->tap(function (Activity $activity) use ($catalog) {
                     $activity->board_id = $catalog->board_id;
                     $activity->catalog_id = $catalog->id;
+                    $activity->workspace_id = $catalog->board->workspace_id;
                 })
                 ->log('Người dùng đã xóa danh sách khỏi bảng');
             return response()->json([
@@ -158,6 +165,7 @@ class CatalogControler extends Controller
                 'catalog' => $catalog
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',
@@ -169,10 +177,7 @@ class CatalogControler extends Controller
     public function destroyCatalog(string $id)
     {
         $catalog = Catalog::withTrashed()->findOrFail($id);
-        $boardId = Catalog::withTrashed()
-            ->join('boards', 'catalogs.board_id', '=', 'boards.id')
-            ->where('catalogs.id', $catalog->id)
-            ->value('boards.id');
+        $boardId = $catalog->board_id;
         $authorize = $this->authorizeWeb->authorizeArchiver($boardId);
         if (!$authorize) {
             return response()->json([
@@ -181,28 +186,28 @@ class CatalogControler extends Controller
             ]);
         }
 
-        $tasksId = Task::withTrashed()
+        $tasks = Task::withTrashed()
             ->where('catalog_id', $id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+            ->get();
 
         try {
 
             DB::beginTransaction();
 
-            foreach ($tasksId as $taskId) {
-                $this->taskController->destroyTask($taskId);
+            foreach ($tasks as $task) {
+                $this->taskController->destroyTask($task->id);
             }
 
             $catalog->forceDelete();
 
             DB::commit();
             return response()->json([
-                'action' => 'sucess',
-                'msg' => 'Xóa vĩnh viễn danh sách thành công!!'
+                'action' => 'success',
+                'msg' => 'Xóa vĩnh viễn danh sách thành công!!',
+                'catalog' => $catalog,
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',
@@ -214,7 +219,10 @@ class CatalogControler extends Controller
 
     public function restoreCatalog(string $id)
     {
-        $catalog = Catalog::withTrashed()->findOrFail($id);
+
+        $catalog = Catalog::withTrashed()
+            ->findOrFail($id);
+
         $boardId = Catalog::withTrashed()
             ->join('boards', 'catalogs.board_id', '=', 'boards.id')
             ->where('catalogs.id', $catalog->id)
@@ -227,28 +235,70 @@ class CatalogControler extends Controller
                 'msg' => 'Bạn không có quyền!!',
             ]);
         }
-        $tasksId = Task::withTrashed()
+        $tasks = Task::withTrashed()
             ->where('catalog_id', $id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
+            ->get();
+//        dd($tasksId);
         try {
             DB::beginTransaction();
 
-            foreach ($tasksId as $taskId) {
-                $this->taskController->restoreTask($taskId);
+            foreach ($tasks as $task) {
+                if ($catalog->deleted_at == $task->deleted_at) {
+                    $task = Task::withTrashed()->findOrFail($task->id);
+                    $task->restore();
+                }
             }
 
             $catalog->restore();
-
+            $msg = 'Quản trị viên đã khôi phục danh sách "' . $catalog->name . '"';
             DB::commit();
+            broadcast(new RealtimeCatalogRestore($catalog, $boardId,$msg))->toOthers();
             return response()->json([
-                'action' => 'sucess',
-                'msg' => 'Khôi phục danh sách thành công!!',
-                'catalog' => $catalog
+                'action' => 'success',
+                'msg' => 'Khôi phục danh sách thành công!',
+                'catalog' => $catalog,
+                'task_count' => $catalog->tasks->count(),
+                'tasks' => $catalog->tasks->map(function ($task) {
+                    return [
+                        'id' => $task->id,
+                        'text' => $task->text,
+                        'image' => $task->image,
+                        'start_date' => $task->start_date,
+                        'end_date' => $task->end_date,
+                        'totalMember' => $task->members->count(),
+                        'totalTag' => $task->tags->count(),
+                        'priority' => $task->priority,
+                        'risk' => $task->risk,
+                        'totalComment' => $task->taskComments->count(),
+                        'totalChecklist' => $task->checklists->count(),
+                        'totalAttachment' => $task->attachments->count(),
+                        'authFlow' => $task->followMembers->contains('user_id', auth()->id()),
+                        'members' => $task->members->map(function ($member) {
+                            return [
+                                'id' => $member->id,
+                                'name' => $member->name,
+                                'image' => $member->image,
+                            ];
+                        }),
+                        'tags' => $task->tags->map(function ($tag) {
+                            return [
+                                'name' => $tag->name,
+                                'color_code' => $tag->color_code,
+                            ];
+                        }),
+                        'checklists' => $task->checklists->map(function ($checklist) {
+                            return [
+                                'totalChecklist' => $checklist->checklistItems->count(),
+                                'totalChecklistComplete' => $checklist->checklistItems->where('is_complete', true),
+
+                            ];
+                        })
+                    ];
+                }),
             ]);
+
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',

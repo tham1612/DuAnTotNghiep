@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNotification;
 use App\Models\CheckList;
+use App\Models\Follow_member;
 use App\Models\TaskAttachment;
+use App\Notifications\BoardNotification;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Str;
 
 class AttachmentController extends Controller
 {
@@ -35,8 +40,21 @@ class AttachmentController extends Controller
                         'name' => $attachment->name
                     ];
 
-//                    session(['msg' => 'Hệ thống đã tải tệp thành công!']);
-//                    session(['action' => 'success']);
+                    $followMember = Follow_member::where('task_id', $attachment->task_id)
+                        ->where('follow', 1)
+                        ->get();
+                    $nameAttachment = Str::limit($attachment->name, 10);
+                    foreach ($followMember as $member) {
+                        if ($member->user->id != Auth::id()) {
+                            event(new EventNotification("Nhiệm vụ " . $attachment->task->text . " đã thêm file " . $nameAttachment . ". Xem chi tiết! ", 'success', $member->user->id));
+                            $name = 'Task ' . $attachment->task->text;
+                            $title = 'Task có thay đổi';
+                            $description = 'Task ' . $attachment->task->text . ' đã thêm file ' . $attachment->name;
+                            $board = $attachment->task->catalog->board;
+                            $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
+                        }
+                    }
+
                 } else {
                     return response()->json([
                         'success' => false,
@@ -45,9 +63,10 @@ class AttachmentController extends Controller
                 }
             }
 
+
             return response()->json([
                 'success' => true,
-                'msg' =>'Hệ thống đã tải tệp thành công!',
+                'msg' => 'Hệ thống đã tải tệp thành công!',
                 'action' => 'success',
                 'attachments' => json_decode(json_encode($attachments))
             ]);
@@ -63,14 +82,14 @@ class AttachmentController extends Controller
     public function update(Request $request, string $id)
     {
         $taskAttachment = TaskAttachment::query()->findOrFail($id);
-        $data=$request->only(['name']);
+        $data = $request->only(['name']);
         $taskAttachment->update($data);
         return response()->json([
             'success' => "update taskAttachment thành công",
             'msg' => true
         ]);
     }
-    public function destroy( string $id)
+    public function destroy(string $id)
     {
         $attachment = TaskAttachment::find($id);
         if ($attachment) {
@@ -89,7 +108,7 @@ class AttachmentController extends Controller
         ], 404);
     }
 
-//    call giao diện
+    //    call giao diện
     public function getFormAttach($taskId)
     {
         if (session('view_only', false)) {

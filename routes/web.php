@@ -24,14 +24,14 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('guest');
 
-Route::middleware(['auth', 'isWorkspace'])
+Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
     ->group(function () {
-
-        Route::get('/home', [HomeController::class, 'index'])->name('home');
+        Route::view('/boardError', '/pageError/boardError');
+        Route::middleware('isViewer')->get('/home', [HomeController::class, 'index'])->name('home');
 
         Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
             ->name('chat');
-      
+
         Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 
         Route::get('/chatAI', [ChatAIController::class, 'index'])->name('chatAI.index');
@@ -49,7 +49,7 @@ Route::middleware(['auth', 'isWorkspace'])
             ->name('users.update');
     });
 
-Route::middleware('auth')->get('inboxs', function () {
+Route::middleware(['auth', 'isActiveWsp'])->get('inboxs', function () {
     return view('Inboxs.index');
 })->name('inbox');
 
@@ -72,4 +72,3 @@ Route::post('/update-status', [UserController::class, 'updateStatus']);
 
 Route::get('/user/status/{id}', [UserController::class, 'checkStatus']);
 Route::get('/latest-message/{currentUserId}/{otherUserId}', [UserController::class, 'getLatestMessage']);
-

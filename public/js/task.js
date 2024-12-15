@@ -10,6 +10,8 @@ function archiverTask(taskId) {
             notificationWeb(response.action, response.msg);
             // Find and remove the task element
             let task = document.getElementById(`task_id_view_${taskId}`);
+            let countCatalogViewBoard = document.querySelector(`.totaltask-catalog-${response.task.catalog_id}`);
+            if (countCatalogViewBoard) countCatalogViewBoard.innerHTML = response.countCatalog
             if (task) {
                 // Store the task element and its parent for restoration
                 removedTask = task;
@@ -94,14 +96,14 @@ function restoreTask(taskId) {
 
 function destroyTask(taskId) {
     Swal.fire({
-        title: "Xóa vĩnh viễn task",
-        text: "Xóa vĩnh viễn task bạn không thể khôi phục lại, bạn có chắc muốn tiếp tục?",
-        icon: "error",
+        title: "Xóa vĩnh viễn thẻ",
+        text: "Xóa vĩnh viễn thẻ bạn không thể khôi phục lại, bạn có chắc muốn tiếp tục?",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
         cancelButtonColor: "#3085d6",
-        confirmButtonText: "Xóa",
-        cancelButtonText: "Đóng",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
