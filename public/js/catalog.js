@@ -223,7 +223,6 @@ function restoreCatalog(catalogId) {
                     </div>
                 `).join('');
                     let tagTaskHTML = task.tags.map(tag => `
-                     <div class="d-flex flex-wrap gap-2">
                         <div data-bs-toggle="tooltip" data-bs-trigger="hover"
                              data-bs-placement="top" title="${tag.name}">
                             <div
@@ -231,7 +230,7 @@ function restoreCatalog(catalogId) {
                                 style="width: 40px;height: 15px; background-color: ${ tag.color_code }">
                             </div>
                         </div>
-                        </div>
+
                 `).join('');
                     let checkListTask = task.checklists.map(checklist => `
                      ${checklist.totalChecklistComplete}/${checklist.totalChecklist}
@@ -256,19 +255,22 @@ function restoreCatalog(catalogId) {
                                     </div>
                                 ` : ''}
                                 <!-- giao việc cho thành viên -->
-                                ${task.totalTag >= 1 ? `
+                                ${task.totalMember >= 1 ? `
                                  <div class="flex-grow-1 d-flex align-items-center" style="height: 30px">
                                     <i class="ri-account-circle-line fs-20 me-2"></i>
                                     ${memberTaskHTML}
                                 </div>
                                 `:''}
                                 ${dateTask}
-                                ${task.totalTag >= 1 ? `
-                                <div class="flex-grow-1 d-flex align-items-center">
-                                    <i class="ri-price-tag-3-line fs-20 me-2"></i>
-                                    ${tagTaskHTML}
-                                </div>
-                                `:''}
+
+                                 <div class="flex-grow-1 d-flex align-items-center tag-task-section-${task.id}
+                                    ${task.totalTag ? '' : 'hidden' }">
+                                        <i class="ri-price-tag-3-line fs-20 me-2 ${task.totalTag? '' : 'd-none' }
+                                         tag-task-section-${task.id}"></i>
+                                          <div class="d-flex flex-wrap gap-2 tag-task-view-${task.id}">
+                                           ${tagTaskHTML}
+                                         </div>
+                                 </div>
 
                             </div>
                         </div>

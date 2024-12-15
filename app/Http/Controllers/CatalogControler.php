@@ -290,6 +290,7 @@ class CatalogControler extends Controller
                             return [
                                 'totalChecklist' => $checklist->checklistItems->count(),
                                 'totalChecklistComplete' => $checklist->checklistItems->where('is_complete', true),
+
                             ];
                         })
                     ];

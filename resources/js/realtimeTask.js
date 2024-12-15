@@ -11,96 +11,96 @@ Echo.channel(`tasks.${boardId}`)
         const catalogElement = document.querySelector(`.tasks-list[data-value="${catalogId}"] .tasks`);
 
         if (catalogElement) {
-            addTaskToCatalogViewBoard(catalogElement, e.task, e.catalog_name); // Thêm task vào catalog nếu tìm thấy
+            addTaskToCatalogViewBoard(catalogElement, e.task, e.catalog_name, e.tag_count); // Thêm task vào catalog nếu tìm thấy
         } else {
             console.error(`Không tìm thấy catalog với data-value: ${catalogId}`);
         }
     })
     .listen('RealtimeTaskKanban', (e) => {
-        notificationWeb('', e.msg)
+            notificationWeb('', e.msg)
 
-// Lấy thông tin task và danh sách
-        let taskElement = $(`#task_id_view_${e.task.id}`); // Tìm task cũ theo ID
-        let listTask = document.getElementById(`${e.task.catalog.name}-${e.task.catalog_id}`); // Tìm danh sách chứa task
+            // Lấy thông tin task và danh sách
+            let taskElement = $(`#task_id_view_${e.task.id}`); // Tìm task cũ theo ID
+            let listTask = document.getElementById(`${e.task.catalog.name}-${e.task.catalog_id}`); // Tìm danh sách chứa task
 
 
-        if (taskElement.length) {
-            taskElement.remove();
-        }
-
-// html của màn board
-        let taskHTML = e.tasks.map(task => {
-            let now = new Date();
-            let endDate = new Date(task.end_date);
-            let startDate = new Date(task.start_date);
-
-            let colorbg = '';
-            if (task.progress === 100) {
-                colorbg = 'bg-success';
-            } else if (now > endDate) {
-                colorbg = 'bg-danger';
-            } else if (now > startDate) {
-                colorbg = 'bg-warning';
-            } else {
-                colorbg = 'bg-primary'; // Mặc định cho trạng thái không phù hợp các điều kiện trên
+            if (taskElement.length) {
+                taskElement.remove();
             }
 
-// Định dạng ngày tháng
-            let formatendDate = endDate.toLocaleString('sv-SE', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
-            let formatstartDate = startDate.toLocaleString('sv-SE', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
-// Xây dựng chuỗi HTML
-            let dateTask = '';
-            if (task.end_date && !task.start_date) {
-                dateTask = `
+            // html của màn board
+            let taskHTML = e.tasks.map(task => {
+                        let now = new Date();
+                        let endDate = new Date(task.end_date);
+                        let startDate = new Date(task.start_date);
+
+                        let colorbg = '';
+                        if (task.progress === 100) {
+                            colorbg = 'bg-success';
+                        } else if (now > endDate) {
+                            colorbg = 'bg-danger';
+                        } else if (now > startDate) {
+                            colorbg = 'bg-warning';
+                        } else {
+                            colorbg = 'bg-primary'; // Mặc định cho trạng thái không phù hợp các điều kiện trên
+                        }
+
+                        // Định dạng ngày tháng
+                        let formatendDate = endDate.toLocaleString('sv-SE', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        });
+                        let formatstartDate = startDate.toLocaleString('sv-SE', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        });
+                        // Xây dựng chuỗi HTML
+                        let dateTask = '';
+                        if (task.end_date && !task.start_date) {
+                            dateTask = `
                         <div class="flex-grow-1 d-flex align-items-center">
                             <i class="ri-calendar-event-line fs-20 me-2"></i>
                             <span class="badge ${colorbg}" id="date-view-board-${task.id}">
                                 ${formatendDate}
                             </span>
                         </div>`;
-            } else if (task.start_date && !task.end_date) {
-                dateTask = `
+                        } else if (task.start_date && !task.end_date) {
+                            dateTask = `
                         <div class="flex-grow-1 d-flex align-items-center">
                             <i class="ri-calendar-event-line fs-20 me-2"></i>
                             <span class="badge ${colorbg}" id="date-view-board-${task.id}">
                                 ${formatstartDate}
                             </span>
                         </div>`;
-            } else if (task.start_date && task.end_date) {
-                dateTask = `
+                        } else if (task.start_date && task.end_date) {
+                            dateTask = `
                         <div class="flex-grow-1 d-flex align-items-center">
                             <i class="ri-calendar-event-line fs-20 me-2"></i>
                             <span class="badge ${colorbg}" id="date-view-board-${task.id}">
                                 ${formatstartDate} - ${formatendDate}
                             </span>
                         </div>`;
-            }
-            let colorPriority = '';
-            if (task.priority == 'High') {
-                colorPriority= 'text-danger';
-            } else if (task.priority == 'Medium') {
-                colorPriority= 'text-warning';
-            } else if (task.priority == 'Low') {
-                colorPriority= 'text-info';
-            }
-            let colorRisk = '';
-            if (task.risk == 'High') {
-                colorRisk= 'text-danger';
-            } else if (task.risk == 'Medium') {
-                colorRisk= 'text-warning';
-            } else if (task.risk == 'Low') {
-                colorRisk= 'text-info';
-            }
+                        }
+                        let colorPriority = '';
+                        if (task.priority == 'High') {
+                            colorPriority = 'text-danger';
+                        } else if (task.priority == 'Medium') {
+                            colorPriority = 'text-warning';
+                        } else if (task.priority == 'Low') {
+                            colorPriority = 'text-info';
+                        }
+                        let colorRisk = '';
+                        if (task.risk == 'High') {
+                            colorRisk = 'text-danger';
+                        } else if (task.risk == 'Medium') {
+                            colorRisk = 'text-warning';
+                        } else if (task.risk == 'Low') {
+                            colorRisk = 'text-info';
+                        }
 
-            let memberTaskHTML = task.members.map(member => `
+                        let memberTaskHTML = task.members.map(member => `
                     <div class="avatar-group">
                         <a href="javascript: void(0);"
                            class="avatar-group-item border-0"
@@ -258,7 +258,7 @@ Echo.channel(`tasks.${boardId}`)
         notificationWeb('', `Thẻ ${e.task.text} đã bị quản trị viên lưu trữ.`)
     });
 
-function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
+function addTaskToCatalogViewBoard(catalogElement, task, catalog_name,tag_count) {
     let currentTaskCountElement = $('.totaltask-catalog-' + task.catalog_id);
     if (currentTaskCountElement.length) {
         let currentTaskCount = parseInt(currentTaskCountElement.text());
@@ -275,7 +275,7 @@ function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
             <div class="card tasks-box cursor-pointer" data-value="${task.id}">
                 <div class="card-body">
                     <div class="d-flex mb-2">
-                            <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
+                            <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-${task.id}" data-bs-toggle="modal"
                                 data-bs-target="#detailCardModal" data-task-id="${task.id}">
                              ${task.text}
                         </h6>
@@ -289,6 +289,14 @@ function addTaskToCatalogViewBoard(catalogElement, task, catalog_name) {
                         <!-- ngày bắt đầu & kết thúc -->
 
                         <!-- nhãn -->
+                         <div class="flex-grow-1 d-flex align-items-center tag-task-section-${task.id}
+                            ${tag_count ? '' : 'hidden' }">
+                                <i class="ri-price-tag-3-line fs-20 me-2 ${tag_count ? '' : 'd-none' }
+                                 tag-task-section-${task.id}"></i>
+                                <div class="d-flex flex-wrap gap-2 tag-task-view-${task.id}">
+
+                                </div>
+                         </div>
 
                     </div>
                 </div>

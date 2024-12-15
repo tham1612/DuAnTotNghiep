@@ -11,10 +11,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RealtimeCreateTask implements ShouldBroadcast
+class RealtimeUpdateTask implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
     public $task, $boardId;
 
     /**
@@ -26,18 +25,20 @@ class RealtimeCreateTask implements ShouldBroadcast
         $this->boardId = $boardId;
     }
 
-
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \Illuminate\Broadcasting\Channel>
+     */
     public function broadcastOn()
     {
         return new Channel('tasks.' . $this->boardId);
     }
-
     public function broadcastWith()
     {
         return [
             'task' => $this->task,
-            'catalog_name' => $this->task->catalog->name,
-            'tag_count'=>count($this->task->tags)
+//            'catalog_name' => $this->task->catalog->name,
         ];
     }
 }

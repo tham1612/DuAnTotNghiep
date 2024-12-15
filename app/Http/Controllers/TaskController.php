@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Events\EventNotification;
+use App\Events\RealtimeCreateCatalog;
 use App\Events\RealtimeCatalogRestore;
 use App\Events\RealtimeCreateTask;
 use App\Events\RealtimeNotificationBoard;
 use App\Events\RealtimeTaskArchiver;
 use App\Events\RealtimeTaskKanban;
+use App\Events\RealtimeUpdateTask;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Catalog;
@@ -144,6 +146,7 @@ class TaskController extends Controller
             'catalogs' => $task->catalog->board->catalogs,
             'boarId' => $task->catalog->board->id,
             'task_count' => count($catalog->tasks),
+            'tag_count'=>count($task->tags)
         ]);
     }
 
@@ -226,6 +229,7 @@ class TaskController extends Controller
 
 
         $task->update($data);
+        broadcast(new RealtimeUpdateTask($task, $task->catalog->board->id))->toOthers();
         $data['id'] = $id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
