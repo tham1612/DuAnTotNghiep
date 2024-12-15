@@ -152,11 +152,18 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
             // ghi lại hoạt động của bảng
-            activity('Người dùng đã tạo bảng ')
-                ->performedOn($board) // đối tượng liên quan là bảng vừa tạo
-                ->causedBy(Auth::user()) // ai là người thực hiện hoạt động này
-                ->withProperties(['workspace_id' => $board->workspace_id]) // Lưu trữ workspace_id vào properties
-                ->log('Đã tạo bảng mới: ' . $board->name); // Nội dung ghi log
+            activity('Thêm mới bảng')
+            ->performedOn($board)
+            ->causedBy(Auth::user())
+            ->withProperties([
+                'workspace' => $board->workspace_id,
+                'board_id' => $board->id,
+            ])
+            ->tap(function (Activity $activity) use ($board) {
+                $activity->board_id = $board->id;
+                $activity->workspace_id = $board->workspace_id;
+            })
+            ->log('Người dùng đã thêm bảng mới.');
 
             DB::commit();
             session(['msg' => 'Thêm bảng ' . $data['name'] . ' thành công!']);
@@ -494,11 +501,14 @@ class BoardController extends Controller
 
         $user = User::find($request->user_id);
         $board = Board::find($request->board_id);
+        Log::debug($user);
+        Log::debug($board);
+
         $checkUser = WorkspaceMember::where('user_id', $request->user_id)
-            ->where('Workspace_id', $board->workspace_id)
+            ->where('workspace_id', $board->workspace_id)
             ->first();
         $owner = BoardMember::where('authorize', "Owner")
-            ->where('Workspace_id', $request->board_id)
+            ->where('board_id', $request->board_id)
             ->first();
         try {
             BoardMember::query()

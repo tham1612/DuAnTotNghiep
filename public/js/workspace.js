@@ -356,9 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const wsmId = form.querySelector("input[name='wsm_id']").value; // Lấy user_id từ form
             const workspaceId = form.querySelector(
                 "input[name='workspace_id']"
-            ).value; // Lấy workspace_id từ form
-            // const count = document.getElementById("tab_2");
-            // const so = count.innerText - 1;
+            ).value;
 
             const count1 = document.getElementById("tab_1"); // Lấy element
             const countString = count1.textContent || count1.innerText; // Lấy nội dung dưới dạng chuỗi

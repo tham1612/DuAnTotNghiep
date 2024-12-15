@@ -41,8 +41,8 @@
                                  data-value="{{ $task->id }}" data-position-value="{{$task->position}}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
-                                        <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}" id="text-task-view-board-{{ $task->id }}">
+                                        <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-{{ $task->id }} " data-bs-toggle="modal"
+                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}" id="">
                                             {{ $task->text }}
                                         </h6>
                                     </div>

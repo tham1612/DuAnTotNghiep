@@ -7,12 +7,9 @@ Echo.channel(`tasks.${boardId}`)
             let taskNameElement = $(`.text-task-view-board-${response.task.id}`);
             if (taskNameElement.length > 0) {
                 taskNameElement.html(response.task.text);
+            }else{
+                console.log('hic')
             }
-
-        }
-        if (response.task.description) {
-            $(`#description_${response.task.id}`).val(response.task.description);
-
         }
         const dateViewBoard = document.getElementById(`date-view-board-${response.task.id}`);
             let dateSection = document.getElementById(`date-section-${response.task.id}`);
@@ -93,7 +90,7 @@ Echo.channel(`tasks.${boardId}`)
                     }
                     dateSection.innerHTML = date; // Thay thế toàn bộ nội dung của `dateSection`
                 }
-                
+
     });
 
 function formatFullDate(date) {

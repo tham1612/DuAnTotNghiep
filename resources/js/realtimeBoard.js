@@ -52,5 +52,9 @@ Echo.channel(`boards.${boardId}`)
         setTimeout(() => {
             window.location.reload();
         }, 1500);
+    })
+    .listen('RealtimeNotificationBoard', (e) => {
+        console.log("Nhận sự kiện RealtimeNotificationBoard:", e);
+        notificationWeb('', e.msg)
     });
 
