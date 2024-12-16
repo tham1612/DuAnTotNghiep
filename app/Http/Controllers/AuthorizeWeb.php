@@ -176,7 +176,10 @@ class AuthorizeWeb extends Controller
             ->first();
 
         if ($checkAuthorize) {
-            return $checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner'
+//            return $checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner'
+//                ? true
+//                : false;
+            return $checkAuthorize->authorize == 'Owner'
                 ? true
                 : false;
         }

@@ -216,9 +216,9 @@
                         @if (!empty($allNotifications) && $allNotifications->count() > 0)
                             @if ($allNotifications->count() <= 9)
                                 <span
-                                    class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
+                                    class="badge rounded-circle bg-danger text-white notification-sidebar-count-{{auth()->id()}}">{{ $allNotifications->count() }}</span>
                             @elseif ($allNotifications->count() > 9)
-                                <span class="badge rounded-circle bg-danger text-white">9+</span>
+                                <span class="badge rounded-circle bg-danger text-white notification-sidebar-count-{{auth()->id()}}">9+</span>
                             @endif
                         @endif
                     </a>
