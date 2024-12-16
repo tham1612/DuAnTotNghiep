@@ -13,7 +13,6 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Catalog;
 use App\Models\CheckList;
-use App\Models\CheckListItemMember;
 use App\Models\Color;
 use App\Models\Follow_member;
 use App\Models\Tag;
@@ -24,12 +23,10 @@ use App\Models\TaskMember;
 use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Notifications\Testhihi;
 use App\Notifications\WorkspaceNotification;
 use App\Notifications\BoardMemberNotification;
 use App\Notifications\BoardNotification;
 use Carbon\Carbon;
-use Google\Service\Forms\FormResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Models\WorkspaceMember;
@@ -415,7 +412,7 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-//        dd($request->all());
+        //        dd($request->all());
         $authorize = $this->authorizeWeb->authorizeEdit($id);
         if (!$authorize) {
             return response()->json([
@@ -1083,13 +1080,16 @@ class BoardController extends Controller
         $authorize = $request->input('authorize');
 
         $user = User::where('email', $email)->first();
-        $userCheck = BoardMember::where('user_id', $user->id)->where('board_id', $board->id)->first();
-        if (!empty($userCheck)) {
-            return response()->json([
-                'action' => 'error',
-                'msg' => 'Thành viên đã tồn tại ở trong bảng'
-            ]);
+        if ($user) {
+            $userCheck = BoardMember::where('user_id', $user->id)->where('board_id', $board->id)->first();
+            if (!empty($userCheck)) {
+                return response()->json([
+                    'action' => 'error',
+                    'msg' => 'Thành viên đã tồn tại ở trong bảng'
+                ]);
+            }
         }
+
 
         event(new UserInvitedToBoard($boardName, $email, $linkInvite, $authorize));
         return response()->json([
@@ -1110,7 +1110,22 @@ class BoardController extends Controller
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
             $user = User::query()->where('email', $request->email)->first();
+            $timestamp = $request->query('timestamp');
+            $linkTime = Carbon::createFromTimestamp($timestamp);
+            $currentTime = Carbon::now();
 
+            if ($user) {
+                $checkedUser = BoardMember::where('workspace_id', $board->id)
+                    ->where('user_id', $user->id)->first();
+
+                if ($checkedUser) {
+                    abort(404, 'Link mời của bạn đã hết hạn');
+                }
+            }
+
+            if ($currentTime->diffInSeconds($linkTime) > 300) {
+                abort(404, 'Link mời của bạn đã hết hạn');
+            }
             //xử lý khi người dùng có tài khoản
             if ($user) {
                 $check_user_wsp = WorkspaceMember::where('user_id', $user->id)->where('workspace_id', $board->workspace_id)
@@ -1378,9 +1393,7 @@ class BoardController extends Controller
                     $name = 'Bảng ' . $board->name;
                     $title = 'Thành viên mới trong bảng';
                     $description = 'Người dùng "' . $userName . '" đã được thêm vào bảng "' . $board->name . '".';
-                    // if ($user->id == Auth::id()) {
-                    //     event(new EventNotification($description, 'success', $user->id));
-                    // }
+
                     $user->notify(new BoardNotification($user, $board, $name, $description, $title));
                 }
             });

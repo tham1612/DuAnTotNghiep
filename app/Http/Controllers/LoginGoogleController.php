@@ -7,9 +7,14 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
 
 class LoginGoogleController extends Controller
 {
+    use AuthenticatesUsers;
+
     /**
      * Display a listing of the resource.
      */
@@ -67,7 +72,7 @@ class LoginGoogleController extends Controller
     }
     public function redirectToGoogle()
     {
-       return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
 

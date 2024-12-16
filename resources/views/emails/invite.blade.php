@@ -158,11 +158,11 @@
                                                 <td class="content-block" itemprop="handler" itemscope itemtype=""
                                                     style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 24px;"
                                                     valign="top">
-                                                    <a href="{{ $linkInvite . '?email=' . urlencode($email) . '&authorize=' . urlencode($authorize) }}"
+                                                    <a href="{{ $linkInvite . '?email=' . urlencode($email) . '&authorize=' . urlencode($authorize) . '&timestamp=' . time() }}"
                                                         itemprop="url"
                                                         style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: .8125rem;font-weight: 400; color: #FFF; text-decoration: none; text-align: center; cursor: pointer; display: inline-block; border-radius: .25rem; text-transform: capitalize; background-color: #0ab39c; margin: 0; border-color: #0ab39c; border-style: solid; border-width: 1px; padding: .5rem .9rem;"
                                                         onMouseOver="this.style.background='#099885'"
-                                                        onMouseOut="this.style.background='#0ab39c'">Accept
+                                                        onMouseOut="this.style.background='#0ab39c'">Tham gia
                                                         &#8594;</a>
                                                 </td>
                                             </tr>

@@ -103,7 +103,7 @@ class TagController extends Controller
         $task = Task::find($data['task_id']);
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $task->text . " tạo thêm nhãn mới. Xem chi tiết! ", 'success', $member->user->id));
+                event(new EventNotification("Thẻ " . $task->text . " tạo thêm nhãn mới. Xem chi tiết! ", 'success', $member->user->id));
                 $name = 'Task ' . $task->text;
                 $title = 'Task có thay đổi';
                 $description = 'Task ' . $task->text . ' tạo thêm nhãn mới';
@@ -164,7 +164,7 @@ class TagController extends Controller
                 $task = Task::find($task_id);
                 foreach ($followMember as $member) {
                     if ($member->user->id != Auth::id()) {
-                        event(new EventNotification("Nhiệm vụ " . $task->text . " đã xóa nhãn " . $check->tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                        event(new EventNotification("Thẻ " . $task->text . " đã xóa nhãn " . $check->tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
                         $name = 'Task ' . $task->text;
                         $title = 'Task có thay đổi';
                         $description = 'Task ' . $task->text . ' đã xóa nhãn ' . $check->tag->name;
@@ -195,7 +195,7 @@ class TagController extends Controller
                 $task = Task::find($task_id);
                 foreach ($followMember as $member) {
                     if ($member->user->id != Auth::id()) {
-                        event(new EventNotification("Nhiệm vụ " . $task->text . " đã thêm nhãn " . $tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                        event(new EventNotification("Thẻ " . $task->text . " đã thêm nhãn " . $tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
                         $name = 'Task ' . $task->text;
                         $title = 'Task có thay đổi';
                         $description = 'Task ' . $task->text . ' đã thêm nhãn ' . $tag->name;

@@ -28,7 +28,7 @@ class ChecklistController extends Controller
             ->get();
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $checkList->task->text . " đã thêm checklist " . $checkList->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                event(new EventNotification("Thẻ " . $checkList->task->text . " đã thêm checklist " . $checkList->name . ". Xem chi tiết! ", 'success', $member->user->id));
                 $name = 'Task ' . $checkList->task->text;
                 $title = 'Task có thay đổi';
                 $description = 'Task ' . $checkList->task->text . ' đã thay đổi ngày đến hạn';
@@ -174,7 +174,7 @@ class ChecklistController extends Controller
             ->get();
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $checkListItem->checkList->task->text . " đã thêm checklist " . $checkListItem->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                event(new EventNotification("Thẻ " . $checkListItem->checkList->task->text . " đã thêm checklist " . $checkListItem->name . ". Xem chi tiết! ", 'success', $member->user->id));
                 $name = 'Task ' . $checkListItem->checkList->task->text;
                 $title = 'Task có thay đổi';
                 $description = 'Task ' . $checkListItem->checkList->task->text . ' đã thay đổi ngày đến hạn';
