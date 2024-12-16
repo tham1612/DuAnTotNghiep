@@ -134,9 +134,12 @@ class AuthorizeWeb extends Controller
             ->where('user_id', auth()->id())
             ->where('board_id', $boardId)
             ->first();
-        return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner')
-            ? true
-            : false;
+        if ($checkAuthorize) {
+            return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner')
+                ? true
+                : false;
+        }
+        return false;
     }
 
     public function authorizeCreateBoardOnWorkspace()
@@ -146,6 +149,25 @@ class AuthorizeWeb extends Controller
             ->where('is_active', 1)
             ->first();
         if ($checkAuthorize) {
+            return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member')
+                ? true
+                : false;
+        }
+        return false;
+    }
+
+    public function authorizeCopyBoardOnWorkspace(string $boardId)
+    {
+        $checkAuthorizeWsp = WorkspaceMember::query()
+            ->where('user_id', auth()->id())
+            ->where('is_active', 1)
+            ->first();
+        $checkAuthorizeBoard = BoardMember::query()
+            ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
+            ->first();
+        $checkAuthorize = $checkAuthorizeBoard ? $checkAuthorizeBoard : $checkAuthorizeWsp;
+        if ($checkAuthorizeBoard && $checkAuthorizeWsp) {
             return ($checkAuthorize->authorize == 'Owner' || $checkAuthorize->authorize == 'Sub_Owner' || $checkAuthorize->authorize == 'Member')
                 ? true
                 : false;
