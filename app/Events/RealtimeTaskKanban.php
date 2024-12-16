@@ -16,16 +16,17 @@ class RealtimeTaskKanban implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $task, $boardId, $msg;
+    public $task, $boardId, $msg, $catalogIdOld;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task, $boardId, $msg)
+    public function __construct(Task $task, $boardId, $msg,?string $catalogIdOld)
     {
         $this->task = $task;
         $this->boardId = $boardId;
         $this->msg = $msg;
+        $this->catalogIdOld = $catalogIdOld;
     }
 
 
@@ -71,11 +72,15 @@ class RealtimeTaskKanban implements ShouldBroadcast
                             'totalChecklist' => $checklist->checklistItems->count(),
                             'totalChecklistComplete' => $checklist->checklistItems->where('is_complete', true),
                         ];
-                    })
+                    }),
+                    'totalChecklistComplete' => $this->task->checklists->sum(function ($checklist) {
+                        return $checklist->checklistItems->where('is_complete', true)->count();
+                    }),
                 ]
             ],
             'task' => $this->task,
-            'msg' => $this->msg
+            'msg' => $this->msg,
+            'catalogIdOld' => $this->catalogIdOld,
         ];
     }
 }

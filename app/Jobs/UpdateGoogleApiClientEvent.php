@@ -77,8 +77,9 @@ class UpdateGoogleApiClientEvent implements ShouldQueue
                 $event->setEnd($endDateTime);
             }
 
-
+            Log::debug($this->attendees);
             if (!empty($this->attendees)) {
+//                Log::debug($this->attendees);
                 // Giả sử $this->attendees chỉ chứa một người tham gia mới mỗi lần
                 $newAttendee = $this->attendees[0]; // Lấy người tham gia mới
                 $email = $newAttendee['email'] ?? null; // Lấy email của người mới

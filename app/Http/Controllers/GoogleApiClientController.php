@@ -167,7 +167,7 @@ class GoogleApiClientController extends Controller
             'user_id' => Auth::id(),
             'task_id' => isset($data['id']) ? $data['id'] : $data['task_id'],
         ];
-
+//        dd($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
         UpdateGoogleApiClientEvent::dispatch($eventData, $attendees, $eventId, $accessToken, $userOrTaskId);
 
         // $client = $this->getClient();

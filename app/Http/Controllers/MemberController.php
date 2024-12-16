@@ -46,6 +46,7 @@ class MemberController extends Controller
         $data['id'] = $task->id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
+        $data['id_google_calendar'] = $task->id_google_calendar;
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
         $existingMember = TaskMember::where('task_id', $data['task_id'])
@@ -74,8 +75,10 @@ class MemberController extends Controller
             }
             if (Auth::user()->access_token) {
                 if ($task->id_google_calendar) {
+//                    dd($data);
                     $this->googleApiClient->updateEvent($data);
                 } else {
+//                    dd(123);
                     $this->googleApiClient->createEvent($data);
                 }
             }
@@ -120,6 +123,7 @@ class MemberController extends Controller
         $data['description'] = $task->description;
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
+        $data['id_google_calendar'] = $task->id_google_calendar;
         if (!$taskMember) {
             return response()->json([
                 'success' => false,
@@ -143,8 +147,10 @@ class MemberController extends Controller
 
             if (Auth::user()->access_token) {
                 if ($task->id_google_calendar) {
+//                    dd($data);
                     $this->googleApiClient->updateEvent($data);
                 } else {
+//                    dd(123);
                     $this->googleApiClient->createEvent($data);
                 }
             }
