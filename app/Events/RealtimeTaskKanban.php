@@ -74,7 +74,8 @@ class RealtimeTaskKanban implements ShouldBroadcast
                     })
                 ]
             ],
-            'task'=> $this->task,
+            'task' => $this->task,
+            'msg' => $this->msg
         ];
     }
 }
