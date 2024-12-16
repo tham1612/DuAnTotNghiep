@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,10 +64,30 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        // Tạo người dùng mới
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    
+        // Lấy ID của người dùng vừa tạo
+        $newUserId = $user->id;
+    
+        // Lấy danh sách ID của tất cả người dùng hiện tại, ngoại trừ người vừa tạo
+        $existingUserIds = User::where('id', '!=', $newUserId)->pluck('id')->toArray();
+    
+        // Dùng vòng lặp để tạo bản ghi trong bảng room_chat
+        foreach ($existingUserIds as $existingUserId) {
+            DB::table('room_chat')->insert([
+                'members_hash' => "{$newUserId},{$existingUserId}", // Ghép ID người mới và ID người hiện có
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    
+        return $user;
     }
+    
+    
 }
