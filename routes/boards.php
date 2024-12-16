@@ -45,6 +45,8 @@ Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
 
                 Route::get('request-to-join-workspace', [BoardController::class, 'requestToJoinWorkspace'])->name('requestToJoinWorkspace');
 
+                Route::get('request-to-join-board/{id}', [BoardController::class, 'requestToJoinBoard'])->name('requestToJoinBoard');
+
                 Route::post('invite', [BoardController::class, 'inviteUserBoard'])->name('invite_board');
 
                 Route::put('accept-member', [BoardController::class, 'acceptMember'])->name('acceptMember');
@@ -54,7 +56,7 @@ Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
                 Route::post('invite-member-workspace/{userId}/{boardId}', [BoardController::class, 'inviteMemberWorkspace'])->name('inviteMemberWorkspace');
 
                 Route::get('activate-member/{id}', [BoardController::class, 'activateMember'])->name('activateMember');
-                
+
                 Route::get('leave-board/{id}', [BoardController::class, 'leaveBoard'])->name('leaveBoard');
 
                 Route::get('upgrade-member-ship/{id}', [BoardController::class, 'upgradeMemberShip'])->name('upgradeMemberShip');

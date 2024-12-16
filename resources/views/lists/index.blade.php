@@ -108,8 +108,8 @@
                                             id="task_id_view_{{$task->id}}">
                                             <td class="col-2">
                                                 <div class="d-flex">
-                                                    <div class="flex-grow-1" data-bs-toggle="modal"
-                                                         data-bs-target="#detailCardModal" data-task-id="{{$task->id}}">
+                                                    <div class="flex-grow-1 text-task-view-board-{{ $task->id }}" data-bs-toggle="modal"
+                                                          data-task-id="{{$task->id}}">
                                                         {{ \Illuminate\Support\Str::limit($task->text, 20) }}
                                                     </div>
                                                 </div>

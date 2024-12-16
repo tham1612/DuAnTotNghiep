@@ -26,6 +26,8 @@ Route::middleware(['auth', 'isWorkspace','isActiveWsp'])
             ->name('catalogs.getFormCreateTaskViewTable');
 
         Route::resource('tasks', TaskController::class);
+        Route::post('gantt/task', [TaskController::class, 'createGantt'])
+        ->name('tasks.CreateGantt');
 
         Route::post('/create-event', [TaskController::class, 'createEvent']);
 

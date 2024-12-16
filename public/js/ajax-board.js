@@ -261,7 +261,7 @@ function submitAddTask(catalogId, catalogName) {
             <div class="card tasks-box cursor-pointer task-of-catalog-${catalogId}" data-value="${response.task.id}" id="task_id_view_${response.task.id}">
                 <div class="card-body">
                     <div class="d-flex mb-2">
-                            <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
+                            <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-${response.task.id} " data-bs-toggle="modal"
                                 data-bs-target="#detailCardModal" data-task-id="${response.task.id}">
                              ${response.task.text}
                         </h6>
@@ -275,7 +275,14 @@ function submitAddTask(catalogId, catalogName) {
                         <!-- ngày bắt đầu & kết thúc -->
 
                         <!-- nhãn -->
+                         <div class="flex-grow-1 d-flex align-items-center tag-task-section-${response.task.id}
+                            ${response.tag_count ? '' : 'hidden' }">
+                                <i class="ri-price-tag-3-line fs-20 me-2 ${response.tag_count ? '' : 'd-none' }
+                                 tag-task-section-${response.task.id}"></i>
+                                <div class="d-flex flex-wrap gap-2 tag-task-view-${response.task.id}">
 
+                                </div>
+                         </div>
                     </div>
                 </div>
                 <div class="card-footer border-top-dashed">
@@ -301,7 +308,7 @@ function submitAddTask(catalogId, catalogName) {
             <tr draggable="true" class="task-of-catalog-${catalogId}">
                 <td class="col-2">
                     <div class="d-flex">
-                        <div class="flex-grow-1" data-bs-toggle="modal" data-bs-target="#detailCardModal" data-task-id="${response.task.id}">
+                        <div class="flex-grow-1 text-task-view-board-${response.task.id}" data-bs-toggle="modal" data-bs-target="#detailCardModal" data-task-id="${response.task.id}">
                             ${response.task.text.substring(0, 20).toUpperCase()}
                         </div>
                     </div>

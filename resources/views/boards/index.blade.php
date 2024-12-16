@@ -41,8 +41,9 @@
                                  data-value="{{ $task->id }}" data-position-value="{{$task->position}}">
                                 <div class="card-body">
                                     <div class="d-flex mb-2">
-                                        <h6 class="fs-15 mb-0 flex-grow-1 " data-bs-toggle="modal"
-                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}">
+                                        <h6 class="fs-15 mb-0 flex-grow-1 text-task-view-board-{{ $task->id }} "
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#detailCardModal" data-task-id="{{ $task->id }}" id="">
                                             {{ $task->text }}
                                         </h6>
                                     </div>
@@ -153,7 +154,11 @@
                                         @elseif($startDate && empty($endDate))
                                             <div class="flex-grow-1 d-flex align-items-center">
                                                 <i class="ri-calendar-event-line fs-20 me-2"></i>
-                                                <span class="badge bg-primary" id="date-view-board-{{$task->id}}">
+                                                <span
+                                                    class="badge @if($startDate > $now)bg-primary
+                                                    @else bg-danger
+                                                    @endif"
+                                                    id="date-view-board-{{$task->id}}">
                                                     {{ $startDate }}
                                                 </span>
                                             </div>
@@ -171,22 +176,24 @@
                                             </div>
                                         @endif
                                         <!-- nhãn -->
-                                        @if ($task->tags->isNotEmpty())
-                                            <div class="flex-grow-1 d-flex align-items-center">
-                                                <i class="ri-price-tag-3-line fs-20 me-2"></i>
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    @foreach ($task->tags as $tag)
-                                                        <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                                                             data-bs-placement="top" title="{{ $tag->name }}">
-                                                            <div
-                                                                class="text-white border rounded d-flex align-items-center justify-content-center"
-                                                                style="width: 40px;height: 15px; background-color: {{ $tag->color_code }}">
-                                                            </div>
+                                        <div class="flex-grow-1 d-flex align-items-center tag-task-section-{{ $task->id }}
+                                            {{ (count($task->tags)) ? '' : 'hidden' }}">
+                                            <i class="ri-price-tag-3-line fs-20 me-2 {{ count($task->tags) ? '' : 'd-none' }}
+                                                 tag-task-section-{{ $task->id }}"></i>
+                                            <div class="d-flex flex-wrap gap-2 tag-task-view-{{$task->id}}">
+                                                @foreach ($task->tags as $tag)
+                                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                                         data-bs-placement="top" title="{{ $tag->name }}"
+                                                         data-tag-view-id="{{ $task->id }}-{{ $tag->id }}">
+                                                        <div
+                                                            class="text-white border rounded d-flex align-items-center justify-content-center"
+                                                            style="width: 40px;height: 15px; background-color: {{ $tag->color_code }}">
                                                         </div>
-                                                    @endforeach
-                                                </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endif
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="card-footer border-top-dashed">
@@ -256,12 +263,12 @@
                                                 @endif
                                                 <!-- checklist -->
                                                 @php
-                                                   $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems;
-                                                    });
-                                                    $inProgressItems = $task->checklists->flatMap(function ($checklist) {
-                                                        return $checklist->checklistItems->where('is_complete', true);
-                                                    });
+                                                    $allChecklistItems = $task->checklists->flatMap(function ($checklist) {
+                                                         return $checklist->checklistItems;
+                                                     });
+                                                     $inProgressItems = $task->checklists->flatMap(function ($checklist) {
+                                                         return $checklist->checklistItems->where('is_complete', true);
+                                                     });
                                                 @endphp
 
                                                 @if($task->checkLists->isNotEmpty())

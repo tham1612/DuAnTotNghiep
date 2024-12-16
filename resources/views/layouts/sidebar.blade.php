@@ -88,7 +88,6 @@
                 $data['workspace_id'] == $workspaceChecked->workspace_id;
         });
 
-
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
     <div class="ms-4 mt-3 mb-2 cursor-pointer d-flex align-items-center justify-content-start " data-bs-toggle="dropdown"
@@ -212,9 +211,10 @@
                         @if (!empty($allNotifications) && $allNotifications->count() > 0)
                             @if ($allNotifications->count() <= 9)
                                 <span
-                                    class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
+                                    class="badge rounded-circle bg-danger text-white notification-sidebar-count-{{ auth()->id() }}">{{ $allNotifications->count() }}</span>
                             @elseif ($allNotifications->count() > 9)
-                                <span class="badge rounded-circle bg-danger text-white">9+</span>
+                                <span
+                                    class="badge rounded-circle bg-danger text-white notification-sidebar-count-{{ auth()->id() }}">9+</span>
                             @endif
                         @endif
                     </a>

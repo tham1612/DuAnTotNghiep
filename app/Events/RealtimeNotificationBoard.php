@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Task;
+use App\Models\Catalog;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,33 +11,26 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RealtimeCreateTask implements ShouldBroadcast
+class RealtimeNotificationBoard implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $task, $boardId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task, $boardId)
+    public $msg, $boardId;
+
+    public function __construct($msg, $boardId)
     {
-        $this->task = $task;
+        $this->msg = $msg;
         $this->boardId = $boardId;
     }
 
 
     public function broadcastOn()
     {
-        return new Channel('tasks.' . $this->boardId);
+        return new Channel('boards.' . $this->boardId);
     }
 
-    public function broadcastWith()
-    {
-        return [
-            'task' => $this->task,
-            'catalog_name' => $this->task->catalog->name,
-            'tag_count'=>count($this->task->tags)
-        ];
-    }
+
 }

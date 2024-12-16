@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Task;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -9,24 +10,19 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Log;
 
-class EventNotification implements ShouldBroadcast
+class RealtimeUpdateTask implements ShouldBroadcast
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $task, $boardId;
 
     /**
      * Create a new event instance.
      */
-
-    public $message;
-    public $action;
-    public $userId;
-    public function __construct($message, $action, $userId)
+    public function __construct(Task $task, $boardId)
     {
-        $this->message = $message;
-        $this->action = $action;
-        $this->userId = $userId;
+        $this->task = $task;
+        $this->boardId = $boardId;
     }
 
     /**
@@ -36,16 +32,13 @@ class EventNotification implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        Log::info($this->userId);
-        return new PrivateChannel("notifications." . $this->userId);
+        return new Channel('tasks.' . $this->boardId);
     }
-
     public function broadcastWith()
     {
         return [
-            'userId' => $this->userId,
-            'action' => $this->action,
-            'message' => $this->message,
+            'task' => $this->task,
+//            'catalog_name' => $this->task->catalog->name,
         ];
     }
 }

@@ -15,6 +15,28 @@
             background-color: #f8d7da;
             border-color: #f5c6cb;
         }
+
+        .notification-item {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 0;
+        }
+
+        .col-mail-1 {
+            width: auto;
+            /* Mở rộng chiều rộng tự động */
+            white-space: nowrap;
+            /* Đảm bảo nội dung không bị cắt khi vượt quá chiều rộng của div */
+            overflow: hidden;
+            /* Ẩn nội dung nếu nó vượt quá chiều rộng */
+            text-overflow: ellipsis;
+            /* Hiển thị dấu ba chấm nếu có nội dung bị che */
+        }
+
+        .col-mail-2 {
+            margin-left: 20px;
+            /* Thay đổi giá trị này nếu cần để tạo khoảng cách giữa các cột */
+        }
     </style>
     <div class="email-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
         <!-- end email-menu-sidebar -->
@@ -53,7 +75,11 @@
                                 });
                         @endphp
                         <div class="col-auto">
-                            <div class="text-muted mb-2">{{ $allNotifications->count() }} thông báo chưa đọc</div>
+                            <div class="text-muted mb-2">
+                                <span
+                                    class="notification-index-count-{{ auth()->id() }}">{{ $allNotifications->count() }}</span>
+                                thông báo chưa đọc
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,5 +126,5 @@
 @endsection
 
 @section('title')
-Thông báo - TaskFlow
+    Thông báo - TaskFlow
 @endsection

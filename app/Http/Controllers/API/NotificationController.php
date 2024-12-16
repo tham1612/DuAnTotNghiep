@@ -121,7 +121,7 @@ class NotificationController extends Controller
                 'data' => $data
             ]);
 
-            return response()->json(['status' => 'success', 'message' => 'Notification marked as read']);
+            return response()->json(['status' => 'success', 'message' => 'Notification marked as read', 'userId' => $user_id]);
         }
 
         return response()->json(['status' => 'error', 'message' => 'Notification not found'], 404);

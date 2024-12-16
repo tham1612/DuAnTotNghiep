@@ -50,6 +50,7 @@ document
     .addEventListener("click", function () {
         const messageInput = document.getElementById("message-input");
         const message = messageInput.value.trim();
+        // document.getElementById('mat').style.display = 'none';
 
         if (message === "") {
             notificationWeb('warning',"Vui lòng nhập tin nhắn")
@@ -101,7 +102,7 @@ function appendMessage(message, senderId) {
         messageElement.innerHTML += `
         <div style="display: flex; align-items: flex-start; margin-bottom: 10px; max-width: 300px;">
             <div class="bg-info-subtle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;">
-                A
+               A
             </div>
             <div style="background-color: #E6E4D5; padding: 10px; border-radius: 5px; color: #333; margin-top: -10px; line-height: 1.2;">
                 ${message}
