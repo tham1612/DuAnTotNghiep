@@ -586,7 +586,7 @@ class BoardController extends Controller
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $this->notificationAcceptMemberBoard($boardMember->board->id, $boardMember->user->name);
                 // if ($boardMember->user->id == Auth::id()) {
-                event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id));
+                event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id, true));
                 // }
                 $boardMember->forceDelete();
                 if (request()->ajax()) {
@@ -1354,7 +1354,7 @@ class BoardController extends Controller
     }
 
     //mời người dùng từ wsp vào bảng
-//thông báo done
+    //thông báo done
     public
         function inviteMemberWorkspace(
         $userId,
@@ -1364,17 +1364,27 @@ class BoardController extends Controller
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
         session()->forget('view_only');
-        BoardMember::create([
-            'user_id' => $userId,
-            'board_id' => $boardId,
-            'authorize' => AuthorizeEnum::Member(),
-            'invite' => now(),
-        ]);
+
+        $check = BoardMember::where('user_id', Auth::id())->where('board_id', $boardId)->first();
+        if ($check) {
+            BoardMember::create([
+                'user_id' => $userId,
+                'board_id' => $boardId,
+                'authorize' => AuthorizeEnum::Member(),
+                'invite' => now(),
+            ]);
+        }
+
         $boardMember = BoardMember::with(['user', 'board'])->find($boardId);
         $this->notificationMemberInviteBoard($boardMember->board->id, $boardMember->user->name);
-        session()->flash('msg', 'Bạn đã mời người dùng vào bảng');
-        session()->flash('action', 'success');
-        return response()->json(['success' => true]);
+        // session()->flash('msg', 'Bạn đã mời người dùng vào bảng');
+        // session()->flash('action', 'success');
+
+        return response()->json([
+            'success' => true,
+            'action' => 'success',
+            'msg' => 'Bạn đã thêm người dùng vào bảng'
+        ]);
     }
 
     //yêu cầu tham gia vào bảng
@@ -1390,7 +1400,6 @@ class BoardController extends Controller
                 'is_accept_invite' => 1
             ]);
 
-            $board = Board::find($boardId);
             $description = 'Người dùng "' . Auth::user()->name . '" đã gửi lời mời vào bảng!.';
             $this->notificationMemberJoinBoard($boardId, Auth::user()->name);
 

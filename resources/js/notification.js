@@ -6,10 +6,12 @@ window.Echo.private(`notifications.${userId}`).listen(
     (event) => {
         console.log(event);
         if (event.userId == userId) {
-            notificationWeb(event.action, event.message);
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
+            notificationWeb("", event.message);
+            if (event.load) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
         }
     }
 );
