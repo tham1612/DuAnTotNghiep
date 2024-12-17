@@ -117,21 +117,36 @@
                 $('input[name="name"]').val('');
                 $('.color-box').removeClass('selected-tag');
                 let tagSection = document.getElementById(`tag-section-${formData.task_id}`);
+                let tagSectionView = document.querySelector(`.tag-task-section-${response.task_id}`);
                 let tagTask = document.getElementById('tag-task-' + formData.task_id);
                 if (tagSection.style.display === 'none') {
                     tagSection.style.display = 'block';
                 }
+                if ( tagSectionView && tagSectionView.classList.contains('hidden')) {
+                    tagSectionView.classList.remove('hidden');
+                }
+                let tagTaskView = document.querySelector(`.tag-task-view-${response.task_id}`);
+                let tagItemView = document.querySelector(`[data-tag-view-id="${response.task_id}-${response.tag_id}"]`);
                 let tagTaskAdd = `
-            <div data-bs-toggle="tooltip" data-bs-trigger="hover"
-                 data-bs-placement="top" data-tag-id="${formData.task_id}-${response.tag_id}"
-                 title="${response.tagTaskName}">
-                <div
-                    class="badge border rounded d-flex align-items-center justify-content-center"
-                    style=" background-color: ${response.tagTaskColor}">
-                    ${response.tagTaskName}
-                </div>
-            </div>
-            `;
+                    <div data-bs-toggle="tooltip" data-bs-trigger="hover"
+                        data-bs-placement="top" data-tag-id="${formData.task_id}-${response.tag_id}"
+                        title="${response.tagTaskName}">
+                        <div
+                            class="badge border rounded d-flex align-items-center justify-content-center"
+                            style=" background-color: ${response.tagTaskColor}">
+                            ${response.tagTaskName}
+                        </div>
+                    </div>
+                    `;
+                let tagTaskAddView = `
+                    <div data-bs-toggle="tooltip"  data-tag-view-id="${response.task_id}-${response.tag_id}" data-bs-trigger="hover"
+                            data-bs-placement="top" title="${response.tagTaskName}">
+                        <div
+                            class="text-white border rounded d-flex align-items-center justify-content-center"
+                            style="width: 40px;height: 15px; background-color: ${response.tagTaskColor}">
+                        </div>
+                    </div>
+                `;
                 let tagBoard = document.getElementById('danh-sach-tag-' + formData.board_id);
                 let tagBoardAdd = `
                 <li class="mt-1 d-flex justify-content-between align-items-center">
@@ -151,6 +166,11 @@
                 } else {
                     console.error('Element cardMembersList-' + task_id + ' not found.');
                 }
+                if (tagTaskView) {
+                        tagTaskView.innerHTML += tagTaskAddView;
+                    } else {
+                        console.error(' not found.');
+                    }
                 if (tagBoard) {
                     tagBoard.innerHTML += tagBoardAdd;
                 } else {

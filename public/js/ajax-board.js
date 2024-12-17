@@ -256,6 +256,22 @@ function submitAddTask(catalogId, catalogName) {
                     currentTaskCountElement.text(1);
                 }
             }
+            let colorPriority = '';
+            if (response.task.priority == 'High') {
+                colorPriority = 'text-danger';
+            } else if (response.task.priority == 'Medium') {
+                colorPriority = 'text-warning';
+            } else if (response.task.priority == 'Low') {
+                colorPriority = 'text-info';
+            }
+            let colorRisk = '';
+            if (response.task.risk == 'High') {
+                colorRisk = 'text-danger';
+            } else if (response.task.risk == 'Medium') {
+                colorRisk = 'text-warning';
+            } else if (response.task.risk == 'Low') {
+                colorRisk = 'text-info';
+            }
             let listTask = document.getElementById(catalogName + '-' + catalogId);
             let task = `
             <div class="card tasks-box cursor-pointer task-of-catalog-${catalogId}" data-value="${response.task.id}" id="task_id_view_${response.task.id}">
@@ -288,7 +304,19 @@ function submitAddTask(catalogId, catalogName) {
                 <div class="card-footer border-top-dashed">
                     <div class="d-flex justify-content-end">
                         <div class="flex-shrink-0">
-
+                            <li class="list-inline-item">
+                                <a href="javascript:void(0)" class="text-muted"
+                                   title="Độ ưu tiên">
+                                    <i id="task-priority-view-board-${response.task.id}" class="ri-flag-fill align-bottom
+                                      ${colorPriority}"></i>
+                                </a>
+                            </li>
+                           <li class="list-inline-item">
+                                <a href="javascript:void(0)" class="text-muted" title="Rủi do">
+                                    <i id="task-risk-view-board-${response.task.id}" class=" ri-spam-fill align-bottom
+                                     ${colorRisk}"></i>
+                                </a>
+                           </li>
                         </div>
                     </div>
                 </div>
@@ -415,7 +443,7 @@ function submitAddTask(catalogId, catalogName) {
             console.log('task đã được thêm thành công!', response);
         },
         error: function(xhr) {
-           notificationWeb('error', 'Có lỗi xảy ra!!')
+            notificationWeb('error', 'Có lỗi xảy ra!!')
             console.log(xhr.responseText);
         },
 
@@ -524,7 +552,7 @@ function submitAddTaskViewTable(catalogId, boarId) {
             console.log('task đã được thêm thành công!', response);
         },
         error: function(xhr) {
-           notificationWeb('error', 'Có lỗi xảy ra!!')
+            notificationWeb('error', 'Có lỗi xảy ra!!')
             console.log(xhr.responseText);
         },
 
