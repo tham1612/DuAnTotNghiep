@@ -53,7 +53,9 @@
                                 });
                         @endphp
                         <div class="col-auto">
-                            <div class="text-muted mb-2">{{ $allNotifications->count() }} thông báo chưa đọc</div>
+                            <div class="text-muted mb-2">
+                                <span class="notification-index-count-{{auth()->id()}}">{{ $allNotifications->count() }}</span>
+                                thông báo chưa đọc</div>
                         </div>
                     </div>
                 </div>

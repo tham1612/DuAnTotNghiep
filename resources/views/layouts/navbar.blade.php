@@ -277,12 +277,21 @@
                                 @endif
                             </div>
                         </div>
+                        @if(!empty($boardMemberChecked))
                         <div class="bg-primary p-1 rounded">
                             <i class="ri-user-add-line text-white"></i>
                             <a href="#addmemberModal" data-bs-toggle="modal" class="avatar-group-item">
                                 <span class="text-white fs-14">Chia sẻ</span>
                             </a>
                         </div>
+                        @else
+                        <div class="bg-opacity-50 bg-dark p-1 rounded">
+                            <i class="ri-user-add-line text-white"></i>
+                            <a href="" data-bs-toggle="modal" class="avatar-group-item">
+                                <span class="text-white fs-14">Tham gia</span>
+                            </a>
+                        </div>
+                        @endif
                     </div>
                     <!-- menu bảng -->
                     <div class="d-flex justify-content-center align-items-center p-2 cursor-pointer">

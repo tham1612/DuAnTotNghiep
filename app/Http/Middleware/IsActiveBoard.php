@@ -25,7 +25,7 @@ class IsActiveBoard
         if ($activeBoard) {
             return $next($request);
         }
-        return redirect('/boardError');
+        return redirect('/home');
 
     }
 }
