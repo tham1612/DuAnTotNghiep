@@ -128,7 +128,8 @@
                                                     style="font-family: 'Roboto', sans-serif; color: #878a99; box-sizing: border-box; line-height: 1.5; font-size: 15px; vertical-align: top; margin: 0; padding: 0 0 10px;"
                                                     valign="top">
                                                     Chúng tôi rất vui mừng thông báo rằng bạn đã được chấp nhận vào
-                                                    không gian làm việc Bảng {{ $boardName }} của chúng tôi trên Task Flow.
+                                                    không gian làm việc Bảng {{ $boardName }} của chúng tôi trên Task
+                                                    Flow.
                                                 </td>
                                             </tr>
                                             <tr
@@ -156,7 +157,7 @@
                                                 <td class="content-block" itemprop="handler" itemscope itemtype=""
                                                     style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 24px;"
                                                     valign="top">
-                                                    <a href="{{ $linkInvite . '?email=' . urlencode($email) . '&authorize=' . urlencode($authorize) }}"
+                                                    <a href="{{ $linkInvite . '?email=' . urlencode($email) . '&authorize=' . urlencode($authorize) . '&timestamp=' . time() }}"
                                                         itemprop="url"
                                                         style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: .8125rem;font-weight: 400; color: #FFF; text-decoration: none; text-align: center; cursor: pointer; display: inline-block; border-radius: .25rem; text-transform: capitalize; background-color: #0ab39c; margin: 0; border-color: #0ab39c; border-style: solid; border-width: 1px; padding: .5rem .9rem;"
                                                         onMouseOver="this.style.background='#099885'"

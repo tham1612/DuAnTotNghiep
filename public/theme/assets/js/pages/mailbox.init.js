@@ -14,10 +14,12 @@ var getJSON = function (e, t) {
         }),
         a.send();
 };
+
 // Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
 
-
 function loadMailData(emails) {
+    console.log(emails);
+
     // Chuyển đến tab chính trong giao diện
     document
         .querySelector(
@@ -48,30 +50,61 @@ function loadMailData(emails) {
         var starClass = email.starred ? "active" : "";
         var countedText = email.counted ? "(" + email.counted + ")" : "";
 
+        // mailList.innerHTML += `
+        // <li class="notification-item ${statusClass}" data-id="${email.id}">
+        //     <div class="col-mail col-mail-1">
+        //         <div class="form-check checkbox-wrapper-mail fs-14">
+        //             <input class="form-check-input" type="checkbox" value="${email.id}" id="checkbox-${email.id}">
+        //             <label class="form-check-label" for="checkbox-${email.id}"></label>
+        //         </div>
+        //         <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starClass}"></button>
+        //         <a href="javascript: void(0);" class="title">
+        //             <span class="title-name">${email.name}</span> ${countedText}
+        //         </a>
+        //     </div>
+        //     <div class="col-mail col-mail-2">
+        //         <a href="javascript: void(0);" class="subject" style="padding-top: 13px;">
+        //             <span class="subject-title">${email.title}</span> – <span class="teaser">${email.description}</span>
+        //         </a>
+        //         <div class="date">${email.date}</div>
+        //     </div>
+        // </li>`;
+        // mailList.innerHTML += `
+        // <li class="notification-item ${statusClass}" data-id="${email.id}" style="padding: 0">
+        //     <div class="col-mail col-mail-1">
+        //         <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starClass}"></button>
+        //         <a href="javascript: void(0);" class="title">
+        //             <span class="title-name"><strong>${email.title}</strong></span> ${countedText}
+        //         </a>
+        //     </div>
+        //     <div class="col-mail col-mail-2 ms-5" >
+        //         <a href="javascript: void(0);" class="subject">
+        //             <span class="teaser">${email.description}</span>
+        //         </a>
+        //         <div class="date">${email.date}</div>
+        //     </div>
+        // </li>`;
         mailList.innerHTML += `
-        <li class="notification-item ${statusClass}" data-id="${email.id}">
+        <li class="notification-item ${statusClass}" data-id="${email.id}" style="padding: 0">
             <div class="col-mail col-mail-1">
-                <div class="form-check checkbox-wrapper-mail fs-14">
-                    <input class="form-check-input" type="checkbox" value="${email.id}" id="checkbox-${email.id}">
-                    <label class="form-check-label" for="checkbox-${email.id}"></label>
-                </div>
                 <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starClass}"></button>
                 <a href="javascript: void(0);" class="title">
-                    <span class="title-name">${email.name}</span> ${countedText}
+                    <span class="title-name"><strong>${email.title}</strong></span> ${countedText}
                 </a>
             </div>
-            <div class="col-mail col-mail-2">
-                <a href="javascript: void(0);" class="subject" style="padding-top: 13px;">
-                    <span class="subject-title">${email.title}</span> – <span class="teaser">${email.description}</span>
+            <div class="col-mail col-mail-2 ms-5">
+                <a href="javascript: void(0);" class="subject">
+                    <span class="teaser">${email.description}</span>
                 </a>
                 <div class="date">${email.date}</div>
             </div>
-        </li>`;
+        </li>
+        `;
     });
 
     document.querySelectorAll(".notification-item").forEach(function (item) {
         item.addEventListener("click", function () {
-            var notificationId = this.getAttribute("data-id");
+            let notificationId = this.getAttribute("data-id");
 
             $.ajax({
                 url: "/api/inbox/read/" + notificationId + "/" + userId,
@@ -82,6 +115,24 @@ function loadMailData(emails) {
                     ),
                 },
                 success: function (response) {
+                    let notificationSidebarCount = document.querySelector(
+                        `.notification-sidebar-count-${response.userId}`
+                    );
+                    let notificationIndexCount = document.querySelector(
+                        `.notification-index-count-${response.userId}`
+                    );
+
+                    let unreadItems = document.querySelectorAll(
+                        "li.notification-item.unread"
+                    );
+                    let unreadCount = unreadItems.length - 1;
+                    if (unreadCount >= 0) {
+                        notificationIndexCount.innerHTML = unreadCount;
+                        if (unreadCount <= 9) {
+                            notificationSidebarCount.innerHTML = unreadCount;
+                        }
+                    }
+
                     if (response.status === "success") {
                         item.classList.remove("unread");
                     }
@@ -93,7 +144,6 @@ function loadMailData(emails) {
         });
     });
 }
-
 
 // Hàm này dùng để tải và hiển thị dữ liệu email xã hội vào danh sách
 // function loadSocialMailData(emails) {

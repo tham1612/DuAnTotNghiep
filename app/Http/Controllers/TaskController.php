@@ -146,7 +146,7 @@ class TaskController extends Controller
             'catalogs' => $task->catalog->board->catalogs,
             'boarId' => $task->catalog->board->id,
             'task_count' => count($catalog->tasks),
-            'tag_count'=>count($task->tags)
+            'tag_count' => count($task->tags)
         ]);
     }
 
@@ -192,7 +192,7 @@ class TaskController extends Controller
                     //     'description' => $data['description'] ?? 'No description',
                     //     'date' => date('M d', strtotime($notification->created_at)), // Định dạng lại ngày
                     // ];
-                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
+                    event(new EventNotification("Thẻ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
@@ -206,10 +206,10 @@ class TaskController extends Controller
             }
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
-                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
+                    event(new EventNotification("Thẻ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
                     $name = 'Task ' . $task->text;
                     $title = 'Task có thay đổi';
-                    $description = 'Nhiệm vụ ' . $task->text . ' đã thay đổi ảnh';
+                    $description = 'Thẻ ' . $task->text . ' đã thay đổi ảnh';
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
@@ -218,10 +218,10 @@ class TaskController extends Controller
         if ($data['text'] != $task->text) {
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
-                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
+                    event(new EventNotification("Thẻ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
                     $name = 'Task ' . $task->text;
                     $title = 'Task có thay đổi';
-                    $description = 'Nhiệm vụ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
+                    $description = 'Thẻ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
@@ -233,11 +233,11 @@ class TaskController extends Controller
         $data['id'] = $id;
         $data['text'] = $task->text;
         $data['description'] = $task->description;
-        $data['id_gg_calendar'] = $task->id_google_calendar;
+        $data['id_google_calendar'] = $task->id_google_calendar;
         $data['start_date'] = $task->start_date;
         $data['end_date'] = $task->end_date;
 
-
+//        dd($data);
         // xử lý thêm vào gg calendar
         if (Auth::user()->access_token) {
             if ($task->id_google_calendar) {
@@ -274,7 +274,7 @@ class TaskController extends Controller
     public function updatePosition(Request $request, string $id)
     {
 
-
+//        dd($request->all());
         $task = Task::query()->findOrFail($id);
         $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
         if (!$authorize) {
@@ -383,7 +383,7 @@ class TaskController extends Controller
                     ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
             $task->update($data);
-            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id, $msg))->toOthers();
+            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id, $msg,$request->catalog_id_old))->toOthers();
             DB::commit();
 
 
@@ -696,6 +696,7 @@ class TaskController extends Controller
 
         return response()->json(['html' => $htmlForm]);
     }
+
     public function createGantt(StoreTaskRequest $request)
     {
         if (session('view_only', false)) {
@@ -749,7 +750,7 @@ class TaskController extends Controller
                 $this->googleApiClient->createEvent($data);
             }
         }
-       return back();
+        return back();
     }
 
 }

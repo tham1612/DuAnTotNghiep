@@ -502,3 +502,29 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document
+    .getElementById("joinBoardButton")
+    .addEventListener("click", function (e) {
+        e.preventDefault(); // Ngăn ngừa hành vi mặc định của liên kết
+        var url = this.getAttribute("href"); // Lấy URL từ thuộc tính href của liên kết
+
+        // Gửi yêu cầu AJAX
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest", // Cho biết đây là yêu cầu AJAX
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.action === "success") {
+                    notificationWeb(data.action, data.msg); // Hiển thị thông báo nếu thành công
+                } else {
+                    notificationWeb("error", "Có lỗi sảy ra");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    });

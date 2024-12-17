@@ -38,10 +38,12 @@ $boardIsStars = \App\Models\Board::query()
     ->value('workspace_id');
     $recentBoards = DB::table(config('activitylog.table_name') . ' as logs')
         ->join('boards', 'logs.board_id', '=', 'boards.id') // Kết nối với bảng boards
+        ->join('workspaces', 'boards.workspace_id', '=', 'workspaces.id') // Kết nối với bảng boards
         ->select(
-            'logs.board_id',
+            'logs.board_id as board_id',
             'boards.name as board_name',
             'boards.image as board_image',
+            'workspaces.name as workspace_name',
 
             DB::raw('MAX(logs.created_at) as last_activity')
         )

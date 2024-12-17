@@ -72,26 +72,21 @@
                 ])
                 ->first();
         }
-
-        // foreach ($workspaceBoards->boards as $board) {
-        //     $boardMembers = $board->members()->wherePivot('is_accept_invite', 0)->get()->unique('id');
-        //     // dd($board->members);
-        // }
     }
 
     $allNotifications = \App\Models\User::find($userId)
         ->notifications()
         ->get()
-        ->filter(function ($notification) {
-            // Truy cập trực tiếp đến mảng data, vì Laravel sẽ tự động chuyển đổi JSON thành mảng
+        ->filter(function ($notification) use ($workspaceChecked) {
+            // Truy cập trực tiếp đến mảng data
             $data = $notification->data;
 
-            // Kiểm tra xem trường `readed` có tồn tại và giá trị là false
-            return isset($data['readed']) && $data['readed'] == false;
+            // Kiểm tra `readed` là false và `workspace_id` khớp với workspace hiện tại
+            return isset($data['readed']) &&
+                $data['readed'] == false &&
+                isset($data['workspace_id']) &&
+                $data['workspace_id'] == $workspaceChecked->workspace_id;
         });
-    session([
-        'workspaces' => $workspaceChecked,
-    ]);
 
 @endphp
 <div class="app-menu navbar-menu" style="padding-top: 0">
@@ -216,9 +211,10 @@
                         @if (!empty($allNotifications) && $allNotifications->count() > 0)
                             @if ($allNotifications->count() <= 9)
                                 <span
-                                    class="badge rounded-circle bg-danger text-white">{{ $allNotifications->count() }}</span>
+                                    class="badge rounded-circle bg-danger text-white notification-sidebar-count-{{ auth()->id() }}">{{ $allNotifications->count() }}</span>
                             @elseif ($allNotifications->count() > 9)
-                                <span class="badge rounded-circle bg-danger text-white">9+</span>
+                                <span
+                                    class="badge rounded-circle bg-danger text-white notification-sidebar-count-{{ auth()->id() }}">9+</span>
                             @endif
                         @endif
                     </a>

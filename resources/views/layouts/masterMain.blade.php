@@ -25,7 +25,11 @@
     <link href="{{ asset('theme/assets/css/app.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- custom Css-->
     <link href="{{ asset('theme/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css"/>
-    @vite(['resources/js/realtimeCatalog.js','resources/js/realtimeTask.js','resources/js/realtimeBoard.js','resources/js/realtimeModalTask.js'])
+    @vite(['resources/js/realtimeCatalog.js',
+            'resources/js/realtimeTask.js',
+            'resources/js/realtimeBoard.js',
+            'resources/js/realtimeModalTask.js',
+            'resources/js/realtimeTag.js'])
     <script !src="">
         const PATH_ROOT = "/theme/";
     </script>

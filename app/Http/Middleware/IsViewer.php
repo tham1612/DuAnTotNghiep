@@ -17,7 +17,13 @@ class IsViewer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->isViewer()) {
+        $workspaceChecked = \App\Models\Workspace::query()
+            ->with('boards')
+            ->join('workspace_members', 'workspaces.id', 'workspace_members.workspace_id')
+            ->where('workspace_members.user_id', Auth::id())
+            ->where('workspace_members.is_active', 1)
+            ->first();
+        if ($workspaceChecked->authorize == "Viewer") {
             return redirect()->route('inbox');
         }
 

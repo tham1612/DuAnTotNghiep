@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\EventNotification;
+use App\Events\RealtimeCreateTag;
+use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeUpdateTag;
 use App\Models\Board;
 use App\Models\Follow_member;
 use App\Models\Tag;
@@ -90,20 +93,29 @@ class TagController extends Controller
 
         $tag = Tag::query()->create($data);
 
+
         if (isset($data['task_id']) && !empty($data['task_id'])) {
             TaskTag::query()->insert([
                 'task_id' => $data['task_id'],
                 'tag_id' => $tag->id,
             ]);
         }
-
         $followMember = Follow_member::where('task_id', $data['task_id'])
             ->where('follow', 1)
             ->get();
         $task = Task::find($data['task_id']);
+        Log::info('Bắt đầu phát sự kiện RealtimeCreateTag', [
+            'tag_id' => $tag->id,
+            'board_id' => $tag->board->id,
+            'task_id' => $task->id,
+        ]);
+
+        broadcast(new RealtimeCreateTag($tag, $tag->board->id, $task->id))->toOthers();
+
+        Log::info('Phát sự kiện thành công');
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $task->text . " tạo thêm nhãn mới. Xem chi tiết! ", 'success', $member->user->id));
+                event(new EventNotification("Thẻ " . $task->text . " tạo thêm nhãn mới. Xem chi tiết! ", 'success', $member->user->id));
                 $name = 'Task ' . $task->text;
                 $title = 'Task có thay đổi';
                 $description = 'Task ' . $task->text . ' tạo thêm nhãn mới';
@@ -114,6 +126,7 @@ class TagController extends Controller
 
         return response()->json([
             'data' => $data,
+            'task_id' => $data['task_id'],
             'success' => true,
             'tagTaskName' => $tag->name,
             'tagTaskColor' => $tag->color_code,
@@ -164,7 +177,7 @@ class TagController extends Controller
                 $task = Task::find($task_id);
                 foreach ($followMember as $member) {
                     if ($member->user->id != Auth::id()) {
-                        event(new EventNotification("Nhiệm vụ " . $task->text . " đã xóa nhãn " . $check->tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                        event(new EventNotification("Thẻ " . $task->text . " đã xóa nhãn " . $check->tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
                         $name = 'Task ' . $task->text;
                         $title = 'Task có thay đổi';
                         $description = 'Task ' . $task->text . ' đã xóa nhãn ' . $check->tag->name;
@@ -172,8 +185,10 @@ class TagController extends Controller
                         $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                     }
                 }
-
+                $action="removed";
                 TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->delete();
+
+                broadcast(new RealtimeUpdateTag($tag, $tag->board->id, $task->id,$action))->toOthers();
                 return response()->json([
                     'success' => true,
                     'action' => 'removed',
@@ -188,14 +203,14 @@ class TagController extends Controller
                     'tag_id' => $tag_id,
                 ]);
                 $tag = Tag::find($tag_id); // Lấy thông tin của tag
-
+                $action="added";
                 $followMember = Follow_member::where('task_id', $task_id)
                     ->where('follow', 1)
                     ->get();
                 $task = Task::find($task_id);
                 foreach ($followMember as $member) {
                     if ($member->user->id != Auth::id()) {
-                        event(new EventNotification("Nhiệm vụ " . $task->text . " đã thêm nhãn " . $tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
+                        event(new EventNotification("Thẻ " . $task->text . " đã thêm nhãn " . $tag->name . ". Xem chi tiết! ", 'success', $member->user->id));
                         $name = 'Task ' . $task->text;
                         $title = 'Task có thay đổi';
                         $description = 'Task ' . $task->text . ' đã thêm nhãn ' . $tag->name;
@@ -203,7 +218,7 @@ class TagController extends Controller
                         $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                     }
                 }
-
+                broadcast(new RealtimeUpdateTag($tag, $tag->board->id, $task->id,$action))->toOthers();
                 return response()->json([
                     'success' => true,
                     'action' => 'added',

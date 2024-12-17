@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Tag;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -9,27 +10,20 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Log;
 
-class EventNotification implements ShouldBroadcast
+class RealtimeUpdateTag implements ShouldBroadcast
 {
-    use Dispatchable, SerializesModels;
-
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $tag, $boardId,$taskId,$action;
     /**
      * Create a new event instance.
      */
-
-    public $message;
-    public $action;
-    public $userId;
-
-    public $load;
-    public function __construct($message, $action, $userId, ?bool $load = NULL)
+    public function __construct( Tag $tag,$boardId,$taskId,$action)
     {
-        $this->message = $message;
+        $this->tag = $tag;
+        $this->taskId = $taskId;
+        $this->boardId = $boardId;
         $this->action = $action;
-        $this->userId = $userId;
-        $this->load = $load;
     }
 
     /**
@@ -39,17 +33,17 @@ class EventNotification implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        Log::info($this->userId);
-        return new PrivateChannel("notifications." . $this->userId);
+        return new Channel('tags.' . $this->boardId);
     }
-
     public function broadcastWith()
     {
         return [
-            'userId' => $this->userId,
-            'action' => $this->action,
-            'message' => $this->message,
-            'load' => $this->load,
+            'board_id'=>$this->boardId,
+            'task_id' => $this->taskId,
+            'tagTaskName' => $this->tag->name,
+            'tagTaskColor' => $this->tag->color_code,
+            'tag_id' => $this->tag->id,
+            'action'=> $this->action
         ];
     }
 }
