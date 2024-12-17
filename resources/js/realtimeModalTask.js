@@ -91,7 +91,8 @@ Echo.channel(`tasks.${boardId}`)
                     dateSection.innerHTML = date; // Thay thế toàn bộ nội dung của `dateSection`
                 }
 
-    });
+    })
+
 
 function formatFullDate(date) {
     const now = new Date();
