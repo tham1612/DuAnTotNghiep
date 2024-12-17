@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\EventNotification;
 use App\Events\RealtimeCreateTag;
 use App\Events\RealtimeCreateTask;
+use App\Events\RealtimeUpdateTag;
 use App\Models\Board;
 use App\Models\Follow_member;
 use App\Models\Tag;
@@ -184,8 +185,10 @@ class TagController extends Controller
                         $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                     }
                 }
-
+                $action="removed";
                 TaskTag::query()->where('task_id', $task_id)->where('tag_id', $tag_id)->delete();
+
+                broadcast(new RealtimeUpdateTag($tag, $tag->board->id, $task->id,$action))->toOthers();
                 return response()->json([
                     'success' => true,
                     'action' => 'removed',
@@ -200,7 +203,7 @@ class TagController extends Controller
                     'tag_id' => $tag_id,
                 ]);
                 $tag = Tag::find($tag_id); // Lấy thông tin của tag
-
+                $action="added";
                 $followMember = Follow_member::where('task_id', $task_id)
                     ->where('follow', 1)
                     ->get();
@@ -215,7 +218,7 @@ class TagController extends Controller
                         $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                     }
                 }
-
+                broadcast(new RealtimeUpdateTag($tag, $tag->board->id, $task->id,$action))->toOthers();
                 return response()->json([
                     'success' => true,
                     'action' => 'added',
