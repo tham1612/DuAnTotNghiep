@@ -36,7 +36,7 @@ class BoardNotification extends Notification implements ShouldQueue
         // Lưu thông báo vào database
         return [
             'user_id' => $this->user->id,
-            'board_id' => $this->board->id,
+            'workspace_id' => $this->board->workspace->id,
             'name' => $this->name,
             'description' => $this->description,
             'readed' => false,

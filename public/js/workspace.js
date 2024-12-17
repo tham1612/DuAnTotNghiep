@@ -55,6 +55,8 @@ $(document).ready(function () {
             data: formData,
 
             success: function (response) {
+                console.log(response);
+
                 // $('#formResponse').html('<div class="alert alert-success">' + response.message + '</div>');
                 notificationWeb(response.action, response.message);
                 document.getElementById("access").innerText = "Riêng tư";
@@ -63,6 +65,8 @@ $(document).ready(function () {
                 }, 3000);
             },
             error: function (xhr) {
+                console.log(xhr);
+
                 if (xhr.status === 422) {
                     let errors = xhr.responseJSON.errors;
                     let errorMessages = "";

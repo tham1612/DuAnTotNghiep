@@ -9,7 +9,7 @@ var getJSON = function (e, t) {
             var e = a.status;
             200 === e
                 ? ((document.getElementById("elmLoader").innerHTML = ""),
-                    t(null, a.response))
+                  t(null, a.response))
                 : t(e, a.response);
         }),
         a.send();
@@ -17,8 +17,9 @@ var getJSON = function (e, t) {
 
 // Hàm này dùng để tải và hiển thị dữ liệu email vào danh sách
 
-
 function loadMailData(emails) {
+    console.log(emails);
+
     // Chuyển đến tab chính trong giao diện
     document
         .querySelector(
@@ -49,25 +50,56 @@ function loadMailData(emails) {
         var starClass = email.starred ? "active" : "";
         var countedText = email.counted ? "(" + email.counted + ")" : "";
 
+        // mailList.innerHTML += `
+        // <li class="notification-item ${statusClass}" data-id="${email.id}">
+        //     <div class="col-mail col-mail-1">
+        //         <div class="form-check checkbox-wrapper-mail fs-14">
+        //             <input class="form-check-input" type="checkbox" value="${email.id}" id="checkbox-${email.id}">
+        //             <label class="form-check-label" for="checkbox-${email.id}"></label>
+        //         </div>
+        //         <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starClass}"></button>
+        //         <a href="javascript: void(0);" class="title">
+        //             <span class="title-name">${email.name}</span> ${countedText}
+        //         </a>
+        //     </div>
+        //     <div class="col-mail col-mail-2">
+        //         <a href="javascript: void(0);" class="subject" style="padding-top: 13px;">
+        //             <span class="subject-title">${email.title}</span> – <span class="teaser">${email.description}</span>
+        //         </a>
+        //         <div class="date">${email.date}</div>
+        //     </div>
+        // </li>`;
+        // mailList.innerHTML += `
+        // <li class="notification-item ${statusClass}" data-id="${email.id}" style="padding: 0">
+        //     <div class="col-mail col-mail-1">
+        //         <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starClass}"></button>
+        //         <a href="javascript: void(0);" class="title">
+        //             <span class="title-name"><strong>${email.title}</strong></span> ${countedText}
+        //         </a>
+        //     </div>
+        //     <div class="col-mail col-mail-2 ms-5" >
+        //         <a href="javascript: void(0);" class="subject">
+        //             <span class="teaser">${email.description}</span>
+        //         </a>
+        //         <div class="date">${email.date}</div>
+        //     </div>
+        // </li>`;
         mailList.innerHTML += `
-        <li class="notification-item ${statusClass}" data-id="${email.id}" data-user-id="${email.id}">
+        <li class="notification-item ${statusClass}" data-id="${email.id}" style="padding: 0">
             <div class="col-mail col-mail-1">
-                <div class="form-check checkbox-wrapper-mail fs-14">
-                    <input class="form-check-input" type="checkbox" value="${email.id}" id="checkbox-${email.id}">
-                    <label class="form-check-label" for="checkbox-${email.id}"></label>
-                </div>
                 <button type="button" class="btn avatar-xs p-0 favourite-btn fs-15 ${starClass}"></button>
                 <a href="javascript: void(0);" class="title">
-                    <span class="title-name">${email.name}</span> ${countedText}
+                    <span class="title-name"><strong>${email.title}</strong></span> ${countedText}
                 </a>
             </div>
-            <div class="col-mail col-mail-2">
-                <a href="javascript: void(0);" class="subject" style="padding-top: 13px;">
-                    <span class="subject-title">${email.title}</span> – <span class="teaser">${email.description}</span>
+            <div class="col-mail col-mail-2 ms-5">
+                <a href="javascript: void(0);" class="subject">
+                    <span class="teaser">${email.description}</span>
                 </a>
                 <div class="date">${email.date}</div>
             </div>
-        </li>`;
+        </li>
+        `;
     });
 
     document.querySelectorAll(".notification-item").forEach(function (item) {
@@ -83,15 +115,21 @@ function loadMailData(emails) {
                     ),
                 },
                 success: function (response) {
-                    let notificationSidebarCount = document.querySelector(`.notification-sidebar-count-${response.userId}`)
-                    let notificationIndexCount = document.querySelector(`.notification-index-count-${response.userId}`)
+                    let notificationSidebarCount = document.querySelector(
+                        `.notification-sidebar-count-${response.userId}`
+                    );
+                    let notificationIndexCount = document.querySelector(
+                        `.notification-index-count-${response.userId}`
+                    );
 
-                    let unreadItems = document.querySelectorAll('li.notification-item.unread');
+                    let unreadItems = document.querySelectorAll(
+                        "li.notification-item.unread"
+                    );
                     let unreadCount = unreadItems.length - 1;
                     if (unreadCount >= 0) {
-                        notificationIndexCount.innerHTML = unreadCount
+                        notificationIndexCount.innerHTML = unreadCount;
                         if (unreadCount <= 9) {
-                            notificationSidebarCount.innerHTML = unreadCount
+                            notificationSidebarCount.innerHTML = unreadCount;
                         }
                     }
 
@@ -106,7 +144,6 @@ function loadMailData(emails) {
         });
     });
 }
-
 
 // Hàm này dùng để tải và hiển thị dữ liệu email xã hội vào danh sách
 // function loadSocialMailData(emails) {
@@ -268,21 +305,21 @@ function emailDetailShow() {
                                 )
                             ).forEach(function (e) {
                                 e.classList.contains("unread") &&
-                                t.target
-                                    .closest("li")
-                                    .classList.remove("unread");
+                                    t.target
+                                        .closest("li")
+                                        .classList.remove("unread");
                             });
                     });
                 }
             ),
-                Array.from(document.querySelectorAll(".close-btn-email")).forEach(
-                    function (e) {
-                        e.addEventListener("click", function () {
-                            a.classList.remove("email-detail-show");
-                        });
-                    }
-                ),
-                !1),
+            Array.from(document.querySelectorAll(".close-btn-email")).forEach(
+                function (e) {
+                    e.addEventListener("click", function () {
+                        a.classList.remove("email-detail-show");
+                    });
+                }
+            ),
+            !1),
         l = document.getElementsByClassName("email-menu-sidebar");
     Array.from(document.querySelectorAll(".email-menu-btn")).forEach(function (
         e
@@ -297,10 +334,10 @@ function emailDetailShow() {
             document
                 .querySelector(".email-menu-sidebar")
                 .classList.contains("menubar-show") &&
-            (t ||
-            document
-                .querySelector(".email-menu-sidebar")
-                .classList.remove("menubar-show"),
+                (t ||
+                    document
+                        .querySelector(".email-menu-sidebar")
+                        .classList.remove("menubar-show"),
                 (t = !1));
         }),
         favouriteBtn();
