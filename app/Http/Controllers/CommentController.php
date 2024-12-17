@@ -50,7 +50,7 @@ class CommentController extends Controller
             ->get();
         foreach ($followMember as $member) {
             if ($member->user->id != Auth::id()) {
-                event(new EventNotification("Nhiệm vụ " . $taskComment->task->text . " đã thêm bình luận. Xem chi tiết! ", 'success', $member->user->id));
+                event(new EventNotification("Thẻ " . $taskComment->task->text . " đã thêm bình luận. Xem chi tiết! ", 'success', $member->user->id));
                 $name = 'Task ' . $taskComment->task->text;
                 $title = 'Task có thay đổi';
                 $description = 'Task ' . $taskComment->task->text . ' đã thêm bình luận';

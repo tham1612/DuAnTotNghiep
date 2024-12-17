@@ -192,7 +192,7 @@ class TaskController extends Controller
                     //     'description' => $data['description'] ?? 'No description',
                     //     'date' => date('M d', strtotime($notification->created_at)), // Định dạng lại ngày
                     // ];
-                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
+                    event(new EventNotification("Thẻ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
@@ -206,10 +206,10 @@ class TaskController extends Controller
             }
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
-                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
+                    event(new EventNotification("Thẻ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
                     $name = 'Task ' . $task->text;
                     $title = 'Task có thay đổi';
-                    $description = 'Nhiệm vụ ' . $task->text . ' đã thay đổi ảnh';
+                    $description = 'Thẻ ' . $task->text . ' đã thay đổi ảnh';
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
@@ -218,10 +218,10 @@ class TaskController extends Controller
         if ($data['text'] != $task->text) {
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
-                    event(new EventNotification("Nhiệm vụ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
+                    event(new EventNotification("Thẻ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
                     $name = 'Task ' . $task->text;
                     $title = 'Task có thay đổi';
-                    $description = 'Nhiệm vụ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
+                    $description = 'Thẻ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
