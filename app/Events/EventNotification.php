@@ -22,11 +22,14 @@ class EventNotification implements ShouldBroadcast
     public $message;
     public $action;
     public $userId;
-    public function __construct($message, $action, $userId)
+
+    public $load;
+    public function __construct($message, $action, $userId, ?bool $load = NULL)
     {
         $this->message = $message;
         $this->action = $action;
         $this->userId = $userId;
+        $this->load = $load;
     }
 
     /**
@@ -46,6 +49,7 @@ class EventNotification implements ShouldBroadcast
             'userId' => $this->userId,
             'action' => $this->action,
             'message' => $this->message,
+            'load' => $this->load,
         ];
     }
 }
