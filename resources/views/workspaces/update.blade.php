@@ -655,7 +655,7 @@
                                                                             <ul class="dropdown-menu"
                                                                                 aria-labelledby="dropdownMenuButton">
                                                                                 <li>
-                                                                                    <a class="dropdown-item text-primary"
+                                                                                    <a class="dropdown-item text-primary addGuestWsp"
                                                                                         href="{{ route('addGuest', $item->wm_id) }}">Thêm
                                                                                         người dùng</a>
                                                                                 </li>

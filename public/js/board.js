@@ -265,42 +265,37 @@ document.addEventListener("DOMContentLoaded", function () {
 //thăng cấp thành viên
 document.addEventListener("DOMContentLoaded", function () {
     // Lắng nghe sự kiện click trên các nút kích thành viên
-    document
-        .querySelectorAll(".dropdown-item.text-primary")
-        .forEach((button) => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
+    document.querySelectorAll(".upgradeMemberShip").forEach((button) => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
 
-                // const wmId = this.getAttribute("data-wm-id"); // Lấy wm_id từ thuộc tính data
-                const wmId = this.getAttribute("href").split("/").pop();
-                const link = `li_board_${wmId}`;
-                const listItem = document.getElementById(link); // Tìm thẻ li tương ứng
-                console.log(link);
+            // const wmId = this.getAttribute("data-wm-id"); // Lấy wm_id từ thuộc tính data
+            const wmId = this.getAttribute("href").split("/").pop();
+            const link = `li_board_${wmId}`;
+            const listItem = document.getElementById(link); // Tìm thẻ li tương ứng
+            console.log(link);
 
-                // Gọi AJAX
-                fetch(`/b/upgrade-member-ship/${wmId}`, {
-                    method: "GET",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest", // Để Laravel nhận diện đây là AJAX request
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            listItem.querySelector(
-                                ".activate-member"
-                            ).outerHTML = `
+            // Gọi AJAX
+            fetch(`/b/upgrade-member-ship/${wmId}`, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest", // Để Laravel nhận diện đây là AJAX request
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        listItem.querySelector(".activate-member").outerHTML = `
                                 <button
                                     class="btn btn-outline-success activate-member"
                                     data-wm-id="${wmId}">
                                     Phó nhóm
                                 </button>`;
 
-                            // Cập nhật trạng thái trong <section>
-                            const section =
-                                listItem.querySelector("section.fs-12");
+                        // Cập nhật trạng thái trong <section>
+                        const section = listItem.querySelector("section.fs-12");
 
-                            section.innerHTML = `
+                        section.innerHTML = `
                                 <p style="margin-bottom: 0px;" class="text-black">
                                     ${data.name} <span class="text-success">(Phó nhóm)</span>
                                 </p>
@@ -311,12 +306,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <span>Phó nhóm của không gian làm việc</span>
                             `;
 
-                            notificationWeb(data.action, data.msg);
-                            // location.reload();
-                        }
-                    });
-            });
+                        notificationWeb(data.action, data.msg);
+                        // location.reload();
+                    }
+                });
         });
+    });
 });
 
 //duyệt thành viên vào bảng
