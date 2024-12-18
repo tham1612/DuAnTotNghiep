@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\DatabaseMessage;
+use Log;
 
 class TaskDueNotification extends Notification implements ShouldQueue
 {
@@ -16,6 +17,7 @@ class TaskDueNotification extends Notification implements ShouldQueue
     public function __construct($task)
     {
         $this->task = $task;
+        Log::debug($task);
     }
 
     public function via($notifiable)
