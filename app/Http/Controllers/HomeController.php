@@ -75,22 +75,21 @@ class HomeController extends Controller
         });
         // dd($ownerBoards);
 
-        $filteredBoards = $boards->filter(function ($board) use ($userId) {
-            // Lấy thông tin thành viên của người dùng trong workspace
-            $workspaceMember = $board->workspace->workspaceMembers->firstWhere('user_id', $userId);
-        
-            // Kiểm tra nếu người dùng là "Viewer"
-            if ($workspaceMember && $workspaceMember->authorize == \App\Enums\AuthorizeEnum::Viewer) {
-                // Nếu bảng là "public" hoặc người dùng là thành viên của bảng (ngay cả khi bảng là "private"), cho phép xem bảng
-                return $board->boardMembers->contains(fn($member) => $member->user_id == $userId);
-            }
-        
-            // Các quyền khác được phép xem tất cả bảng
-            return true;
-        });
         // Tách danh sách bảng sao
-        $board_star = $filteredBoards->filter(fn($board) => $board->is_star);
-
+        $board_star = $boards->filter(function ($board) use ($userId) {
+            // Kiểm tra quyền truy cập của bảng
+            if ($board->access == 'public') {
+                // Nếu bảng là public, chỉ cần kiểm tra is_star
+                return $board->is_star;
+            } elseif ($board->access == 'private') {
+                // Nếu bảng là private, kiểm tra user có trong boardMembers không
+                return $board->is_star && $board->boardMembers->contains(function ($member) use ($userId) {
+                    return $member->user_id == $userId;
+                });
+            }
+            return false; 
+        });
+    
         // lấy tất cả các thành viên trong ws mà người dùng đang trong ws đấy
         $workspaceMembers = WorkspaceMember::with([
             'user',
@@ -107,26 +106,21 @@ class HomeController extends Controller
         ->whereNull('deleted_at') // Chỉ lấy những thành viên không bị xóa (nếu có soft delete)
         ->get();
 
-        // Kiểm tra nếu người dùng hiện tại là "Viewer" trong bất kỳ workspace nào
-        $isViewer = $workspaceMembers->contains(function ($member) use ($userId) {
-            return $member->user_id == $userId && $member->authorize == \App\Enums\AuthorizeEnum::Viewer;
-        });
-
         $tasks = Task::whereNull('deleted_at') 
         ->with(['catalog.board.workspace', 'catalog.board.boardMembers', 'members'])
+        ->whereHas('catalog.board', function ($query) use ($userId) {
+            $query->where(function ($boardQuery) use ($userId) {
+                // Lọc board có access = 'public' hoặc user là board_member nếu access = 'private'
+                $boardQuery->where('boards.access', '!=', 'private')
+                    ->orWhereIn('boards.id', function ($subQuery) use ($userId) {
+                        $subQuery->select('board_id')
+                            ->from('board_members')
+                            ->where('user_id', $userId);
+                    });
+            });
+        })
         ->whereHas('catalog.board.workspace', function ($query) use ($currentWorkspace) {
             $query->where('id', $currentWorkspace->workspace_id);
-        })
-        ->whereIn('catalog_id', function ($query) use ($userId, $isViewer) {
-            $query->select('catalogs.id')
-                ->from('catalogs')
-                ->join('boards', 'catalogs.board_id', '=', 'boards.id')
-                ->join('board_members', 'boards.id', '=', 'board_members.board_id')
-                ->where(function ($boardQuery) use ($userId, $isViewer) {
-                    if ($isViewer) {
-                        $boardQuery->where('board_members.user_id', $userId);
-                    }
-                });
         })
         ->get()
         ->map(function ($task) {
@@ -165,10 +159,12 @@ class HomeController extends Controller
 
 
         // hoạt động gần đây
-        $activities = Activity::with('causer')->whereIn('properties->workspace_id', $boards->pluck('workspace.id')->unique())
-            ->orderBy('created_at', 'desc')
-            ->get();
-
+        $activities = Activity::with('causer')
+        ->where('log_name', 'Thêm mới bảng') 
+        ->whereIn('properties->workspace', $boards->pluck('workspace_id')->unique()) // workspace_id trong properties
+        ->orderBy('created_at', 'desc')
+        ->get();
+        
         // Truyền các biến này sang view
         return view('homes.home', compact(
             'boards',
@@ -184,7 +180,6 @@ class HomeController extends Controller
             'myAssignedTasks',
             'tasksExpiringSoon',
             'currentWorkspace',
-            'isViewer'
         ));
     }
 }
