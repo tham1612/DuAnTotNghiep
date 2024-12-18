@@ -28,7 +28,7 @@ class BoardNotification extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         // Gửi thông qua mail và lưu vào database
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     public function toDatabase($notifiable)
@@ -43,5 +43,17 @@ class BoardNotification extends Notification implements ShouldQueue
             'title' => $this->title,
             'date' => now(),
         ];
+    }
+
+    public function toMail(object $notifiable)
+    {
+        return (new MailMessage)
+            ->subject($this->title)
+            ->view('emails.workspace_member_notification', [
+                'title' => $this->title,
+                'description' => $this->description,
+                'workspace_name' => $this->board->name ?? 'Bảng chưa xác định',
+                'recipient_name' => $this->boardMemberName ?? 'Bạn',
+            ]);
     }
 }

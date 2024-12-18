@@ -6,6 +6,7 @@ use App\Http\Middleware\AfterMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\BeforeMiddleware;
 use App\Http\Middleware\IsActiveWorkspace;
+use App\Http\Middleware\IsBoardOfWorkspace;
 use App\Http\Middleware\isWorkspace;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -41,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+//            IsBoardOfWorkspace::class,
 //            IsActiveWorkspace::class
 //            AfterMiddleware::class,
 //            BeforeMiddleware::class,
@@ -61,6 +63,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'isBoardOfWorkspace' => \App\Http\Middleware\IsBoardOfWorkspace::class,
         'isActiveBoard' => \App\Http\Middleware\IsActiveBoard::class,
         'isActiveWsp' => \App\Http\Middleware\IsActiveWorkspace::class,
         'auth' => \App\Http\Middleware\Authenticate::class,

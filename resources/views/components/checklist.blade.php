@@ -144,7 +144,6 @@
                                              style="padding: 15px 15px 0 15px">
                                             <h5 class="text-center">Thao tác
                                                 mục</h5>
-                                            <p class="mt-2">Chuyển sang thẻ</p>
                                             <p class="cursor-pointer text-danger"
                                                onclick="removeCheckListItem({{ $checklistItem->id }},{{ $checklist->id }})">
                                                 Xóa</p>

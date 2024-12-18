@@ -13,7 +13,7 @@ $(document).ready(function () {
             processData: false, // Không xử lý dữ liệu
             contentType: false, // Không đặt kiểu content mặc định
             success: function (response) {
-                notificationWeb(response.action, response.message);
+                notificationWeb(response.action, response.msg);
                 console.log("cật nhật thành công");
             },
             error: function (xhr) {

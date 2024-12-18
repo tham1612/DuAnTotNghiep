@@ -531,17 +531,17 @@
                 </div>
             </div>
 
-            <div class="d-flex mt-3 mb-3 cursor-pointer">
-                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"
-                     style=" height: 30px; background-color: #091e420f; color: #172b4d">
-                    <i class="las ri-share-line fs-20"></i>
-                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                       data-bs-offset="-40,10">Chia sẻ</p>
-                    <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">
-                        {{--                                                @include('dropdowns.share') --}}
-                    </div>
-                </div>
-            </div>
+{{--            <div class="d-flex mt-3 mb-3 cursor-pointer">--}}
+{{--                <div class="d-flex align-items-center justify-content-flex-start rounded fw-medium fs-15 p-3 w-100"--}}
+{{--                     style=" height: 30px; background-color: #091e420f; color: #172b4d">--}}
+{{--                    <i class="las ri-share-line fs-20"></i>--}}
+{{--                    <p class="ms-2 mt-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"--}}
+{{--                       data-bs-offset="-40,10">Chia sẻ</p>--}}
+{{--                    <div class="dropdown-menu dropdown-menu-md p-3" style="width: 150%">--}}
+{{--                        --}}{{--                                                @include('dropdowns.share') --}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
     </div>
 

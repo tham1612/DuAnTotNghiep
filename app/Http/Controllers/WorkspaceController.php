@@ -535,7 +535,7 @@ class WorkspaceController extends Controller
             } elseif ($member->is_accept_invite != 0 && $member->is_accept_invite != 2) {
                 $wspInvite[] = $member;
                 $wspInviteCount++;
-            } elseif ($member->authorize->value == AuthorizeEnum::Viewer() && $member->is_accept_invite == 0) {
+            } elseif ($member->authorize->value == AuthorizeEnum::Viewer() && $member->is_accept_invite == 0 || $member->is_accept_invite == 2) {
                 $wspViewer[] = $member;
                 $wspViewerCount++;
             }
@@ -685,18 +685,17 @@ class WorkspaceController extends Controller
     //thông báo Done
     public function refuse_member($wm_id)
     {
-        $wspMember = WorkspaceMember::with(['user', 'workspace'])->find($wm_id);
+        $wspMember = WorkspaceMember::with(['user', 'workspace.boards'])->find($wm_id);
         try {
+//            dd($wspMember);
             DB::table('workspace_members')->where('id', $wm_id)->update([
                 'is_accept_invite' => 2
             ]);
-
-            $title = "Từ chối lời mời";
             $title = "Lời Mời Đã Bị Từ Chối";
             $description = 'Bạn vừa nhận được thông báo từ chối lời mời gia nhập không gian làm việc "' . $wspMember->workspace->name . '". Hy vọng bạn sẽ có những cơ hội hợp tác khác trong tương lai gần!';
-            if ($wspMember->user->id == Auth::id()) {
+//            if ($wspMember->user->id == Auth::id()) {
                 event(new EventNotification($description, 'success', $wspMember->user->id));
-            }
+//            }
             $wspMember->user->notify(new WorkspaceMemberNotification($title, $description, $wspMember, 1));
             return response()->json([
                 'success' => true,
@@ -1140,7 +1139,7 @@ class WorkspaceController extends Controller
         $wsp = WorkspaceMember::find($id);
         $userBoard = $wsp->relatedBoardMembers;
 
-        $owner = WorkspaceMember::where('authorize', 'Owner')->first();
+        $owner = WorkspaceMember::where('authorize', 'Owner')->where('id', $wsp->workspace->id)->first();
         try {
             foreach ($userBoard as $item) {
                 if ($item->authorize == "Owner") {
