@@ -110,7 +110,7 @@
                                                 <td class="content-block"
                                                     style="color: #878a99; text-align: left; font-size: 15px; padding-top: 15px;">
                                                     <p><strong>Task:</strong> {{ $task->text }}</p>
-                                                    <p><strong>Thời hạn:</strong> {{ $task->end_date->format('d/m/Y H:i') }}</p>
+                                                    <p><strong>Thời hạn:</strong> {{ \Carbon\Carbon::parse($task->end_date)->format('d/m/Y H:i') }}</p>
                                                     <p><strong>Danh mục:</strong> {{ $task->catalog->name }}</p>
                                                 </td>
                                             </tr>

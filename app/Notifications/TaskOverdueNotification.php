@@ -28,7 +28,7 @@ class TaskOverdueNotification extends Notification
     {
         // Tạo email thông báox
         return (new MailMessage)
-            ->subject('Task sắp đến hạn')
+            ->subject('Task đã quá hạn')
             ->view('emails.taskOverDueDate', ['task' => $this->task]);
     }
 

@@ -175,7 +175,7 @@
                                             <!-- Popup xuất hiện khi nhấn nút ba chấm -->
                                             @if (Auth::id() == $boardOwner->user_id)
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li><a class="dropdown-item text-danger"
+                                                    <li><a class="dropdown-item text-danger roikhoi"
                                                             href="{{ route('b.leaveBoard', $boardOwner->bm_id) }}">Rời
                                                             khỏi</a></li>
                                                 </ul>
@@ -242,7 +242,7 @@
                                                     @elseif($boardOwner->user_id == Auth::id())
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
-                                                            <li><a class="dropdown-item text-danger"
+                                                            <li><a class="dropdown-item text-danger kicknguoi"
                                                                     href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     phó
                                                                     nhóm</a>
@@ -332,7 +332,7 @@
                                                                     viên</a>
                                                             </li>
                                                             <li>
-                                                                <a class="dropdown-item text-danger"
+                                                                <a class="dropdown-item text-danger kicknguoi"
                                                                     href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     thành
                                                                     viên</a>
@@ -341,7 +341,7 @@
                                                     @elseif (!empty($boardSubOwnerChecked))
                                                         <ul class="dropdown-menu"
                                                             aria-labelledby="dropdownMenuButton">
-                                                            <li><a class="dropdown-item text-danger"
+                                                            <li><a class="dropdown-item text-danger kicknguoi"
                                                                     href="{{ route('b.activateMember', $item->bm_id) }}">Kích
                                                                     thành
                                                                     viên</a></li>

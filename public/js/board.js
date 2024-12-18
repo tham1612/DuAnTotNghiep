@@ -221,45 +221,46 @@ $(".submitFormBoardTemplate").on("submit", function (e) {
 //kích thành viên khỏi bảng
 document.addEventListener("DOMContentLoaded", function () {
     // Lắng nghe sự kiện click trên các nút kích thành viên
-    document
-        .querySelectorAll(".dropdown-item.text-danger")
-        .forEach((button) => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
+    document.querySelectorAll(".kicknguoi").forEach((button) => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
 
-                // const wmId = this.getAttribute("data-wm-id"); // Lấy wm_id từ thuộc tính data
-                const wmId = this.getAttribute("href").split("/").pop();
-                const link = `li_board_${wmId}`;
-                const listItem = document.getElementById(link); // Tìm thẻ li tương ứng
-                const count1 = document.getElementById("tab_board_1");
-                const so1 = count1.innerText - 1;
-                console.log(link);
+            // const wmId = this.getAttribute("data-wm-id"); // Lấy wm_id từ thuộc tính data
+            const wmId = this.getAttribute("href").split("/").pop();
+            const link = `li_board_${wmId}`;
+            const listItem = document.getElementById(link); // Tìm thẻ li tương ứng
+            const count1 = document.getElementById("tab_board_1");
+            const so1 = count1.innerText - 1;
+            console.log(link);
 
-                if (!listItem) {
-                    alert("Không tìm thấy thành phần cần chuyển!");
-                    return;
-                }
+            if (!listItem) {
+                alert("Không tìm thấy thành phần cần chuyển!");
+                return;
+            }
 
-                // Gọi AJAX
-                fetch(`/b/activate-member/${wmId}`, {
-                    method: "GET",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest", // Để Laravel nhận diện đây là AJAX request
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            // Xóa thẻ li khỏi tab-ul-1
-                            listItem.remove();
-                            count1.innerHTML = so1;
-                            // Hiển thị thông báo thành công
-                            notificationWeb(data.action, data.msg);
-                            // location.reload();
-                        }
-                    });
-            });
+            // Gọi AJAX
+            fetch(`/b/activate-member/${wmId}`, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest", // Để Laravel nhận diện đây là AJAX request
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // Xóa thẻ li khỏi tab-ul-1
+                        listItem.remove();
+                        count1.innerHTML = so1;
+                        // Hiển thị thông báo thành công
+                        notificationWeb(data.action, data.msg);
+
+                        // setTimeout(() => {
+                        //     window.location.reload();
+                        // }, 1500);
+                    }
+                });
         });
+    });
 });
 
 //thăng cấp thành viên
@@ -523,3 +524,48 @@ document
                 console.error("Error:", error);
             });
     });
+//rời khỏi bảng
+// document.addEventListener("DOMContentLoaded", function () {
+//     // Lắng nghe sự kiện click trên các nút kích thành viên
+//     document.querySelectorAll(".roikhoi").forEach((button) => {
+//         button.addEventListener("click", function (event) {
+//             event.preventDefault();
+
+//             // const wmId = this.getAttribute("data-wm-id"); // Lấy wm_id từ thuộc tính data
+//             const wmId = this.getAttribute("href").split("/").pop();
+//             const link = `li_board_${wmId}`;
+//             const listItem = document.getElementById(link); // Tìm thẻ li tương ứng
+//             const count1 = document.getElementById("tab_board_1");
+//             const so1 = count1.innerText - 1;
+//             console.log(link);
+
+//             if (!listItem) {
+//                 alert("Không tìm thấy thành phần cần chuyển!");
+//                 return;
+//             }
+
+//             // Gọi AJAX
+//             fetch(`/b/leave-board/${wmId}`, {
+//                 method: "GET",
+//                 headers: {
+//                     "X-Requested-With": "XMLHttpRequest", // Để Laravel nhận diện đây là AJAX request
+//                 },
+//             })
+//                 .then((response) => response.json())
+//                 .then((data) => {
+//                     if (data.success) {
+//                         // Xóa thẻ li khỏi tab-ul-1
+//                         listItem.remove();
+//                         count1.innerHTML = so1;
+//                         // Hiển thị thông báo thành công
+//                         notificationWeb(data.action, data.msg);
+
+//                         setTimeout(() => {
+//                             window.location.reload();
+//                         }, 1500);
+//                     }
+//                 });
+//         });
+//     });
+
+// });

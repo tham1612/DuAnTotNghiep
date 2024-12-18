@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
                     $user->notify(new TaskDueNotification($task));
                 });
             }
-        })->dailyAt('08:00'); // Chạy mỗi ngày lúc 08:00
+        })->dailyAt('00:59'); // Chạy mỗi ngày lúc 08:00
 
         // Gửi thông báo cho task quá hạn và chưa hoàn thành
         $schedule->call(function () {
@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
                     });
                 }
             }
-        })->dailyAt('08:00');
+        })->dailyAt('00:59');
     }
 
     /**

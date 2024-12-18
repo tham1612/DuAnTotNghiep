@@ -23,6 +23,8 @@ use App\Models\TaskMember;
 use App\Models\TaskTag;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Notifications\TaskDueNotification;
+use App\Notifications\TaskOverdueNotification;
 use App\Notifications\WorkspaceNotification;
 use App\Notifications\BoardMemberNotification;
 use App\Notifications\BoardNotification;
@@ -187,10 +189,7 @@ class BoardController extends Controller
      */
     public function edit(Request $request, string $id)
     {
-        // $checkListItemMemberIsSend = CheckListItemMember::with(['checkListItem.checkList.task.catalog.board', 'user'])->where('check_list_item_id', 1)
-        //     ->where('user_id', 1)
-        //     ->first();
-        //     dd($checkListItemMemberIsSend);
+
         $board = Board::query()->findOrFail($id);
         $colors = Color::query()->get();
         session([
@@ -594,6 +593,27 @@ class BoardController extends Controller
                 // if ($boardMember->user->id == Auth::id()) {
                 event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id, true));
                 // }
+
+                $catalogs = Catalog::where('board_id', $boardMember->board_id)->get(); // Nếu đã định nghĩa quan hệ hasMany
+                foreach ($catalogs as $catalog) {
+                    $tasks = $catalog->tasks; // Quan hệ hasMany
+
+                    foreach ($tasks as $task) {
+
+                        $taskMembers = TaskMember::where('task_id', $task->id)->where('user_id', $boardMember->user_id)->forceDelete();
+                        $checkLists = CheckList::where('task_id', $task->id)->get();
+
+                        foreach ($checkLists as $checkList) {
+
+                            foreach ($checkList->checkListItems as $checkListItem) {
+
+                                foreach ($checkListItem->checkListItemMembers as $member) {
+                                    $member->forceDelete();
+                                }
+                            }
+                        }
+                    }
+                }
                 $boardMember->forceDelete();
                 if (request()->ajax()) {
                     return response()->json([
@@ -641,12 +661,53 @@ class BoardController extends Controller
                     if ($boardMember->user->id == Auth::id()) {
                         event(new EventNotification("Bạn đã rời khỏi bảng", 'success', $boardMember->user->id));
                     }
+
+
+                    $catalogs = Catalog::where('board_id', $boardMember->board_id)->get(); // Nếu đã định nghĩa quan hệ hasMany
+                    foreach ($catalogs as $catalog) {
+                        $tasks = $catalog->tasks; // Quan hệ hasMany
+
+                        foreach ($tasks as $task) {
+
+                            $taskMembers = TaskMember::where('task_id', $task->id)->where('user_id', $boardMember->user_id)->forceDelete();
+                            $checkLists = CheckList::where('task_id', $task->id)->get();
+
+                            foreach ($checkLists as $checkList) {
+
+                                foreach ($checkList->checkListItems as $checkListItem) {
+
+                                    foreach ($checkListItem->checkListItemMembers as $member) {
+                                        $member->forceDelete();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     $boardMember->forceDelete();
+
+                    if (request()->ajax()) {
+                        return response()->json([
+                            'success' => true,
+                            'action' => 'success',
+                            'msg' => 'Bạn đã rời khỏi bảng ' . $boardMember->board->name
+                        ]);
+                    }
+
                     return redirect()->route('home')->with([
                         'msg' => "Bạn đã rời khỏi bảng ",
                         'action' => 'success'
                     ]);
                 } else {
+
+                    if (request()->ajax()) {
+                        return response()->json([
+                            'success' => true,
+                            'action' => 'error',
+                            'msg' => 'Bạn phải nhượng quyền cho người khác trước khi rời khỏi bảng'
+                        ]);
+                    }
+
                     return back()->with([
                         'msg' => "Bạn phải nhượng quyền cho người khác trước khi rời khỏi bảng",
                         'action' => 'danger'
@@ -659,15 +720,54 @@ class BoardController extends Controller
                 $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
                 $this->notificationAcceptMemberBoard($boardMember->board->id, $boardMember->user->name);
                 if ($boardMember->user->id == Auth::id()) {
-                    event(new EventNotification("Rất tiếc, bạn đã bị loại khỏi bảng", 'success', $boardMember->user->id));
+                    event(new EventNotification("Rất tiếc, bạn đã rời khỏi bảng", 'success', $boardMember->user->id));
                 }
+
+                $catalogs = Catalog::where('board_id', $boardMember->board_id)->get(); // Nếu đã định nghĩa quan hệ hasMany
+                foreach ($catalogs as $catalog) {
+                    $tasks = $catalog->tasks; // Quan hệ hasMany
+
+                    foreach ($tasks as $task) {
+
+                        $taskMembers = TaskMember::where('task_id', $task->id)->where('user_id', $boardMember->user_id)->forceDelete();
+                        $checkLists = CheckList::where('task_id', $task->id)->get();
+
+                        foreach ($checkLists as $checkList) {
+
+                            foreach ($checkList->checkListItems as $checkListItem) {
+
+                                foreach ($checkListItem->checkListItemMembers as $member) {
+                                    $member->forceDelete();
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $boardMember->forceDelete();
+
+                if (request()->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'action' => 'success',
+                        'msg' => 'Bạn đã rời khỏi bảng ' . $boardMember->board->name
+                    ]);
+                }
+
                 return redirect()->route('home')->with([
                     'msg' => "Bạn đã rời khỏi bảng ",
                     'action' => 'success'
                 ]);
             }
         } else {
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'action' => 'success',
+                    'msg' => 'Bạn đã rời khỏi bảng ' . $boardMember->board->name
+                ]);
+            }
+
             return redirect()->route('home')->with([
                 'msg' => "Bạn đã không còn ở bảng ",
                 'action' => 'warning'
@@ -1386,9 +1486,8 @@ class BoardController extends Controller
                 'invite' => now(),
             ]);
         }
-
-        $boardMember = BoardMember::with(['user', 'board'])->find($boardId);
-        $this->notificationMemberInviteBoard($boardMember->board->id, $boardMember->user->name);
+        $userName = User::find($userId)->name;
+        $this->notificationMemberInviteBoard($boardId, $userName);
 
         return response()->json([
             'success' => true,

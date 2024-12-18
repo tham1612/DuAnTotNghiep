@@ -1155,47 +1155,6 @@ class WorkspaceController extends Controller
         $owner = WorkspaceMember::where('authorize', 'Owner')->where('id', $wsp->workspace->id)->first();
         try {
             DB::beginTransaction();
-            // foreach ($userBoard as $item) {
-            //     if ($item->authorize == "Owner") {
-            //         BoardMember::create([
-            //             'user_id' => $owner->user_id,
-            //             'board_id' => $item->board_id,
-            //             'authorize' => 'Owner',
-            //             'invite' => now(),
-            //         ]);
-            //     }
-
-            //     $catalog = Catalog::where('board_id', $item->board_id)->get();
-            //     foreach ($catalog as $item00) {
-            //         $task = Task::where('catalog_id', $item00->id)->get();
-
-            //         foreach ($task as $item0) {
-            //             $taskMemeber = TaskMember::where('user_id', $wsp->user_id)->where('task_id', $item0->id)->get();
-
-            //             foreach ($taskMemeber as $item2) {
-            //                 $checklist = CheckList::where('task_id', $item2->task_id)->with('checkListItems')->get();
-
-            //                 foreach ($checklist as $item3) {
-            //                     foreach ($item3->checkListItems as $item4) {
-            //                         $checkListItemMember = CheckListItemMember::where('check_list_item_id', $item4->id)
-            //                             ->where('user_id', $wsp->user_id)->get();
-            //                         foreach ($checkListItemMember as $item5) {
-            //                             $item5->forceDelete();
-            //                         }
-            //                     }
-            //                 }
-
-            //                 $item2->forceDelete();
-            //             }
-            //             $item0->forceDelete();
-            //         }
-            //     }
-
-
-            //     $item->forceDelete();
-
-            // }
-
 
             foreach ($userBoard as $board) {
                 if ($board->authorize == "Owner") {
