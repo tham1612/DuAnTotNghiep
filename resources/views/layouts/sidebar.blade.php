@@ -200,7 +200,7 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('home') }}"
-                        @if ($workspaceChecked->authorize == 'Viewer') style="pointer-events: none;" @endif>
+                      >
                         <i class="ri-home-3-line"></i> <span data-key="">Trang Chủ</span>
                     </a>
                 </li>
@@ -222,7 +222,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link"
                         href="{{ route('homes.dashboard', $workspaceChecked->workspace_id) }}"
-                        @if ($workspaceChecked->authorize == 'Viewer') style="pointer-events: none;" @endif>
+                        >
                         <i class="ri-dashboard-line"></i> <span data-key="">Bảng Điều Khiển</span>
                     </a>
                 </li>

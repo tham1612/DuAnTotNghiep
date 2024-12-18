@@ -53,7 +53,8 @@
                                 </select>
                             </div>
                             <div class="col-2 d-flex justify-content-center">
-                                <button type="submit" id="inviteBoardButton" class="btn btn-primary">
+                                <button type="submit" id="inviteBoardButton" class="btn btn-primary"
+                                    @if ($board->access == 'private' && $boardMemberChecked->authorize == 'Member') disabled @endif>
                                     Chia sẻ
                                 </button>
                             </div>
@@ -85,24 +86,7 @@
                         </div>
 
                     </div>
-                    {{--                    chọn thành viên ở trong ws --}}
-                    {{-- <div class="d-flex justify-content-between">
-                        <h6 class="text-primary" style="margin-bottom: -5px">Chọn thành viện từ khong gian làm việc</h6
-                            class="text-primary ">
-                        <form action="" method="post" class="d-flex align-items-center gap-2">
-                            @if ($wspMember->count() > 0)
-                                <div class="form-group mb-0">
-                                    <select class="form-select form-select-sm js-example-basic-single" name="state"
-                                        style="min-width: 200px;">
-                                        @foreach ($wspMember as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-sm">Thêm mới</button>
-                            @endif
-                        </form>
-                    </div> --}}
+
                     <!--end col-->
                     <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-3" role="tablist">
                         <li class="nav-item d-flex align-items-center justify-content-between">
@@ -341,7 +325,7 @@
                                                                     quyền</a>
                                                             </li>
                                                             <li>
-                                                                <a class="dropdown-item text-primary"
+                                                                <a class="dropdown-item text-primary upgradeMemberShip"
                                                                     href="{{ route('b.upgradeMemberShip', $item->bm_id) }}">Thăng
                                                                     cấp
                                                                     thành
@@ -414,8 +398,7 @@
                                                     </div>
 
                                                     <div class="col-4 d-flex justify-content-end">
-                                                        <form onsubmit="disableButtonOnSubmit()"
-                                                            action="{{ route('b.acceptMember') }}" method="post">
+                                                        <form action="{{ route('b.acceptMember') }}" method="post">
                                                             @method('PUT')
                                                             @csrf
                                                             <input type="hidden" value="{{ $item->user_id }}"
@@ -517,46 +500,6 @@
         });
     }
 
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     // Gắn sự kiện khi chọn thành viên từ dropdown
-    //     document.querySelector('#inviteButton').addEventListener('click', function() {
-    //         const selectElement = document.querySelector('.invite-member-select');
-    //         const memberId = selectElement.value;
-    //         const memberName = selectElement.options[selectElement.selectedIndex].text;
-    //         const boardId = {{ $board->id }}; // Lấy giá trị ID board từ biến Laravel
-
-    //         // Gọi đến URL xử lý mời thành viên
-    //         const inviteUrl = `/b/invite-member-workspace/${memberId}/${boardId}`;
-
-    //         fetch(inviteUrl, {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-    //                         .getAttribute('content')
-    //                 }
-    //             })
-    //             .then(response => {
-    //                 if (!response.ok) {
-    //                     throw new Error('Network response was not ok');
-    //                 }
-    //                 return response.json(); // Parse response as JSON
-    //             })
-    //             .then(data => {
-    //                 if (data.success) {
-    //                     console.log(`Đã thêm thành viên ${memberName} thành công`);
-    //                     window.location
-    //                         .reload(); // Tải lại trang sau khi mời thành viên thành công
-    //                 } else {
-    //                     alert('Thêm thành viên thất bại');
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error inviting member:', error);
-    //                 alert('Có lỗi xảy ra, vui lòng thử lại.');
-    //             });
-    //     });
-    // });
 
     //Thêm thành viên từ không gian làm việc
     document.addEventListener('DOMContentLoaded', function() {
@@ -609,6 +552,11 @@
             let email = $('#emailInput').val();
             let authorize = $('#authorizeInput').val();
 
+            if (!email) {
+                notificationWeb('error', 'Vui lòng nhập email');
+                return false;
+            }
+
             // Gửi AJAX
             $.ajax({
                 url: '{{ route('b.invite_board') }}',
@@ -634,7 +582,6 @@
                 },
                 error: function(xhr) {
                     console.error(xhr.responseText);
-                    alert('Đã xảy ra lỗi, vui lòng thử lại.');
                 },
                 complete: function() {
                     $('#inviteBoardButton').prop('disabled', false).text('Chia sẻ');

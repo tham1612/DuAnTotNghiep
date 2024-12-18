@@ -184,7 +184,6 @@
                                                                 in_array($currentUserId, $membersArray) &&
                                                                 in_array($user->id, $membersArray);
                                                         @endphp
-
                                                         @if ($isInRoom && $user->id !== $currentUserId)
                                                             <li id="an1">
                                                                 <a href="{{ url('chat/' . $room->id . '/' . $user->id) }}"
@@ -417,7 +416,7 @@
                                                         <!-- Phần đánh dấu để cuộn xuống cuối -->
                                                         <div id="bottom"></div>
                                                     @else
-                                                        <p ></p>
+                                                        <p></p>
                                                     @endif
                                                 </div>
                                             @else

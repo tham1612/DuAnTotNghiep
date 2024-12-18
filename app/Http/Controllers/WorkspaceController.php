@@ -10,6 +10,7 @@ use App\Models\Board;
 use App\Models\BoardMember;
 use App\Models\Catalog;
 use App\Models\CheckList;
+use App\Models\CheckListItemMember;
 use App\Models\Follow_member;
 use App\Models\Tag;
 use App\Models\Task;
@@ -383,8 +384,8 @@ class WorkspaceController extends Controller
             } else if (Session::get('msg') == "two") {
                 Session::forget('msg');
                 return redirect()->route('home')->with([
-                    'msg' => 'Chờ quản trị viên duyệt',
-                    'action' => 'success'
+                    'msg' => 'Chờ quản trị viên duyệt bạn vào bảng',
+                    'action' => 'warning'
                 ]);
             } else if (Session::get('msg') == "three") {
                 return redirect()->route('home')->with([
@@ -537,7 +538,7 @@ class WorkspaceController extends Controller
             } elseif ($member->is_accept_invite != 0 && $member->is_accept_invite != 2) {
                 $wspInvite[] = $member;
                 $wspInviteCount++;
-            } elseif ($member->authorize->value == AuthorizeEnum::Viewer() && $member->is_accept_invite == 0) {
+            } elseif ($member->authorize->value == AuthorizeEnum::Viewer() && $member->is_accept_invite == 0 || $member->is_accept_invite == 2) {
                 $wspViewer[] = $member;
                 $wspViewerCount++;
             }
@@ -687,18 +688,17 @@ class WorkspaceController extends Controller
     //thông báo Done
     public function refuse_member($wm_id)
     {
-        $wspMember = WorkspaceMember::with(['user', 'workspace'])->find($wm_id);
+        $wspMember = WorkspaceMember::with(['user', 'workspace.boards'])->find($wm_id);
         try {
+            //            dd($wspMember);
             DB::table('workspace_members')->where('id', $wm_id)->update([
                 'is_accept_invite' => 2
             ]);
-
-            $title = "Từ chối lời mời";
             $title = "Lời Mời Đã Bị Từ Chối";
             $description = 'Bạn vừa nhận được thông báo từ chối lời mời gia nhập không gian làm việc "' . $wspMember->workspace->name . '". Hy vọng bạn sẽ có những cơ hội hợp tác khác trong tương lai gần!';
-            if ($wspMember->user->id == Auth::id()) {
-                event(new EventNotification($description, 'success', $wspMember->user->id));
-            }
+            //            if ($wspMember->user->id == Auth::id()) {
+            event(new EventNotification($description, 'success', $wspMember->user->id));
+            //            }
             $wspMember->user->notify(new WorkspaceMemberNotification($title, $description, $wspMember, 1));
             return response()->json([
                 'success' => true,
@@ -871,6 +871,10 @@ class WorkspaceController extends Controller
         //xử lý khi admin gửi link invite cho người dùng
         if ($request->email) {
             $workspace = Workspace::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            if (!$workspace) {
+                return redirect('/boardError');
+            }
+
             $user = User::query()->where('email', $request->email)->first();
             $timestamp = $request->query('timestamp');
             $linkTime = Carbon::createFromTimestamp($timestamp);
@@ -979,12 +983,16 @@ class WorkspaceController extends Controller
         } //xử lý khi người dùng kick vào link invite
         else {
             $workspace = Workspace::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            if (!$workspace) {
+                return redirect('/boardError');
+                // abort(404, 'Link mời của bạn đã hết hạn');
+
+            }
             Auth::logout();
             Session::put('workspace_id', $workspace->id);
             Session::put('access', $workspace->access);
             Session::put('authorize', AuthorizeEnum::Viewer());
             Session::put('invited', value: 'case3');
-
 
             return redirect()->route('login');
         }
@@ -1144,35 +1152,105 @@ class WorkspaceController extends Controller
         $wsp = WorkspaceMember::find($id);
         $userBoard = $wsp->relatedBoardMembers;
 
-        $owner = WorkspaceMember::where('authorize', 'Owner')->first();
+        $owner = WorkspaceMember::where('authorize', 'Owner')->where('id', $wsp->workspace->id)->first();
         try {
-            foreach ($userBoard as $item) {
-                if ($item->authorize == "Owner") {
+            DB::beginTransaction();
+            // foreach ($userBoard as $item) {
+            //     if ($item->authorize == "Owner") {
+            //         BoardMember::create([
+            //             'user_id' => $owner->user_id,
+            //             'board_id' => $item->board_id,
+            //             'authorize' => 'Owner',
+            //             'invite' => now(),
+            //         ]);
+            //     }
+
+            //     $catalog = Catalog::where('board_id', $item->board_id)->get();
+            //     foreach ($catalog as $item00) {
+            //         $task = Task::where('catalog_id', $item00->id)->get();
+
+            //         foreach ($task as $item0) {
+            //             $taskMemeber = TaskMember::where('user_id', $wsp->user_id)->where('task_id', $item0->id)->get();
+
+            //             foreach ($taskMemeber as $item2) {
+            //                 $checklist = CheckList::where('task_id', $item2->task_id)->with('checkListItems')->get();
+
+            //                 foreach ($checklist as $item3) {
+            //                     foreach ($item3->checkListItems as $item4) {
+            //                         $checkListItemMember = CheckListItemMember::where('check_list_item_id', $item4->id)
+            //                             ->where('user_id', $wsp->user_id)->get();
+            //                         foreach ($checkListItemMember as $item5) {
+            //                             $item5->forceDelete();
+            //                         }
+            //                     }
+            //                 }
+
+            //                 $item2->forceDelete();
+            //             }
+            //             $item0->forceDelete();
+            //         }
+            //     }
+
+
+            //     $item->forceDelete();
+
+            // }
+
+
+            foreach ($userBoard as $board) {
+                if ($board->authorize == "Owner") {
                     BoardMember::create([
                         'user_id' => $owner->user_id,
-                        'board_id' => $item->board_id,
+                        'board_id' => $board->board_id,
                         'authorize' => 'Owner',
                         'invite' => now(),
                     ]);
                 }
-                $item->forceDelete();
 
+                $catalogs = Catalog::where('board_id', $board->board_id)->get(); // Nếu đã định nghĩa quan hệ hasMany
+                foreach ($catalogs as $catalog) {
+                    $tasks = $catalog->tasks; // Quan hệ hasMany
+
+                    foreach ($tasks as $task) {
+
+                        $taskMembers = TaskMember::where('task_id', $task->id)->where('user_id', $wsp->user_id)->forceDelete();
+                        $checkLists = CheckList::where('task_id', $task->id)->get();
+
+                        foreach ($checkLists as $checkList) {
+
+                            foreach ($checkList->checkListItems as $checkListItem) {
+
+                                foreach ($checkListItem->checkListItemMembers as $member) {
+                                    $member->forceDelete();
+                                }
+                            }
+                        }
+
+                        // $taskMembers->forceDelete();
+                    }
+                }
+                //xóa boardMember
+                $board->forceDelete();
             }
 
 
             $title = "Loại không gian làm việc";
             $description = 'Bạn vừa bị loại khỏi không gian làm việc ' . $wsp->workspace->name;
             $wsp->user->notify(new WorkspaceMemberNotification($title, $description, $wsp, 0));
-            event(new EventNotification('Bạn đã bị loại khỏi không gian làm việc ' . $wsp->workspace->name, 'success', $wsp->user->id));
+            event(new EventNotification('Bạn đã bị loại khỏi không gian làm việc ' . $wsp->workspace->name, 'success', $wsp->user->id, true));
             $wsp->forceDelete();
+
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'action' => 'success',
                 'msg' => 'Bạn đã loại người dùng vào không gian làm việc',
             ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        } catch (\Throwable $th) {
-            throw $th;
+            dd($e);
         }
 
     }

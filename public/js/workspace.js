@@ -13,7 +13,7 @@ $(document).ready(function () {
             processData: false, // Không xử lý dữ liệu
             contentType: false, // Không đặt kiểu content mặc định
             success: function (response) {
-                notificationWeb(response.action, response.message);
+                notificationWeb(response.action, response.msg);
                 console.log("cật nhật thành công");
             },
             error: function (xhr) {
@@ -231,7 +231,7 @@ document.querySelectorAll(".upgrade-member").forEach((item) => {
 //thêm khách làm thành viên
 document.addEventListener("DOMContentLoaded", function () {
     // Lắng nghe sự kiện click trên tất cả các thẻ <a> có class "dropdown-item text-danger"
-    document.querySelectorAll(".dropdown-item.text-primary").forEach((link) => {
+    document.querySelectorAll(".addGuestWsp").forEach((link) => {
         link.addEventListener("click", function (event) {
             event.preventDefault(); // Ngăn chặn hành vi mặc định (chuyển trang)
 

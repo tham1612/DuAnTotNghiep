@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AuthorizeEnum;
+use App\Models\Board;
+use App\Models\BoardMember;
 use App\Models\User;
+use App\Models\Workspace;
 use App\Models\WorkspaceMember;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Session;
-use App\Enums\AuthorizeEnum;
-use App\Models\Board;
-use App\Models\BoardMember;
-use App\Models\Workspace;
-use App\Notifications\BoardNotification;
-use App\Notifications\WorkspaceNotification;
+use Log;
+
 
 class LoginGoogleController extends Controller
 {
@@ -131,10 +131,10 @@ class LoginGoogleController extends Controller
                             Session::forget('workspace_id');
                             Session::forget('email_invited');
                             Session::forget('authorize');
-                            return redirect()->route('home')->with([
-                                'action' => 'success',
-                                'msg' => "Bạn đã được thêm vào trong không gian làm việc. \"{$wsp->name}\" !!!"
-                            ]);
+                            session()->flash('action', 'success');
+                            session()->flash('msg', "Bạn đã được thêm vào trong không gian làm việc. \"{$wsp->name}\" !!!");
+
+
                         } catch (\Throwable $th) {
                             throw $th;
                         }
@@ -193,20 +193,19 @@ class LoginGoogleController extends Controller
                             Session::forget('invited');
                             Session::forget('authorize');
                             Session::forget('access');
-
-                            return redirect()->route('home')->with([
-                                'msg' => 'Bạn đã tham gia vào không gian làm việc',
-                                'action' => 'success'
-                            ]);
+                            session()->flash('msg', 'Bạn đã tham gia vào không gian làm việc');
+                            session()->flash('action', 'success');
                         } catch (\Throwable $th) {
                             dd($th);
                         }
                     }
+
                     // xử lý người dùng kick vào link invite và workspace đang private
                     else {
+
                         try {
                             if (!$userCheck) {
-                                WorkspaceMember::create([
+                                WorkspaceMember::query()->create([
                                     'user_id' => $user->id,
                                     'workspace_id' => Session::get('workspace_id'),
                                     'authorize' => "Viewer",
@@ -219,10 +218,6 @@ class LoginGoogleController extends Controller
                                 Session::forget('invited');
                                 Session::forget('authorize');
                                 Session::forget('access');
-                                return redirect()->route('home')->with([
-                                    'msg' => 'Chờ người quản trị duyệt',
-                                    'action' => 'success'
-                                ]);
                             }
 
                             //xóa tất cả session đã set
@@ -230,16 +225,13 @@ class LoginGoogleController extends Controller
                             Session::forget('invited');
                             Session::forget('authorize');
                             Session::forget('access');
-                            return redirect()->route('home')->with([
-                                'msg' => 'Bạn đã gửi lời mời vào không gian làm việc, chờ quản trị viên duyệt!',
-                                'action' => 'success'
-                            ]);
+                            session()->flash('action', 'success');
+                            session()->flash('msg', "Chờ quản trị viên duyệt!");
+
                         } catch (\Throwable $th) {
                             dd($th);
-
                         }
                     }
-
                 }
 
                 /// END. sử lý thêm người dùng vào workspace
@@ -251,6 +243,7 @@ class LoginGoogleController extends Controller
                 else if (Session::get('invited_board') == "case1") {
                     //xử lý người dùng khi đăng nhập đúng email
                     if (Session::get('email_invited') == $userMain->email) {
+
                         try {
                             //thêm người dùng vào workspace member
                             BoardMember::create([
@@ -267,10 +260,9 @@ class LoginGoogleController extends Controller
                             Session::forget('board_id');
                             Session::forget('email_invited');
                             Session::forget('authorize');
-                            return redirect()->route('b.edit', $board->id)->with([
-                                'msg' => "Bạn đã được thêm vào trong bảng. \"{$board->name}\" !!!",
-                                'action' => 'success'
-                            ]);
+                            session()->flash('action', 'success');
+                            session()->flash('msg', "Bạn đã tham gia vào bảng!!!");
+
                         } catch (\Throwable $th) {
                             throw $th;
                         }
@@ -297,81 +289,44 @@ class LoginGoogleController extends Controller
                         ->where('board_id', Session::get('board_id'))
                         ->first();
 
+                    //Trường hợp có trong wsp
                     if ($check_user_wsp) {
                         if (!$check_user_board) {
-                            //xử lý nếu bảng public
-                            if (Session::get('board_access') == "public") {
-                                try {
-                                    BoardMember::create([
-                                        'user_id' => $user->id,
-                                        'board_id' => Session::get('board_id'),
-                                        'authorize' => Session::get('authorize'),
-                                        'invite' => now(),
-                                    ]);
 
-                                    $wm = WorkspaceMember::query()
-                                        ->where('workspace_members.user_id', $user->id)
-                                        ->where('workspace_id', Session::get('workspace_id'))
-                                        ->first();
+                            BoardMember::create([
+                                'user_id' => $user->id,
+                                'board_id' => Session::get('board_id'),
+                                'authorize' => Session::get('authorize'),
+                                'invite' => now(),
+                                'is_accept_invite' => 1,
+                            ]);
 
-                                    //xử lý update is_active
-                                    WorkspaceMember::query()
-                                        ->where('user_id', $user->id)
-                                        ->whereNot('id', $wm->id)
-                                        ->update(['is_active' => 0]);
-                                    WorkspaceMember::query()
-                                        ->where('id', $wm->id)
-                                        ->update(['is_active' => 1]);
+                            Session::forget('board_id');
+                            Session::forget('workspace_id');
+                            Session::forget('board_access');
+                            Session::forget('authorize');
+                            Session::forget('invited_board');
+                            session()->flash('action', 'success');
+                            session()->flash('msg', "Chờ quản trị viên duyệt bạn vào bảng");
+                            // }
 
-                                    $this->notificationMemberInviteBoard(Session::get('board_id'), auth()->user()->name);
-
-                                    Session::forget('board_id');
-                                    Session::forget('workspace_id');
-                                    Session::forget('board_access');
-                                    Session::forget('authorize');
-                                    Session::forget('invited_board');
-                                    return redirect()->route('home')->with([
-                                        'msg' =>
-                                            'Bạn đã tham gia vào Bảng',
-                                        'action' => 'success'
-                                    ]);
-                                } catch (\Throwable $th) {
-                                    throw $th;
-                                }
-                            }
-                            //xử lý nếu bảng private
-                            else {
-                                BoardMember::create([
-                                    'user_id' => $user->id,
-                                    'board_id' => Session::get('board_id'),
-                                    'authorize' => Session::get('authorize'),
-                                    'invite' => now(),
-                                    'is_accept_invite' => 1,
-                                ]);
-
-                                Session::forget('board_id');
-                                Session::forget('workspace_id');
-                                Session::forget('board_access');
-                                Session::forget('authorize');
-                                Session::forget('invited_board');
-                                return redirect()->route('home')->with([
-                                    'msg' =>
-                                        'Chờ quản trị viên duyệt bạn vào bảng',
-                                    'action' => 'danger'
-                                ]);
-                            }
                         } else {
                             //
                             if ($check_user_wsp->is_active == 1) {
-                                session(['msg' => 'Bạn đã ở trong bảng rồi']);
-                                session(['action' => 'success']);
+                                if ($check_user_board->is_accept_invite == 1) {
+                                    session(['msg' => 'Chờ quản trị viên duyệt']);
+                                    session(['action' => 'warning']);
+
+                                } else {
+                                    session(['msg' => 'Bạn đã ở trong bảng rồi']);
+                                    session(['action' => 'success']);
+                                }
                                 $boardId = Session::get('board_id');
                                 Session::forget('board_id');
                                 Session::forget('workspace_id');
                                 Session::forget('board_access');
                                 Session::forget('authorize');
                                 Session::forget('invited_board');
-                                return redirect()->route('b.edit', $boardId);
                             } else {
                                 $wm = WorkspaceMember::query()
                                     ->where('workspace_members.user_id', Auth::id())
@@ -386,17 +341,51 @@ class LoginGoogleController extends Controller
                                 WorkspaceMember::query()
                                     ->where('id', $wm->id)
                                     ->update(['is_active' => 1]);
-                                session(['msg' => 'Bạn đã ở trong bảng rồi']);
-                                session(['action' => 'success']);
+                                if ($check_user_board->is_accept_invite == 1) {
+                                    session(['msg' => 'Chờ quản trị viên duyệt']);
+                                    session(['action' => 'warning']);
+
+                                } else {
+                                    session(['msg' => 'Bạn đã ở trong bảng rồi']);
+                                    session(['action' => 'success']);
+                                }
                                 $boardId = Session::get('board_id');
                                 Session::forget('board_id');
                                 Session::forget('workspace_id');
                                 Session::forget('board_access');
                                 Session::forget('authorize');
                                 Session::forget('invited_board');
-                                return redirect()->route('b.edit', $boardId);
                             }
+                        }
+                    }
 
+                    //trường hợp chưa có trong wsp
+                    else {
+                        if (!$check_user_board) {
+                            BoardMember::create([
+                                'user_id' => $user->id,
+                                'board_id' => Session::get('board_id'),
+                                'authorize' => Session::get('authorize'),
+                                'invite' => now(),
+                                'is_accept_invite' => 1,
+                            ]);
+
+                            Session::forget('board_id');
+                            Session::forget('workspace_id');
+                            Session::forget('board_access');
+                            Session::forget('authorize');
+                            Session::forget('invited_board');
+                            session()->flash('action', 'success');
+                            session()->flash('msg', "Chờ quản trị viên duyệt bạn vào bảng");
+                        } else {
+                            if ($check_user_board->is_accept_invite == 1) {
+                                session(['msg' => 'Chờ quản trị viên duyệt']);
+                                session(['action' => 'warning']);
+
+                            } else {
+                                session(['msg' => 'Bạn đã ở trong bảng rồi']);
+                                session(['action' => 'success']);
+                            }
                         }
                     }
                 }
@@ -444,11 +433,9 @@ class LoginGoogleController extends Controller
                             Session::forget('board_id');
                             Session::forget('email_invited');
                             Session::forget('authorize');
-                            return redirect()->route('b.edit', $board->id)->with([
-                                'msg' =>
-                                    "Bạn đã được thêm vào trong bảng. \"{$board->name}\" !!!",
-                                'action' => 'success'
-                            ]);
+                            session()->flash('action', 'success');
+                            session()->flash('msg', "Bạn đã được thêm vào trong bảng. \"{$board->name}\" !!!");
+
                         } catch (\Throwable $th) {
                             throw $th;
                         }
@@ -461,20 +448,13 @@ class LoginGoogleController extends Controller
                         Session::forget('board_id');
                         Session::forget('email_invited');
                         Session::forget('authorize');
-                        return redirect()->route('home')->with([
-                            'msg' =>
-                                'Bạn không đăng nhập đúng email được mời',
-                            'action' => 'success'
-                        ]);
+                        session()->flash('action', 'success');
+                        session()->flash('msg', "Bạn không đăng nhập đúng email được mời");
+
                     }
                 }
                 ///END.
                 Auth::login($finduser);
-
-                // if (empty($finduser->password)) {
-                //     return redirect()->route('password.request')->with('message', 'Vui lòng đặt mật khẩu mới cho tài khoản của bạn.');
-                // }
-
                 return redirect()->intended('home');
             } else {
                 $newUser = User::create([
@@ -488,54 +468,8 @@ class LoginGoogleController extends Controller
                 return redirect()->intended('home');
             }
         } catch (Exception $e) {
-            \Log::error('Error during Google OAuth callback: ' . $e->getMessage());
+            Log::error('Error during Google OAuth callback: ' . $e->getMessage());
             return redirect('/login')->with('error', 'Có lỗi xảy ra khi xác thực Google.');
-        }
-    }
-
-
-
-
-    protected function notificationMemberInviteBoard($boardID, $userName)
-    {
-        // Eager load boardMembers và user, lọc authorize != Viewer
-        $board = Board::with([
-            'boardMembers' => function ($query) {
-                $query->where('authorize', '!=', 'Viewer');
-            },
-            'boardMembers.user' // Eager load user
-        ])->find($boardID);
-
-        if ($board) {
-            // Gửi thông báo tới các thành viên hợp lệ
-            $board->boardMembers->each(function ($boardMember) use ($board, $userName) {
-                $user = $boardMember->user;
-                if ($user) {
-                    $name = 'Bảng ' . $board->name;
-                    $title = 'Thành viên mới trong bảng';
-                    $description = 'Người dùng "' . $userName . '" đã được thêm vào bảng "' . $board->name . '".';
-                    $user->notify(new BoardNotification($user, $board, $name, $description, $title));
-                }
-            });
-        }
-    }
-    //thông báo người dùng tham gia vào work space
-    protected function notificationMemberInviteWorkspace($workspaceID, $userName)
-    {
-        $workspace = Workspace::with([
-            'users' => function ($query) {
-                $query->wherePivot('authorize', '!=', 'Viewer') // Điều kiện lọc 'authorize' không phải là 'Viewer'
-                    ->wherePivot('is_accept_invite', 0); // Điều kiện lọc 'is_accept_invite' bằng 0
-            }
-        ])->find($workspaceID);
-
-        if ($workspace) {
-            $workspace->users->each(function ($user) use ($workspace, $userName) {
-                $name = 'không gian làm việc ' . $workspace->name;
-                $title = 'Thành viên mới trong không gian làm việc';
-                $description = 'Người dùng "' . $userName . '" đã được thêm vào không gian làm việc "' . $workspace->name . '".';
-                $user->notify(new WorkspaceNotification($user, $workspace, $name, $description, $title));
-            });
         }
     }
 }

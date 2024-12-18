@@ -275,6 +275,22 @@ function addTaskToCatalogViewBoard(catalogElement, task, catalog_name, tag_count
             currentTaskCountElement.text(1);
         }
     }
+    let colorPriority = '';
+    if (task.priority == 'High') {
+        colorPriority = 'text-danger';
+    } else if (task.priority == 'Medium') {
+        colorPriority = 'text-warning';
+    } else if (task.priority == 'Low') {
+        colorPriority = 'text-info';
+    }
+    let colorRisk = '';
+    if (task.risk == 'High') {
+        colorRisk = 'text-danger';
+    } else if (task.risk == 'Medium') {
+        colorRisk = 'text-warning';
+    } else if (task.risk == 'Low') {
+        colorRisk = 'text-info';
+    }
     let listTask = document.getElementById(`${catalog_name}-${task.catalog_id}`);
     let tasks = `
             <div class="card tasks-box cursor-pointer" data-value="${task.id}">
@@ -308,7 +324,19 @@ function addTaskToCatalogViewBoard(catalogElement, task, catalog_name, tag_count
                 <div class="card-footer border-top-dashed">
                     <div class="d-flex justify-content-end">
                         <div class="flex-shrink-0">
-
+                            <li class="list-inline-item">
+                                <a href="javascript:void(0)" class="text-muted"
+                                   title="Độ ưu tiên">
+                                    <i id="task-priority-view-board-${task.id}" class="ri-flag-fill align-bottom
+                                      ${colorPriority}"></i>
+                                </a>
+                            </li>
+                           <li class="list-inline-item">
+                                <a href="javascript:void(0)" class="text-muted" title="Rủi do">
+                                    <i id="task-risk-view-board-${task.id}" class=" ri-spam-fill align-bottom
+                                     ${colorRisk}"></i>
+                                </a>
+                           </li>
                         </div>
                     </div>
                 </div>

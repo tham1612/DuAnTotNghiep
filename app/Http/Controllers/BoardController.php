@@ -548,24 +548,30 @@ class BoardController extends Controller
         if (session('view_only', false)) {
             return back()->with('error', 'Bạn chỉ có quyền xem và không thể chỉnh sửa bảng này.');
         }
+
         session()->forget('view_only');
+
         try {
             $title = "Phản hồi về lời mời tham gia bảng";
-            $description = "Rất tiếc, lời mời tham gia bảng {{ $boardMember->board->name }} của bạn chưa được phê duyệt. Cảm ơn bạn đã quan tâm, và hy vọng sẽ có cơ hội hợp tác trong các dự án khác!";
+            $description = "Rất tiếc, lời mời tham gia bảng " . $boardMember->board->name . " của bạn chưa được phê duyệt. Cảm ơn bạn đã quan tâm, và hy vọng sẽ có cơ hội hợp tác trong các dự án khác!";
+
             if ($boardMember->user->id == Auth::id()) {
-                event(new EventNotification("Rất tiếc, lời mời tham gia bảng {{ $boardMember->board->name }} của bạn chưa được phê duyệt", 'success', $boardMember->user->id));
+                event(new EventNotification("Rất tiếc, lời mời tham gia bảng " . $boardMember->board->name . " của bạn chưa được phê duyệt", 'success', $boardMember->user->id));
             }
+
             $boardMember->user->notify(new BoardMemberNotification($title, $description, $boardMember->board->name, $boardMember->user->name));
             $boardMember->forceDelete();
+
             return response()->json([
                 'success' => true,
                 'action' => 'success',
-                'msg' => 'bạn đã từ chối người dùng vào bảng ',
+                'msg' => 'Bạn đã từ chối người dùng vào bảng.',
             ]);
         } catch (\Throwable $th) {
             throw $th;
         }
     }
+
 
     //Kích thành viên || Rời khỏi bảng
     //thông báo done
@@ -1116,6 +1122,9 @@ class BoardController extends Controller
         //xử lý khi admin gửi link invite cho người dùng
         if ($request->email) {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            if (!$board) {
+                return redirect('/boardError');
+            }
             $user = User::query()->where('email', $request->email)->first();
             $timestamp = $request->query('timestamp');
             $linkTime = Carbon::createFromTimestamp($timestamp);
@@ -1296,6 +1305,9 @@ class BoardController extends Controller
         } //xử lý khi người dùng có link invite và kick vô
         else {
             $board = Board::where('link_invite', 'LIKE', "%$uuid/$token%")->first();
+            if (!$board) {
+                return redirect('/boardError');
+            }
             Auth::logout();
             Session::put('board_id', $board->id);
             Session::put('workspace_id', $board->workspace_id);
@@ -1370,15 +1382,13 @@ class BoardController extends Controller
             BoardMember::create([
                 'user_id' => $userId,
                 'board_id' => $boardId,
-                'authorize' => AuthorizeEnum::Member(),
+                'authorize' => "Member",
                 'invite' => now(),
             ]);
         }
 
         $boardMember = BoardMember::with(['user', 'board'])->find($boardId);
         $this->notificationMemberInviteBoard($boardMember->board->id, $boardMember->user->name);
-        // session()->flash('msg', 'Bạn đã mời người dùng vào bảng');
-        // session()->flash('action', 'success');
 
         return response()->json([
             'success' => true,

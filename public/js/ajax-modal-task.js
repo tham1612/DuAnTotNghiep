@@ -472,11 +472,12 @@ function submitUpdateDateTask(taskId, event) {
     // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
     if (startDateInput && endDateInput && startDate >= endDate) {
         // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
-        });
+        notificationWeb('error','Ngày bắt đầu phải nhỏ hơn ngày kết thúc.')
+        // Swal.fire({
+        //     icon: "error",
+        //     title: "Oops...",
+        //     text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+        // });
         return; // Dừng thực hiện hàm nếu có lỗi
     }
     // Sử dụng FormData để linh hoạt trong việc thêm dữ liệu
@@ -805,7 +806,6 @@ function FormCheckListItem(checkListId) {
                              style="padding: 15px 15px 0 15px">
                             <h5 class="text-center">Thao tác
                                 mục</h5>
-                            <p class="mt-2">Chuyển sang thẻ</p>
                             <p class="cursor-pointer text-danger"
                                onclick="removeCheckListItem(${response.id},${response.check_list_id})">
                                 Xóa</p>
@@ -1366,11 +1366,12 @@ function submitUpdateDateCheckListItem(checklistItemId) {
     // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
     if (startDateInputCheckListItem && endDateInputCheckListItem && startDate >= endDate) {
         // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
-        });
+        notificationWeb('error','Ngày bắt đầu phải nhỏ hơn ngày kết thúc.')
+        // Swal.fire({
+        //     icon: "error",
+        //     title: "Oops...",
+        //     text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+        // });
         return; // Dừng thực hiện hàm nếu có lỗi
     }
     let formData = {

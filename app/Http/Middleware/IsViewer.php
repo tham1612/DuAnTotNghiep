@@ -24,7 +24,7 @@ class IsViewer
             ->where('workspace_members.is_active', 1)
             ->first();
         if ($workspaceChecked->authorize == "Viewer") {
-            return redirect()->route('inbox');
+            return redirect()->route('home');
         }
 
         return $next($request); // Tiếp tục xử lý yêu cầu

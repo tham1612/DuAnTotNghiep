@@ -362,11 +362,12 @@
                     // Kiểm tra nếu cả ngày bắt đầu và ngày kết thúc đều có giá trị
                     if (startDateInput1 && endDateInput1 && startDate1 >= endDate1) {
                         // Hiển thị thông báo lỗi nếu ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
-                        })
+                        notificationWeb('error','Ngày bắt đầu phải nhỏ hơn ngày kết thúc.')
+                        // Swal.fire({
+                        //     icon: "error",
+                        //     title: "Oops...",
+                        //     text: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.",
+                        // })
                         return; // Dừng thực hiện hàm nếu có lỗi
                     }
                     var formData = {

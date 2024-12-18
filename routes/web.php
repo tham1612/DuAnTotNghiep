@@ -19,15 +19,15 @@ use App\Http\Controllers\MessageController;
 |
 */
 
-
+Route::view('/boardError', '/pageError/boardError');
 Route::get('/', function () {
     return view('welcome');
 })->middleware('guest');
 
 Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
     ->group(function () {
-        Route::view('/boardError', '/pageError/boardError');
-        Route::middleware('isViewer')->get('/home', [HomeController::class, 'index'])->name('home');
+
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
 
         Route::get('chat/{roomId?}/{receiverId?}', [UserController::class, 'chat'])
             ->name('chat');

@@ -174,6 +174,15 @@
                                                 {{$startDate}} - {{ $endDate }}
                                                 </span>
                                             </div>
+                                        @else
+                                            <div class="flex-grow-1 d-flex align-items-center">
+{{--                                                <i class="ri-calendar-event-line fs-20 me-2"></i>--}}
+                                                <span
+                                                    class=""
+                                                    id="date-view-board-{{$task->id}}">
+
+                                                </span>
+                                            </div>
                                         @endif
                                         <!-- nhãn -->
                                         <div class="flex-grow-1 d-flex align-items-center tag-task-section-{{ $task->id }}

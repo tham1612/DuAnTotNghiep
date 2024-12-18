@@ -4,12 +4,12 @@
     <!-- ngày bắt đầu -->
     <div>
         <strong class="fs-14">Ngày bắt đầu</strong>
-        <input type="datetime-local" name="start_date" id="start_date_{{$checklistItem->id}}" min="{{$task->start_date}}" max="{{$task->end_date}}"
+        <input type="datetime-local" name="start_date" id="start_date_{{$checklistItem->id}}"
                value="{{$checklistItem->start_date}}" class="form-control border-0 my-2"/>
     </div>
     <div>
         <strong class="fs-14">Ngày kết thúc</strong>
-        <input type="datetime-local" id="end_date_{{$checklistItem->id}}" name="end_date" min="{{$task->start_date}}" max="{{$task->end_date}}"
+        <input type="datetime-local" id="end_date_{{$checklistItem->id}}" name="end_date"
                value="{{$checklistItem->end_date}}"
                class="form-control border-0 my-2" onchange="updateReminderOptions({{$checklistItem->id}})"/>
     </div>
