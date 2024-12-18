@@ -104,7 +104,7 @@ class WorkspaceController extends Controller
                     'is_active' => $is_active,
                 ]);
 
-                activity('Workspace Created')
+            activity('Workspace Created')
                 ->causedBy(Auth::user())
                 ->performedOn($workspace)
                 ->withProperties([
@@ -286,7 +286,9 @@ class WorkspaceController extends Controller
                     } catch (\Throwable $th) {
                         dd($th);
                     }
-                } //xử lý người dùng kick link invte và workspace đang private
+                }
+
+                //xử lý người dùng kick link invte và workspace đang private
                 else {
                     WorkspaceMember::create([
                         'user_id' => $user->id,
@@ -982,6 +984,8 @@ class WorkspaceController extends Controller
             Session::put('access', $workspace->access);
             Session::put('authorize', AuthorizeEnum::Viewer());
             Session::put('invited', value: 'case3');
+
+
             return redirect()->route('login');
         }
 
