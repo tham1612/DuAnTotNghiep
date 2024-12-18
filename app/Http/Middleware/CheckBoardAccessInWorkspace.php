@@ -74,7 +74,7 @@ class CheckBoardAccessInWorkspace
 
                     // Nếu người dùng không phải là thành viên của bảng và bảng không phải là public
                     if (!$isMemberOfBoard && !$isBoardPublic) {
-                        return back()->with('error', 'Bạn không có quyền truy cập bảng này.');
+                        return redirect('/home')->with(['msg'=> 'Bảng ở chế độ riêng tư, bạn không thể truy cập!!','action'=>'danger']);
                     }
 
                     // Nếu người dùng là thành viên của bảng với vai trò Viewer (điều kiện bổ sung cho chắc chắn)

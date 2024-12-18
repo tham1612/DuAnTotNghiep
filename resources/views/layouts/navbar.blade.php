@@ -227,7 +227,7 @@
                                     $maxDisplay = 3;
                                     $count = 0;
                                 @endphp
-
+@if(!empty($boardMembers))
                                 @foreach ($boardMembers as $boardMember)
                                     @php
                                         $boardMember = json_decode(json_encode($boardMember));
@@ -252,18 +252,19 @@
                                         @php $count++; @endphp
                                     @endif
                                 @endforeach
-
-                                @if (count($boardMembers) > $maxDisplay)
-                                    <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="{{ count($boardMembers) - $maxDisplay }} more">
-                                        <div class="avatar-xs" style="width: 35px;height: 35px">
-                                            <div class="avatar-title rounded-circle" style="width: 35px;height: 35px">
-                                                +{{ count($boardMembers) - $maxDisplay }}
+                                    @if (count($boardMembers) > $maxDisplay)
+                                        <a href="javascript: void(0);" class="avatar-group-item" data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           title="{{ count($boardMembers) - $maxDisplay }} more">
+                                            <div class="avatar-xs" style="width: 35px;height: 35px">
+                                                <div class="avatar-title rounded-circle" style="width: 35px;height: 35px">
+                                                    +{{ count($boardMembers) - $maxDisplay }}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
+                                        </a>
+                                    @endif
                                 @endif
+
                             </div>
                         </div>
                         @if (!$boardMemberChecked || isset($boardMemberChecked) && $boardMemberChecked->is_accept_invite == 1)

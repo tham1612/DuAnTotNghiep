@@ -97,7 +97,7 @@ class TaskController extends Controller
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không có quyền thêm thẻ!!',
             ]);
         }
         $data = $request->except(['position', 'priority', 'risk', 'sortorder']);
@@ -162,7 +162,7 @@ class TaskController extends Controller
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không có quyền chỉnh sửa!!',
             ]);
         }
 
@@ -181,7 +181,7 @@ class TaskController extends Controller
             foreach ($followMember as $member) {
                 if ($member->user->id != Auth::id()) {
                     $name = 'Task ' . $task->text;
-                    $title = 'Task có thay đổi';
+                    $title = 'Thẻ đã được cập nhật';
                     $description = 'Task ' . $task->text . ' đã thay đổi ngày đến hạn';
                     // $data = [
                     //     'user_id' => $data['user_id'] ?? 'N/A',
@@ -193,6 +193,7 @@ class TaskController extends Controller
                     //     'date' => date('M d', strtotime($notification->created_at)), // Định dạng lại ngày
                     // ];
                     event(new EventNotification("Thẻ " . $task->text . " đã thay đổi ngày !", 'success', $member->user->id));
+//                    dd($member->user, $board, $name, $description, $title);
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
             }
@@ -208,7 +209,7 @@ class TaskController extends Controller
                 if ($member->user->id != Auth::id()) {
                     event(new EventNotification("Thẻ " . $task->text . " đã thay đổi ảnh ", 'success', $member->user->id));
                     $name = 'Task ' . $task->text;
-                    $title = 'Task có thay đổi';
+                    $title = 'Thẻ đã được cập nhật';
                     $description = 'Thẻ ' . $task->text . ' đã thay đổi ảnh';
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
@@ -220,7 +221,7 @@ class TaskController extends Controller
                 if ($member->user->id != Auth::id()) {
                     event(new EventNotification("Thẻ " . $task->text . " đã đổi tên thành " . $data['text'], 'success', $member->user->id));
                     $name = 'Task ' . $task->text;
-                    $title = 'Task có thay đổi';
+                    $title = 'Thẻ đã được cập nhật';
                     $description = 'Thẻ ' . $task->text . ' đã đổi tên thành ' . $data['text'];
                     $member->user->notify(new BoardNotification($member->user, $board, $name, $description, $title));
                 }
@@ -280,7 +281,7 @@ class TaskController extends Controller
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không có quyền chỉnh sửa!!',
             ]);
         }
 
@@ -383,7 +384,7 @@ class TaskController extends Controller
                     ->log('Vị trí các task trong cùng catalog đã thay đổi.');
             }
             $task->update($data);
-            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id, $msg,$request->catalog_id_old))->toOthers();
+            broadcast(new RealtimeTaskKanban($task, $task->catalog->board->id, $msg, $request->catalog_id_old))->toOthers();
             DB::commit();
 
 
@@ -441,7 +442,7 @@ class TaskController extends Controller
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không có quyền chỉnh sửa!!',
             ]);
         }
 
@@ -468,7 +469,7 @@ class TaskController extends Controller
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không đủ quyền để lưu trữ thẻ!!',
             ]);
         }
         $task->delete();
@@ -494,7 +495,7 @@ class TaskController extends Controller
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không đủ quyền để khôi phục thẻ!!',
             ]);
         }
         broadcast(new RealtimeNotificationBoard('Quản trị viên đã khôi phục thẻ', $boardId))->toOthers();
@@ -570,11 +571,11 @@ class TaskController extends Controller
     {
         $data = $request->all();
         $task = Task::query()->findOrFail($data['id']);
-        $authorize = $this->authorizeWeb->authorizeEdit($task->catalog->board->id);
+        $authorize = $this->authorizeWeb->authorizeEdit($data['toBoard']);
         if (!$authorize) {
             return response()->json([
                 'action' => 'error',
-                'msg' => 'Bạn không có quyền!!',
+                'msg' => 'Bạn không có quyền chỉnh sửa ở bảng sao chép sang!!',
             ]);
         }
         $catalog = Catalog::query()->findOrFail($data['catalog_id']);
@@ -602,7 +603,7 @@ class TaskController extends Controller
                 $attachmentOld = TaskAttachment::query()->where('task_id', $task['id'])->get();
 
                 foreach ($attachmentOld as $attachment) {
-                    TaskTag::query()->create([
+                    TaskAttachment::query()->create([
                         'task_id' => $taskNew->id,
                         'file_name' => $attachment['file_name'],
                         'name' => $attachment['name'],
@@ -641,6 +642,7 @@ class TaskController extends Controller
                 'board_id' => $data['toBoard']
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e->getMessage());
             return response()->json([
                 'action' => 'error',

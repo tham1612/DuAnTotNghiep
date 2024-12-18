@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
     ->group(function () {
 
-        Route::middleware('isViewer')->get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
+        Route::get('/homes/dashboard/{workspaceId}', [BoardController::class, 'index'])->name('homes.dashboard');
 
         Route::group(['middleware' => ['auth', 'check.board.access']], function () {
             //        Route::group(['middleware' => ['auth']], function () {
@@ -31,7 +31,7 @@ Route::middleware(['auth', 'isWorkspace', 'isActiveWsp'])
 
                 Route::post('store', [BoardController::class, 'store'])->name('store');
 
-                Route::get('{id}/edit', [BoardController::class, 'edit'])->middleware('isActiveBoard')->name('edit');
+                Route::get('{id}/edit', [BoardController::class, 'edit'])->middleware(['isActiveBoard', 'isBoardOfWorkspace'])->name('edit');
 
                 Route::post('{id}/filter', [BoardController::class, 'filter']);
 

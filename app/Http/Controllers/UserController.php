@@ -20,19 +20,19 @@ class UserController extends Controller
         foreach ($userIds as $id) {
             // Kiểm tra xem ID đã tồn tại trong bất kỳ members_hash nào chưa
             $exists = DB::table('room_chat')->where('members_hash', 'LIKE', "%{$id}%")->exists();
-        
+
             // Nếu ID chưa tồn tại trong members_hash
             if (!$exists) {
                 // Tạo combinations cho ID hiện tại với các ID còn lại
                 $remainingIds = array_diff($userIds, [$id]);
-        
+
                 foreach ($remainingIds as $otherId) {
                     // Tạo members_hash có định dạng "id,otherId" (nhỏ -> lớn để tránh trùng lặp ngược)
                     $membersHash = implode(',', [$id, $otherId]);
-                    
+
                     // Kiểm tra lại để tránh thêm trùng members_hash
                     $alreadyExists = DB::table('room_chat')->where('members_hash', $membersHash)->exists();
-        
+
                     if (!$alreadyExists) {
                         // Tạo mới bản ghi trong bảng room_chat
                         DB::table('room_chat')->insert([
@@ -46,7 +46,7 @@ class UserController extends Controller
         if ($request->input('query')) {
             $query = $request->input('query'); // Nhận tham số từ request
             $users = [];
-            
+
             if ($query) {
                 // Truy vấn cơ sở dữ liệu và loại trừ người dùng hiện tại
                 $users = User::where(function ($queryBuilder) use ($query) {
@@ -54,19 +54,19 @@ class UserController extends Controller
                                  ->orWhere('email', 'LIKE', "%{$query}%");
                 })
                 ->where('id', '!=', auth()->id())
-                ->get();            
-            }            
+                ->get();
+            }
             return response()->json($users); // Trả về dữ liệu dưới dạng JSON
         } else {
             $currentUserId = auth()->id(); // Lấy ID của người dùng hiện tại
 
             $users = DB::table('users')
-              
-           
-             
+
+
+
                 ->get();
-            
-       
+
+
             $rooms = DB::table('room_chat')
                 ->select('id', 'name', 'members_hash')
                 ->get()->toArray();
@@ -79,7 +79,7 @@ class UserController extends Controller
             return view('chat.index', compact('users', 'roomId', 'receiverId', 'rooms'));
         }
     }
-    
+
     public function check(string $id = null)
     {
         if (is_null($id)) {
@@ -151,10 +151,10 @@ class UserController extends Controller
             ->orderBy('created_at', 'desc') // sắp xếp theo thời gian tạo, mới nhất trước
             ->limit(1) // giới hạn 1 kết quả
             ->first(); // lấy bản ghi đầu tiên
-    
+
         return response()->json($latestMessage);
     }
-    
+
     public function edit(string $id)
     {
         $user = User::query()->findOrFail($id);

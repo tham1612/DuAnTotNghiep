@@ -9,6 +9,30 @@ use Illuminate\Http\Request;
 
 class AuthorizeWeb extends Controller
 {
+    public function authorizeAccessBoard($boardId)
+    {
+        $checkAuthorize = BoardMember::query()
+            ->where('user_id', auth()->id())
+            ->where('board_id', $boardId)
+            ->value('authorize');
+
+        $authorize = Board::query()
+            ->findOrFail($boardId);
+
+        if ($authorize->access == 'public') {
+            return ($checkAuthorize == 'Owner'
+                || $checkAuthorize == 'Member'
+                || $checkAuthorize == 'Sub_Owner')
+                ? true
+                : false;
+        } else if ($authorize->access == 'private') {
+            return ($checkAuthorize == 'Owner'
+                || $checkAuthorize == 'Sub_Owner')
+                ? true
+                : false;
+        }
+        return false;
+    }
     public function authorizeDeleteCreateMember($boardId)
     {
         $checkAuthorize = BoardMember::query()

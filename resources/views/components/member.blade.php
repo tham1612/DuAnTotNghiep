@@ -53,7 +53,8 @@
                                 </select>
                             </div>
                             <div class="col-2 d-flex justify-content-center">
-                                <button type="submit" id="inviteBoardButton" class="btn btn-primary">
+                                <button type="submit" id="inviteBoardButton" class="btn btn-primary"
+                                @if($board->access == 'private' && $boardMemberChecked->authorize == 'Member')disabled @endif>
                                     Chia sẻ
                                 </button>
                             </div>
@@ -414,7 +415,7 @@
                                                     </div>
 
                                                     <div class="col-4 d-flex justify-content-end">
-                                                        <form onsubmit="disableButtonOnSubmit()"
+                                                        <form
                                                             action="{{ route('b.acceptMember') }}" method="post">
                                                             @method('PUT')
                                                             @csrf
